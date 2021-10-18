@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -76,7 +75,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   String? _choosenValue1;
 
   final inbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA"];
-  final outbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA", "NO ANSWER"];
+  final outbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA", "NO RESPONSE"];
 
   int newlength = 0;
   int prospectlength = 0;
@@ -647,7 +646,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                     onSelected: (value) {
                                                       // check = true;
                                                       if (value == "DELETE") {
-                                                        print("deleted");
                                                         String id = snapshot
                                                             .data!
                                                             .docs[index]["id"];
@@ -737,10 +735,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 s,
                                                                 f,
                                                                 lastseen,
-                                                                company,
                                                                 cli,
                                                                 logo,
-                                                                website);
+                                                                company);
                                                       }
                                                     },
                                                     icon: Icon(
@@ -955,10 +952,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       s,
                                                       f,
                                                       lastseen,
-                                                      company,
                                                       cli,
                                                       logo,
-                                                      website);
+                                                      company);
                                                 },
                                               ),
                                               // Task assignee here...
@@ -1597,10 +1593,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       s,
                                                       f,
                                                       lastseen,
-                                                      company,
                                                       cli,
                                                       logo,
-                                                      website);
+                                                      company);
                                                 },
                                               ),
                                               // Task assignee here...
@@ -2238,10 +2233,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       s,
                                                       f,
                                                       lastseen,
-                                                      company,
                                                       cli,
                                                       logo,
-                                                      website);
+                                                      company);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -2869,23 +2863,23 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       .data!
                                                       .docs[index]["website"];
                                                   descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      endDate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      company,
-                                                      cli,
-                                                      logo,
-                                                      website);
+                                                    context,
+                                                    taskname,
+                                                    create,
+                                                    endDate,
+                                                    flagres,
+                                                    id,
+                                                    catstat,
+                                                    scatstat,
+                                                    mainclr,
+                                                    clrRes,
+                                                    s,
+                                                    f,
+                                                    lastseen,
+                                                    company,
+                                                    cli,
+                                                    logo,
+                                                  );
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -3465,10 +3459,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       s,
       f,
       Timestamp lastseen,
-      company,
       cli,
       logo,
-      website) {
+      company) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // ignore: undefined_prefixed_name
@@ -3815,7 +3808,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 children: [
                                                   Container(
                                                     width: width * 0.13,
-                                                    child: Text("Company Name"),
+                                                    child: Text("Organisation"),
                                                   ),
                                                   Container(
                                                     color: Color(0xFFE0E0E0),
@@ -4171,7 +4164,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 children: [
                                                   Lottie.asset(
                                                       "assets/Lotties/check1.json"),
-                                                  Text("Company Name")
+                                                  Text("Organisation")
                                                 ],
                                               ),
                                             ),
@@ -4181,28 +4174,59 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               width: 1,
                                             ),
                                             Container(
-                                              width: width * 0.21,
-                                              child: ListTile(
-                                                leading: SizedBox(
-                                                    width: 30,
-                                                    height: 30,
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        child: HtmlElementView(
-                                                            viewType: logo))),
-                                                title: Text(company),
-                                                subtitle: Text(website),
-                                                trailing: IconButton(
-                                                  icon: Icon(
-                                                    Icons.edit,
-                                                    color: bgColor,
-                                                  ),
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            )
+                                                width: width * 0.21,
+                                                child: StreamBuilder(
+                                                  stream: _fireStore
+                                                      .collection("Tasks")
+                                                      .where("id",
+                                                          isEqualTo: id)
+                                                      .snapshots(),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<
+                                                                  QuerySnapshot>
+                                                              snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                      return Container();
+                                                    }
+                                                    return ListView.builder(
+                                                      itemCount: snapshot
+                                                          .data!.docs.length,
+                                                      itemBuilder: (_, index) {
+                                                        return ListTile(
+                                                          leading: SizedBox(
+                                                              width: 30,
+                                                              height: 30,
+                                                              child: ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  child: HtmlElementView(
+                                                                      viewType: snapshot
+                                                                          .data!
+                                                                          .docs[index]["logo"]))),
+                                                          title: Text(snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ["companyname"]),
+                                                          subtitle: Text(
+                                                              snapshot.data!
+                                                                          .docs[
+                                                                      index]
+                                                                  ["website"]),
+                                                          trailing: IconButton(
+                                                            icon: Icon(
+                                                              Icons.edit,
+                                                              color: bgColor,
+                                                            ),
+                                                            onPressed: () {},
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ))
                                           ],
                                         ),
                                         alignment: Alignment.centerLeft,
@@ -4235,6 +4259,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                             ),
                                             TextButton.icon(
                                                 onPressed: () {
+                                                  addContact(context, id, logo);
                                                   _isCompany = !_isCompany;
                                                   setState(() {});
                                                 },
@@ -4244,185 +4269,122 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         ),
                                         alignment: Alignment.centerLeft,
                                       ),
-                                      _isCompany
-                                          ? TranslationAnimatedWidget.tween(
-                                              translationDisabled:
-                                                  Offset(50, 0),
-                                              translationEnabled: Offset(0, 0),
-                                              child:
-                                                  OpacityAnimatedWidget.tween(
-                                                opacityDisabled: 0,
-                                                opacityEnabled: 1,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    children: [
-                                                      comFom(
-                                                          _conpersonController,
-                                                          (value) {
-                                                        if (value.isEmpty) {
-                                                          return "Enter Person name";
-                                                        } else {
-                                                          return null;
-                                                        }
-                                                      }, "Name of the Person"),
-                                                      comFom(_commailController,
-                                                          (value) {
-                                                        if (value.isEmpty) {
-                                                          return "Enter Email";
-                                                        } else {
-                                                          return null;
-                                                        }
-                                                      }, "Enter email"),
-                                                      comFom(_comphoController,
-                                                          (value) {
-                                                        if (value.isEmpty) {
-                                                          return "Enter PhoneNumber";
-                                                        } else {
-                                                          return null;
-                                                        }
-                                                      }, "Phone Number"),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          FlatButton(
-                                                              color: Colors.red,
-                                                              child: Text(
-                                                                  "Cancel"),
-                                                              onPressed: () {
-                                                                _isCompany =
-                                                                    !_isCompany;
-                                                                setState(() {});
-                                                              }),
-                                                          FlatButton(
-                                                            color: Colors.green,
-                                                            child: Text("ADD"),
-                                                            onPressed: () {
-                                                              ComapnyUpdateServices
-                                                                  .addMoreContacts(
-                                                                      id,
-                                                                      _conpersonController,
-                                                                      _commailController,
-                                                                      _comphoController);
-                                                              _isCompany =
-                                                                  !_isCompany;
-                                                              setState(() {});
-                                                            },
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(
-                                              width: width * 0.4045,
-                                              height: height * 0.17,
-                                              child: StreamBuilder(
-                                                stream: _fireStore
-                                                    .collection("Tasks")
-                                                    .where("id", isEqualTo: id)
-                                                    .snapshots(),
-                                                builder: (BuildContext context,
-                                                    AsyncSnapshot<QuerySnapshot>
-                                                        snapshot) {
-                                                  if (!snapshot.hasData) {
-                                                    return Container();
-                                                  }
-                                                  return ListView.builder(
+                                      Container(
+                                        width: width * 0.4045,
+                                        height: height * 0.17,
+                                        child: StreamBuilder(
+                                          stream: _fireStore
+                                              .collection("Tasks")
+                                              .where("id", isEqualTo: id)
+                                              .snapshots(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return Container();
+                                            }
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              physics: ClampingScrollPhysics(),
+                                              itemCount:
+                                                  snapshot.data!.docs.length,
+                                              itemBuilder: (_, index) {
+                                                List<dynamic> contactlist =
+                                                    snapshot.data!.docs[index]
+                                                        ["CompanyDetails"];
+                                                return ListView.builder(
                                                     shrinkWrap: true,
                                                     physics:
                                                         ClampingScrollPhysics(),
-                                                    itemCount: snapshot
-                                                        .data!.docs.length,
-                                                    itemBuilder: (_, index) {
-                                                      List<dynamic>
-                                                          contactlist = snapshot
-                                                                  .data!
-                                                                  .docs[index][
-                                                              "CompanyDetails"];
-                                                      return ListView.builder(
-                                                          shrinkWrap: true,
-                                                          physics:
-                                                              ClampingScrollPhysics(),
-                                                          itemCount: contactlist
-                                                              .length,
-                                                          itemBuilder: (_, i) {
-                                                            return Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: width *
-                                                                      0.315,
-                                                                  child: Card(
-                                                                    color:
-                                                                        txtColor,
-                                                                    elevation:
-                                                                        10.0,
-                                                                    child: ExpansionTile(
-                                                                        childrenPadding: EdgeInsets.symmetric(horizontal: 20),
-                                                                        textColor: Colors.indigo,
-                                                                        iconColor: Colors.indigo,
-                                                                        collapsedIconColor: Colors.indigo,
-                                                                        leading: Icon(
-                                                                          Icons
-                                                                              .person_pin,
-                                                                          color:
-                                                                              Colors.indigo,
-                                                                        ),
-                                                                        title: Text(contactlist[i]["contactperson"]),
-                                                                        children: [
-                                                                          Align(
-                                                                            alignment:
-                                                                                Alignment.centerLeft,
-                                                                            child:
-                                                                                Text("Phone : " + contactlist[i]["phone"]),
-                                                                          ),
-                                                                          Align(
-                                                                            alignment:
-                                                                                Alignment.centerLeft,
-                                                                            child:
-                                                                                Text("Email : " + contactlist[i]["email"]),
-                                                                          ),
-                                                                        ]),
-                                                                  ),
-                                                                ),
-                                                                IconButton(
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    color:
-                                                                        bgColor,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    ComapnyUpdateServices.removeContact(
-                                                                        id,
-                                                                        contactlist[
-                                                                            i]);
-                                                                  },
-                                                                ),
-                                                                IconButton(
-                                                                  icon: Icon(
-                                                                    Icons.edit,
-                                                                    color:
-                                                                        bgColor,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {},
-                                                                ),
-                                                              ],
-                                                            );
-                                                          });
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                    itemCount:
+                                                        contactlist.length,
+                                                    itemBuilder: (_, i) {
+                                                      return Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SizedBox(
+                                                            width:
+                                                                width * 0.315,
+                                                            child: Card(
+                                                              color: txtColor,
+                                                              elevation: 10.0,
+                                                              child:
+                                                                  ExpansionTile(
+                                                                      childrenPadding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              20),
+                                                                      textColor:
+                                                                          Colors
+                                                                              .indigo,
+                                                                      iconColor:
+                                                                          Colors
+                                                                              .indigo,
+                                                                      collapsedIconColor:
+                                                                          Colors
+                                                                              .indigo,
+                                                                      leading:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .person_pin,
+                                                                        color: Colors
+                                                                            .indigo,
+                                                                      ),
+                                                                      title: Text(
+                                                                          contactlist[i]
+                                                                              [
+                                                                              "contactperson"]),
+                                                                      children: [
+                                                                    Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child: Text("Phone : " +
+                                                                          contactlist[i]
+                                                                              [
+                                                                              "phone"]),
+                                                                    ),
+                                                                    Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child: Text("Email : " +
+                                                                          contactlist[i]
+                                                                              [
+                                                                              "email"]),
+                                                                    ),
+                                                                  ]),
+                                                            ),
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: bgColor,
+                                                            ),
+                                                            onPressed: () {
+                                                              ComapnyUpdateServices
+                                                                  .removeContact(
+                                                                      id,
+                                                                      contactlist[
+                                                                          i]);
+                                                            },
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.edit,
+                                                              color: bgColor,
+                                                            ),
+                                                            onPressed: () {},
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -4902,7 +4864,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                               height: height * 0.70,
                               child: Lottie.asset("assets/Lotties/empty.json"))
                           : Container(
-                              alignment: Alignment.topCenter,
                               width: width * 0.445,
                               height: height * 0.70,
                               child: _isStatic
@@ -5136,6 +5097,48 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                   color: Color(
                                                                       0xFFE0E0E0),
                                                                 ),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                Container(
+                                                                    child: Row(
+                                                                        children: [
+                                                                      Container(
+                                                                        padding: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                10.0,
+                                                                            vertical:
+                                                                                2.0),
+                                                                        color: lr[index]["Bound"] ==
+                                                                                "InBound"
+                                                                            ? goodClr
+                                                                            : avgClr,
+                                                                        child:
+                                                                            Text(
+                                                                          lr[index]
+                                                                              [
+                                                                              "Bound"],
+                                                                          style:
+                                                                              TxtStls.stl1,
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              50),
+                                                                      Container(
+                                                                        padding: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                10.0,
+                                                                            vertical:
+                                                                                2.0),
+                                                                        color: Colors
+                                                                            .orange,
+                                                                        child: Text(
+                                                                            lr[index][
+                                                                                "Action"],
+                                                                            style:
+                                                                                TxtStls.stl1),
+                                                                      ),
+                                                                    ])),
                                                                 Container(
                                                                     alignment:
                                                                         Alignment
@@ -5216,8 +5219,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
             width: width * 0.20,
             height: height * 0.35,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              padding: const EdgeInsets.all(20.0),
               child: _visible
                   ? TranslationAnimatedWidget.tween(
                       translationDisabled: Offset(_visible ? 25 : 0, 0),
@@ -5249,13 +5251,19 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           ),
                                           SizedBox(width: 15),
                                           Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 1),
-                                              color: flwClr,
-                                              child: Text(
-                                                _choosenValue!.toString(),
-                                                style: TxtStls.stl1,
-                                              )),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 1),
+                                            color: flwClr,
+                                            child: radioItem == "InBound"
+                                                ? Text(
+                                                    _choosenValue!.toString(),
+                                                    style: TxtStls.stl1,
+                                                  )
+                                                : Text(
+                                                    _choosenValue1!.toString(),
+                                                    style: TxtStls.stl1,
+                                                  ),
+                                          ),
                                         ],
                                       ),
                                       Text("NOTE :"),
@@ -5337,8 +5345,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                       _ismove = !_ismove;
                                       _visible = !_visible;
                                       GraphValueServices.graph(endDate, id);
+                                      String? val = radioItem == "InBound"
+                                          ? _choosenValue
+                                          : _choosenValue1;
                                       StateUpdateServices.prosUpdate(
-                                          id, cat, _momoController, endDate);
+                                          id,
+                                          cat,
+                                          _momoController,
+                                          endDate,
+                                          radioItem,
+                                          val);
                                       Navigator.pop(context);
                                       setState(() {});
                                     },
@@ -5356,8 +5372,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   InkWell(
                                     onTap: () {
                                       CatUpdateServices.updateCat1(id);
+                                      String? val = radioItem == "InBound"
+                                          ? _choosenValue
+                                          : _choosenValue1;
                                       StateUpdateServices.InprosUpdate(
-                                          id, cat, _momoController, endDate);
+                                          id,
+                                          cat,
+                                          _momoController,
+                                          endDate,
+                                          radioItem,
+                                          val);
                                       _visible = !_visible;
                                       _ismove = !_ismove;
                                       GraphValueServices.graph(endDate, id);
@@ -5376,8 +5400,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   InkWell(
                                     onTap: () {
                                       CatUpdateServices.updateCat3(id);
+                                      String? val = radioItem == "InBound"
+                                          ? _choosenValue
+                                          : _choosenValue1;
                                       StateUpdateServices.wonUpdate(
-                                          id, cat, _momoController, endDate);
+                                          id,
+                                          cat,
+                                          _momoController,
+                                          endDate,
+                                          radioItem,
+                                          val);
                                       _ismove = !_ismove;
                                       _visible = !_visible;
                                       GraphValueServices.graph(endDate, id);
@@ -5396,8 +5428,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   InkWell(
                                     onTap: () {
                                       CatUpdateServices.updateCat4(id);
+                                      String? val = radioItem == "InBound"
+                                          ? _choosenValue
+                                          : _choosenValue1;
                                       StateUpdateServices.closeUpdate(
-                                          id, cat, _momoController, endDate);
+                                          id,
+                                          cat,
+                                          _momoController,
+                                          endDate,
+                                          radioItem,
+                                          val);
                                       _ismove = !_ismove;
                                       _visible = !_visible;
                                       GraphValueServices.graph(endDate, id);
@@ -5474,10 +5514,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                             groupValue: radioItem,
                                             onChanged: (val) {
                                               radioItem = val.toString();
-                                              print(radioItem);
                                               setState(() {});
                                             },
-                                            toggleable: false,
+                                            toggleable: true,
                                           ),
                                         ),
                                         Text(
@@ -5512,7 +5551,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               radioItem = val.toString();
                                               setState(() {});
                                             },
-                                            toggleable: false,
+                                            toggleable: true,
                                           ),
                                         ),
                                         Text(
@@ -5560,15 +5599,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           style: TxtStls.stl1,
                                         ),
                                         onChanged: (value) {
-                                          _choosenValue = value!;
+                                          _choosenValue = value;
                                           setState(() {});
                                         },
                                       ),
                                     ),
                                   )
-                                : Container(),
-                            radioItem == "OutBound"
-                                ? Padding(
+                                : Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
@@ -5607,10 +5644,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         },
                                       ),
                                     ),
-                                  )
-                                : Container(),
+                                  ),
                             SizedBox(height: 50),
-                            radioItem == ''
+                            radioItem == ""
                                 ? Text("Choose Action ")
                                 : MaterialButton(
                                     elevation: 20.0,
@@ -5775,11 +5811,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       decoration: InputDecoration(
         fillColor: Colors.white,
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
           borderSide: BorderSide(
             color: Colors.black,
           ),
         ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
           borderSide: BorderSide(
             color: Colors.black,
             width: 2.0,
@@ -6112,5 +6150,114 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
         ),
       );
     }
+  }
+
+  addContact(BuildContext context, id, logo) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0.0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: txtColor,
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            color: Colors.blueAccent[100],
+            width: width * 0.30,
+            height: height * 0.35,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              height: height * 0.20,
+              width: width * 0.30,
+              child: Row(
+                children: [
+                  Container(
+                    width: width * 0.10,
+                    child: HtmlElementView(viewType: logo),
+                  ),
+                  Container(
+                    width: width * 0.20,
+                    child: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("Contact Person Name")),
+                            Material(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: txtColor,
+                                child: form(_conpersonController, (value) {
+                                  return value.isEmpty || value.length < 3
+                                      ? "Enter valid  Name"
+                                      : "null";
+                                }, true)),
+                            SizedBox(height: 10),
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("Email id")),
+                            Material(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: txtColor,
+                                child: form(_commailController, (value) {
+                                  return value.isEmpty
+                                      ? "Enter valid  Name"
+                                      : "null";
+                                }, true)),
+                            SizedBox(height: 10),
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("Phone Number")),
+                            Material(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: txtColor,
+                                child: form(_comphoController, (value) {
+                                  return value.isEmpty || value.length < 10
+                                      ? "Enter valid  Name"
+                                      : "null";
+                                }, true)),
+                            SizedBox(height: 10),
+                            MaterialButton(
+                              elevation: 10.0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              color: Colors.lightBlue,
+                              child: Text("ADD"),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  ComapnyUpdateServices.addMoreContacts(
+                                      id,
+                                      _conpersonController,
+                                      _commailController,
+                                      _comphoController);
+                                  Navigator.pop(context);
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (_) {
+          return alertDialog;
+        });
   }
 }

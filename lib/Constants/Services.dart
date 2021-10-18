@@ -334,7 +334,8 @@ class CrudOperations {
 }
 
 class StateUpdateServices {
-  static prosUpdate(id, String category, note, lastDate) async {
+  static prosUpdate(
+      id, String category, note, lastDate, radioItem, action) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Activity": FieldValue.arrayUnion([
@@ -345,7 +346,9 @@ class StateUpdateServices {
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false
+          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+          "Bound": radioItem,
+          "Action": action,
         }
       ])
     }).then((value) {
@@ -354,7 +357,8 @@ class StateUpdateServices {
     print("update");
   }
 
-  static InprosUpdate(id, String category, note, lastDate) async {
+  static InprosUpdate(
+      id, String category, note, lastDate, radioItem, action) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Activity": FieldValue.arrayUnion([
@@ -365,7 +369,9 @@ class StateUpdateServices {
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false
+          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+          "Bound": radioItem,
+          "Action": action,
         }
       ])
     }).then((value) {
@@ -374,7 +380,8 @@ class StateUpdateServices {
     print("update");
   }
 
-  static wonUpdate(id, String category, note, lastDate) async {
+  static wonUpdate(
+      id, String category, note, lastDate, radioItem, action) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Activity": FieldValue.arrayUnion([
@@ -385,7 +392,9 @@ class StateUpdateServices {
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false
+          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+          "Bound": radioItem,
+          "Action": action,
         }
       ])
     }).then((value) {
@@ -394,7 +403,8 @@ class StateUpdateServices {
     print("update");
   }
 
-  static closeUpdate(id, String category, note, lastDate) async {
+  static closeUpdate(
+      id, String category, note, lastDate, radioItem, action) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Activity": FieldValue.arrayUnion([
@@ -405,7 +415,9 @@ class StateUpdateServices {
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false
+          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+          "Bound": radioItem,
+          "Action": action,
         }
       ])
     }).then((value) {
