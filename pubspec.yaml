@@ -51,8 +51,9 @@ dependencies:
   flutter_carousel_slider: ^1.0.8
   qr_flutter: ^4.0.0
   syncfusion_flutter_pdfviewer: ^19.3.44-beta
-  webview_flutter: ^2.1.1
   cached_network_image: ^3.1.0
+  image_picker_web: ^2.0.3+1
+
 
 
 

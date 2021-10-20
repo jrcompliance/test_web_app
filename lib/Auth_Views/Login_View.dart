@@ -1,84 +1,171 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:test_web_app/Constants/reusable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Auth_Views/GetUserdata.dart';
+import 'package:test_web_app/DashBoard/MainScreen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  bool _isSecured = true;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnimatedContainer(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/Lotties/loginbackground.png"),
-              fit: BoxFit.fill),
-        ),
-        duration: Duration(milliseconds: 50),
-        child: Card(
-          color: Colors.white,
-          elevation: 10.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(1))),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            constraints: BoxConstraints(maxWidth: 400),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Scan QR Code to Login :",
-                          style: TextStyle(fontSize: 25),
+    return Scaffold(body: LayoutBuilder(
+      builder: (BuildContext context, constraints) {
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/Lotties/loginbackground.png"),
+                fit: BoxFit.fill),
+          ),
+          child: Card(
+            color: Colors.white,
+            elevation: 20,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 350, maxHeight: 800),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          child: Text(
+                        "Login with",
+                        style: TextStyle(
+                            color: Colors.indigo, fontWeight: FontWeight.bold),
+                      )),
+                      Image.asset("assets/Logos/jrlogo.jpeg", scale: 1.5),
+                      SizedBox(height: 20),
+                      Material(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
-                        SizedBox(
-                          height: 20,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter user email';
+                            }
+                            return null;
+                          },
+                          controller: emailController,
+                          style: TextStyle(color: Colors.white),
+                          obscureText: false,
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Colors.white,
+                              ),
+                              hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              hintText: "Email id",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)))),
                         ),
-                        Text("1 .  Open your application",
-                            style: TextStyle(fontSize: 17.5)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text("2.  Select Scanner to scan Qr Code",
-                            style: TextStyle(fontSize: 17.5))
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 66.0),
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(border: Border.all(color: grClr)),
-                    child: QrImage(
-                      version: QrVersions.auto,
-                      data: "20",
-                      embeddedImage: AssetImage("assets/Logos/circlelogo.png"),
-                      embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: Size(40, 40),
                       ),
-                    ),
+                      SizedBox(height: 30),
+                      Material(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter the Password";
+                            }
+                            return null;
+                          },
+                          controller: passwordController,
+                          style: TextStyle(color: Colors.white),
+                          obscureText: _isSecured,
+                          decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                  icon: Icon(_isSecured
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSecured = !_isSecured;
+                                    });
+                                  },
+                                  color: Colors.white),
+                              hintStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              hintText: "Password",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)))),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          login();
+                        },
+                        child: Text(
+                          "LogIn",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
+      },
+    ));
+  }
+
+  Future<void> login() async {
+    try {
+      await _auth
+          .signInWithEmailAndPassword(
+              email: emailController.text.toString(),
+              password: passwordController.text.toString())
+          .then((cred) async {
+        if (cred.user == null) {
+          print('Not loggedin');
+        } else {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("email", emailController.text.toString());
+          prefs.setString("password", passwordController.text.toString());
+          print("loggedin");
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => MainScreen()),
+              (route) => false);
+        }
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }

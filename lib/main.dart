@@ -5,14 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Auth_Views/Register_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: bgColor),
         canvasColor: secondaryColor,
       ),
-      home: MainScreen(),
+      home: LandingScreen(),
     );
   }
 }

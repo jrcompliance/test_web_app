@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Auth_Views/GetUserdata.dart';
+import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/MyDashBoard.dart';
@@ -13,6 +18,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final ScrollController _mainScrollController = ScrollController();
   Tabs active = Tabs.DashBoard;
   @override
@@ -35,12 +42,21 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       floatingActionButton: RaisedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            logout();
+          },
           icon: Icon(Icons.add),
           label: Text("Create"),
           color: Colors.pinkAccent,
           elevation: 10),
     );
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    await _auth.signOut().then((value) => Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false));
   }
 
   Widget SideDrawer(BuildContext context) {

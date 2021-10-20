@@ -7,6 +7,7 @@ import 'package:animated_widgets/widgets/translation_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -117,7 +118,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             : width * 0.005,
                       ),
                       Text(
-                        "${newlength.toString()}" + " tasks",
+                        "${newlength.toString()}tasks",
                         style: TxtStls.stl1,
                       ),
                       SizedBox(
@@ -241,7 +242,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         width: width * 0.09,
                                                         child: InkWell(
                                                             onTap: () {
-                                                              print(index);
                                                               String id = snapshot
                                                                       .data!
                                                                       .docs[
@@ -835,7 +835,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             : width * 0.005,
                       ),
                       Text(
-                        "${prospectlength.toString()}" + " tasks",
+                        "${prospectlength.toString()}tasks",
                         style: TxtStls.stl1,
                       ),
                     ],
@@ -860,7 +860,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
-                                        snapshot.data!.docs.length == 0) {
+                                        snapshot.data!.docs.isEmpty) {
                                       return Container();
                                     }
                                     return Padding(
@@ -1354,14 +1354,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   color: Clrs.txtColor,
                                                   onSelected: (value) {
                                                     if (value == "DELETE") {
-                                                      print("deleted");
                                                       String id = snapshot.data!
                                                           .docs[index]["id"];
                                                       CrudOperations.deleteTask(
                                                           id);
                                                     }
                                                     if (value == "MOVE") {
-                                                      print("Move to where");
                                                       String cat = snapshot
                                                           .data!
                                                           .docs[index]["cat"];
@@ -1477,7 +1475,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             : width * 0.005,
                       ),
                       Text(
-                        "${inprogresslength.toString()}" + " tasks",
+                        "${inprogresslength.toString()}tasks",
                         style: TxtStls.stl1,
                       ),
                     ],
@@ -1502,7 +1500,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
-                                        snapshot.data!.docs.length == 0) {
+                                        snapshot.data!.docs.isEmpty) {
                                       return Container();
                                     }
                                     return Padding(
@@ -2011,14 +2009,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   color: Clrs.txtColor,
                                                   onSelected: (value) {
                                                     if (value == "DELETE") {
-                                                      print("deleted");
                                                       String id = snapshot.data!
                                                           .docs[index]["id"];
                                                       CrudOperations.deleteTask(
                                                           id);
                                                     }
                                                     if (value == "MOVE") {
-                                                      print("Move to where");
                                                       String cat = snapshot
                                                           .data!
                                                           .docs[index]["cat"];
@@ -2126,7 +2122,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             : width * 0.005,
                       ),
                       Text(
-                        "${wonlength.toString()}" + " tasks",
+                        "${wonlength.toString()} tasks",
                         style: TxtStls.stl1,
                       ),
                     ],
@@ -2151,7 +2147,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
-                                        snapshot.data!.docs.length == 0) {
+                                        snapshot.data!.docs.isEmpty) {
                                       return Container();
                                     }
                                     return Padding(
@@ -2215,9 +2211,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
-                                                  String website = snapshot
-                                                      .data!
-                                                      .docs[index]["website"];
 
                                                   descBox(
                                                       context,
@@ -2659,14 +2652,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   color: Clrs.txtColor,
                                                   onSelected: (value) {
                                                     if (value == "DELETE") {
-                                                      print("deleted");
                                                       String id = snapshot.data!
                                                           .docs[index]["id"];
                                                       CrudOperations.deleteTask(
                                                           id);
                                                     }
                                                     if (value == "MOVE") {
-                                                      print("Move to where");
                                                       String cat = snapshot
                                                           .data!
                                                           .docs[index]["cat"];
@@ -2773,7 +2764,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             : width * 0.005,
                       ),
                       Text(
-                        "${closelength.toString()}" + " tasks",
+                        "${closelength.toString()} tasks",
                         style: TxtStls.stl1,
                       ),
                     ],
@@ -2798,7 +2789,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
-                                        snapshot.data!.docs.length == 0) {
+                                        snapshot.data!.docs.isEmpty) {
                                       return Container();
                                     }
                                     return Padding(
@@ -2832,7 +2823,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   Timestamp create = snapshot
                                                       .data!
                                                       .docs[index]["startDate"];
-                                                  String endDate = snapshot
+                                                  String enddate = snapshot
                                                       .data!
                                                       .docs[index]["endDate"];
                                                   String catstat = snapshot
@@ -2851,35 +2842,31 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       .docs[index]["fail"];
                                                   int s = snapshot.data!
                                                       .docs[index]["success"];
-                                                  String company =
-                                                      snapshot.data!.docs[index]
-                                                          ["companyname"];
                                                   List cli =
                                                       snapshot.data!.docs[index]
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
-                                                  String website = snapshot
-                                                      .data!
-                                                      .docs[index]["website"];
+                                                  String company =
+                                                      snapshot.data!.docs[index]
+                                                          ["companyname"];
                                                   descBox(
-                                                    context,
-                                                    taskname,
-                                                    create,
-                                                    endDate,
-                                                    flagres,
-                                                    id,
-                                                    catstat,
-                                                    scatstat,
-                                                    mainclr,
-                                                    clrRes,
-                                                    s,
-                                                    f,
-                                                    lastseen,
-                                                    company,
-                                                    cli,
-                                                    logo,
-                                                  );
+                                                      context,
+                                                      taskname,
+                                                      create,
+                                                      enddate,
+                                                      flagres,
+                                                      id,
+                                                      catstat,
+                                                      scatstat,
+                                                      mainclr,
+                                                      clrRes,
+                                                      s,
+                                                      f,
+                                                      lastseen,
+                                                      cli,
+                                                      logo,
+                                                      company);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -3337,14 +3324,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   color: Clrs.txtColor,
                                                   onSelected: (value) {
                                                     if (value == "DELETE") {
-                                                      print("deleted");
                                                       String id = snapshot.data!
                                                           .docs[index]["id"];
                                                       CrudOperations.deleteTask(
                                                           id);
                                                     }
                                                     if (value == "MOVE") {
-                                                      print("Move to where");
                                                       String cat = snapshot
                                                           .data!
                                                           .docs[index]["cat"];
@@ -4438,8 +4423,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   itemCount:
                                                       attachments1.length,
                                                   itemBuilder:
-                                                      (BuildContextcontext,
-                                                          int i) {
+                                                      (BuildContext context,
+                                                          i) {
                                                     return ListTile(
                                                       leading: SizedBox(
                                                         height: 40,
@@ -4729,7 +4714,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         onChanged: (val) {
                                                           radioItem1 =
                                                               val.toString();
-                                                          print(radioItem1);
+
                                                           setState(() {});
                                                         },
                                                         toggleable: false,
@@ -4757,7 +4742,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         onChanged: (val) {
                                                           radioItem1 =
                                                               val.toString();
-                                                          print(radioItem1);
                                                           setState(() {});
                                                         },
                                                         toggleable: false,
@@ -4794,7 +4778,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         onChanged: (val) {
                                                           radioItem2 =
                                                               val.toString();
-                                                          print(radioItem2);
                                                           setState(() {});
                                                         },
                                                         toggleable: false,
@@ -4822,7 +4805,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         onChanged: (val) {
                                                           radioItem2 =
                                                               val.toString();
-                                                          print(radioItem2);
                                                           setState(() {});
                                                         },
                                                         toggleable: false,
@@ -6165,88 +6147,65 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
             color: Colors.blueAccent[100],
-            width: width * 0.30,
+            width: width * 0.175,
             height: height * 0.35,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              height: height * 0.20,
-              width: width * 0.30,
-              child: Row(
-                children: [
-                  Container(
-                    width: width * 0.10,
-                    child: HtmlElementView(viewType: logo),
-                  ),
-                  Container(
-                    width: width * 0.20,
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("Contact Person Name")),
-                            Material(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: txtColor,
-                                child: form(_conpersonController, (value) {
-                                  return value.isEmpty || value.length < 3
-                                      ? "Enter valid  Name"
-                                      : "null";
-                                }, true)),
-                            SizedBox(height: 10),
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("Email id")),
-                            Material(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: txtColor,
-                                child: form(_commailController, (value) {
-                                  return value.isEmpty
-                                      ? "Enter valid  Name"
-                                      : "null";
-                                }, true)),
-                            SizedBox(height: 10),
-                            Align(
-                                alignment: Alignment.topLeft,
-                                child: Text("Phone Number")),
-                            Material(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: txtColor,
-                                child: form(_comphoController, (value) {
-                                  return value.isEmpty || value.length < 10
-                                      ? "Enter valid  Name"
-                                      : "null";
-                                }, true)),
-                            SizedBox(height: 10),
-                            MaterialButton(
-                              elevation: 10.0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0)),
-                              color: Colors.lightBlue,
-                              child: Text("ADD"),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  ComapnyUpdateServices.addMoreContacts(
-                                      id,
-                                      _conpersonController,
-                                      _commailController,
-                                      _comphoController);
-                                  Navigator.pop(context);
-                                }
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text("Contact Person Name")),
+                    Material(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: txtColor,
+                        child: form(_conpersonController, (value) {
+                          return value.isEmpty ? "Enter valid  Name" : null;
+                        }, true)),
+                    SizedBox(height: 10),
+                    Align(
+                        alignment: Alignment.topLeft, child: Text("Email id")),
+                    Material(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: txtColor,
+                        child: form(_commailController, (value) {
+                          return value.isEmpty ? "Enter valid  Name" : null;
+                        }, true)),
+                    SizedBox(height: 10),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text("Phone Number")),
+                    Material(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: txtColor,
+                        child: form(_comphoController, (value) {
+                          return value.isEmpty || value.length < 10
+                              ? "Enter valid  Name"
+                              : null;
+                        }, true)),
+                    SizedBox(height: 10),
+                    MaterialButton(
+                      elevation: 10.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      color: Colors.lightBlue,
+                      child: Text("ADD"),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          ComapnyUpdateServices.addMoreContacts(
+                              id,
+                              _conpersonController,
+                              _commailController,
+                              _comphoController);
+                          Navigator.pop(context);
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
           );

@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Constants/Responsive.dart';
+import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -12,16 +16,18 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController phonenumberController = TextEditingController();
-  GlobalKey _formKey = GlobalKey();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController phonenumberController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   bool _isSecured = false;
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     return Scaffold(body: LayoutBuilder(
       builder: (BuildContext context, constraints) {
         return AnimatedContainer(
@@ -47,16 +53,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                          child: Text(
-                        "SignUp with",
-                        style: TextStyle(
-                            color: Colors.indigo, fontWeight: FontWeight.bold),
-                      )),
-                      Image.asset("assets/Logos/jrlogo.jpeg"),
-                      SizedBox(
-                        height: 20,
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: 60,
+                            width: 60,
+                            child: logoBase64 == null
+                                ? CircleAvatar(
+                                    backgroundColor: Colors.blue,
+                                  )
+                                : ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40)),
+                                    child: Image.memory(logoBase64!),
+                                  ),
+                          ),
+                          Positioned(
+                            right: 5,
+                            bottom: 5,
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt),
+                              color: bgColor,
+                              onPressed: () {
+                                chooseProfile();
+                              },
+                            ),
+                          )
+                        ],
                       ),
+                      SizedBox(height: 20),
                       Material(
                         color: Colors.black,
                         borderRadius: BorderRadius.all(
@@ -65,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter user name';
+                              return 'Please enter Employee name';
                             }
                             return null;
                           },
@@ -80,15 +105,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
-                              hintText: "Username",
+                              hintText: "Employee Name",
                               border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       Material(
                         color: Colors.black,
                         borderRadius: BorderRadius.all(
@@ -97,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter user name';
+                              return 'Please enter employee phone Number';
                             }
                             return null;
                           },
@@ -112,15 +135,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
-                              hintText: "Phone Number",
+                              hintText: "Employee Phone Number",
                               border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       Material(
                         color: Colors.black,
                         borderRadius: BorderRadius.all(
@@ -129,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: TextFormField(
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter user email';
+                              return 'Please enter Employee email';
                             }
                             return null;
                           },
@@ -144,15 +165,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hintStyle: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
-                              hintText: "Email id",
+                              hintText: "Employee Email id",
                               border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10)))),
                         ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
+                      SizedBox(height: 30),
                       Material(
                         color: Colors.black,
                         borderRadius: BorderRadius.all(
@@ -188,9 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       BorderRadius.all(Radius.circular(10)))),
                         ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
+                      SizedBox(height: 30),
                       TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -225,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> getRegister() async {
-    FirebaseAuth.instance
+    await _auth
         .createUserWithEmailAndPassword(
             email: emailController.text.toString(),
             password: passwordController.text.toString())
@@ -237,23 +254,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("email", emailController.text.toString());
         prefs.setString("password", passwordController.text.toString());
+        prefs.setString("username", usernameController.text.toString());
+        prefs.setString("phone", phonenumberController.text.toString());
         print("loggedin");
       }
-
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => MainScreen()), (route) => false);
     });
   }
 
   Future<void> storeUserData() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    String uid = auth.currentUser!.uid.toString();
-    FirebaseFirestore fireStore = FirebaseFirestore.instance;
-    fireStore.collection("UsersData").doc(uid).set({
+    FirebaseStorage storage = FirebaseStorage.instance;
+    TaskSnapshot upload = await storage.ref('Profiles/').putData(logoBase64!);
+    String myUrl = await upload.ref.getDownloadURL();
+    String uid = _auth.currentUser!.uid.toString();
+    await fireStore.collection("EmployeeData").doc(uid).set({
       "email": emailController.text.toString(),
-      "username": usernameController.text.toString(),
       "password": passwordController.text.toString(),
+      "username": usernameController.text.toString(),
+      "phone": phonenumberController.text.toString(),
+      "imageUrl": myUrl,
       'uid': uid,
-    });
+    }).then((value) => Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
+  }
+
+  Uint8List? logoBase64;
+  chooseProfile() async {
+    FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
+    if (pickedfile != null) {
+      Uint8List? fileBytes = pickedfile.files.first.bytes;
+      logoBase64 = fileBytes;
+      setState(() {});
+    } else {
+      print("select file");
+    }
   }
 }

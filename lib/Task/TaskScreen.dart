@@ -64,6 +64,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           return Container();
                         }
                         return ListView.builder(
+                          shrinkWrap: true,
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (BuildContext context, index) {
                             return Padding(
