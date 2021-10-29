@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,38 +64,43 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 }
 
-class Dummy extends StatefulWidget {
-  const Dummy({Key? key}) : super(key: key);
+class Check extends StatefulWidget {
+  const Check({Key? key}) : super(key: key);
 
   @override
-  _DummyState createState() => _DummyState();
+  _CheckState createState() => _CheckState();
 }
 
-class _DummyState extends State<Dummy> {
+class _CheckState extends State<Check> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("imges").snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (_, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: HtmlElementView(
-                  viewType: snapshot.data!.docs[index]["url"],
-                ),
+    return Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("EmployeeData")
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {}
+              return PopupMenuButton<String>(
+                itemBuilder: (context) => snapshot.data!.docs
+                    .map((item) => PopupMenuItem<String>(
+                        value: item["uid"],
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(item["imageUrl"]),
+                            ),
+                            Text(
+                              item["username"],
+                            ),
+                          ],
+                        )))
+                    .toList(),
+                onSelected: (value) {
+                  print(value);
+                },
               );
-            },
-          );
-        },
-      ),
-    );
+            }));
   }
 }

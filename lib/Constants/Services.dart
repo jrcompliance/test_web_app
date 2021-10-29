@@ -1,22 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];
-
-class QueryServices {
-  static Query newqry =
-      _firestore.collection("Tasks").where("cat", isEqualTo: "NEW");
-  static Query prosqry =
-      _firestore.collection("Tasks").where("cat", isEqualTo: "PROSPECT");
-  static Query inpro =
-      _firestore.collection("Tasks").where("cat", isEqualTo: "IN PROGRESS");
-  static Query wonqry =
-      _firestore.collection("Tasks").where("cat", isEqualTo: "WON");
-  static Query clsqry =
-      _firestore.collection("Tasks").where("cat", isEqualTo: "CLOSE");
-}
 
 class UpdateServices {
   static lastseenUpdate(id) async {
@@ -272,7 +261,8 @@ class EndDateOperations {
 }
 
 class CrudOperations {
-  static uploadTask(_taskController, _endDateController) async {
+  static uploadTask(_taskController, _endDateController, _nameController,
+      _emailController, _phoneController, _messageController) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     String did = collectionReference.doc().id;
     print(did);
@@ -281,6 +271,7 @@ class CrudOperations {
       "task": _taskController.text.toString(),
       "startDate": Timestamp.fromDate(DateTime.now()),
       "endDate": _endDateController.text.toString(),
+      "message": _messageController.text.toString(),
       "priority": "E",
       "cat": "NEW",
       "status": "FRESH",
@@ -297,9 +288,9 @@ class CrudOperations {
       "success": 0,
       "CompanyDetails": [
         {
-          "contactperson": "",
-          "email": "",
-          "phone": "",
+          "contactperson": _nameController.text.toString(),
+          "email": _emailController.text.toString(),
+          "phone": _phoneController.text.toString(),
         }
       ],
       "Activity": [],
@@ -308,6 +299,10 @@ class CrudOperations {
     }).then((value) {
       _taskController.clear();
       _endDateController.clear();
+      _nameController.clear();
+      _emailController.clear();
+      _phoneController.clear();
+      _messageController.clear();
     });
   }
 
@@ -342,7 +337,7 @@ class StateUpdateServices {
         {
           "From": category,
           "To": "PROSPECT",
-          "Who": "Yalagala Srinivas",
+          "Who": username.toString(),
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
@@ -365,7 +360,7 @@ class StateUpdateServices {
         {
           "From": category,
           "To": "IN PROGRESS",
-          "Who": "Yalagala Srinivas",
+          "Who": username.toString(),
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
@@ -388,7 +383,7 @@ class StateUpdateServices {
         {
           "From": category,
           "To": "WON",
-          "Who": "Yalagala Srinivas",
+          "Who": username.toString(),
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
@@ -411,7 +406,7 @@ class StateUpdateServices {
         {
           "From": category,
           "To": "CLOSE",
-          "Who": "Yalagala Srinivas",
+          "Who": username.toString(),
           "When": Timestamp.now(),
           "Note": note.text.toString(),
           "LatDate": lastDate,
@@ -428,25 +423,15 @@ class StateUpdateServices {
 }
 
 class ComapnyUpdateServices {
-  static updateCompany(id, cl1, cl2, cl3, cl4, cl5) async {
+  static updateCompany(id, cl1, cl5) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "companyname": cl1.text.toString(),
       "website": cl5.text.toString(),
       "logo": "https://www.google.com/s2/favicons?sz=64&domain_url=" +
           cl5.text.toString(),
-      "CompanyDetails": [
-        {
-          "contactperson": cl2.text.toString(),
-          "email": cl3.text.toString(),
-          "phone": cl4.text.toString(),
-        }
-      ]
     }).then((value) {
       cl1.clear();
-      cl2.clear();
-      cl3.clear();
-      cl4.clear();
       cl5.clear();
     });
     print("update");
@@ -513,5 +498,42 @@ class GraphValueServices {
     } else {
       fail(id);
     }
+  }
+}
+
+class LeadServices {
+  static Color getcatClr(cat) {
+    if (cat == "NEW") {
+      return neClr;
+    } else if (cat == "PROSPECT") {
+      return prosClr;
+    } else if (cat == "IN PROGRESS") {
+      return ipClr;
+    } else if (cat == "WON") {
+      return wonClr;
+    } else {
+      return clsClr;
+    }
+  }
+}
+
+class AssignServices {
+  static assign(id, uid, img) async {
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    collectionReference.doc(id).update({
+      "Attachments": FieldValue.arrayUnion([
+        {
+          "uid": uid,
+          "uid1": img,
+        }
+      ]),
+    });
+  }
+
+  static remove(id, e) async {
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    collectionReference.doc(id).update({
+      "Attachments": FieldValue.arrayRemove([e]),
+    });
   }
 }

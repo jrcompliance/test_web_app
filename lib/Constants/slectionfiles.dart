@@ -11,9 +11,7 @@ class FileServices {
       Uint8List? fileBytes = result.files.first.bytes;
       String fileName = result.files.first.name;
       uploadStorage1(fileName, fileBytes, id);
-    } else {
-      print("select file");
-    }
+    } else {}
   }
 
   static uploadStorage1(fileName, fileBytes, id) async {

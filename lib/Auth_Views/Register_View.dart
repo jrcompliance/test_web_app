@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -16,7 +15,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   final TextEditingController emailController = TextEditingController();
@@ -249,21 +248,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         .then((cred) async {
       storeUserData();
       if (cred.user == null) {
-        print('Not loggedin');
       } else {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("email", emailController.text.toString());
         prefs.setString("password", passwordController.text.toString());
         prefs.setString("username", usernameController.text.toString());
         prefs.setString("phone", phonenumberController.text.toString());
-        print("loggedin");
       }
     });
   }
 
   Future<void> storeUserData() async {
     FirebaseStorage storage = FirebaseStorage.instance;
-    TaskSnapshot upload = await storage.ref('Profiles/').putData(logoBase64!);
+    TaskSnapshot upload =
+        await storage.ref('Profiles/$name').putData(logoBase64!);
     String myUrl = await upload.ref.getDownloadURL();
     String uid = _auth.currentUser!.uid.toString();
     await fireStore.collection("EmployeeData").doc(uid).set({
@@ -278,14 +276,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Uint8List? logoBase64;
+  String? name;
   chooseProfile() async {
     FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
     if (pickedfile != null) {
       Uint8List? fileBytes = pickedfile.files.first.bytes;
+      String fileName = pickedfile.files.first.name;
       logoBase64 = fileBytes;
+      name = fileName;
       setState(() {});
-    } else {
-      print("select file");
-    }
+    } else {}
   }
 }

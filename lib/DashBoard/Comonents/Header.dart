@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 class Header extends StatefulWidget {
@@ -16,36 +16,27 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  String? email;
-  String? imageUrl;
-  String? usersname;
-  String? phone;
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    userdetails();
-  }
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (Responsive.isMobile(context))
+        if (Responsive.isSmallScreen(context))
           IconButton(
             icon: Icon(Icons.menu),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
-        if (Responsive.isMobile(context))
+        if (Responsive.isLargeScreen(context))
           Text(
             widget.title,
             style: GoogleFonts.oswald(
                 color: txtColor, fontSize: 20, fontWeight: FontWeight.w400),
           ),
-        if (Responsive.isMobile(context))
-          Spacer(flex: Responsive.isMobile(context) ? 2 : 1),
+        Spacer(flex: Responsive.isSmallScreen(context) ? 1 : 2),
+        if (Responsive.isSmallScreen(context))
+          Spacer(flex: Responsive.isSmallScreen(context) ? 1 : 2),
         Expanded(
             child: Container(
           decoration: BoxDecoration(
@@ -94,25 +85,27 @@ class _HeaderState extends State<Header> {
           child: Row(
             children: [
               SizedBox(
-                height: 40,
-                width: 40,
-                child: imageUrl == ""
-                    ? Container()
-                    : ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        child: Image.network(
-                          "$imageUrl".toString(),
+                height: 50,
+                width: 50,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  child: imageUrl == null
+                      ? Text("")
+                      : Image.network(
+                          "$imageUrl",
                         ),
-                      ),
+                ),
               ),
-              if (!Responsive.isMobile(context))
+              if (!Responsive.isSmallScreen(context))
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: defaultPadding / 2),
-                  child: Text(
-                    "$usersname".toString(),
-                    style: TextStyle(color: txtColor),
-                  ),
+                  child: username == null
+                      ? Text("")
+                      : Text(
+                          "$username".toString(),
+                          style: TextStyle(color: txtColor),
+                        ),
                 ),
               Icon(Icons.keyboard_arrow_down),
             ],
@@ -120,22 +113,5 @@ class _HeaderState extends State<Header> {
         ),
       ],
     );
-  }
-
-  Future<void> userdetails() async {
-    await fireStore
-        .collection("EmployeeData")
-        .where("uid", isEqualTo: _auth.currentUser!.uid.toString())
-        .snapshots()
-        .listen((event) {
-      event.docs.forEach((element) {
-        //print(element.data());
-        usersname = element.data()["username"].toString();
-        email = element.data()["email"].toString();
-        phone = element.data()["phone"].toString();
-        imageUrl = element.data()["imageUrl"].toString();
-        setState(() {});
-      });
-    });
   }
 }
