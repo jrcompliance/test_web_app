@@ -4,11 +4,14 @@ import 'dart:ui';
 import 'package:animated_widgets/widgets/opacity_animated.dart';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:animated_widgets/widgets/translation_animated.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -16,6 +19,7 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/DashBoard/Comonents/Charts.dart';
@@ -28,6 +32,7 @@ class DashBoardBodyScreen extends StatefulWidget {
 
 class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _movekey = GlobalKey();
 
@@ -89,7 +94,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: Responsive.isMobile(context)
+      padding: Responsive.isSmallScreen(context)
           ? const EdgeInsets.all(10.0)
           : const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
       child: Container(
@@ -113,7 +118,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         });
                       }),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
@@ -122,13 +127,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         style: TxtStls.stl1,
                       ),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
                       InkWell(
                         child: SizedBox(
-                          width: Responsive.isMobile(context)
+                          width: Responsive.isSmallScreen(context)
                               ? width * 0.2
                               : width * 0.2,
                           child: Row(
@@ -167,7 +172,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         bottomRight: Radius.circular(10.0)),
                                     border: Border.all(color: Colors.grey)),
                                 child: StreamBuilder(
-                                  stream: QueryServices.newqry.snapshots(),
+                                  stream: _fireStore
+                                      .collection("Tasks")
+                                      .where("Attachments", arrayContains: {
+                                        "uid":
+                                            _auth.currentUser!.uid.toString(),
+                                        "uid1": imageUrl.toString(),
+                                      })
+                                      .where("cat", isEqualTo: "NEW")
+                                      .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData) {
@@ -200,6 +213,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 .data!.docs[index]["status"];
                                             String newres = snapshot
                                                 .data!.docs[index]["status"];
+                                            List cert = snapshot.data!
+                                                .docs[index]["Attachments"];
 
                                             return Row(
                                               children: [
@@ -218,19 +233,19 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 Container(
                                                   alignment: Alignment.center,
                                                   width: width * 0.09,
-                                                  child: CircleAvatar(
-                                                    maxRadius: 15,
-                                                    backgroundColor:
-                                                        Colors.orange,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.person_add_alt_1,
-                                                        size: 15,
-                                                      ),
-                                                      onPressed: () {},
-                                                      tooltip: "ASSIGNEE TO",
-                                                    ),
-                                                  ),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: cert
+                                                          .map(
+                                                            (e) => CircleAvatar(
+                                                              backgroundImage:
+                                                                  CachedNetworkImageProvider(
+                                                                      e["uid1"]),
+                                                            ),
+                                                          )
+                                                          .toList()),
                                                 ),
                                                 //end Date of task here...
                                                 snapshot.data!.docs[index]
@@ -314,7 +329,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 // task priority flag here....
                                                 snapshot.data!.docs[index]
                                                             ["priority"] ==
-                                                        ""
+                                                        null
                                                     ? Container(
                                                         alignment:
                                                             Alignment.center,
@@ -704,10 +719,27 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 .data!
                                                                 .docs[index]
                                                             ["logo"];
-                                                        String website =
-                                                            snapshot.data!
+                                                        String cname = snapshot
+                                                                    .data!
                                                                     .docs[index]
-                                                                ["website"];
+                                                                [
+                                                                "CompanyDetails"]
+                                                            [
+                                                            0]["contactperson"];
+                                                        String cemail = snapshot
+                                                                    .data!
+                                                                    .docs[index]
+                                                                [
+                                                                "CompanyDetails"]
+                                                            [0]["email"];
+
+                                                        String cphone = snapshot
+                                                                    .data!
+                                                                    .docs[index]
+                                                                [
+                                                                "CompanyDetails"]
+                                                            [0]["phone"];
+
                                                         enddate == ""
                                                             ? Scaffold.of(
                                                                     context)
@@ -737,7 +769,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 lastseen,
                                                                 cli,
                                                                 logo,
-                                                                company);
+                                                                company,
+                                                                cname,
+                                                                cemail,
+                                                                cphone);
                                                       }
                                                     },
                                                     icon: Icon(
@@ -821,7 +856,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                           ),
                         )
                       : deco(tap1, newlength),
-
                   // Prospect Category
                   Row(
                     children: [
@@ -830,7 +864,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         setState(() {});
                       }),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
@@ -856,7 +890,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         bottomRight: Radius.circular(10.0)),
                                     border: Border.all(color: Colors.grey)),
                                 child: StreamBuilder(
-                                  stream: QueryServices.prosqry.snapshots(),
+                                  stream: _fireStore
+                                      .collection("Tasks")
+                                      .where("Attachments", arrayContains: {
+                                        "uid":
+                                            _auth.currentUser!.uid.toString(),
+                                        "uid1": imageUrl.toString(),
+                                      })
+                                      .where("cat", isEqualTo: "PROSPECT")
+                                      .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
@@ -883,6 +925,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               .data!.docs[index]["status1"];
                                           String prores = snapshot
                                               .data!.docs[index]["status1"];
+                                          List cert = snapshot.data!.docs[index]
+                                              ["Attachments"];
                                           return Row(
                                             children: [
                                               // Task name here...
@@ -934,9 +978,19 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
-                                                  String website = snapshot
-                                                      .data!
-                                                      .docs[index]["website"];
+                                                  String cname =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["contactperson"];
+                                                  String cemail =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["email"];
+
+                                                  String cphone =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["phone"];
 
                                                   descBox(
                                                       context,
@@ -954,26 +1008,29 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       lastseen,
                                                       cli,
                                                       logo,
-                                                      company);
+                                                      company,
+                                                      cname,
+                                                      cemail,
+                                                      cphone);
                                                 },
                                               ),
                                               // Task assignee here...
                                               Container(
                                                 alignment: Alignment.center,
                                                 width: width * 0.09,
-                                                child: CircleAvatar(
-                                                  maxRadius: 15,
-                                                  backgroundColor:
-                                                      Colors.orange,
-                                                  child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.person_add_alt_1,
-                                                      size: 15,
-                                                    ),
-                                                    onPressed: () {},
-                                                    tooltip: "ASSIGNEE TO",
-                                                  ),
-                                                ),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: cert
+                                                        .map(
+                                                          (e) => CircleAvatar(
+                                                            backgroundImage:
+                                                                CachedNetworkImageProvider(
+                                                                    e["uid1"]),
+                                                          ),
+                                                        )
+                                                        .toList()),
                                               ),
                                               //end Date of task here...
                                               snapshot.data!.docs[index]
@@ -1461,7 +1518,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                           ),
                         )
                       : deco(tap2, prospectlength),
-
                   // In Progress Category
                   Row(
                     children: [
@@ -1470,7 +1526,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         setState(() {});
                       }),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
@@ -1496,7 +1552,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         bottomRight: Radius.circular(10.0)),
                                     border: Border.all(color: Colors.grey)),
                                 child: StreamBuilder(
-                                  stream: QueryServices.inpro.snapshots(),
+                                  stream: _fireStore
+                                      .collection("Tasks")
+                                      .where("Attachments", arrayContains: {
+                                        "uid":
+                                            _auth.currentUser!.uid.toString(),
+                                        "uid1": imageUrl.toString(),
+                                      })
+                                      .where("cat", isEqualTo: "IN PROGRESS")
+                                      .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
@@ -1573,27 +1637,24 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
-                                                  String website = snapshot
-                                                      .data!
-                                                      .docs[index]["website"];
 
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company);
+                                                  // descBox(
+                                                  //     context,
+                                                  //     taskname,
+                                                  //     create,
+                                                  //     enddate,
+                                                  //     flagres,
+                                                  //     id,
+                                                  //     catstat,
+                                                  //     scatstat,
+                                                  //     mainclr,
+                                                  //     clrRes,
+                                                  //     s,
+                                                  //     f,
+                                                  //     lastseen,
+                                                  //     cli,
+                                                  //     logo,
+                                                  //     company);
                                                 },
                                               ),
                                               // Task assignee here...
@@ -2107,9 +2168,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                           ),
                         )
                       : deco(tap3, inprogresslength),
-
                   // Won Category
-
                   Row(
                     children: [
                       tBtn(tap5, "WON", wonClr, () {
@@ -2117,7 +2176,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         setState(() {});
                       }),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
@@ -2143,7 +2202,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         bottomRight: Radius.circular(10.0)),
                                     border: Border.all(color: Colors.grey)),
                                 child: StreamBuilder(
-                                  stream: QueryServices.wonqry.snapshots(),
+                                  stream: _fireStore
+                                      .collection("Tasks")
+                                      .where("Attachments", arrayContains: {
+                                        "uid":
+                                            _auth.currentUser!.uid.toString(),
+                                        "uid1": imageUrl.toString(),
+                                      })
+                                      .where("cat", isEqualTo: "WON")
+                                      .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
@@ -2212,23 +2279,23 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
 
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company);
+                                                  // descBox(
+                                                  //     context,
+                                                  //     taskname,
+                                                  //     create,
+                                                  //     enddate,
+                                                  //     flagres,
+                                                  //     id,
+                                                  //     catstat,
+                                                  //     scatstat,
+                                                  //     mainclr,
+                                                  //     clrRes,
+                                                  //     s,
+                                                  //     f,
+                                                  //     lastseen,
+                                                  //     cli,
+                                                  //     logo,
+                                                  //     company);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -2750,7 +2817,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                           ),
                         )
                       : deco(tap5, wonlength),
-
                   // Close Category
                   Row(
                     children: [
@@ -2759,7 +2825,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         setState(() {});
                       }),
                       SizedBox(
-                        width: Responsive.isMobile(context)
+                        width: Responsive.isSmallScreen(context)
                             ? width * 0.005
                             : width * 0.005,
                       ),
@@ -2785,7 +2851,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         bottomRight: Radius.circular(10.0)),
                                     border: Border.all(color: Colors.grey)),
                                 child: StreamBuilder(
-                                  stream: QueryServices.clsqry.snapshots(),
+                                  stream: _fireStore
+                                      .collection("Tasks")
+                                      .where("Attachments", arrayContains: {
+                                        "uid":
+                                            _auth.currentUser!.uid.toString(),
+                                        "uid1": imageUrl.toString(),
+                                      })
+                                      .where("cat", isEqualTo: "CLOSE")
+                                      .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData ||
@@ -2850,23 +2924,23 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   String company =
                                                       snapshot.data!.docs[index]
                                                           ["companyname"];
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company);
+                                                  // descBox(
+                                                  //     context,
+                                                  //     taskname,
+                                                  //     create,
+                                                  //     enddate,
+                                                  //     flagres,
+                                                  //     id,
+                                                  //     catstat,
+                                                  //     scatstat,
+                                                  //     mainclr,
+                                                  //     clrRes,
+                                                  //     s,
+                                                  //     f,
+                                                  //     lastseen,
+                                                  //     cli,
+                                                  //     logo,
+                                                  //     company);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -3446,7 +3520,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       Timestamp lastseen,
       cli,
       logo,
-      company) {
+      company,
+      cname,
+      cemail,
+      cphone) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // ignore: undefined_prefixed_name
@@ -3761,13 +3838,11 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                               eble1 = !eble1;
                                                               eble2 = !eble2;
                                                               eble3 = !eble3;
-                                                              ComapnyUpdateServices.updateCompany(
-                                                                  id,
-                                                                  _comnameController,
-                                                                  _conpersonController,
-                                                                  _commailController,
-                                                                  _comphoController,
-                                                                  _comwebController);
+                                                              ComapnyUpdateServices
+                                                                  .updateCompany(
+                                                                      id,
+                                                                      _comnameController,
+                                                                      _comwebController);
                                                             }
                                                             cli.length <= 0
                                                                 ? certficateBox(
@@ -3934,48 +4009,58 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                     height: 40,
                                                     width: 1,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                          width: width * 0.18,
-                                                          height: height * 0.05,
-                                                          child: eble1
-                                                              ? form(
-                                                                  _conpersonController,
-                                                                  (value) {
-                                                                  return value!
-                                                                          .isEmpty
-                                                                      ? "Enter Contact Person Name"
-                                                                      : null;
-                                                                }, eble1)
-                                                              : Text(_conpersonController
-                                                                  .text
-                                                                  .toString()),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              eble1 = !eble1;
-                                                              setState(() {});
-                                                            },
-                                                            icon: Icon(
-                                                              eble1
-                                                                  ? Icons.check
-                                                                  : Icons.edit,
-                                                              size: 15,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  cname == ""
+                                                      ? Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 8.0,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: width *
+                                                                    0.18,
+                                                                height: height *
+                                                                    0.05,
+                                                                child: eble1
+                                                                    ? form(
+                                                                        _conpersonController,
+                                                                        (value) {
+                                                                        return value!.isEmpty
+                                                                            ? "Enter Contact Person Name"
+                                                                            : null;
+                                                                      }, eble1)
+                                                                    : Text(_conpersonController
+                                                                        .text
+                                                                        .toString()),
+                                                              ),
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    eble1 =
+                                                                        !eble1;
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  icon: Icon(
+                                                                    eble1
+                                                                        ? Icons
+                                                                            .check
+                                                                        : Icons
+                                                                            .edit,
+                                                                    size: 15,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Center(
+                                                          child: Text(cname
+                                                              .toString())),
                                                 ],
                                               ),
                                               alignment: Alignment.centerLeft,
@@ -3998,48 +4083,58 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                     height: 40,
                                                     width: 1,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                          width: width * 0.18,
-                                                          height: height * 0.05,
-                                                          child: eble2
-                                                              ? form(
-                                                                  _commailController,
-                                                                  (value) {
-                                                                  return value!
-                                                                          .isEmpty
-                                                                      ? "Enter a valid email"
-                                                                      : null;
-                                                                }, eble2)
-                                                              : Text(_commailController
-                                                                  .text
-                                                                  .toString()),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              eble2 = !eble2;
-                                                              setState(() {});
-                                                            },
-                                                            icon: Icon(
-                                                              eble2
-                                                                  ? Icons.check
-                                                                  : Icons.edit,
-                                                              size: 15,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  cemail == ""
+                                                      ? Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 8.0,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: width *
+                                                                    0.18,
+                                                                height: height *
+                                                                    0.05,
+                                                                child: eble2
+                                                                    ? form(
+                                                                        _commailController,
+                                                                        (value) {
+                                                                        return value!.isEmpty
+                                                                            ? "Enter a valid email"
+                                                                            : null;
+                                                                      }, eble2)
+                                                                    : Text(_commailController
+                                                                        .text
+                                                                        .toString()),
+                                                              ),
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    eble2 =
+                                                                        !eble2;
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  icon: Icon(
+                                                                    eble2
+                                                                        ? Icons
+                                                                            .check
+                                                                        : Icons
+                                                                            .edit,
+                                                                    size: 15,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Center(
+                                                          child: Text(cemail
+                                                              .toString())),
                                                 ],
                                               ),
                                               alignment: Alignment.centerLeft,
@@ -4062,50 +4157,57 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                     height: 40,
                                                     width: 1,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                          width: width * 0.18,
-                                                          height: height * 0.05,
-                                                          child: eble3
-                                                              ? form(
-                                                                  _comphoController,
-                                                                  (value) {
-                                                                  return value!
-                                                                          .isEmpty
-                                                                      ? "Enter a valid PhoneNumber"
-                                                                      : null;
-                                                                }, eble3)
-                                                              : Text(_comphoController
-                                                                  .text
-                                                                  .toString()),
-                                                        ),
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              eble3 = !eble3;
-                                                              setState(
-                                                                () {},
-                                                              );
-                                                            },
-                                                            icon: Icon(
-                                                              eble3
-                                                                  ? Icons.check
-                                                                  : Icons.edit,
-                                                              size: 15,
-                                                              color:
-                                                                  Colors.grey,
-                                                            )),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  cphone == ""
+                                                      ? Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 8.0,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: width *
+                                                                    0.18,
+                                                                height: height *
+                                                                    0.05,
+                                                                child: eble3
+                                                                    ? form(
+                                                                        _comphoController,
+                                                                        (value) {
+                                                                        return value!.isEmpty
+                                                                            ? "Enter a valid PhoneNumber"
+                                                                            : null;
+                                                                      }, eble3)
+                                                                    : Text(_comphoController
+                                                                        .text
+                                                                        .toString()),
+                                                              ),
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    eble3 =
+                                                                        !eble3;
+                                                                    setState(
+                                                                      () {},
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(
+                                                                    eble3
+                                                                        ? Icons
+                                                                            .check
+                                                                        : Icons
+                                                                            .edit,
+                                                                    size: 15,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Text(cphone),
                                                 ],
                                               ),
                                               alignment: Alignment.centerLeft,
@@ -4325,19 +4427,41 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft,
-                                                                      child: Text("Phone : " +
-                                                                          contactlist[i]
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.call,
+                                                                            color:
+                                                                                bgColor,
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: 20),
+                                                                          Text(contactlist[i]
                                                                               [
-                                                                              "phone"]),
+                                                                              "phone"])
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                     Align(
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft,
-                                                                      child: Text("Email : " +
-                                                                          contactlist[i]
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.email,
+                                                                            color:
+                                                                                bgColor,
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: 20),
+                                                                          Text(contactlist[i]
                                                                               [
-                                                                              "email"]),
+                                                                              "email"])
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ]),
                                                             ),
@@ -4348,11 +4472,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                               color: bgColor,
                                                             ),
                                                             onPressed: () {
-                                                              ComapnyUpdateServices
-                                                                  .removeContact(
-                                                                      id,
-                                                                      contactlist[
-                                                                          i]);
+                                                              _showMyDialog(
+                                                                  id,
+                                                                  contactlist[
+                                                                      i]);
                                                             },
                                                           ),
                                                           IconButton(
@@ -4872,7 +4995,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           stream: FirebaseFirestore.instance
                                               .collection("Tasks")
                                               .where("id", isEqualTo: id)
-                                              .where("")
                                               .snapshots(),
                                           builder: (BuildContext context,
                                               AsyncSnapshot<QuerySnapshot>
@@ -4922,244 +5044,205 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                   'dd-MMM-yy')
                                                               .format(dt1);
 
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(16.0),
-                                                        child: Card(
-                                                          color: txtColor,
-                                                          elevation: 5.0,
-                                                          child: Container(
+                                                      return Column(
+                                                        children: [
+                                                          Text(
+                                                            "First Message : " +
+                                                                snapshot.data!
+                                                                            .docs[
+                                                                        index]
+                                                                    ["message"],
+                                                          ),
+                                                          Padding(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    5.0),
-                                                            child: Column(
-                                                              children: [
-                                                                Row(
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        16.0),
+                                                            child: Card(
+                                                              color: txtColor,
+                                                              elevation: 10.0,
+                                                              child: Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            5.0),
+                                                                child: Column(
                                                                   children: [
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
+                                                                    Row(
                                                                       children: [
-                                                                        Container(
-                                                                            child:
-                                                                                Text(
-                                                                          "MoveDate : " +
-                                                                              date,
-                                                                          style:
-                                                                              TextStyle(fontSize: 15),
-                                                                        )),
-                                                                        Container(
-                                                                            child:
-                                                                                Text(
-                                                                          "Time : " +
-                                                                              time,
-                                                                          style:
-                                                                              TextStyle(fontSize: 12.5),
-                                                                        )),
-                                                                      ],
-                                                                    ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            60),
-                                                                    Container(
-                                                                      color: Color(
-                                                                          0xFFE0E0E0),
-                                                                      height:
-                                                                          40,
-                                                                      width:
-                                                                          1.5,
-                                                                    ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            60),
-                                                                    Container(
-                                                                        alignment:
-                                                                            Alignment
-                                                                                .centerLeft,
-                                                                        child:
-                                                                            Text(
-                                                                          "EndDate : " +
-                                                                              lastDate,
-                                                                          style:
-                                                                              TextStyle(fontSize: 15),
-                                                                        )),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            60),
-                                                                    Container(
-                                                                      color: Color(
-                                                                          0xFFE0E0E0),
-                                                                      height:
-                                                                          40,
-                                                                      width:
-                                                                          1.5,
-                                                                    ),
-                                                                    SizedBox(
-                                                                        width:
-                                                                            60),
-                                                                    Container(
-                                                                        alignment:
-                                                                            Alignment
-                                                                                .centerRight,
-                                                                        height:
-                                                                            40,
-                                                                        width:
-                                                                            100,
-                                                                        child: lr[index]["Yes"] ==
-                                                                                true
-                                                                            ? Lottie.asset("assets/Lotties/success.json")
-                                                                            : Lottie.asset("assets/Lotties/fail.json"))
-                                                                  ],
-                                                                ),
-                                                                Container(
-                                                                  height:
-                                                                      height *
-                                                                          0.001,
-                                                                  width: width *
-                                                                      0.45,
-                                                                  color: Color(
-                                                                      0xFFE0E0E0),
-                                                                ),
-                                                                Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .centerLeft,
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              width * 0.1,
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                          child:
-                                                                              Text(
-                                                                            lr[index]["Who"],
-                                                                          ),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Container(
+                                                                                child: Text(
+                                                                              "MoveDate : " + date,
+                                                                              style: TextStyle(fontSize: 15),
+                                                                            )),
+                                                                            Container(
+                                                                                child: Text(
+                                                                              "Time : " + time,
+                                                                              style: TextStyle(fontSize: 12.5),
+                                                                            )),
+                                                                          ],
                                                                         ),
-                                                                        Text(
-                                                                            "FROM : "),
-                                                                        Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.all(8.0),
-                                                                          child:
-                                                                              Container(
-                                                                            alignment:
-                                                                                Alignment.center,
+                                                                        SizedBox(
                                                                             width:
-                                                                                width * 0.12,
-                                                                            child:
-                                                                                Text(lr[index]["From"], style: TxtStls.stl1),
-                                                                            color:
-                                                                                FlagService.stateClr(statecolor),
-                                                                          ),
-                                                                        ),
-                                                                        Text(
-                                                                            "TO : "),
-                                                                        Container(
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          width:
-                                                                              width * 0.12,
-                                                                          child: Text(
-                                                                              lr[index]["To"],
-                                                                              style: TxtStls.stl1),
-                                                                          color:
-                                                                              FlagService.stateClr1(statecolor1),
-                                                                        )
-                                                                      ],
-                                                                    )),
-                                                                Container(
-                                                                  height:
-                                                                      height *
-                                                                          0.001,
-                                                                  width: width *
-                                                                      0.45,
-                                                                  color: Color(
-                                                                      0xFFE0E0E0),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Container(
-                                                                    child: Row(
-                                                                        children: [
-                                                                      Container(
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                10.0,
-                                                                            vertical:
-                                                                                2.0),
-                                                                        color: lr[index]["Bound"] ==
-                                                                                "InBound"
-                                                                            ? goodClr
-                                                                            : avgClr,
-                                                                        child:
-                                                                            Text(
-                                                                          lr[index]
-                                                                              [
-                                                                              "Bound"],
-                                                                          style:
-                                                                              TxtStls.stl1,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              50),
-                                                                      Container(
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                10.0,
-                                                                            vertical:
-                                                                                2.0),
-                                                                        color: Colors
-                                                                            .orange,
-                                                                        child: Text(
-                                                                            lr[index][
-                                                                                "Action"],
-                                                                            style:
-                                                                                TxtStls.stl1),
-                                                                      ),
-                                                                    ])),
-                                                                Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .centerLeft,
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              width * 0.05,
-                                                                          child:
-                                                                              Text("Note"),
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                        ),
+                                                                                60),
                                                                         Container(
                                                                           color:
                                                                               Color(0xFFE0E0E0),
                                                                           height:
                                                                               40,
                                                                           width:
-                                                                              1,
+                                                                              1.5,
                                                                         ),
+                                                                        SizedBox(
+                                                                            width:
+                                                                                60),
+                                                                        Container(
+                                                                            alignment:
+                                                                                Alignment.centerLeft,
+                                                                            child: Text(
+                                                                              "EndDate : " + lastDate,
+                                                                              style: TextStyle(fontSize: 15),
+                                                                            )),
+                                                                        SizedBox(
+                                                                            width:
+                                                                                60),
+                                                                        Container(
+                                                                          color:
+                                                                              Color(0xFFE0E0E0),
+                                                                          height:
+                                                                              40,
+                                                                          width:
+                                                                              1.5,
+                                                                        ),
+                                                                        SizedBox(
+                                                                            width:
+                                                                                60),
                                                                         Container(
                                                                             alignment: Alignment
-                                                                                .centerLeft,
-                                                                            padding: EdgeInsets.all(
-                                                                                10.0),
+                                                                                .centerRight,
                                                                             height:
+                                                                                40,
+                                                                            width:
                                                                                 100,
-                                                                            width: width *
-                                                                                0.35,
-                                                                            child:
-                                                                                Text(lr[index]["Note"]))
+                                                                            child: lr[index]["Yes"] == true
+                                                                                ? Lottie.asset("assets/Lotties/success.json")
+                                                                                : Lottie.asset("assets/Lotties/fail.json"))
                                                                       ],
-                                                                    )),
-                                                              ],
+                                                                    ),
+                                                                    Container(
+                                                                      height: height *
+                                                                          0.001,
+                                                                      width: width *
+                                                                          0.45,
+                                                                      color: Color(
+                                                                          0xFFE0E0E0),
+                                                                    ),
+                                                                    Container(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .centerLeft,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              width: width * 0.1,
+                                                                              alignment: Alignment.centerLeft,
+                                                                              child: Text(
+                                                                                lr[index]["Who"],
+                                                                              ),
+                                                                            ),
+                                                                            Text("FROM : "),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                width: width * 0.12,
+                                                                                child: Text(lr[index]["From"], style: TxtStls.stl1),
+                                                                                color: FlagService.stateClr(statecolor),
+                                                                              ),
+                                                                            ),
+                                                                            Text("TO : "),
+                                                                            Container(
+                                                                              alignment: Alignment.center,
+                                                                              width: width * 0.12,
+                                                                              child: Text(lr[index]["To"], style: TxtStls.stl1),
+                                                                              color: FlagService.stateClr1(statecolor1),
+                                                                            )
+                                                                          ],
+                                                                        )),
+                                                                    Container(
+                                                                      height: height *
+                                                                          0.001,
+                                                                      width: width *
+                                                                          0.45,
+                                                                      color: Color(
+                                                                          0xFFE0E0E0),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height:
+                                                                            10),
+                                                                    Container(
+                                                                        child: Row(
+                                                                            children: [
+                                                                          Container(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+                                                                            color: lr[index]["Bound"] == "InBound"
+                                                                                ? goodClr
+                                                                                : avgClr,
+                                                                            child:
+                                                                                Text(
+                                                                              lr[index]["Bound"],
+                                                                              style: TxtStls.stl1,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: 50),
+                                                                          Container(
+                                                                            padding:
+                                                                                EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+                                                                            color:
+                                                                                Colors.orange,
+                                                                            child:
+                                                                                Text(lr[index]["Action"], style: TxtStls.stl1),
+                                                                          ),
+                                                                        ])),
+                                                                    Container(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .centerLeft,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              width: width * 0.05,
+                                                                              child: Text("Note"),
+                                                                              alignment: Alignment.centerLeft,
+                                                                            ),
+                                                                            Container(
+                                                                              color: Color(0xFFE0E0E0),
+                                                                              height: 40,
+                                                                              width: 1,
+                                                                            ),
+                                                                            Container(
+                                                                                alignment: Alignment.centerLeft,
+                                                                                padding: EdgeInsets.all(10.0),
+                                                                                height: 100,
+                                                                                width: width * 0.35,
+                                                                                child: Text(lr[index]["Note"]))
+                                                                          ],
+                                                                        )),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        ],
                                                       );
                                                     },
                                                   );
@@ -5838,7 +5921,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Container(
-      padding: Responsive.isMobile(context)
+      padding: Responsive.isSmallScreen(context)
           ? const EdgeInsets.symmetric(horizontal: 15)
           : const EdgeInsets.symmetric(horizontal: 20),
       color: Colors.grey,
@@ -5965,7 +6048,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return SizedBox(
-            width: Responsive.isMobile(context) ? width * 0.16 : width * 0.16,
+            width:
+                Responsive.isSmallScreen(context) ? width * 0.16 : width * 0.16,
             child: Form(
               key: _formKey,
               child: Column(
@@ -6060,8 +6144,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Navigator.pop(context);
-                        CrudOperations.uploadTask(
-                            _taskController, _endDateController);
                       }
                     },
                   )
@@ -6218,5 +6300,41 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
         builder: (_) {
           return alertDialog;
         });
+  }
+
+  Future<void> _showMyDialog(id, element) async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: txtColor,
+          title: const Text('Are you sure to Delete ?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Once you delete can not retrive it!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                ComapnyUpdateServices.removeContact(id, element);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
