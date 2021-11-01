@@ -89,6 +89,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   int wonlength = 0;
   int closelength = 0;
 
+  List<bool> _isHover = [false, false, false, false, false, false];
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -241,7 +243,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           .map(
                                                             (e) => CircleAvatar(
                                                               backgroundImage:
-                                                                  CachedNetworkImageProvider(
+                                                                  NetworkImage(
                                                                       e["uid1"]),
                                                             ),
                                                           )
@@ -772,7 +774,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 company,
                                                                 cname,
                                                                 cemail,
-                                                                cphone);
+                                                                cphone,
+                                                                cert);
                                                       }
                                                     },
                                                     icon: Icon(
@@ -1011,7 +1014,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       company,
                                                       cname,
                                                       cemail,
-                                                      cphone);
+                                                      cphone,
+                                                      cert);
                                                 },
                                               ),
                                               // Task assignee here...
@@ -1026,7 +1030,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                         .map(
                                                           (e) => CircleAvatar(
                                                             backgroundImage:
-                                                                CachedNetworkImageProvider(
+                                                                NetworkImage(
                                                                     e["uid1"]),
                                                           ),
                                                         )
@@ -1587,6 +1591,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               .data!.docs[index]["status2"];
                                           String inres = snapshot
                                               .data!.docs[index]["status2"];
+                                          List cert = snapshot.data!.docs[index]
+                                              ["Attachments"];
                                           return Row(
                                             children: [
                                               // Task name here...
@@ -1637,44 +1643,65 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
+                                                  String cname =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["contactperson"];
+                                                  String cemail =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["email"];
 
-                                                  // descBox(
-                                                  //     context,
-                                                  //     taskname,
-                                                  //     create,
-                                                  //     enddate,
-                                                  //     flagres,
-                                                  //     id,
-                                                  //     catstat,
-                                                  //     scatstat,
-                                                  //     mainclr,
-                                                  //     clrRes,
-                                                  //     s,
-                                                  //     f,
-                                                  //     lastseen,
-                                                  //     cli,
-                                                  //     logo,
-                                                  //     company);
+                                                  String cphone =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["phone"];
+                                                  List cert =
+                                                      snapshot.data!.docs[index]
+                                                          ["Attachments"];
+
+                                                  descBox(
+                                                      context,
+                                                      taskname,
+                                                      create,
+                                                      enddate,
+                                                      flagres,
+                                                      id,
+                                                      catstat,
+                                                      scatstat,
+                                                      mainclr,
+                                                      clrRes,
+                                                      s,
+                                                      f,
+                                                      lastseen,
+                                                      cli,
+                                                      logo,
+                                                      company,
+                                                      cname,
+                                                      cemail,
+                                                      cphone,
+                                                      cert);
                                                 },
                                               ),
                                               // Task assignee here...
                                               Container(
                                                 alignment: Alignment.center,
                                                 width: width * 0.09,
-                                                child: CircleAvatar(
-                                                  maxRadius: 15,
-                                                  backgroundColor:
-                                                      Colors.orange,
-                                                  child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.person_add_alt_1,
-                                                      size: 15,
-                                                    ),
-                                                    onPressed: () {},
-                                                    tooltip: "ASSIGNEE TO",
-                                                  ),
-                                                ),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: cert
+                                                        .map(
+                                                          (e) => CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    e["uid1"]),
+                                                          ),
+                                                        )
+                                                        .toList()),
                                               ),
+
                                               //end Date of task here...
                                               snapshot.data!.docs[index]
                                                           ["endDate"] ==
@@ -2237,6 +2264,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               .data!.docs[index]["status4"];
                                           String wonres = snapshot
                                               .data!.docs[index]["status4"];
+                                          List cert = snapshot.data!.docs[index]
+                                              ["Attachments"];
                                           return Row(
                                             children: [
                                               // Task name here...
@@ -2278,24 +2307,41 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           ["Certificates"];
                                                   String logo = snapshot.data!
                                                       .docs[index]["logo"];
+                                                  String cname =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["contactperson"];
+                                                  String cemail =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["email"];
 
-                                                  // descBox(
-                                                  //     context,
-                                                  //     taskname,
-                                                  //     create,
-                                                  //     enddate,
-                                                  //     flagres,
-                                                  //     id,
-                                                  //     catstat,
-                                                  //     scatstat,
-                                                  //     mainclr,
-                                                  //     clrRes,
-                                                  //     s,
-                                                  //     f,
-                                                  //     lastseen,
-                                                  //     cli,
-                                                  //     logo,
-                                                  //     company);
+                                                  String cphone =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["phone"];
+
+                                                  descBox(
+                                                      context,
+                                                      taskname,
+                                                      create,
+                                                      enddate,
+                                                      flagres,
+                                                      id,
+                                                      catstat,
+                                                      scatstat,
+                                                      mainclr,
+                                                      clrRes,
+                                                      s,
+                                                      f,
+                                                      lastseen,
+                                                      cli,
+                                                      logo,
+                                                      company,
+                                                      cname,
+                                                      cemail,
+                                                      cphone,
+                                                      cert);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -2312,19 +2358,19 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               Container(
                                                 alignment: Alignment.center,
                                                 width: width * 0.09,
-                                                child: CircleAvatar(
-                                                  maxRadius: 15,
-                                                  backgroundColor:
-                                                      Colors.orange,
-                                                  child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.person_add_alt_1,
-                                                      size: 15,
-                                                    ),
-                                                    onPressed: () {},
-                                                    tooltip: "ASSIGNEE TO",
-                                                  ),
-                                                ),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: cert
+                                                        .map(
+                                                          (e) => CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    e["uid1"]),
+                                                          ),
+                                                        )
+                                                        .toList()),
                                               ),
                                               //end Date of task here...
                                               snapshot.data!.docs[index]
@@ -2886,6 +2932,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               .data!.docs[index]["status5"];
                                           String clres = snapshot
                                               .data!.docs[index]["status5"];
+                                          List cert = snapshot.data!.docs[index]
+                                              ["Attachments"];
                                           return Row(
                                             children: [
                                               // Task name here...
@@ -2924,23 +2972,41 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   String company =
                                                       snapshot.data!.docs[index]
                                                           ["companyname"];
-                                                  // descBox(
-                                                  //     context,
-                                                  //     taskname,
-                                                  //     create,
-                                                  //     enddate,
-                                                  //     flagres,
-                                                  //     id,
-                                                  //     catstat,
-                                                  //     scatstat,
-                                                  //     mainclr,
-                                                  //     clrRes,
-                                                  //     s,
-                                                  //     f,
-                                                  //     lastseen,
-                                                  //     cli,
-                                                  //     logo,
-                                                  //     company);
+                                                  String cname =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["contactperson"];
+                                                  String cemail =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["email"];
+
+                                                  String cphone =
+                                                      snapshot.data!.docs[index]
+                                                              ["CompanyDetails"]
+                                                          [0]["phone"];
+
+                                                  descBox(
+                                                      context,
+                                                      taskname,
+                                                      create,
+                                                      enddate,
+                                                      flagres,
+                                                      id,
+                                                      catstat,
+                                                      scatstat,
+                                                      mainclr,
+                                                      clrRes,
+                                                      s,
+                                                      f,
+                                                      lastseen,
+                                                      cli,
+                                                      logo,
+                                                      company,
+                                                      cname,
+                                                      cemail,
+                                                      cphone,
+                                                      cert);
                                                 },
                                                 child: Container(
                                                   alignment:
@@ -2957,19 +3023,19 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               Container(
                                                 alignment: Alignment.center,
                                                 width: width * 0.09,
-                                                child: CircleAvatar(
-                                                  maxRadius: 15,
-                                                  backgroundColor:
-                                                      Colors.orange,
-                                                  child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.person_add_alt_1,
-                                                      size: 15,
-                                                    ),
-                                                    onPressed: () {},
-                                                    tooltip: "ASSIGNEE TO",
-                                                  ),
-                                                ),
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: cert
+                                                        .map(
+                                                          (e) => CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    e["uid1"]),
+                                                          ),
+                                                        )
+                                                        .toList()),
                                               ),
                                               //end Date of task here...
                                               snapshot.data!.docs[index]
@@ -3523,7 +3589,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       company,
       cname,
       cemail,
-      cphone) {
+      cphone,
+      cert) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     // ignore: undefined_prefixed_name
@@ -3584,37 +3651,72 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                   ),
                   child: Row(
                     children: [
-                      Tooltip(
-                        message: "Lead Create Date",
-                        child: Container(
-                          padding: EdgeInsets.all(9),
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Lottie.asset("assets/Lotties/createdate.json"),
-                              Text(createDate),
-                            ],
+                      InkWell(
+                        child: Tooltip(
+                          message: "Create Date",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _isHover[0]
+                                    ? Lottie.asset(
+                                        "assets/Lotties/createdate.json")
+                                    : SizedBox(
+                                        width: 25,
+                                        height: 25,
+                                        child: Image.asset(
+                                          "assets/animal/calendar.png",
+                                          fit: BoxFit.fill,
+                                        )),
+                                Text(createDate),
+                              ],
+                            ),
                           ),
                         ),
+                        onHover: (value) {
+                          _isHover[0] = value;
+                          setState(() {});
+                        },
+                        onTap: () {},
                       ),
                       Container(
                         color: Color(0xFFEEEEEE),
                         height: 40,
                         width: 1,
                       ),
-                      Tooltip(
-                        message: "End Date",
-                        child: Container(
-                          padding: EdgeInsets.all(9),
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Lottie.asset("assets/Lotties/lastdate.json",
-                                  fit: BoxFit.fill),
-                              Text(deadline),
-                            ],
+                      InkWell(
+                        child: Tooltip(
+                          message: "End Date",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _isHover[1]
+                                    ? Lottie.asset(
+                                        "assets/Lotties/lastdate.json",
+                                        fit: BoxFit.fill)
+                                    : SizedBox(
+                                        width: 30,
+                                        height: 35,
+                                        child: Image.asset(
+                                          "assets/animal/announcement.png",
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                Text(deadline),
+                              ],
+                            ),
                           ),
                         ),
+                        onHover: (value) {
+                          _isHover[1] = value;
+                          setState(() {});
+                        },
+                        onTap: () {},
                       ),
                       Container(
                         color: Color(0xFFEEEEEE),
@@ -3636,78 +3738,148 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         height: 40,
                         width: 1,
                       ),
-                      Tooltip(
-                        message: "Last Seen",
-                        child: Container(
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Lottie.asset("assets/Lotties/lastseen.json"),
-                              Column(
-                                children: [
-                                  Text(lastview),
-                                  Text(
-                                    lastviewTime,
-                                    style: TextStyle(fontSize: 15),
-                                  )
-                                ],
-                              )
-                            ],
+                      InkWell(
+                        child: Tooltip(
+                          message: "Last Seen",
+                          child: Container(
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _isHover[2]
+                                    ? Lottie.asset(
+                                        "assets/Lotties/lastseen.json")
+                                    : SizedBox(
+                                        width: 50,
+                                        height: 50,
+                                        child: Image.asset(
+                                            "assets/animal/view.png",
+                                            fit: BoxFit.fill)),
+                                Column(
+                                  children: [
+                                    Text(lastview),
+                                    Text(
+                                      lastviewTime,
+                                      style: TextStyle(fontSize: 15),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
+                        onHover: (value) {
+                          _isHover[2] = value;
+                          setState(() {});
+                        },
+                        onTap: () {},
                       ),
                       Container(
                         color: Color(0xFFEEEEEE),
                         height: 70,
                         width: 1,
                       ),
-                      Tooltip(
-                        message: "Agent",
-                        child: Container(
-                          padding: EdgeInsets.all(9),
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Lottie.asset("assets/Lotties/agent.json"),
-                              Text("Await"),
-                            ],
+                      InkWell(
+                          child: Tooltip(
+                            message: "Agent",
+                            child: Container(
+                              padding: EdgeInsets.all(9),
+                              width: 200,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _isHover[3]
+                                      ? Lottie.asset(
+                                          "assets/Lotties/agent.json")
+                                      : SizedBox(
+                                          width: 35,
+                                          height: 35,
+                                          child: Image.asset(
+                                            "assets/animal/call-center-agent.png",
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      physics: ClampingScrollPhysics(),
+                                      itemCount: cert.length,
+                                      itemBuilder: (_, index) {
+                                        return ClipRRect(
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(30.0)),
+                                            child: SizedBox(
+                                                width: 30,
+                                                height: 30,
+                                                child: Image.network(
+                                                    cert[index]["uid1"])));
+                                      })
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                          onHover: (value) {
+                            _isHover[3] = value;
+                            setState(() {});
+                          },
+                          onTap: () {}),
                       Container(
                         color: Color(0xFFEEEEEE),
                         height: 40,
                         width: 1,
                       ),
-                      Tooltip(
-                        message: "Filters",
-                        child: Container(
-                          padding: EdgeInsets.all(9),
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Lottie.asset("assets/Lotties/filter.json"),
-                              Text("Await")
-                            ],
+                      InkWell(
+                          onTap: () {},
+                          child: Tooltip(
+                            message: "Filters",
+                            child: Container(
+                              padding: EdgeInsets.all(9),
+                              width: 200,
+                              child: Row(
+                                children: [
+                                  _isHover[4]
+                                      ? Lottie.asset(
+                                          "assets/Lotties/filter.json")
+                                      : Image.asset(
+                                          "assets/animal/setting.png"),
+                                  Text("Await")
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                          onHover: (value) {
+                            _isHover[4] = value;
+                            setState(() {});
+                          }),
                       Container(
                         color: Color(0xFFEEEEEE),
                         height: 40,
                         width: 1,
                       ),
-                      Tooltip(
-                        message: "Current Status",
-                        child: Container(
-                          padding: EdgeInsets.all(9),
-                          width: 125,
-                          height: 50,
-                          child: SizedBox(
-                            child: Lottie.asset("assets/Lotties/live.json",
-                                fit: BoxFit.fill),
+                      InkWell(
+                        onTap: () {},
+                        child: Tooltip(
+                          message: "Current Status",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 125,
+                            height: 50,
+                            child: SizedBox(
+                              child: _isHover[5]
+                                  ? Lottie.asset("assets/Lotties/live.json",
+                                      fit: BoxFit.fill)
+                                  : Image.asset(
+                                      "assets/animal/instagram-stories.png"),
+                            ),
                           ),
                         ),
+                        onHover: (value) {
+                          _isHover[5] = value;
+                          setState(() {});
+                        },
                       ),
                       Column(
                         children: [
@@ -4694,7 +4866,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                     .data!.docs[index]["id"];
                                                 return Wrap(
                                                   children: certificates
-                                                      .map((e) => cert(e, id))
+                                                      .map(
+                                                          (e) => service(e, id))
                                                       .toList(),
                                                 );
                                               },
@@ -5015,45 +5188,45 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 itemBuilder: (context, index) {
                                                   List lr = snapshot.data!
                                                       .docs[index]["Activity"];
-                                                  return ListView.builder(
-                                                    shrinkWrap: true,
-                                                    itemCount: lr.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      String statecolor =
-                                                          lr[index]["From"];
-                                                      String statecolor1 =
-                                                          lr[index]["To"];
-                                                      String date = DateFormat(
-                                                              'dd-MMMM-yy')
-                                                          .format(lr[index]
-                                                                  ["When"]
-                                                              .toDate());
-                                                      String time =
-                                                          DateFormat('hh:mm a')
+                                                  return Column(
+                                                    children: [
+                                                      Text(
+                                                        "First Message : " +
+                                                            snapshot.data!
+                                                                    .docs[index]
+                                                                ["message"],
+                                                      ),
+                                                      ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: lr.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          String statecolor =
+                                                              lr[index]["From"];
+                                                          String statecolor1 =
+                                                              lr[index]["To"];
+                                                          String date = DateFormat(
+                                                                  'dd-MMMM-yy')
                                                               .format(lr[index]
                                                                       ["When"]
                                                                   .toDate());
-                                                      DateTime dt1 =
-                                                          DateTime.parse(
-                                                              lr[index]
+                                                          String time = DateFormat(
+                                                                  'hh:mm a')
+                                                              .format(lr[index]
+                                                                      ["When"]
+                                                                  .toDate());
+                                                          DateTime dt1 =
+                                                              DateTime.parse(lr[
+                                                                      index]
                                                                   ["LatDate"]);
-                                                      String lastDate =
-                                                          DateFormat(
-                                                                  'dd-MMM-yy')
-                                                              .format(dt1);
+                                                          String lastDate =
+                                                              DateFormat(
+                                                                      'dd-MMM-yy')
+                                                                  .format(dt1);
 
-                                                      return Column(
-                                                        children: [
-                                                          Text(
-                                                            "First Message : " +
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["message"],
-                                                          ),
-                                                          Padding(
+                                                          return Padding(
                                                             padding:
                                                                 const EdgeInsets
                                                                         .symmetric(
@@ -5241,10 +5414,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
                                                   );
                                                 });
                                           }),
@@ -5331,7 +5504,20 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           ),
                                         ],
                                       ),
-                                      Text("NOTE :"),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("NOTE :"),
+                                            Icon(
+                                              Icons.format_bold,
+                                              color: bgColor,
+                                            ),
+                                            Icon(
+                                              Icons.format_italic,
+                                              color: bgColor,
+                                            ),
+                                          ]),
                                       SizedBox(height: 10),
                                       TextFormField(
                                           validator: (value) {
@@ -5832,7 +6018,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         snapshot.data!.docs[index]["id"];
                                     return Wrap(
                                       children: certificates
-                                          .map((e) => cert(e, id))
+                                          .map((e) => service(e, id))
                                           .toList(),
                                     );
                                   },
@@ -5998,7 +6184,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
     );
   }
 
-  Widget cert(e, id) {
+  Widget service(e, id) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
@@ -6025,17 +6211,6 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget atta(e, id) {
-    return InkWell(
-      child: GridTile(
-        child: Image.network(e),
-      ),
-      onTap: () {
-        //fileview(context, e);
-      },
     );
   }
 

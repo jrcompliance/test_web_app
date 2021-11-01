@@ -116,6 +116,12 @@ flutter:
     - assets/pdf_file.svg
     - assets/Logos/pdflogo.png
     - assets/build.png
+    - assets/animal/view.png
+    - assets/animal/setting.png
+    - assets/animal/instagram-stories.png
+    - assets/animal/call-center-agent.png
+    - assets/animal/calendar.png
+    - assets/animal/announcement.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

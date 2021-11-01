@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: bgColor),
         canvasColor: secondaryColor,
       ),
-      home: LandingScreen(),
+      home: CheckScreen(),
     );
   }
 }
@@ -64,43 +66,53 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 }
 
-class Check extends StatefulWidget {
-  const Check({Key? key}) : super(key: key);
+class CheckScreen extends StatefulWidget {
+  const CheckScreen({Key? key}) : super(key: key);
 
   @override
-  _CheckState createState() => _CheckState();
+  _CheckScreenState createState() => _CheckScreenState();
 }
 
-class _CheckState extends State<Check> {
+class _CheckScreenState extends State<CheckScreen> {
+  var _is;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("EmployeeData")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {}
-              return PopupMenuButton<String>(
-                itemBuilder: (context) => snapshot.data!.docs
-                    .map((item) => PopupMenuItem<String>(
-                        value: item["uid"],
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(item["imageUrl"]),
-                            ),
-                            Text(
-                              item["username"],
-                            ),
-                          ],
-                        )))
-                    .toList(),
-                onSelected: (value) {
-                  print(value);
-                },
-              );
-            }));
+      backgroundColor: txtColor,
+      body: Column(children: [
+        TextFormField(
+          style: TextStyle(fontStyle: check()),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.format_italic,
+            color: bgColor,
+          ),
+          onPressed: () {
+            _is = 1;
+            setState(() {});
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.format_bold,
+            color: bgColor,
+          ),
+          onPressed: () {
+            _is = 2;
+            setState(() {});
+          },
+        )
+      ]),
+    );
+  }
+
+  check() {
+    if (_is == 1) {
+      return FontStyle.italic;
+    } else if (_is == 2) {
+      return FontStyle.normal;
+    }
   }
 }
