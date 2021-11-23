@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: bgColor),
-        canvasColor: secondaryColor,
+        canvasColor: bgColor,
       ),
       home: LandingScreen(),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
+import 'package:test_web_app/Auth_Views/MyLogo.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
@@ -42,6 +43,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       drawer: SideDrawer(context),
       body: SafeArea(
         child: Row(
@@ -52,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: SideDrawer(context),
               ),
             Expanded(
-              flex: 5,
+              flex: 6,
               child: DashboardBody(context),
             ),
           ],
@@ -71,50 +73,48 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    await _auth.signOut().then((value) => Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false));
-  }
-
   Widget SideDrawer(BuildContext context) {
     return Drawer(
       child: ListView(
+        shrinkWrap: true,
         children: [
-          DrawerHeader(
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: ExactAssetImage('assets/Logos/jrlogo.jpeg'),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-          ),
+          Image.asset("assets/Logos/Controlifylogo.png"),
           DrawerListTile(
-              "DashBoard", "assets/menu_dashbord.svg", Tabs.DashBoard),
-          DrawerListTile("Leads", "assets/menu_task.svg", Tabs.Leads),
-          DrawerListTile("Notification", "assets/menu_notification.svg",
+              "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
+          DrawerListTile(
+              "Anylytics", "assets/Notations/Chart.png", Tabs.Analytics),
+          DrawerListTile(
+              "Invoice", "assets/Notations/Ticket.png", Tabs.Invoice),
+          DrawerListTile(
+              "Schedule", "assets/Notations/Document.png", Tabs.Schedule),
+          DrawerListTile(
+              "Calendar", "assets/Notations/Calendar.png", Tabs.Calendar),
+          DrawerListTile(
+              "Messages", "assets/Notations/Activity.png", Tabs.Messages),
+          DrawerListTile("Notification", "assets/Notations/Notification.png",
               Tabs.Notification),
-          DrawerListTile("Profile", "assets/menu_profile.svg", Tabs.Profile),
-          DrawerListTile("Settings", "assets/menu_setting.svg", Tabs.Settings),
+          DrawerListTile(
+              "Settings", "assets/Notations/Setting.png", Tabs.Settings),
         ],
       ),
     );
   }
 
-  DrawerListTile(title, svgPicture, tab) {
+  DrawerListTile(title, imageUrl, tab) {
     return ListTile(
-      title: Text(title, style: TextStyle(color: txtColor)),
-      leading: SvgPicture.asset(
-        svgPicture,
-        color: txtColor,
+      title: Responsive.isMediumScreen(context)
+          ? null
+          : Text(title, style: TxtStls.fieldtitlestyle),
+      leading: SizedBox(
+        child: Image.asset(imageUrl,
+            fit: BoxFit.fill, filterQuality: FilterQuality.high),
+        width: 20,
+        height: 20,
       ),
       onTap: () {
-        active = tab;
-        setState(() {});
+        setState(() {
+          active = tab;
+        });
       },
     );
   }
@@ -141,29 +141,33 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       );
-    }
-    if (active == Tabs.Leads) {
-      return Scrollbar(
-        controller: _mainScrollController,
-        isAlwaysShown: true,
-        showTrackOnHover: true,
-        hoverThickness: 10.0,
-        child: SafeArea(
-          child: ListView(
-            controller: _mainScrollController,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: ClampingScrollPhysics(),
-            children: [
-              Header(
-                title: "Leads",
-              ),
-              LeadScreen(),
-            ],
-          ),
-        ),
-      );
-    }
+    } else if (active == Tabs.Analytics) {
+    } else if (active == Tabs.Invoice) {
+    } else if (active == Tabs.Schedule) {
+    } else if (active == Tabs.Calendar) {
+    } else if (active == Tabs.Messages) {}
+    // if (active == Tabs.Leads) {
+    //   return Scrollbar(
+    //     controller: _mainScrollController,
+    //     isAlwaysShown: true,
+    //     showTrackOnHover: true,
+    //     hoverThickness: 10.0,
+    //     child: SafeArea(
+    //       child: ListView(
+    //         controller: _mainScrollController,
+    //         shrinkWrap: true,
+    //         scrollDirection: Axis.vertical,
+    //         physics: ClampingScrollPhysics(),
+    //         children: [
+    //           Header(
+    //             title: "Leads",
+    //           ),
+    //           LeadScreen(),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
     if (active == Tabs.Notification) {
       return SafeArea(
         child: Column(
@@ -179,21 +183,21 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     }
-    if (active == Tabs.Profile) {
-      return SafeArea(
-        child: Column(
-          children: [
-            Header(
-              title: "Profile",
-            ),
-            Text(
-              "Profile",
-              style: TextStyle(color: txtColor),
-            )
-          ],
-        ),
-      );
-    }
+    // if (active == Tabs.Profile) {
+    //   return SafeArea(
+    //     child: Column(
+    //       children: [
+    //         Header(
+    //           title: "Profile",
+    //         ),
+    //         Text(
+    //           "Profile",
+    //           style: TextStyle(color: txtColor),
+    //         )
+    //       ],
+    //     ),
+    //   );
+    // }
     return SafeArea(
       child: Column(
         children: [
@@ -446,6 +450,22 @@ class _MainScreenState extends State<MainScreen> {
           return alertDialog;
         });
   }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    await _auth.signOut().then((value) => Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false));
+  }
 }
 
-enum Tabs { DashBoard, Leads, Notification, Profile, Settings }
+enum Tabs {
+  DashBoard,
+  Analytics,
+  Invoice,
+  Schedule,
+  Calendar,
+  Messages,
+  Notification,
+  Settings
+}

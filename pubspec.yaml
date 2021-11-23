@@ -90,6 +90,17 @@ flutter:
 
     - assets/Lotties/registeredsucees.json
 
+
+    - assets/Notations/Category.png
+    - assets/Notations/Chart.png
+    - assets/Notations/Ticket.png
+    - assets/Notations/Document.png
+    - assets/Notations/Calendar.png
+    - assets/Notations/Activity.png
+    - assets/Notations/Notification.png
+    - assets/Notations/Setting.png
+
+
     - assets/menu_dashbord.svg
     - assets/menu_task.svg
     - assets/menu_doc.svg
@@ -119,7 +130,6 @@ flutter:
     - assets/Lotties/chillwork.json
     - assets/Lotties/normalwork.json
     - assets/Lotties/highworkpressure.json
-    - assets/Logos/circlelogo.png
     - assets/pdf_file.svg
     - assets/animal/view.png
     - assets/animal/setting.png
