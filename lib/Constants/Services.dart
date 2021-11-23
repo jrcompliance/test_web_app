@@ -501,22 +501,6 @@ class GraphValueServices {
   }
 }
 
-class LeadServices {
-  static Color getcatClr(cat) {
-    if (cat == "NEW") {
-      return neClr;
-    } else if (cat == "PROSPECT") {
-      return prosClr;
-    } else if (cat == "IN PROGRESS") {
-      return ipClr;
-    } else if (cat == "WON") {
-      return wonClr;
-    } else {
-      return clsClr;
-    }
-  }
-}
-
 class AssignServices {
   static assign(id, uid, img) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");

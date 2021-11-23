@@ -1,10 +1,50 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+
+const bgColor = Colors.white;
+const txtColor = Colors.black;
+const fieldColor = Color(0x8AEEEEEE);
+const btnColor = Color(0xFF5551F1);
+const bt = Colors.indigoAccent;
+
+const deco = BoxDecoration(
+  color: fieldColor,
+  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+);
+
+class TxtStls {
+  static const titlestyle = TextStyle(fontSize: 30, color: txtColor);
+  static const fieldtitlestyle =
+      TextStyle(fontSize: 13, color: txtColor, fontWeight: FontWeight.bold);
+  static const fieldtitlestyle1 =
+      TextStyle(fontSize: 13, color: txtColor, fontStyle: FontStyle.italic);
+  static const fieldstyle =
+      TextStyle(fontSize: 12.5, color: txtColor, letterSpacing: 0.2);
+  static const btnstyle = TextStyle(color: btnColor, fontSize: 12.5);
+
+  static const stl1 =
+      TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w200);
+  static const stl2 =
+      TextStyle(color: Clrs.bgColor, fontWeight: FontWeight.w100);
+  static const stl3 = TextStyle(color: grClr);
+  static const stl4 = TextStyle(color: grClr, fontSize: 10);
+  static const hdstl = TextStyle(
+      color: Clrs.txtColor, fontSize: 17, fontWeight: FontWeight.w900);
+  static const stl11 =
+      TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w700);
+  static const stl122 = TextStyle(
+      color: Clrs.bgColor,
+      fontWeight: FontWeight.w100,
+      fontSize: 10.0,
+      overflow: TextOverflow.ellipsis);
+}
 
 const primaryColor = Color(0xFF2697FF);
 const secondaryColor = Color(0xFF2A2D3E);
-const bgColor = Color(0xFF212332);
-const txtColor = Colors.white;
 const grClr = Colors.grey;
 const defaultPadding = 16.0;
 
@@ -26,24 +66,6 @@ const folClr = Color(0xFFFF5722);
 const spClr = Color(0xFFF06292);
 const qtoClr = Color(0xFF616161);
 
-class TxtStls {
-  static const stl1 =
-      TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w200);
-  static const stl2 =
-      TextStyle(color: Clrs.bgColor, fontWeight: FontWeight.w100);
-  static const stl3 = TextStyle(color: grClr);
-  static const stl4 = TextStyle(color: grClr, fontSize: 10);
-  static const hdstl = TextStyle(
-      color: Clrs.txtColor, fontSize: 17, fontWeight: FontWeight.w900);
-  static const stl11 =
-      TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w700);
-  static const stl122 = TextStyle(
-      color: Clrs.bgColor,
-      fontWeight: FontWeight.w100,
-      fontSize: 10.0,
-      overflow: TextOverflow.ellipsis);
-}
-
 class Clrs {
   static const appBarColor = Colors.brown;
   static const bgColor = Colors.black;
@@ -59,4 +81,5 @@ class statClr {
   static const inpro = Colors.orange;
   static const ready = Colors.red;
   static const com = Colors.green;
+  static const com1 = Colors.indigoAccent;
 }
