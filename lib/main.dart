@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scrollbarTheme: ScrollbarThemeData(
             thumbColor: MaterialStateProperty.all(Colors.white)),
-        scaffoldBackgroundColor: bgColor,
+        scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: bgColor),
-        canvasColor: bgColor,
+            .apply(bodyColor: AbgColor.withOpacity(0.1)),
+        canvasColor: bgColor.withOpacity(1),
       ),
       home: LandingScreen(),
     );

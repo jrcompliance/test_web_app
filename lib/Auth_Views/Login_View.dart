@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       body: SafeArea(
         child: Row(
           children: [
@@ -237,7 +238,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: btnColor,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10.0))),
-                                      child: Text("Log In"),
+                                      child: Text(
+                                        "Log In",
+                                        style: TextStyle(color: bgColor),
+                                      ),
                                     ),
                                     onTap: () {
                                       getLogin(_emailController,

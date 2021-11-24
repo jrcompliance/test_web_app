@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 const bgColor = Colors.white;
+const AbgColor = Colors.grey;
 const txtColor = Colors.black;
 const fieldColor = Color(0x8AEEEEEE);
 const btnColor = Color(0xFF5551F1);
@@ -25,6 +26,8 @@ class TxtStls {
   static const fieldstyle =
       TextStyle(fontSize: 12.5, color: txtColor, letterSpacing: 0.2);
   static const btnstyle = TextStyle(color: btnColor, fontSize: 12.5);
+  static const numstyle =
+      TextStyle(color: txtColor, fontSize: 20, fontWeight: FontWeight.bold);
 
   static const stl1 =
       TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w200);

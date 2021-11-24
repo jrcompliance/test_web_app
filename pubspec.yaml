@@ -87,9 +87,13 @@ flutter:
     - assets/Logos/Controlifylogo.png
     - assets/Logos/SignUp.png
     - assets/Logos/login.png
+    - assets/Logos/Ologo.png
+    - assets/Logos/1.png
+    - assets/Logos/2.png
+    - assets/Logos/3.png
+    - assets/Logos/4.png
 
     - assets/Lotties/registeredsucees.json
-
 
     - assets/Notations/Category.png
     - assets/Notations/Chart.png
@@ -101,17 +105,6 @@ flutter:
     - assets/Notations/Setting.png
 
 
-    - assets/menu_dashbord.svg
-    - assets/menu_task.svg
-    - assets/menu_doc.svg
-    - assets/menu_notification.svg
-    - assets/menu_profile.svg
-    - assets/menu_setting.svg
-    - assets/media.svg
-    - assets/Search.svg
-    - assets/notask.gif
-    - assets/WorkSpace.jpg
-    - assets/stat.jpeg
     - assets/Lotties/stats.json
     - assets/Lotties/filter.json
     - assets/Lotties/lastdate.json
@@ -125,18 +118,11 @@ flutter:
     - assets/Lotties/empty.json
     - assets/Lotties/success.json
     - assets/Lotties/fail.json
-    - assets/Lotties/loginbackground.png
     - assets/Lotties/notask.json
     - assets/Lotties/chillwork.json
     - assets/Lotties/normalwork.json
     - assets/Lotties/highworkpressure.json
-    - assets/pdf_file.svg
-    - assets/animal/view.png
-    - assets/animal/setting.png
-    - assets/animal/instagram-stories.png
-    - assets/animal/call-center-agent.png
-    - assets/animal/calendar.png
-    - assets/animal/announcement.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

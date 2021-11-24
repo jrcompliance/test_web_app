@@ -83,7 +83,10 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                                 color: btnColor,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
-                            child: Text("Reset Your Password"),
+                            child: Text(
+                              "Reset Your Password",
+                              style: TextStyle(color: bgColor),
+                            ),
                           ),
                           onTap: () {
                             forgotPassword(_emailController);

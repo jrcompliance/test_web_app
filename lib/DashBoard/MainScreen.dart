@@ -13,7 +13,7 @@ import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/MyDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Header.dart';
-import 'package:test_web_app/DashBoard/Comonents/Leads/Leads_View.dart';
+import 'package:test_web_app/DashBoard/UserDashBoard.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -43,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      extendBodyBehindAppBar: true,
       drawer: SideDrawer(context),
       body: SafeArea(
         child: Row(
@@ -75,10 +75,14 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget SideDrawer(BuildContext context) {
     return Drawer(
+      elevation: 0.9,
       child: ListView(
         shrinkWrap: true,
         children: [
-          Image.asset("assets/Logos/Controlifylogo.png"),
+          SizedBox(
+              width: 30,
+              child: Image.asset("assets/Logos/Ologo.png",
+                  fit: BoxFit.fill, filterQuality: FilterQuality.high)),
           DrawerListTile(
               "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
           DrawerListTile(
@@ -102,14 +106,14 @@ class _MainScreenState extends State<MainScreen> {
 
   DrawerListTile(title, imageUrl, tab) {
     return ListTile(
+      hoverColor: btnColor.withOpacity(0.25),
       title: Responsive.isMediumScreen(context)
           ? null
           : Text(title, style: TxtStls.fieldtitlestyle),
       leading: SizedBox(
         child: Image.asset(imageUrl,
             fit: BoxFit.fill, filterQuality: FilterQuality.high),
-        width: 20,
-        height: 20,
+        height: 22.5,
       ),
       onTap: () {
         setState(() {
@@ -121,25 +125,13 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget DashboardBody(BuildContext context) {
     if (active == Tabs.DashBoard) {
-      return SafeArea(
-        child: Scrollbar(
-          controller: _mainScrollController,
-          isAlwaysShown: true,
-          showTrackOnHover: true,
-          hoverThickness: 10.0,
-          child: ListView(
-            controller: _mainScrollController,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: ClampingScrollPhysics(),
-            children: [
-              Header(
-                title: "DashBoard",
-              ),
-              DashBoardBodyScreen(),
-            ],
+      return Column(
+        children: [
+          Header(
+            title: "DashBoard",
           ),
-        ),
+          UserDashBoard()
+        ],
       );
     } else if (active == Tabs.Analytics) {
     } else if (active == Tabs.Invoice) {
@@ -220,8 +212,8 @@ class _MainScreenState extends State<MainScreen> {
         .snapshots()
         .listen((event) {
       event.docs.forEach((element) {
-        username = element.data()["username"].toString();
-        email = element.data()["email"].toString();
+        username = element.data()["uname"].toString();
+        email = element.data()["uemail"].toString();
         phone = element.data()["phone"].toString();
         imageUrl = element.data()["imageUrl"].toString();
         role = element.data()["role"].toString();
