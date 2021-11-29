@@ -23,7 +23,7 @@ class _HeaderState extends State<Header> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: AbgColor.withOpacity(0.075),
+      color: AbgColor.withOpacity(0.0001),
       height: size.height * 0.07,
       width: size.width,
       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
@@ -40,6 +40,7 @@ class _HeaderState extends State<Header> {
           : Row(
               children: [
                 Expanded(
+                  flex: 6,
                   child: Text(
                     widget.title,
                     style: TextStyle(
@@ -48,16 +49,27 @@ class _HeaderState extends State<Header> {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                Container(
-                    child: Text(
-                  "24-Nov-2 021",
-                  style: TxtStls.fieldstyle,
-                )),
-                Container(
-                    child: Text(
-                  "24-Nov-2 021",
-                  style: TxtStls.fieldstyle,
-                ))
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: bgColor,
+                      child: Text(
+                        "24-Nov-2021",
+                        style: TxtStls.fieldstyle,
+                      )),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                      alignment: Alignment.center,
+                      color: bgColor,
+                      child: Text(
+                        "24-Nov-2021",
+                        style: TxtStls.fieldstyle,
+                      )),
+                )
               ],
             ),
     );

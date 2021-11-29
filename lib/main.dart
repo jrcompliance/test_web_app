@@ -55,7 +55,7 @@ class _LandingScreenState extends State<LandingScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (prefs.getString("email") == null) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => RegisterScreen()));
+            context, MaterialPageRoute(builder: (_) => LoginScreen()));
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => MainScreen()));
@@ -75,68 +75,68 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 }
 
-class APage extends StatefulWidget {
-  const APage({Key? key}) : super(key: key);
-
-  @override
-  _APageState createState() => _APageState();
-}
-
-class _APageState extends State<APage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("ADMIN SIDE"),
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width * 1,
-        height: MediaQuery.of(context).size.height * 1,
-        color: txtColor,
-        child: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection("EmployeeData").snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (BuildContext context, index) {
-                return ListTile(
-                  leading: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                      child: Image.network(
-                          snapshot.data!.docs[index]["imageUrl"])),
-                  title: Text(snapshot.data!.docs[index]["username"]),
-                  onTap: () {
-                    login(snapshot.data!.docs[index]["email"],
-                        snapshot.data!.docs[index]["password"]);
-                  },
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Future<void> login(email, password) async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((cred) async {
-        if (cred.user != null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => MainScreen()));
-        } else {
-          print('Not loggedin');
-        }
-      });
-    } on Exception catch (e) {
-      print(e.toString());
-    }
-  }
-}
+// class APage extends StatefulWidget {
+//   const APage({Key? key}) : super(key: key);
+//
+//   @override
+//   _APageState createState() => _APageState();
+// }
+//
+// class _APageState extends State<APage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("ADMIN SIDE"),
+//       ),
+//       body: Container(
+//         width: MediaQuery.of(context).size.width * 1,
+//         height: MediaQuery.of(context).size.height * 1,
+//         color: txtColor,
+//         child: StreamBuilder(
+//           stream:
+//               FirebaseFirestore.instance.collection("EmployeeData").snapshots(),
+//           builder:
+//               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//             if (!snapshot.hasData) {
+//               return Container();
+//             }
+//             return ListView.builder(
+//               itemCount: snapshot.data!.docs.length,
+//               itemBuilder: (BuildContext context, index) {
+//                 return ListTile(
+//                   leading: ClipRRect(
+//                       borderRadius: BorderRadius.all(Radius.circular(40.0)),
+//                       child: Image.network(
+//                           snapshot.data!.docs[index]["imageUrl"])),
+//                   title: Text(snapshot.data!.docs[index]["username"]),
+//                   onTap: () {
+//                     login(snapshot.data!.docs[index]["email"],
+//                         snapshot.data!.docs[index]["password"]);
+//                   },
+//                 );
+//               },
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Future<void> login(email, password) async {
+//     try {
+//       await FirebaseAuth.instance
+//           .signInWithEmailAndPassword(email: email, password: password)
+//           .then((cred) async {
+//         if (cred.user != null) {
+//           Navigator.push(
+//               context, MaterialPageRoute(builder: (_) => MainScreen()));
+//         } else {
+//           print('Not loggedin');
+//         }
+//       });
+//     } on Exception catch (e) {
+//       print(e.toString());
+//     }
+//   }
+// }

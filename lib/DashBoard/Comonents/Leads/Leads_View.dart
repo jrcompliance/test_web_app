@@ -335,8 +335,8 @@ class _LeadScreenState extends State<LeadScreen> {
                                               itemBuilder: (context) => snp
                                                   .map((item) => PopupMenuItem(
                                                       onTap: () {
-                                                        img = item
-                                                            .get("imageUrl");
+                                                        img =
+                                                            item.get("uimage");
                                                         setState(() {});
                                                       },
                                                       value: item.get("uid"),
@@ -346,11 +346,10 @@ class _LeadScreenState extends State<LeadScreen> {
                                                             backgroundImage:
                                                                 NetworkImage(
                                                                     item.get(
-                                                                        "imageUrl")),
+                                                                        "uimage")),
                                                           ),
                                                           Text(
-                                                            item.get(
-                                                                "username"),
+                                                            item.get("uname"),
                                                           ),
                                                         ],
                                                       )))
