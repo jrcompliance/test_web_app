@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "JR CRM",
       theme: ThemeData.light().copyWith(
-        scrollbarTheme: ScrollbarThemeData(
-            thumbColor: MaterialStateProperty.all(Colors.white)),
+        scrollbarTheme:
+            ScrollbarThemeData(thumbColor: MaterialStateProperty.all(btnColor)),
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: AbgColor.withOpacity(0.1)),

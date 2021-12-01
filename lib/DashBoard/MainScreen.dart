@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,11 @@ import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Constants/shape.dart';
+import 'package:test_web_app/Constants/tasklength.dart';
+import 'package:test_web_app/DashBoard/Comonents/DashBoard/MyDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Header.dart';
+import 'package:test_web_app/DashBoard/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/UserDashBoard.dart';
 
 class MainScreen extends StatefulWidget {
@@ -34,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     this.userdetails();
+    this.userTasks();
   }
 
   Future<void> userdetails() async {
@@ -43,15 +49,65 @@ class _MainScreenState extends State<MainScreen> {
         .snapshots()
         .listen((event) {
       event.docs.forEach((element) {
-        username = element.data()["uname"].toString();
-        email = element.data()["uemail"].toString();
-        phone = element.data()["uphoneNumber"].toString();
-        imageUrl = element.data()["uimage"].toString();
-        role = element.data()["urole"].toString();
-        uid = element.data()["uid"].toString();
-        setState(() {});
+        setState(() {
+          String uname = element.data()["uname"].toString();
+          String uemail = element.data()["uemail"].toString();
+          String uphoneNumber = element.data()["uphoneNumber"].toString();
+          String uimage = element.data()["uimage"].toString();
+          String urole = element.data()["urole"].toString();
+          String uuid = element.data()["uid"].toString();
+          username = uname;
+          email = uemail;
+          phone = uphoneNumber;
+          imageUrl = uimage;
+          role = urole;
+          uid = uuid;
+        });
       });
     });
+  }
+
+  Future<void> userTasks() async {
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments",
+            arrayContains: {"uid": _auth.currentUser!.uid.toString()})
+        .where("cat", isEqualTo: "PROSPECT")
+        .snapshots()
+        .listen((value) {
+          prospectLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments",
+            arrayContains: {"uid": _auth.currentUser!.uid.toString()})
+        .where("cat", isEqualTo: "NEW")
+        .snapshots()
+        .listen((value) {
+          newLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments",
+            arrayContains: {"uid": _auth.currentUser!.uid.toString()})
+        .where("cat", isEqualTo: "INPROGRESS")
+        .snapshots()
+        .listen((value) {
+          ipLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments",
+            arrayContains: {"uid": _auth.currentUser!.uid.toString()})
+        .where("cat", isEqualTo: "WON")
+        .snapshots()
+        .listen((value) {
+          wonLength = value.docs.length.toDouble();
+          setState(() {});
+        });
   }
 
   @override
@@ -92,11 +148,11 @@ class _MainScreenState extends State<MainScreen> {
           DrawerListTile(
               "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
           DrawerListTile(
+              "Schedule", "assets/Notations/Document.png", Tabs.Schedule),
+          DrawerListTile(
               "Anylytics", "assets/Notations/Chart.png", Tabs.Analytics),
           DrawerListTile(
               "Invoice", "assets/Notations/Ticket.png", Tabs.Invoice),
-          DrawerListTile(
-              "Schedule", "assets/Notations/Document.png", Tabs.Schedule),
           DrawerListTile(
               "Calendar", "assets/Notations/Calendar.png", Tabs.Calendar),
           DrawerListTile(
@@ -106,24 +162,29 @@ class _MainScreenState extends State<MainScreen> {
           DrawerListTile(
               "Settings", "assets/Notations/Setting.png", Tabs.Settings),
           SizedBox(height: 250),
-          ListTile(
-            leading: imageUrl == null || imageUrl == ""
-                ? Icon(
-                    Icons.person,
-                    color: txtColor,
-                    size: 30,
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.network(imageUrl!)),
-            title: username == null
-                ? Text("")
-                : Text(username!, style: TxtStls.fieldstyle),
-            trailing: IconButton(
-                onPressed: () async {
-                  await _showMyDialog();
-                },
-                icon: Icon(Icons.exit_to_app_outlined)),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                border: Border.all(color: txtColor.withOpacity(0.1))),
+            child: ListTile(
+              leading: imageUrl == null || imageUrl == ""
+                  ? Icon(
+                      Icons.person,
+                      color: txtColor,
+                      size: 30,
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(imageUrl!)),
+              title: username == null
+                  ? Text("")
+                  : Text(username!, style: TxtStls.fieldstyle),
+              trailing: IconButton(
+                  onPressed: () async {
+                    await _showMyDialog();
+                  },
+                  icon: Icon(Icons.exit_to_app_outlined)),
+            ),
           )
         ],
       ),
@@ -140,16 +201,22 @@ class _MainScreenState extends State<MainScreen> {
           UserDashBoard(),
         ],
       );
+    } else if (active == Tabs.Schedule) {
+      return Column(
+        children: [
+          Header(title: 'Task Preview'),
+          TaskPreview(),
+        ],
+      );
     } else if (active == Tabs.Analytics) {
       return Column(
         children: [
           Header(title: "Analytics"),
+          DashBoardBodyScreen(),
         ],
       );
     } else if (active == Tabs.Invoice) {
       return Header(title: "Invoice");
-    } else if (active == Tabs.Schedule) {
-      return Header(title: 'Schedule');
     } else if (active == Tabs.Calendar) {
       return Header(title: "Calendar");
     } else if (active == Tabs.Messages) {
@@ -448,9 +515,9 @@ class _MainScreenState extends State<MainScreen> {
 
 enum Tabs {
   DashBoard,
+  Schedule,
   Analytics,
   Invoice,
-  Schedule,
   Calendar,
   Messages,
   Notification,

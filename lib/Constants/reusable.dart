@@ -23,6 +23,8 @@ class TxtStls {
       TextStyle(fontSize: 13, color: txtColor, fontWeight: FontWeight.bold);
   static const fieldtitlestyle1 =
       TextStyle(fontSize: 13, color: txtColor, fontStyle: FontStyle.italic);
+  static const fieldtitlestyle2 =
+      TextStyle(fontSize: 12, color: txtColor, fontWeight: FontWeight.bold);
   static const fieldstyle =
       TextStyle(fontSize: 12.5, color: txtColor, letterSpacing: 0.2);
   static const btnstyle = TextStyle(color: btnColor, fontSize: 12.5);
@@ -44,6 +46,13 @@ class TxtStls {
       fontWeight: FontWeight.w100,
       fontSize: 10.0,
       overflow: TextOverflow.ellipsis);
+}
+
+class ClrStls {
+  static const tnClr =
+      TextStyle(fontSize: 12, color: btnColor, fontWeight: FontWeight.bold);
+  static const endClr =
+      TextStyle(fontSize: 12, color: neClr, fontWeight: FontWeight.bold);
 }
 
 const primaryColor = Color(0xFF2697FF);

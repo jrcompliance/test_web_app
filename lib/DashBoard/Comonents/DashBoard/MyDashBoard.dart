@@ -92,3479 +92,2876 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: Responsive.isSmallScreen(context)
-          ? const EdgeInsets.all(10.0)
-          : const EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-      child: Container(
-        color: secondaryColor,
-        child: ListView(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            scrollDirection: Axis.vertical,
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      color: AbgColor.withOpacity(0.0001),
+      width: size.width,
+      height: size.height * 0.93,
+      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // new Category
+          Row(
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // new Category
-                  Row(
+              tBtn(tap1, "NEW", neClr, () {
+                setState(() {
+                  tap1 = !tap1;
+                });
+              }),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
+              ),
+              Text(
+                "${newlength.toString()}tasks",
+                style: TxtStls.stl1,
+              ),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
+              ),
+              InkWell(
+                child: SizedBox(
+                  width: Responsive.isSmallScreen(context)
+                      ? size.width * 0.2
+                      : size.width * 0.2,
+                  child: Row(
                     children: [
-                      tBtn(tap1, "NEW", neClr, () {
-                        setState(() {
-                          tap1 = !tap1;
-                        });
-                      }),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
+                      Icon(
+                        Icons.add,
+                        color: grClr,
+                        size: 10,
                       ),
                       Text(
-                        "${newlength.toString()}tasks",
-                        style: TxtStls.stl1,
-                      ),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
-                      ),
-                      InkWell(
-                        child: SizedBox(
-                          width: Responsive.isSmallScreen(context)
-                              ? width * 0.2
-                              : width * 0.2,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: grClr,
-                                size: 10,
-                              ),
-                              Text(
-                                "CREATE",
-                                style: TxtStls.stl4,
-                              )
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          taskBox(context);
-                        },
-                      ),
+                        "CREATE",
+                        style: TxtStls.stl4,
+                      )
                     ],
                   ),
-                  tap1
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 8.0, bottom: 8.0),
-                          child: Column(
-                            children: [
-                              head(),
-                              Container(
-                                width: width * 1,
-                                height: height * 0.3,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0)),
-                                    border: Border.all(color: Colors.grey)),
-                                child: StreamBuilder(
-                                  stream: _fireStore
-                                      .collection("Tasks")
-                                      .where("Attachments", arrayContains: {
-                                        "uid":
-                                            _auth.currentUser!.uid.toString(),
-                                        "uid1": imageUrl.toString(),
-                                      })
-                                      .where("cat", isEqualTo: "NEW")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Container();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 15, left: 15),
-                                      child: Scrollbar(
-                                        showTrackOnHover: true,
-                                        isAlwaysShown: true,
-                                        controller: _scrollController,
-                                        thickness: 10,
-                                        hoverThickness: 10,
-                                        child: ListView.separated(
-                                          controller: _scrollController,
-                                          shrinkWrap: true,
-                                          physics: ClampingScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          separatorBuilder:
-                                              (BuildContext context, i) =>
-                                                  Divider(),
-                                          itemCount: snapshot.data!.docs.length,
-                                          itemBuilder: (_, index) {
-                                            newlength =
-                                                snapshot.data!.docs.length;
-                                            String flagres = snapshot
-                                                .data!.docs[index]["priority"];
-                                            String newsta = snapshot
-                                                .data!.docs[index]["status"];
-                                            String newres = snapshot
-                                                .data!.docs[index]["status"];
-                                            List cert = snapshot.data!
-                                                .docs[index]["Attachments"];
+                ),
+                onTap: () {
+                  taskBox(context);
+                },
+              ),
+            ],
+          ),
+          tap1
+              ? Column(
+                  children: [
+                    head(),
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.11,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0)),
+                          border: Border.all(color: Colors.grey)),
+                      child: StreamBuilder(
+                        stream: _fireStore
+                            .collection("Tasks")
+                            .where("Attachments", arrayContains: {
+                              "uid": _auth.currentUser!.uid.toString(),
+                              "uid1": imageUrl.toString(),
+                            })
+                            .where("cat", isEqualTo: "NEW")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 15),
+                            child: Scrollbar(
+                              showTrackOnHover: true,
+                              isAlwaysShown: true,
+                              controller: _scrollController,
+                              thickness: 10,
+                              hoverThickness: 10,
+                              child: ListView.separated(
+                                controller: _scrollController,
+                                shrinkWrap: true,
+                                physics: ClampingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                separatorBuilder: (BuildContext context, i) =>
+                                    Divider(),
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (_, index) {
+                                  newlength = snapshot.data!.docs.length;
+                                  String flagres =
+                                      snapshot.data!.docs[index]["priority"];
+                                  String newsta =
+                                      snapshot.data!.docs[index]["status"];
+                                  String newres =
+                                      snapshot.data!.docs[index]["status"];
+                                  List cert =
+                                      snapshot.data!.docs[index]["Attachments"];
 
-                                            return Row(
-                                              children: [
-                                                // Task name here...
-                                                Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  width: width * 0.325,
-                                                  child: Text(
-                                                    snapshot.data!.docs[index]
-                                                        ["task"],
-                                                    style: TxtStls.stl1,
+                                  return Row(
+                                    children: [
+                                      // Task name here...
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.325,
+                                        child: Text(
+                                          snapshot.data!.docs[index]["task"],
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                      // Task assignee here...
+                                      Container(
+                                        alignment: Alignment.center,
+                                        width: size.width * 0.09,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: cert
+                                                .map(
+                                                  (e) => CircleAvatar(
+                                                    backgroundImage:
+                                                        NetworkImage(e["uid1"]),
                                                   ),
-                                                ),
-                                                // Task assignee here...
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  width: width * 0.09,
-                                                  child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: cert
-                                                          .map(
-                                                            (e) => CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      e["uid1"]),
-                                                            ),
-                                                          )
-                                                          .toList()),
-                                                ),
-                                                //end Date of task here...
-                                                snapshot.data!.docs[index]
-                                                            ["endDate"] ==
-                                                        ""
-                                                    ? Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        child: InkWell(
-                                                            onTap: () {
-                                                              String id = snapshot
-                                                                      .data!
-                                                                      .docs[
-                                                                  index]["id"];
-                                                              MyCalenders
-                                                                  .pickEndDate1(
-                                                                      context,
-                                                                      id,
-                                                                      _endDateController);
-                                                              setState(() {});
-                                                            },
-                                                            child: Icon(
-                                                              Icons
-                                                                  .calendar_today_outlined,
-                                                            )),
-                                                      )
-                                                    : Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            MyCalenders
-                                                                .pickEndDate1(
-                                                                    context,
-                                                                    id,
-                                                                    _endDateController);
-                                                            setState(() {});
-                                                          },
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              IconButton(
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.clear,
-                                                                  size: 10,
-                                                                ),
-                                                                onPressed: () {
-                                                                  setState(() {
-                                                                    String id =
-                                                                        snapshot
-                                                                            .data!
-                                                                            .docs[index]["id"];
-                                                                    EndDateOperations
-                                                                        .updateEdateTask1(
-                                                                            id);
-                                                                  });
-                                                                },
-                                                              ),
-                                                              Text(
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["endDate"],
-                                                                style: TxtStls
-                                                                    .stl1,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                )
+                                                .toList()),
+                                      ),
+                                      //end Date of task here...
+                                      snapshot.data!.docs[index]["endDate"] ==
+                                              ""
+                                          ? Container(
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    String id = snapshot.data!
+                                                        .docs[index]["id"];
+                                                    MyCalenders.pickEndDate1(
+                                                        context,
+                                                        id,
+                                                        _endDateController);
+                                                    setState(() {});
+                                                  },
+                                                  child: Icon(
+                                                    Icons
+                                                        .calendar_today_outlined,
+                                                  )),
+                                            )
+                                          : Container(
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  MyCalenders.pickEndDate1(
+                                                      context,
+                                                      id,
+                                                      _endDateController);
+                                                  setState(() {});
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                        Icons.clear,
+                                                        size: 10,
                                                       ),
-
-                                                // task priority flag here....
-                                                snapshot.data!.docs[index]
-                                                            ["priority"] ==
-                                                        null
-                                                    ? Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        child: PopupMenuButton(
-                                                          color: Clrs.txtColor,
-                                                          onSelected: (value) {
-                                                            pricol = value;
-                                                            String prcl = pricol
-                                                                .toString();
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            FlagService
-                                                                .updateFlag(
-                                                                    id, prcl);
-                                                            setState(() {});
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.flag,
-                                                            color: FlagService
-                                                                .pricolorget(
-                                                                    flagres),
-                                                          ),
-                                                          itemBuilder:
-                                                              (context) {
-                                                            return [
-                                                              PopupMenuItem(
-                                                                value: "U",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .flag,
-                                                                      color: Clrs
-                                                                          .urgent,
-                                                                    ),
-                                                                    Text(
-                                                                      "Urgent",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                  value: "E",
-                                                                  child: Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .clear,
-                                                                        color: Clrs
-                                                                            .bgColor,
-                                                                      ),
-                                                                      Text(
-                                                                        "Clear",
-                                                                        style: TxtStls
-                                                                            .stl2,
-                                                                      )
-                                                                    ],
-                                                                  )),
-                                                            ];
-                                                          },
-                                                        ),
-                                                      )
-                                                    : Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        child: PopupMenuButton(
-                                                          color: Clrs.txtColor,
-                                                          onSelected: (value) {
-                                                            pricol = value;
-                                                            String prcl = pricol
-                                                                .toString();
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            FlagService
-                                                                .updateFlag(
-                                                                    id, prcl);
-                                                            setState(() {});
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.flag,
-                                                            color: FlagService
-                                                                .pricolorget(
-                                                                    flagres),
-                                                          ),
-                                                          itemBuilder:
-                                                              (context) {
-                                                            return [
-                                                              PopupMenuItem(
-                                                                value: "U",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .flag,
-                                                                      color: Clrs
-                                                                          .urgent,
-                                                                    ),
-                                                                    Text(
-                                                                      "Urgent",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                  value: "E",
-                                                                  child: Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .clear,
-                                                                        color: Clrs
-                                                                            .bgColor,
-                                                                      ),
-                                                                      Text(
-                                                                        "Clear",
-                                                                        style: TxtStls
-                                                                            .stl2,
-                                                                      )
-                                                                    ],
-                                                                  )),
-                                                            ];
-                                                          },
-                                                        ),
-                                                      ),
-                                                // task status here...
-                                                snapshot.data!.docs[index]
-                                                            ["status"] ==
-                                                        ""
-                                                    ? Container(
-                                                        color:
-                                                            StatusUpdateServices
-                                                                .statcolorget(
-                                                                    newres),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        height: height * 0.04,
-                                                        child: PopupMenuButton(
-                                                          color: Clrs.txtColor,
-                                                          onSelected: (value) {
-                                                            status = value
-                                                                .toString();
-                                                            String stat1 =
-                                                                status
-                                                                    .toString();
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            StatusUpdateServices
-                                                                .updateStatus(
-                                                                    id, stat1);
-                                                            setState(() {});
-                                                          },
-                                                          child: Text(
-                                                            StatusUpdateServices
-                                                                .statusget(
-                                                                    newsta),
-                                                            style: TxtStls.stl1,
-                                                          ),
-                                                          itemBuilder:
-                                                              (context) {
-                                                            return [
-                                                              PopupMenuItem(
-                                                                value: "FRESH",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: wonClr,
-                                                                  child: Text(
-                                                                    "FRESH",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                value:
-                                                                    "ASSIGNED",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: flwClr,
-                                                                  child: Text(
-                                                                    "ASSIGNED",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                value:
-                                                                    "CONTACTED",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: conClr,
-                                                                  child: Text(
-                                                                    "CONTACTED",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ];
-                                                          },
-                                                        ),
-                                                      )
-                                                    : Container(
-                                                        color:
-                                                            StatusUpdateServices
-                                                                .statcolorget(
-                                                                    newres),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: width * 0.09,
-                                                        height: height * 0.04,
-                                                        child: PopupMenuButton(
-                                                          color: Clrs.txtColor,
-                                                          onSelected: (value) {
-                                                            status = value
-                                                                .toString();
-                                                            String stat1 =
-                                                                status
-                                                                    .toString();
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            StatusUpdateServices
-                                                                .updateStatus(
-                                                                    id, stat1);
-                                                            setState(() {});
-                                                          },
-                                                          child: Text(
-                                                            StatusUpdateServices
-                                                                .statusget(
-                                                                    newsta),
-                                                            style: TxtStls.stl1,
-                                                          ),
-                                                          itemBuilder:
-                                                              (context) {
-                                                            return [
-                                                              PopupMenuItem(
-                                                                value: "FRESH",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: wonClr,
-                                                                  child: Text(
-                                                                    "FRESH",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                value:
-                                                                    "ASSIGNED",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: flwClr,
-                                                                  child: Text(
-                                                                    "ASSIGNED",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              PopupMenuItem(
-                                                                value:
-                                                                    "CONTACTED",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: conClr,
-                                                                  child: Text(
-                                                                    "CONTACTED",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ];
-                                                          },
-                                                        ),
-                                                      ),
-                                                // more option here....
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  width: width * 0.09,
-                                                  child: PopupMenuButton(
-                                                    color: Clrs.txtColor,
-                                                    onSelected: (value) {
-                                                      // check = true;
-                                                      if (value == "DELETE") {
-                                                        String id = snapshot
-                                                            .data!
-                                                            .docs[index]["id"];
-                                                        CrudOperations
-                                                            .deleteTask(id);
-                                                      }
-                                                      if (value == "MOVE") {
-                                                        String taskname =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["task"];
-                                                        Timestamp create =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["startDate"];
-                                                        String enddate =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["endDate"];
-
-                                                        String catstat =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["cat"];
-                                                        String scatstat =
-                                                            newsta;
-                                                        Color mainclr = neClr;
-
-                                                        Color clrRes =
-                                                            StatusUpdateServices
-                                                                .statcolorget(
-                                                                    newres);
-
-                                                        String id = snapshot
-                                                            .data!
-                                                            .docs[index]["id"];
-                                                        int f = snapshot.data!
-                                                                .docs[index]
-                                                            ["fail"];
-                                                        int s = snapshot.data!
-                                                                .docs[index]
-                                                            ["success"];
-                                                        Timestamp lastseen =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["lastseen"];
-                                                        String company =
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["companyname"];
-                                                        List cli = snapshot
-                                                                .data!
-                                                                .docs[index]
-                                                            ["Certificates"];
-                                                        String logo = snapshot
-                                                                .data!
-                                                                .docs[index]
-                                                            ["logo"];
-                                                        String cname = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                [
-                                                                "CompanyDetails"]
-                                                            [
-                                                            0]["contactperson"];
-                                                        String cemail = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                [
-                                                                "CompanyDetails"]
-                                                            [0]["email"];
-
-                                                        String cphone = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                [
-                                                                "CompanyDetails"]
-                                                            [0]["phone"];
-
-                                                        enddate == ""
-                                                            ? Scaffold.of(
-                                                                    context)
-                                                                .showSnackBar(
-                                                                    SnackBar(
-                                                                backgroundColor:
-                                                                    txtColor,
-                                                                content: Text(
-                                                                  "Select End Date",
-                                                                  style: TxtStls
-                                                                      .stl2,
-                                                                ),
-                                                              ))
-                                                            : descBox(
-                                                                context,
-                                                                taskname,
-                                                                create,
-                                                                enddate,
-                                                                flagres,
-                                                                id,
-                                                                catstat,
-                                                                scatstat,
-                                                                mainclr,
-                                                                clrRes,
-                                                                s,
-                                                                f,
-                                                                lastseen,
-                                                                cli,
-                                                                logo,
-                                                                company,
-                                                                cname,
-                                                                cemail,
-                                                                cphone,
-                                                                cert);
-                                                      }
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.more_vert_outlined,
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          String id = snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ["id"];
+                                                          EndDateOperations
+                                                              .updateEdateTask1(
+                                                                  id);
+                                                        });
+                                                      },
                                                     ),
-                                                    itemBuilder: (context) {
-                                                      return [
-                                                        PopupMenuItem(
-                                                            value: "DELETE",
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .delete_outline,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                Text(
-                                                                  "Delete",
-                                                                  style: TxtStls
-                                                                      .stl2,
-                                                                )
-                                                              ],
-                                                            )),
-                                                        PopupMenuItem(
-                                                            value: "MOVE",
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_left_outlined,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                Text(
-                                                                  "Move To",
-                                                                  style: TxtStls
-                                                                      .stl2,
-                                                                )
-                                                              ],
-                                                            )),
-                                                        PopupMenuItem(
-                                                            value: "CANCEL",
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons.clear,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                Text(
-                                                                  "Cancel",
-                                                                  style: TxtStls
-                                                                      .stl2,
-                                                                )
-                                                              ],
-                                                            )),
-                                                      ];
-                                                    },
-                                                  ),
+                                                    Text(
+                                                      snapshot.data!.docs[index]
+                                                          ["endDate"],
+                                                      style: TxtStls.stl1,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            );
+                                              ),
+                                            ),
+
+                                      // task priority flag here....
+                                      snapshot.data!.docs[index]["priority"] ==
+                                              null
+                                          ? Container(
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              child: PopupMenuButton(
+                                                color: Clrs.txtColor,
+                                                onSelected: (value) {
+                                                  pricol = value;
+                                                  String prcl =
+                                                      pricol.toString();
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  FlagService.updateFlag(
+                                                      id, prcl);
+                                                  setState(() {});
+                                                },
+                                                icon: Icon(
+                                                  Icons.flag,
+                                                  color:
+                                                      FlagService.pricolorget(
+                                                          flagres),
+                                                ),
+                                                itemBuilder: (context) {
+                                                  return [
+                                                    PopupMenuItem(
+                                                      value: "U",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.flag,
+                                                            color: Clrs.urgent,
+                                                          ),
+                                                          Text(
+                                                            "Urgent",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                        value: "E",
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.clear,
+                                                              color:
+                                                                  Clrs.bgColor,
+                                                            ),
+                                                            Text(
+                                                              "Clear",
+                                                              style:
+                                                                  TxtStls.stl2,
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ];
+                                                },
+                                              ),
+                                            )
+                                          : Container(
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              child: PopupMenuButton(
+                                                color: Clrs.txtColor,
+                                                onSelected: (value) {
+                                                  pricol = value;
+                                                  String prcl =
+                                                      pricol.toString();
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  FlagService.updateFlag(
+                                                      id, prcl);
+                                                  setState(() {});
+                                                },
+                                                icon: Icon(
+                                                  Icons.flag,
+                                                  color:
+                                                      FlagService.pricolorget(
+                                                          flagres),
+                                                ),
+                                                itemBuilder: (context) {
+                                                  return [
+                                                    PopupMenuItem(
+                                                      value: "U",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.flag,
+                                                            color: Clrs.urgent,
+                                                          ),
+                                                          Text(
+                                                            "Urgent",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                        value: "E",
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.clear,
+                                                              color:
+                                                                  Clrs.bgColor,
+                                                            ),
+                                                            Text(
+                                                              "Clear",
+                                                              style:
+                                                                  TxtStls.stl2,
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ];
+                                                },
+                                              ),
+                                            ),
+                                      // task status here...
+                                      snapshot.data!.docs[index]["status"] == ""
+                                          ? Container(
+                                              color: StatusUpdateServices
+                                                  .statcolorget(newres),
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              height: size.height * 0.04,
+                                              child: PopupMenuButton(
+                                                color: Clrs.txtColor,
+                                                onSelected: (value) {
+                                                  status = value.toString();
+                                                  String stat1 =
+                                                      status.toString();
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  StatusUpdateServices
+                                                      .updateStatus(id, stat1);
+                                                  setState(() {});
+                                                },
+                                                child: Text(
+                                                  StatusUpdateServices
+                                                      .statusget(newsta),
+                                                  style: TxtStls.stl1,
+                                                ),
+                                                itemBuilder: (context) {
+                                                  return [
+                                                    PopupMenuItem(
+                                                      value: "FRESH",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: wonClr,
+                                                        child: Text(
+                                                          "FRESH",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      value: "ASSIGNED",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: flwClr,
+                                                        child: Text(
+                                                          "ASSIGNED",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      value: "CONTACTED",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: conClr,
+                                                        child: Text(
+                                                          "CONTACTED",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ];
+                                                },
+                                              ),
+                                            )
+                                          : Container(
+                                              color: StatusUpdateServices
+                                                  .statcolorget(newres),
+                                              alignment: Alignment.center,
+                                              width: size.width * 0.09,
+                                              height: size.height * 0.04,
+                                              child: PopupMenuButton(
+                                                color: Clrs.txtColor,
+                                                onSelected: (value) {
+                                                  status = value.toString();
+                                                  String stat1 =
+                                                      status.toString();
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  StatusUpdateServices
+                                                      .updateStatus(id, stat1);
+                                                  setState(() {});
+                                                },
+                                                child: Text(
+                                                  StatusUpdateServices
+                                                      .statusget(newsta),
+                                                  style: TxtStls.stl1,
+                                                ),
+                                                itemBuilder: (context) {
+                                                  return [
+                                                    PopupMenuItem(
+                                                      value: "FRESH",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: wonClr,
+                                                        child: Text(
+                                                          "FRESH",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      value: "ASSIGNED",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: flwClr,
+                                                        child: Text(
+                                                          "ASSIGNED",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      value: "CONTACTED",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: conClr,
+                                                        child: Text(
+                                                          "CONTACTED",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ];
+                                                },
+                                              ),
+                                            ),
+                                      // more option here....
+                                      Container(
+                                        alignment: Alignment.center,
+                                        width: size.width * 0.09,
+                                        child: PopupMenuButton(
+                                          color: Clrs.txtColor,
+                                          onSelected: (value) {
+                                            // check = true;
+                                            if (value == "DELETE") {
+                                              String id = snapshot
+                                                  .data!.docs[index]["id"];
+                                              CrudOperations.deleteTask(id);
+                                            }
+                                            if (value == "MOVE") {
+                                              String taskname = snapshot
+                                                  .data!.docs[index]["task"];
+                                              Timestamp create = snapshot.data!
+                                                  .docs[index]["startDate"];
+                                              String enddate = snapshot
+                                                  .data!.docs[index]["endDate"];
+
+                                              String catstat = snapshot
+                                                  .data!.docs[index]["cat"];
+                                              String scatstat = newsta;
+                                              Color mainclr = neClr;
+
+                                              Color clrRes =
+                                                  StatusUpdateServices
+                                                      .statcolorget(newres);
+
+                                              String id = snapshot
+                                                  .data!.docs[index]["id"];
+                                              int f = snapshot.data!.docs[index]
+                                                  ["fail"];
+                                              int s = snapshot.data!.docs[index]
+                                                  ["success"];
+                                              Timestamp lastseen = snapshot
+                                                  .data!
+                                                  .docs[index]["lastseen"];
+                                              String company = snapshot.data!
+                                                  .docs[index]["companyname"];
+                                              List cli = snapshot.data!
+                                                  .docs[index]["Certificates"];
+                                              String logo = snapshot
+                                                  .data!.docs[index]["logo"];
+                                              String cname =
+                                                  snapshot.data!.docs[index]
+                                                          ["CompanyDetails"][0]
+                                                      ["contactperson"];
+                                              String cemail =
+                                                  snapshot.data!.docs[index]
+                                                          ["CompanyDetails"][0]
+                                                      ["email"];
+
+                                              String cphone =
+                                                  snapshot.data!.docs[index]
+                                                          ["CompanyDetails"][0]
+                                                      ["phone"];
+
+                                              enddate == ""
+                                                  ? Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                      backgroundColor: txtColor,
+                                                      content: Text(
+                                                        "Select End Date",
+                                                        style: TxtStls.stl2,
+                                                      ),
+                                                    ))
+                                                  : descBox(
+                                                      context,
+                                                      taskname,
+                                                      create,
+                                                      enddate,
+                                                      flagres,
+                                                      id,
+                                                      catstat,
+                                                      scatstat,
+                                                      mainclr,
+                                                      clrRes,
+                                                      s,
+                                                      f,
+                                                      lastseen,
+                                                      cli,
+                                                      logo,
+                                                      company,
+                                                      cname,
+                                                      cemail,
+                                                      cphone,
+                                                      cert);
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.more_vert_outlined,
+                                          ),
+                                          itemBuilder: (context) {
+                                            return [
+                                              PopupMenuItem(
+                                                  value: "DELETE",
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.delete_outline,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      Text(
+                                                        "Delete",
+                                                        style: TxtStls.stl2,
+                                                      )
+                                                    ],
+                                                  )),
+                                              PopupMenuItem(
+                                                  value: "MOVE",
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .arrow_left_outlined,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      Text(
+                                                        "Move To",
+                                                        style: TxtStls.stl2,
+                                                      )
+                                                    ],
+                                                  )),
+                                              PopupMenuItem(
+                                                  value: "CANCEL",
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.clear,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      Text(
+                                                        "Cancel",
+                                                        style: TxtStls.stl2,
+                                                      )
+                                                    ],
+                                                  )),
+                                            ];
                                           },
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        )
-                      : deco(tap1, newlength),
-                  // Prospect Category
-                  Row(
-                    children: [
-                      tBtn(tap2, "PROSPECT", prosClr, () {
-                        tap2 = !tap2;
-                        setState(() {});
-                      }),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        "${prospectlength.toString()}tasks",
-                        style: TxtStls.stl1,
-                      ),
-                    ],
-                  ),
-                  tap2
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 8.0, right: 8.0, left: 8.0),
-                          child: Column(
-                            children: [
-                              head(),
-                              Container(
-                                width: width * 1,
-                                height: height * 0.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0)),
-                                    border: Border.all(color: Colors.grey)),
-                                child: StreamBuilder(
-                                  stream: _fireStore
-                                      .collection("Tasks")
-                                      .where("Attachments", arrayContains: {
-                                        "uid":
-                                            _auth.currentUser!.uid.toString(),
-                                        "uid1": imageUrl.toString(),
-                                      })
-                                      .where("cat", isEqualTo: "PROSPECT")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Container();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 15, left: 15),
-                                      child: ListView.separated(
-                                        shrinkWrap: true,
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        separatorBuilder:
-                                            (BuildContext context, i) =>
-                                                Divider(),
-                                        itemCount: snapshot.data!.docs.length,
-                                        itemBuilder: (_, index) {
-                                          prospectlength =
-                                              snapshot.data!.docs.length;
-                                          String flagres = snapshot
-                                              .data!.docs[index]["priority"];
-                                          String prosta = snapshot
-                                              .data!.docs[index]["status1"];
-                                          String prores = snapshot
-                                              .data!.docs[index]["status1"];
-                                          List cert = snapshot.data!.docs[index]
-                                              ["Attachments"];
-                                          return Row(
-                                            children: [
-                                              // Task name here...
-                                              InkWell(
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  width: width * 0.325,
-                                                  child: Text(
-                                                    snapshot.data!.docs[index]
-                                                        ["task"],
-                                                    style: TxtStls.stl1,
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  //check = false;
-                                                  String taskname = snapshot
-                                                      .data!
-                                                      .docs[index]["task"];
-                                                  Timestamp create = snapshot
-                                                      .data!
-                                                      .docs[index]["startDate"];
-                                                  String endDate = snapshot
-                                                      .data!
-                                                      .docs[index]["endDate"];
-                                                  String catstat = snapshot
-                                                      .data!.docs[index]["cat"];
-                                                  String scatstat = prosta;
-                                                  Color mainclr = prosClr;
-                                                  Color clrRes =
-                                                      StatusUpdateServices
-                                                          .statcolorget1(
-                                                              prores);
-
-                                                  String id = snapshot
-                                                      .data!.docs[index]["id"];
-                                                  Timestamp lastseen = snapshot
-                                                      .data!
-                                                      .docs[index]["lastseen"];
-                                                  int f = snapshot.data!
-                                                      .docs[index]["fail"];
-                                                  int s = snapshot.data!
-                                                      .docs[index]["success"];
-                                                  String company =
-                                                      snapshot.data!.docs[index]
-                                                          ["companyname"];
-                                                  List cli =
-                                                      snapshot.data!.docs[index]
-                                                          ["Certificates"];
-                                                  String logo = snapshot.data!
-                                                      .docs[index]["logo"];
-                                                  String cname =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["contactperson"];
-                                                  String cemail =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["email"];
-
-                                                  String cphone =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["phone"];
-
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      endDate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company,
-                                                      cname,
-                                                      cemail,
-                                                      cphone,
-                                                      cert);
-                                                },
-                                              ),
-                                              // Task assignee here...
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: cert
-                                                        .map(
-                                                          (e) => CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    e["uid1"]),
-                                                          ),
-                                                        )
-                                                        .toList()),
-                                              ),
-                                              //end Date of task here...
-                                              snapshot.data!.docs[index]
-                                                          ["endDate"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            MyCalenders
-                                                                .pickEndDate1(
-                                                                    context,
-                                                                    id,
-                                                                    _endDateController);
-                                                            setState(() {});
-                                                          },
-                                                          child: Icon(
-                                                            Icons
-                                                                .calendar_today_outlined,
-                                                          )),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          MyCalenders.pickEndDate1(
-                                                              context,
-                                                              id,
-                                                              _endDateController);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.clear,
-                                                                size: 10,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  String id = snapshot
-                                                                          .data!
-                                                                          .docs[
-                                                                      index]["id"];
-                                                                  EndDateOperations
-                                                                      .updateEdateTask1(
-                                                                          id);
-                                                                });
-                                                              },
-                                                            ),
-                                                            Text(
-                                                              snapshot.data!
-                                                                          .docs[
-                                                                      index]
-                                                                  ["endDate"],
-                                                              style:
-                                                                  TxtStls.stl1,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                              // task priority flag here....
-                                              snapshot.data!.docs[index]
-                                                          ["priority"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // task status here...
-                                              snapshot.data!.docs[index]
-                                                          ["status1"] ==
-                                                      ""
-                                                  ? Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget1(
-                                                                  prores),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status1 = value;
-                                                          String stat2 = status1
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus1(
-                                                                  id, stat2);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget1(
-                                                                  prosta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "AVERAGE",
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8.0),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: avgClr,
-                                                                child: Text(
-                                                                  "  AVERAGE  ",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value: "  GOOD  ",
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8.0),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: goodClr,
-                                                                child: Text(
-                                                                  "GOOD",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget1(
-                                                                  prores),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status1 = value;
-                                                          String stat2 = status1
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus1(
-                                                                  id, stat2);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget1(
-                                                                  prosta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "AVERAGE",
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8.0),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: avgClr,
-                                                                child: Text(
-                                                                  "  AVERAGE  ",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value: "  GOOD  ",
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8.0),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: goodClr,
-                                                                child: Text(
-                                                                  "GOOD",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // more option here....
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: PopupMenuButton(
-                                                  color: Clrs.txtColor,
-                                                  onSelected: (value) {
-                                                    if (value == "DELETE") {
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      CrudOperations.deleteTask(
-                                                          id);
-                                                    }
-                                                    if (value == "MOVE") {
-                                                      String cat = snapshot
-                                                          .data!
-                                                          .docs[index]["cat"];
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      String enddate = snapshot
-                                                              .data!.docs[index]
-                                                          ["endDate"];
-                                                      snapshot.data!.docs[index]
-                                                                  [
-                                                                  "Certificates"] ==
-                                                              []
-                                                          ? certficateBox(
-                                                              context,
-                                                              id,
-                                                              cat,
-                                                              enddate)
-                                                          : moveBox(context, id,
-                                                              cat, enddate);
-                                                    }
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.more_vert_outlined,
-                                                  ),
-                                                  itemBuilder: (context) {
-                                                    return [
-                                                      PopupMenuItem(
-                                                        value: "DELETE",
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .delete_outline,
-                                                              color: Colors
-                                                                  .pink[300],
-                                                            ),
-                                                            Text(
-                                                              "Delete",
-                                                              style:
-                                                                  TxtStls.stl2,
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      PopupMenuItem(
-                                                          value: "MOVE",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_left_outlined,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Move To",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                      PopupMenuItem(
-                                                          value: "CANCEL",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons.cancel,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Cancel",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ];
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : deco(tap2, prospectlength),
-                  // In Progress Category
-                  Row(
-                    children: [
-                      tBtn(tap3, "IN PROGRESS", ipClr, () {
-                        tap3 = !tap3;
-                        setState(() {});
-                      }),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
-                      ),
-                      Text(
-                        "${inprogresslength.toString()}tasks",
-                        style: TxtStls.stl1,
-                      ),
-                    ],
-                  ),
-                  tap3
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 8.0, right: 8.0, left: 8.0),
-                          child: Column(
-                            children: [
-                              head(),
-                              Container(
-                                width: width * 1,
-                                height: height * 0.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0)),
-                                    border: Border.all(color: Colors.grey)),
-                                child: StreamBuilder(
-                                  stream: _fireStore
-                                      .collection("Tasks")
-                                      .where("Attachments", arrayContains: {
-                                        "uid":
-                                            _auth.currentUser!.uid.toString(),
-                                        "uid1": imageUrl.toString(),
-                                      })
-                                      .where("cat", isEqualTo: "IN PROGRESS")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Container();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 15, left: 15),
-                                      child: ListView.separated(
-                                        shrinkWrap: true,
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        separatorBuilder:
-                                            (BuildContext context, i) =>
-                                                Divider(),
-                                        itemCount: snapshot.data!.docs.length,
-                                        itemBuilder: (_, index) {
-                                          inprogresslength =
-                                              snapshot.data!.docs.length;
-                                          String flagres = snapshot
-                                              .data!.docs[index]["priority"];
-                                          String insta = snapshot
-                                              .data!.docs[index]["status2"];
-                                          String inres = snapshot
-                                              .data!.docs[index]["status2"];
-                                          List cert = snapshot.data!.docs[index]
-                                              ["Attachments"];
-                                          return Row(
-                                            children: [
-                                              // Task name here...
-                                              InkWell(
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  width: width * 0.325,
-                                                  child: Text(
-                                                    snapshot.data!.docs[index]
-                                                        ["task"],
-                                                    style: TxtStls.stl1,
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  String taskname = snapshot
-                                                      .data!
-                                                      .docs[index]["task"];
-                                                  Timestamp create = snapshot
-                                                      .data!
-                                                      .docs[index]["startDate"];
-                                                  String enddate = snapshot
-                                                      .data!
-                                                      .docs[index]["endDate"];
-
-                                                  String catstat = snapshot
-                                                      .data!.docs[index]["cat"];
-                                                  String scatstat = insta;
-                                                  Color mainclr = ipClr;
-                                                  Color clrRes =
-                                                      StatusUpdateServices
-                                                          .statcolorget2(inres);
-
-                                                  String id = snapshot
-                                                      .data!.docs[index]["id"];
-                                                  Timestamp lastseen = snapshot
-                                                      .data!
-                                                      .docs[index]["lastseen"];
-                                                  int f = snapshot.data!
-                                                      .docs[index]["fail"];
-                                                  int s = snapshot.data!
-                                                      .docs[index]["success"];
-                                                  String company =
-                                                      snapshot.data!.docs[index]
-                                                          ["companyname"];
-                                                  List cli =
-                                                      snapshot.data!.docs[index]
-                                                          ["Certificates"];
-                                                  String logo = snapshot.data!
-                                                      .docs[index]["logo"];
-                                                  String cname =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["contactperson"];
-                                                  String cemail =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["email"];
-
-                                                  String cphone =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["phone"];
-                                                  List cert =
-                                                      snapshot.data!.docs[index]
-                                                          ["Attachments"];
-
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company,
-                                                      cname,
-                                                      cemail,
-                                                      cphone,
-                                                      cert);
-                                                },
-                                              ),
-                                              // Task assignee here...
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: cert
-                                                        .map(
-                                                          (e) => CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    e["uid1"]),
-                                                          ),
-                                                        )
-                                                        .toList()),
-                                              ),
-
-                                              //end Date of task here...
-                                              snapshot.data!.docs[index]
-                                                          ["endDate"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            MyCalenders
-                                                                .pickEndDate1(
-                                                                    context,
-                                                                    id,
-                                                                    _endDateController);
-                                                            setState(() {});
-                                                          },
-                                                          child: Icon(
-                                                            Icons
-                                                                .calendar_today_outlined,
-                                                          )),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          MyCalenders.pickEndDate1(
-                                                              context,
-                                                              id,
-                                                              _endDateController);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.clear,
-                                                                size: 10,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  String id = snapshot
-                                                                          .data!
-                                                                          .docs[
-                                                                      index]["id"];
-                                                                  EndDateOperations
-                                                                      .updateEdateTask1(
-                                                                          id);
-                                                                });
-                                                              },
-                                                            ),
-                                                            Text(
-                                                              snapshot.data!
-                                                                          .docs[
-                                                                      index]
-                                                                  ["endDate"],
-                                                              style:
-                                                                  TxtStls.stl1,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                              // task priority flag here....
-                                              snapshot.data!.docs[index]
-                                                          ["priority"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // task status here...
-                                              snapshot.data!.docs[index]
-                                                          ["status2"] ==
-                                                      ""
-                                                  ? Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget2(
-                                                                  inres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status2 = value;
-                                                          String stat3 = status2
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus2(
-                                                                  id, stat3);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget2(
-                                                                  insta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "FOLLOWUP",
-                                                              child: Container(
-                                                                color: flwClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "FOLLOWUP",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "SPECIFICATION",
-                                                              child: Container(
-                                                                color: spClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "SPECIFICATION",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "QUOTATION",
-                                                              child: Container(
-                                                                color: qtoClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "QUOTATION",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget2(
-                                                                  inres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status2 = value;
-                                                          String stat3 = status2
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus2(
-                                                                  id, stat3);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget2(
-                                                                  insta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "FOLLOWUP",
-                                                              child: Container(
-                                                                color: flwClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "FOLLOWUP",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "SPECIFICATION",
-                                                              child: Container(
-                                                                color: spClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "SPECIFICATION",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "QUOTATION",
-                                                              child: Container(
-                                                                color: qtoClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "QUOTATION",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // more option here....
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: PopupMenuButton(
-                                                  color: Clrs.txtColor,
-                                                  onSelected: (value) {
-                                                    if (value == "DELETE") {
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      CrudOperations.deleteTask(
-                                                          id);
-                                                    }
-                                                    if (value == "MOVE") {
-                                                      String cat = snapshot
-                                                          .data!
-                                                          .docs[index]["cat"];
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      String enddate = snapshot
-                                                              .data!.docs[index]
-                                                          ["endDate"];
-                                                      moveBox(context, id, cat,
-                                                          enddate);
-                                                    }
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.more_vert_outlined,
-                                                  ),
-                                                  itemBuilder: (context) {
-                                                    return [
-                                                      PopupMenuItem(
-                                                        value: "DELETE",
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .delete_outline,
-                                                              color: Colors
-                                                                  .pink[300],
-                                                            ),
-                                                            Text(
-                                                              "Delete",
-                                                              style:
-                                                                  TxtStls.stl2,
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      PopupMenuItem(
-                                                          value: "MOVE",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_left_outlined,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Move To",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                      PopupMenuItem(
-                                                          value: "CANCEL",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons.cancel,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Cancel",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ];
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : deco(tap3, inprogresslength),
-                  // Won Category
-                  Row(
-                    children: [
-                      tBtn(tap5, "WON", wonClr, () {
-                        tap5 = !tap5;
-                        setState(() {});
-                      }),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
-                      ),
-                      Text(
-                        "${wonlength.toString()} tasks",
-                        style: TxtStls.stl1,
-                      ),
-                    ],
-                  ),
-                  tap5
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              right: 8.0, left: 8.0, bottom: 8.0),
-                          child: Column(
-                            children: [
-                              head(),
-                              Container(
-                                width: width * 1,
-                                height: height * 0.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0)),
-                                    border: Border.all(color: Colors.grey)),
-                                child: StreamBuilder(
-                                  stream: _fireStore
-                                      .collection("Tasks")
-                                      .where("Attachments", arrayContains: {
-                                        "uid":
-                                            _auth.currentUser!.uid.toString(),
-                                        "uid1": imageUrl.toString(),
-                                      })
-                                      .where("cat", isEqualTo: "WON")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Container();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 15, left: 15),
-                                      child: ListView.separated(
-                                        shrinkWrap: true,
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        separatorBuilder:
-                                            (BuildContext context, i) =>
-                                                Divider(),
-                                        itemCount: snapshot.data!.docs.length,
-                                        itemBuilder: (_, index) {
-                                          wonlength =
-                                              snapshot.data!.docs.length;
-                                          String flagres = snapshot
-                                              .data!.docs[index]["priority"];
-                                          String wonsta = snapshot
-                                              .data!.docs[index]["status4"];
-                                          String wonres = snapshot
-                                              .data!.docs[index]["status4"];
-                                          List cert = snapshot.data!.docs[index]
-                                              ["Attachments"];
-                                          return Row(
-                                            children: [
-                                              // Task name here...
-                                              InkWell(
-                                                onTap: () {
-                                                  String taskname = snapshot
-                                                      .data!
-                                                      .docs[index]["task"];
-                                                  Timestamp create = snapshot
-                                                      .data!
-                                                      .docs[index]["startDate"];
-                                                  String enddate = snapshot
-                                                      .data!
-                                                      .docs[index]["endDate"];
-
-                                                  String catstat = snapshot
-                                                      .data!.docs[index]["cat"];
-
-                                                  String scatstat = wonsta;
-                                                  Color mainclr = wonClr;
-                                                  Color clrRes =
-                                                      StatusUpdateServices
-                                                          .statcolorget4(
-                                                              wonres);
-                                                  String id = snapshot
-                                                      .data!.docs[index]["id"];
-                                                  Timestamp lastseen = snapshot
-                                                      .data!
-                                                      .docs[index]["lastseen"];
-                                                  int f = snapshot.data!
-                                                      .docs[index]["fail"];
-                                                  int s = snapshot.data!
-                                                      .docs[index]["success"];
-                                                  String company =
-                                                      snapshot.data!.docs[index]
-                                                          ["companyname"];
-                                                  List cli =
-                                                      snapshot.data!.docs[index]
-                                                          ["Certificates"];
-                                                  String logo = snapshot.data!
-                                                      .docs[index]["logo"];
-                                                  String cname =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["contactperson"];
-                                                  String cemail =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["email"];
-
-                                                  String cphone =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["phone"];
-
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company,
-                                                      cname,
-                                                      cemail,
-                                                      cphone,
-                                                      cert);
-                                                },
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  width: width * 0.325,
-                                                  child: Text(
-                                                    snapshot.data!.docs[index]
-                                                        ["task"],
-                                                    style: TxtStls.stl1,
-                                                  ),
-                                                ),
-                                              ),
-                                              // Task assignee here...
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: cert
-                                                        .map(
-                                                          (e) => CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    e["uid1"]),
-                                                          ),
-                                                        )
-                                                        .toList()),
-                                              ),
-                                              //end Date of task here...
-                                              snapshot.data!.docs[index]
-                                                          ["endDate"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            MyCalenders
-                                                                .pickEndDate1(
-                                                                    context,
-                                                                    id,
-                                                                    _endDateController);
-                                                            setState(() {});
-                                                          },
-                                                          child: Icon(
-                                                            Icons
-                                                                .calendar_today_outlined,
-                                                          )),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          MyCalenders.pickEndDate1(
-                                                              context,
-                                                              id,
-                                                              _endDateController);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.clear,
-                                                                size: 10,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  String id = snapshot
-                                                                          .data!
-                                                                          .docs[
-                                                                      index]["id"];
-                                                                  EndDateOperations
-                                                                      .updateEdateTask1(
-                                                                          id);
-                                                                });
-                                                              },
-                                                            ),
-                                                            Text(
-                                                              snapshot.data!
-                                                                          .docs[
-                                                                      index]
-                                                                  ["endDate"],
-                                                              style:
-                                                                  TxtStls.stl1,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                              // task priority flag here....
-                                              snapshot.data!.docs[index]
-                                                          ["priority"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // task status here...
-                                              snapshot.data!.docs[index]
-                                                          ["status4"] ==
-                                                      ""
-                                                  ? Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget4(
-                                                                  wonres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status4 = value;
-                                                          String stat4 = status4
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus4(
-                                                                  id, stat4);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget4(
-                                                                  wonsta),
-                                                          style: TxtStls.stl11,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "PAYMENT",
-                                                              child: Container(
-                                                                color: wonClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "PAYMENT",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "DOCUMENTS",
-                                                              child: Container(
-                                                                color: flwClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "DOCUMENTS",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value: "SAMPLES",
-                                                              child: Container(
-                                                                color: goodClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "SAMPLES",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget4(
-                                                                  wonres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status4 = value;
-                                                          String stat4 = status4
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus4(
-                                                                  id, stat4);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget4(
-                                                                  wonsta),
-                                                          style: TxtStls.stl11,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "PAYMENT",
-                                                              child: Container(
-                                                                color: wonClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "PAYMENT",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "DOCUMENTS",
-                                                              child: Container(
-                                                                color: flwClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "DOCUMENTS",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value: "SAMPLES",
-                                                              child: Container(
-                                                                color: goodClr,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                  "SAMPLES",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // more option here....
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: PopupMenuButton(
-                                                  color: Clrs.txtColor,
-                                                  onSelected: (value) {
-                                                    if (value == "DELETE") {
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      CrudOperations.deleteTask(
-                                                          id);
-                                                    }
-                                                    if (value == "MOVE") {
-                                                      String cat = snapshot
-                                                          .data!
-                                                          .docs[index]["cat"];
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      String enddate = snapshot
-                                                              .data!.docs[index]
-                                                          ["endDate"];
-                                                      moveBox(context, id, cat,
-                                                          enddate);
-                                                    }
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.more_vert_outlined,
-                                                  ),
-                                                  itemBuilder: (context) {
-                                                    return [
-                                                      PopupMenuItem(
-                                                        value: "DELETE",
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .delete_outline,
-                                                              color: Colors
-                                                                  .pink[300],
-                                                            ),
-                                                            Text(
-                                                              "Delete",
-                                                              style:
-                                                                  TxtStls.stl2,
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      PopupMenuItem(
-                                                          value: "MOVE",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_left_outlined,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Move To",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                      PopupMenuItem(
-                                                          value: "CANCEL",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons.cancel,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Cancel",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ];
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : deco(tap5, wonlength),
-                  // Close Category
-                  Row(
-                    children: [
-                      tBtn(tap6, "CLOSE", clsClr, () {
-                        tap6 = !tap6;
-                        setState(() {});
-                      }),
-                      SizedBox(
-                        width: Responsive.isSmallScreen(context)
-                            ? width * 0.005
-                            : width * 0.005,
-                      ),
-                      Text(
-                        "${closelength.toString()} tasks",
-                        style: TxtStls.stl1,
-                      ),
-                    ],
-                  ),
-                  tap6
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              right: 8.0, bottom: 8.0, left: 8.0),
-                          child: Column(
-                            children: [
-                              head(),
-                              Container(
-                                width: width * 1,
-                                height: height * 0.35,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0)),
-                                    border: Border.all(color: Colors.grey)),
-                                child: StreamBuilder(
-                                  stream: _fireStore
-                                      .collection("Tasks")
-                                      .where("Attachments", arrayContains: {
-                                        "uid":
-                                            _auth.currentUser!.uid.toString(),
-                                        "uid1": imageUrl.toString(),
-                                      })
-                                      .where("cat", isEqualTo: "CLOSE")
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Container();
-                                    }
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 15, left: 15),
-                                      child: ListView.separated(
-                                        shrinkWrap: true,
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        separatorBuilder:
-                                            (BuildContext context, i) =>
-                                                Divider(),
-                                        itemCount: snapshot.data!.docs.length,
-                                        itemBuilder: (_, index) {
-                                          closelength =
-                                              snapshot.data!.docs.length;
-                                          String flagres = snapshot
-                                              .data!.docs[index]["priority"];
-                                          String clsta = snapshot
-                                              .data!.docs[index]["status5"];
-                                          String clres = snapshot
-                                              .data!.docs[index]["status5"];
-                                          List cert = snapshot.data!.docs[index]
-                                              ["Attachments"];
-                                          return Row(
-                                            children: [
-                                              // Task name here...
-                                              InkWell(
-                                                onTap: () {
-                                                  String taskname = snapshot
-                                                      .data!
-                                                      .docs[index]["task"];
-                                                  Timestamp create = snapshot
-                                                      .data!
-                                                      .docs[index]["startDate"];
-                                                  String enddate = snapshot
-                                                      .data!
-                                                      .docs[index]["endDate"];
-                                                  String catstat = snapshot
-                                                      .data!.docs[index]["cat"];
-                                                  String scatstat = clsta;
-                                                  Color mainclr = clsClr;
-                                                  Color clrRes =
-                                                      StatusUpdateServices
-                                                          .statcolorget5(clres);
-                                                  String id = snapshot
-                                                      .data!.docs[index]["id"];
-                                                  Timestamp lastseen = snapshot
-                                                      .data!
-                                                      .docs[index]["lastseen"];
-                                                  int f = snapshot.data!
-                                                      .docs[index]["fail"];
-                                                  int s = snapshot.data!
-                                                      .docs[index]["success"];
-                                                  List cli =
-                                                      snapshot.data!.docs[index]
-                                                          ["Certificates"];
-                                                  String logo = snapshot.data!
-                                                      .docs[index]["logo"];
-                                                  String company =
-                                                      snapshot.data!.docs[index]
-                                                          ["companyname"];
-                                                  String cname =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["contactperson"];
-                                                  String cemail =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["email"];
-
-                                                  String cphone =
-                                                      snapshot.data!.docs[index]
-                                                              ["CompanyDetails"]
-                                                          [0]["phone"];
-
-                                                  descBox(
-                                                      context,
-                                                      taskname,
-                                                      create,
-                                                      enddate,
-                                                      flagres,
-                                                      id,
-                                                      catstat,
-                                                      scatstat,
-                                                      mainclr,
-                                                      clrRes,
-                                                      s,
-                                                      f,
-                                                      lastseen,
-                                                      cli,
-                                                      logo,
-                                                      company,
-                                                      cname,
-                                                      cemail,
-                                                      cphone,
-                                                      cert);
-                                                },
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  width: width * 0.325,
-                                                  child: Text(
-                                                    snapshot.data!.docs[index]
-                                                        ["task"],
-                                                    style: TxtStls.stl1,
-                                                  ),
-                                                ),
-                                              ),
-                                              // Task assignee here...
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: cert
-                                                        .map(
-                                                          (e) => CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    e["uid1"]),
-                                                          ),
-                                                        )
-                                                        .toList()),
-                                              ),
-                                              //end Date of task here...
-                                              snapshot.data!.docs[index]
-                                                          ["endDate"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            String id = snapshot
-                                                                    .data!
-                                                                    .docs[index]
-                                                                ["id"];
-                                                            MyCalenders
-                                                                .pickEndDate1(
-                                                                    context,
-                                                                    id,
-                                                                    _endDateController);
-                                                            setState(() {});
-                                                          },
-                                                          child: Icon(
-                                                            Icons
-                                                                .calendar_today_outlined,
-                                                          )),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          MyCalenders.pickEndDate1(
-                                                              context,
-                                                              id,
-                                                              _endDateController);
-                                                          setState(() {});
-                                                        },
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            IconButton(
-                                                              icon: Icon(
-                                                                Icons.clear,
-                                                                size: 10,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  String id = snapshot
-                                                                          .data!
-                                                                          .docs[
-                                                                      index]["id"];
-                                                                  EndDateOperations
-                                                                      .updateEdateTask1(
-                                                                          id);
-                                                                });
-                                                              },
-                                                            ),
-                                                            Text(
-                                                              snapshot.data!
-                                                                          .docs[
-                                                                      index]
-                                                                  ["endDate"],
-                                                              style:
-                                                                  TxtStls.stl1,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                              // task priority flag here....
-                                              snapshot.data!.docs[index]
-                                                          ["priority"] ==
-                                                      ""
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          pricol = value;
-                                                          String prcl =
-                                                              pricol.toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          FlagService
-                                                              .updateFlag(
-                                                                  id, prcl);
-                                                          setState(() {});
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.flag,
-                                                          color: FlagService
-                                                              .pricolorget(
-                                                                  flagres),
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value: "U",
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  Icon(
-                                                                    Icons.flag,
-                                                                    color: Clrs
-                                                                        .urgent,
-                                                                  ),
-                                                                  Text(
-                                                                    "Urgent",
-                                                                    style: TxtStls
-                                                                        .stl2,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value: "E",
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .clear,
-                                                                      color: Clrs
-                                                                          .bgColor,
-                                                                    ),
-                                                                    Text(
-                                                                      "Clear",
-                                                                      style: TxtStls
-                                                                          .stl2,
-                                                                    )
-                                                                  ],
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // task status here...
-                                              snapshot.data!.docs[index]
-                                                          ["status5"] ==
-                                                      ""
-                                                  ? Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget5(
-                                                                  clres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status5 = value;
-                                                          String stat5 = status5
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus5(
-                                                                  id, stat5);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget5(
-                                                                  clsta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "IRRELEVANT",
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: irrClr,
-                                                                child: Text(
-                                                                  "IRRELEVANT",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "BUDGET ISSUE",
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: clsClr,
-                                                                child: Text(
-                                                                  "BUDGET ISSUE",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value:
-                                                                    "INFORMATIVE",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: flwClr,
-                                                                  child: Text(
-                                                                    "INFORMATIVE",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                )),
-                                                            PopupMenuItem(
-                                                                value:
-                                                                    "NO ANSWER",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: conClr,
-                                                                  child: Text(
-                                                                    "NO ANSWER",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      color:
-                                                          StatusUpdateServices
-                                                              .statcolorget5(
-                                                                  clres),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: width * 0.09,
-                                                      height: height * 0.04,
-                                                      child: PopupMenuButton(
-                                                        color: Clrs.txtColor,
-                                                        onSelected: (value) {
-                                                          status5 = value;
-                                                          String stat5 = status5
-                                                              .toString();
-                                                          String id = snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["id"];
-                                                          StatusUpdateServices
-                                                              .updateStatus5(
-                                                                  id, stat5);
-                                                          setState(() {});
-                                                        },
-                                                        child: Text(
-                                                          StatusUpdateServices
-                                                              .statusget5(
-                                                                  clsta),
-                                                          style: TxtStls.stl1,
-                                                        ),
-                                                        itemBuilder: (context) {
-                                                          return [
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "IRRELEVANT",
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: irrClr,
-                                                                child: Text(
-                                                                  "IRRELEVANT",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                              value:
-                                                                  "BUDGET ISSUE",
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                color: clsClr,
-                                                                child: Text(
-                                                                  "BUDGET ISSUE",
-                                                                  style: TxtStls
-                                                                      .stl1,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            PopupMenuItem(
-                                                                value:
-                                                                    "INFORMATIVE",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: flwClr,
-                                                                  child: Text(
-                                                                    "INFORMATIVE",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                )),
-                                                            PopupMenuItem(
-                                                                value:
-                                                                    "NO ANSWER",
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  color: conClr,
-                                                                  child: Text(
-                                                                    "NO ANSWER",
-                                                                    style: TxtStls
-                                                                        .stl1,
-                                                                  ),
-                                                                )),
-                                                          ];
-                                                        },
-                                                      ),
-                                                    ),
-                                              // more option here....
-                                              Container(
-                                                alignment: Alignment.center,
-                                                width: width * 0.09,
-                                                child: PopupMenuButton(
-                                                  color: Clrs.txtColor,
-                                                  onSelected: (value) {
-                                                    if (value == "DELETE") {
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      CrudOperations.deleteTask(
-                                                          id);
-                                                    }
-                                                    if (value == "MOVE") {
-                                                      String cat = snapshot
-                                                          .data!
-                                                          .docs[index]["cat"];
-                                                      String id = snapshot.data!
-                                                          .docs[index]["id"];
-                                                      String enddate = snapshot
-                                                              .data!.docs[index]
-                                                          ["endDate"];
-
-                                                      moveBox(context, id, cat,
-                                                          enddate);
-                                                    }
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.more_vert_outlined,
-                                                  ),
-                                                  itemBuilder: (context) {
-                                                    return [
-                                                      PopupMenuItem(
-                                                        value: "DELETE",
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .delete_outline,
-                                                              color: Colors
-                                                                  .pink[300],
-                                                            ),
-                                                            Text(
-                                                              "Delete",
-                                                              style:
-                                                                  TxtStls.stl2,
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      PopupMenuItem(
-                                                          value: "MOVE",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_left_outlined,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Move To",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                      PopupMenuItem(
-                                                          value: "CANCEL",
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Icon(
-                                                                Icons.cancel,
-                                                                color: Clrs
-                                                                    .bgColor,
-                                                              ),
-                                                              Text(
-                                                                "Cancel",
-                                                                style: TxtStls
-                                                                    .stl2,
-                                                              )
-                                                            ],
-                                                          )),
-                                                    ];
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : deco(tap6, closelength),
-                ],
+                    ),
+                  ],
+                )
+              : deco(tap1, newlength),
+          // Prospect Category
+          Row(
+            children: [
+              tBtn(tap2, "PROSPECT", prosClr, () {
+                tap2 = !tap2;
+                setState(() {});
+              }),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
               ),
-            ]),
+              Text(
+                "${prospectlength.toString()}tasks",
+                style: TxtStls.stl1,
+              ),
+            ],
+          ),
+          tap2
+              ? Column(
+                  children: [
+                    head(),
+                    Container(
+                      width: size.width * 1,
+                      height: size.height * 0.11,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0)),
+                          border: Border.all(color: Colors.grey)),
+                      child: StreamBuilder(
+                        stream: _fireStore
+                            .collection("Tasks")
+                            .where("Attachments", arrayContains: {
+                              "uid": _auth.currentUser!.uid.toString(),
+                            })
+                            .where("cat", isEqualTo: "PROSPECT")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 15),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              separatorBuilder: (BuildContext context, i) =>
+                                  Divider(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (_, index) {
+                                prospectlength = snapshot.data!.docs.length;
+                                String flagres =
+                                    snapshot.data!.docs[index]["priority"];
+                                String prosta =
+                                    snapshot.data!.docs[index]["status1"];
+                                String prores =
+                                    snapshot.data!.docs[index]["status1"];
+                                List cert =
+                                    snapshot.data!.docs[index]["Attachments"];
+                                return Row(
+                                  children: [
+                                    // Task name here...
+                                    InkWell(
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.325,
+                                        child: Text(
+                                          snapshot.data!.docs[index]["task"],
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        //check = false;
+                                        String taskname =
+                                            snapshot.data!.docs[index]["task"];
+                                        Timestamp create = snapshot
+                                            .data!.docs[index]["startDate"];
+                                        String endDate = snapshot
+                                            .data!.docs[index]["endDate"];
+                                        String catstat =
+                                            snapshot.data!.docs[index]["cat"];
+                                        String scatstat = prosta;
+                                        Color mainclr = prosClr;
+                                        Color clrRes =
+                                            StatusUpdateServices.statcolorget1(
+                                                prores);
+
+                                        String id =
+                                            snapshot.data!.docs[index]["id"];
+                                        Timestamp lastseen = snapshot
+                                            .data!.docs[index]["lastseen"];
+                                        int f =
+                                            snapshot.data!.docs[index]["fail"];
+                                        int s = snapshot.data!.docs[index]
+                                            ["success"];
+                                        String company = snapshot
+                                            .data!.docs[index]["companyname"];
+                                        List cli = snapshot.data!.docs[index]
+                                            ["Certificates"];
+                                        String logo =
+                                            snapshot.data!.docs[index]["logo"];
+                                        String cname = snapshot.data!
+                                                .docs[index]["CompanyDetails"]
+                                            [0]["contactperson"];
+                                        String cemail =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["email"];
+
+                                        String cphone =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["phone"];
+
+                                        descBox(
+                                            context,
+                                            taskname,
+                                            create,
+                                            endDate,
+                                            flagres,
+                                            id,
+                                            catstat,
+                                            scatstat,
+                                            mainclr,
+                                            clrRes,
+                                            s,
+                                            f,
+                                            lastseen,
+                                            cli,
+                                            logo,
+                                            company,
+                                            cname,
+                                            cemail,
+                                            cphone,
+                                            cert);
+                                      },
+                                    ),
+                                    // Task assignee here...
+                                    // Container(
+                                    //   alignment: Alignment.center,
+                                    //   width: size.width * 0.09,
+                                    //   child: Row(
+                                    //       mainAxisAlignment:
+                                    //           MainAxisAlignment.center,
+                                    //       children: cert
+                                    //           .map(
+                                    //             (e) => CircleAvatar(
+                                    //               backgroundImage:
+                                    //                   NetworkImage(e["uid1"]),
+                                    //             ),
+                                    //           )
+                                    //           .toList()),
+                                    // ),
+                                    //end Date of task here...
+                                    snapshot.data!.docs[index]["endDate"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  MyCalenders.pickEndDate1(
+                                                      context,
+                                                      id,
+                                                      _endDateController);
+                                                  setState(() {});
+                                                },
+                                                child: Icon(
+                                                  Icons.calendar_today_outlined,
+                                                )),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                              onTap: () {
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                MyCalenders.pickEndDate1(
+                                                    context,
+                                                    id,
+                                                    _endDateController);
+                                                setState(() {});
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      size: 10,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        String id = snapshot
+                                                            .data!
+                                                            .docs[index]["id"];
+                                                        EndDateOperations
+                                                            .updateEdateTask1(
+                                                                id);
+                                                      });
+                                                    },
+                                                  ),
+                                                  Text(
+                                                    snapshot.data!.docs[index]
+                                                        ["endDate"],
+                                                    style: TxtStls.stl1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                    // task priority flag here....
+                                    snapshot.data!.docs[index]["priority"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // task status here...
+                                    snapshot.data!.docs[index]["status1"] == ""
+                                        ? Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget1(prores),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status1 = value;
+                                                String stat2 =
+                                                    status1.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus1(id, stat2);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget1(
+                                                    prosta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "AVERAGE",
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: avgClr,
+                                                      child: Text(
+                                                        "  AVERAGE  ",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "  GOOD  ",
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: goodClr,
+                                                      child: Text(
+                                                        "GOOD",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget1(prores),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status1 = value;
+                                                String stat2 =
+                                                    status1.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus1(id, stat2);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget1(
+                                                    prosta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "AVERAGE",
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: avgClr,
+                                                      child: Text(
+                                                        "  AVERAGE  ",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "  GOOD  ",
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: goodClr,
+                                                      child: Text(
+                                                        "GOOD",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // more option here....
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: PopupMenuButton(
+                                        color: Clrs.txtColor,
+                                        onSelected: (value) {
+                                          if (value == "DELETE") {
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            CrudOperations.deleteTask(id);
+                                          }
+                                          if (value == "MOVE") {
+                                            String cat = snapshot
+                                                .data!.docs[index]["cat"];
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            String enddate = snapshot
+                                                .data!.docs[index]["endDate"];
+                                            snapshot.data!.docs[index]
+                                                        ["Certificates"] ==
+                                                    []
+                                                ? certficateBox(
+                                                    context, id, cat, enddate)
+                                                : moveBox(
+                                                    context, id, cat, enddate);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.more_vert_outlined,
+                                        ),
+                                        itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              value: "DELETE",
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.delete_outline,
+                                                    color: Colors.pink[300],
+                                                  ),
+                                                  Text(
+                                                    "Delete",
+                                                    style: TxtStls.stl2,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                                value: "MOVE",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.arrow_left_outlined,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Move To",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                            PopupMenuItem(
+                                                value: "CANCEL",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.cancel,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Cancel",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                          ];
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : deco(tap2, prospectlength),
+          // // In Progress Category
+          Row(
+            children: [
+              tBtn(tap3, "IN PROGRESS", ipClr, () {
+                tap3 = !tap3;
+                setState(() {});
+              }),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
+              ),
+              Text(
+                "${inprogresslength.toString()}tasks",
+                style: TxtStls.stl1,
+              ),
+            ],
+          ),
+          tap3
+              ? Column(
+                  children: [
+                    head(),
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.11,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0)),
+                          border: Border.all(color: Colors.grey)),
+                      child: StreamBuilder(
+                        stream: _fireStore
+                            .collection("Tasks")
+                            .where("Attachments", arrayContains: {
+                              "uid": _auth.currentUser!.uid.toString(),
+                              "uid1": imageUrl.toString(),
+                            })
+                            .where("cat", isEqualTo: "IN PROGRESS")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 15),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              separatorBuilder: (BuildContext context, i) =>
+                                  Divider(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (_, index) {
+                                inprogresslength = snapshot.data!.docs.length;
+                                String flagres =
+                                    snapshot.data!.docs[index]["priority"];
+                                String insta =
+                                    snapshot.data!.docs[index]["status2"];
+                                String inres =
+                                    snapshot.data!.docs[index]["status2"];
+                                List cert =
+                                    snapshot.data!.docs[index]["Attachments"];
+                                return Row(
+                                  children: [
+                                    // Task name here...
+                                    InkWell(
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.325,
+                                        child: Text(
+                                          snapshot.data!.docs[index]["task"],
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        String taskname =
+                                            snapshot.data!.docs[index]["task"];
+                                        Timestamp create = snapshot
+                                            .data!.docs[index]["startDate"];
+                                        String enddate = snapshot
+                                            .data!.docs[index]["endDate"];
+
+                                        String catstat =
+                                            snapshot.data!.docs[index]["cat"];
+                                        String scatstat = insta;
+                                        Color mainclr = ipClr;
+                                        Color clrRes =
+                                            StatusUpdateServices.statcolorget2(
+                                                inres);
+
+                                        String id =
+                                            snapshot.data!.docs[index]["id"];
+                                        Timestamp lastseen = snapshot
+                                            .data!.docs[index]["lastseen"];
+                                        int f =
+                                            snapshot.data!.docs[index]["fail"];
+                                        int s = snapshot.data!.docs[index]
+                                            ["success"];
+                                        String company = snapshot
+                                            .data!.docs[index]["companyname"];
+                                        List cli = snapshot.data!.docs[index]
+                                            ["Certificates"];
+                                        String logo =
+                                            snapshot.data!.docs[index]["logo"];
+                                        String cname = snapshot.data!
+                                                .docs[index]["CompanyDetails"]
+                                            [0]["contactperson"];
+                                        String cemail =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["email"];
+
+                                        String cphone =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["phone"];
+                                        List cert = snapshot.data!.docs[index]
+                                            ["Attachments"];
+
+                                        descBox(
+                                            context,
+                                            taskname,
+                                            create,
+                                            enddate,
+                                            flagres,
+                                            id,
+                                            catstat,
+                                            scatstat,
+                                            mainclr,
+                                            clrRes,
+                                            s,
+                                            f,
+                                            lastseen,
+                                            cli,
+                                            logo,
+                                            company,
+                                            cname,
+                                            cemail,
+                                            cphone,
+                                            cert);
+                                      },
+                                    ),
+                                    // Task assignee here...
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: cert
+                                              .map(
+                                                (e) => CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(e["uid1"]),
+                                                ),
+                                              )
+                                              .toList()),
+                                    ),
+
+                                    //end Date of task here...
+                                    snapshot.data!.docs[index]["endDate"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  MyCalenders.pickEndDate1(
+                                                      context,
+                                                      id,
+                                                      _endDateController);
+                                                  setState(() {});
+                                                },
+                                                child: Icon(
+                                                  Icons.calendar_today_outlined,
+                                                )),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                              onTap: () {
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                MyCalenders.pickEndDate1(
+                                                    context,
+                                                    id,
+                                                    _endDateController);
+                                                setState(() {});
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      size: 10,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        String id = snapshot
+                                                            .data!
+                                                            .docs[index]["id"];
+                                                        EndDateOperations
+                                                            .updateEdateTask1(
+                                                                id);
+                                                      });
+                                                    },
+                                                  ),
+                                                  Text(
+                                                    snapshot.data!.docs[index]
+                                                        ["endDate"],
+                                                    style: TxtStls.stl1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                    // task priority flag here....
+                                    snapshot.data!.docs[index]["priority"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // task status here...
+                                    snapshot.data!.docs[index]["status2"] == ""
+                                        ? Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget2(inres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status2 = value;
+                                                String stat3 =
+                                                    status2.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus2(id, stat3);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget2(
+                                                    insta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "FOLLOWUP",
+                                                    child: Container(
+                                                      color: flwClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "FOLLOWUP",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "SPECIFICATION",
+                                                    child: Container(
+                                                      color: spClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "SPECIFICATION",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "QUOTATION",
+                                                    child: Container(
+                                                      color: qtoClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "QUOTATION",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget2(inres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status2 = value;
+                                                String stat3 =
+                                                    status2.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus2(id, stat3);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget2(
+                                                    insta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "FOLLOWUP",
+                                                    child: Container(
+                                                      color: flwClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "FOLLOWUP",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "SPECIFICATION",
+                                                    child: Container(
+                                                      color: spClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "SPECIFICATION",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "QUOTATION",
+                                                    child: Container(
+                                                      color: qtoClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "QUOTATION",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // more option here....
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: PopupMenuButton(
+                                        color: Clrs.txtColor,
+                                        onSelected: (value) {
+                                          if (value == "DELETE") {
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            CrudOperations.deleteTask(id);
+                                          }
+                                          if (value == "MOVE") {
+                                            String cat = snapshot
+                                                .data!.docs[index]["cat"];
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            String enddate = snapshot
+                                                .data!.docs[index]["endDate"];
+                                            moveBox(context, id, cat, enddate);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.more_vert_outlined,
+                                        ),
+                                        itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              value: "DELETE",
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.delete_outline,
+                                                    color: Colors.pink[300],
+                                                  ),
+                                                  Text(
+                                                    "Delete",
+                                                    style: TxtStls.stl2,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                                value: "MOVE",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.arrow_left_outlined,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Move To",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                            PopupMenuItem(
+                                                value: "CANCEL",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.cancel,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Cancel",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                          ];
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : deco(tap3, inprogresslength),
+          // Won Category
+          Row(
+            children: [
+              tBtn(tap5, "WON", wonClr, () {
+                tap5 = !tap5;
+                setState(() {});
+              }),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
+              ),
+              Text(
+                "${wonlength.toString()} tasks",
+                style: TxtStls.stl1,
+              ),
+            ],
+          ),
+          tap5
+              ? Column(
+                  children: [
+                    head(),
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.11,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0)),
+                          border: Border.all(color: Colors.grey)),
+                      child: StreamBuilder(
+                        stream: _fireStore
+                            .collection("Tasks")
+                            .where("Attachments", arrayContains: {
+                              "uid": _auth.currentUser!.uid.toString(),
+                              "uid1": imageUrl.toString(),
+                            })
+                            .where("cat", isEqualTo: "WON")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 15),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              separatorBuilder: (BuildContext context, i) =>
+                                  Divider(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (_, index) {
+                                wonlength = snapshot.data!.docs.length;
+                                String flagres =
+                                    snapshot.data!.docs[index]["priority"];
+                                String wonsta =
+                                    snapshot.data!.docs[index]["status4"];
+                                String wonres =
+                                    snapshot.data!.docs[index]["status4"];
+                                List cert =
+                                    snapshot.data!.docs[index]["Attachments"];
+                                return Row(
+                                  children: [
+                                    // Task name here...
+                                    InkWell(
+                                      onTap: () {
+                                        String taskname =
+                                            snapshot.data!.docs[index]["task"];
+                                        Timestamp create = snapshot
+                                            .data!.docs[index]["startDate"];
+                                        String enddate = snapshot
+                                            .data!.docs[index]["endDate"];
+
+                                        String catstat =
+                                            snapshot.data!.docs[index]["cat"];
+
+                                        String scatstat = wonsta;
+                                        Color mainclr = wonClr;
+                                        Color clrRes =
+                                            StatusUpdateServices.statcolorget4(
+                                                wonres);
+                                        String id =
+                                            snapshot.data!.docs[index]["id"];
+                                        Timestamp lastseen = snapshot
+                                            .data!.docs[index]["lastseen"];
+                                        int f =
+                                            snapshot.data!.docs[index]["fail"];
+                                        int s = snapshot.data!.docs[index]
+                                            ["success"];
+                                        String company = snapshot
+                                            .data!.docs[index]["companyname"];
+                                        List cli = snapshot.data!.docs[index]
+                                            ["Certificates"];
+                                        String logo =
+                                            snapshot.data!.docs[index]["logo"];
+                                        String cname = snapshot.data!
+                                                .docs[index]["CompanyDetails"]
+                                            [0]["contactperson"];
+                                        String cemail =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["email"];
+
+                                        String cphone =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["phone"];
+
+                                        descBox(
+                                            context,
+                                            taskname,
+                                            create,
+                                            enddate,
+                                            flagres,
+                                            id,
+                                            catstat,
+                                            scatstat,
+                                            mainclr,
+                                            clrRes,
+                                            s,
+                                            f,
+                                            lastseen,
+                                            cli,
+                                            logo,
+                                            company,
+                                            cname,
+                                            cemail,
+                                            cphone,
+                                            cert);
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.325,
+                                        child: Text(
+                                          snapshot.data!.docs[index]["task"],
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    // Task assignee here...
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: cert
+                                              .map(
+                                                (e) => CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(e["uid1"]),
+                                                ),
+                                              )
+                                              .toList()),
+                                    ),
+                                    //end Date of task here...
+                                    snapshot.data!.docs[index]["endDate"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  MyCalenders.pickEndDate1(
+                                                      context,
+                                                      id,
+                                                      _endDateController);
+                                                  setState(() {});
+                                                },
+                                                child: Icon(
+                                                  Icons.calendar_today_outlined,
+                                                )),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                              onTap: () {
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                MyCalenders.pickEndDate1(
+                                                    context,
+                                                    id,
+                                                    _endDateController);
+                                                setState(() {});
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      size: 10,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        String id = snapshot
+                                                            .data!
+                                                            .docs[index]["id"];
+                                                        EndDateOperations
+                                                            .updateEdateTask1(
+                                                                id);
+                                                      });
+                                                    },
+                                                  ),
+                                                  Text(
+                                                    snapshot.data!.docs[index]
+                                                        ["endDate"],
+                                                    style: TxtStls.stl1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                    // task priority flag here....
+                                    snapshot.data!.docs[index]["priority"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // task status here...
+                                    snapshot.data!.docs[index]["status4"] == ""
+                                        ? Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget4(wonres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status4 = value;
+                                                String stat4 =
+                                                    status4.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus4(id, stat4);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget4(
+                                                    wonsta),
+                                                style: TxtStls.stl11,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "PAYMENT",
+                                                    child: Container(
+                                                      color: wonClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "PAYMENT",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "DOCUMENTS",
+                                                    child: Container(
+                                                      color: flwClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "DOCUMENTS",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "SAMPLES",
+                                                    child: Container(
+                                                      color: goodClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "SAMPLES",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget4(wonres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status4 = value;
+                                                String stat4 =
+                                                    status4.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus4(id, stat4);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget4(
+                                                    wonsta),
+                                                style: TxtStls.stl11,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "PAYMENT",
+                                                    child: Container(
+                                                      color: wonClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "PAYMENT",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "DOCUMENTS",
+                                                    child: Container(
+                                                      color: flwClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "DOCUMENTS",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "SAMPLES",
+                                                    child: Container(
+                                                      color: goodClr,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "SAMPLES",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // more option here....
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: PopupMenuButton(
+                                        color: Clrs.txtColor,
+                                        onSelected: (value) {
+                                          if (value == "DELETE") {
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            CrudOperations.deleteTask(id);
+                                          }
+                                          if (value == "MOVE") {
+                                            String cat = snapshot
+                                                .data!.docs[index]["cat"];
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            String enddate = snapshot
+                                                .data!.docs[index]["endDate"];
+                                            moveBox(context, id, cat, enddate);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.more_vert_outlined,
+                                        ),
+                                        itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              value: "DELETE",
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.delete_outline,
+                                                    color: Colors.pink[300],
+                                                  ),
+                                                  Text(
+                                                    "Delete",
+                                                    style: TxtStls.stl2,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                                value: "MOVE",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.arrow_left_outlined,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Move To",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                            PopupMenuItem(
+                                                value: "CANCEL",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.cancel,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Cancel",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                          ];
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : deco(tap5, wonlength),
+          // Close Category
+          Row(
+            children: [
+              tBtn(tap6, "CLOSE", clsClr, () {
+                tap6 = !tap6;
+                setState(() {});
+              }),
+              SizedBox(
+                width: Responsive.isSmallScreen(context)
+                    ? size.width * 0.005
+                    : size.width * 0.005,
+              ),
+              Text(
+                "${closelength.toString()} tasks",
+                style: TxtStls.stl1,
+              ),
+            ],
+          ),
+          tap6
+              ? Column(
+                  children: [
+                    head(),
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.11,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0)),
+                          border: Border.all(color: Colors.grey)),
+                      child: StreamBuilder(
+                        stream: _fireStore
+                            .collection("Tasks")
+                            .where("Attachments", arrayContains: {
+                              "uid": _auth.currentUser!.uid.toString(),
+                              "uid1": imageUrl.toString(),
+                            })
+                            .where("cat", isEqualTo: "CLOSE")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15, left: 15),
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              separatorBuilder: (BuildContext context, i) =>
+                                  Divider(),
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (_, index) {
+                                closelength = snapshot.data!.docs.length;
+                                String flagres =
+                                    snapshot.data!.docs[index]["priority"];
+                                String clsta =
+                                    snapshot.data!.docs[index]["status5"];
+                                String clres =
+                                    snapshot.data!.docs[index]["status5"];
+                                List cert =
+                                    snapshot.data!.docs[index]["Attachments"];
+                                return Row(
+                                  children: [
+                                    // Task name here...
+                                    InkWell(
+                                      onTap: () {
+                                        String taskname =
+                                            snapshot.data!.docs[index]["task"];
+                                        Timestamp create = snapshot
+                                            .data!.docs[index]["startDate"];
+                                        String enddate = snapshot
+                                            .data!.docs[index]["endDate"];
+                                        String catstat =
+                                            snapshot.data!.docs[index]["cat"];
+                                        String scatstat = clsta;
+                                        Color mainclr = clsClr;
+                                        Color clrRes =
+                                            StatusUpdateServices.statcolorget5(
+                                                clres);
+                                        String id =
+                                            snapshot.data!.docs[index]["id"];
+                                        Timestamp lastseen = snapshot
+                                            .data!.docs[index]["lastseen"];
+                                        int f =
+                                            snapshot.data!.docs[index]["fail"];
+                                        int s = snapshot.data!.docs[index]
+                                            ["success"];
+                                        List cli = snapshot.data!.docs[index]
+                                            ["Certificates"];
+                                        String logo =
+                                            snapshot.data!.docs[index]["logo"];
+                                        String company = snapshot
+                                            .data!.docs[index]["companyname"];
+                                        String cname = snapshot.data!
+                                                .docs[index]["CompanyDetails"]
+                                            [0]["contactperson"];
+                                        String cemail =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["email"];
+
+                                        String cphone =
+                                            snapshot.data!.docs[index]
+                                                ["CompanyDetails"][0]["phone"];
+
+                                        descBox(
+                                            context,
+                                            taskname,
+                                            create,
+                                            enddate,
+                                            flagres,
+                                            id,
+                                            catstat,
+                                            scatstat,
+                                            mainclr,
+                                            clrRes,
+                                            s,
+                                            f,
+                                            lastseen,
+                                            cli,
+                                            logo,
+                                            company,
+                                            cname,
+                                            cemail,
+                                            cphone,
+                                            cert);
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.325,
+                                        child: Text(
+                                          snapshot.data!.docs[index]["task"],
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    // Task assignee here...
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: cert
+                                              .map(
+                                                (e) => CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(e["uid1"]),
+                                                ),
+                                              )
+                                              .toList()),
+                                    ),
+                                    //end Date of task here...
+                                    snapshot.data!.docs[index]["endDate"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  String id = snapshot
+                                                      .data!.docs[index]["id"];
+                                                  MyCalenders.pickEndDate1(
+                                                      context,
+                                                      id,
+                                                      _endDateController);
+                                                  setState(() {});
+                                                },
+                                                child: Icon(
+                                                  Icons.calendar_today_outlined,
+                                                )),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: InkWell(
+                                              onTap: () {
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                MyCalenders.pickEndDate1(
+                                                    context,
+                                                    id,
+                                                    _endDateController);
+                                                setState(() {});
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      size: 10,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        String id = snapshot
+                                                            .data!
+                                                            .docs[index]["id"];
+                                                        EndDateOperations
+                                                            .updateEdateTask1(
+                                                                id);
+                                                      });
+                                                    },
+                                                  ),
+                                                  Text(
+                                                    snapshot.data!.docs[index]
+                                                        ["endDate"],
+                                                    style: TxtStls.stl1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                    // task priority flag here....
+                                    snapshot.data!.docs[index]["priority"] == ""
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                pricol = value;
+                                                String prcl = pricol.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                FlagService.updateFlag(
+                                                    id, prcl);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(
+                                                Icons.flag,
+                                                color: FlagService.pricolorget(
+                                                    flagres),
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "U",
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.flag,
+                                                          color: Clrs.urgent,
+                                                        ),
+                                                        Text(
+                                                          "Urgent",
+                                                          style: TxtStls.stl2,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "E",
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Icon(
+                                                            Icons.clear,
+                                                            color: Clrs.bgColor,
+                                                          ),
+                                                          Text(
+                                                            "Clear",
+                                                            style: TxtStls.stl2,
+                                                          )
+                                                        ],
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // task status here...
+                                    snapshot.data!.docs[index]["status5"] == ""
+                                        ? Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget5(clres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status5 = value;
+                                                String stat5 =
+                                                    status5.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus5(id, stat5);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget5(
+                                                    clsta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "IRRELEVANT",
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: irrClr,
+                                                      child: Text(
+                                                        "IRRELEVANT",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "BUDGET ISSUE",
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: clsClr,
+                                                      child: Text(
+                                                        "BUDGET ISSUE",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "INFORMATIVE",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: flwClr,
+                                                        child: Text(
+                                                          "INFORMATIVE",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      )),
+                                                  PopupMenuItem(
+                                                      value: "NO ANSWER",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: conClr,
+                                                        child: Text(
+                                                          "NO ANSWER",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          )
+                                        : Container(
+                                            color: StatusUpdateServices
+                                                .statcolorget5(clres),
+                                            alignment: Alignment.center,
+                                            width: size.width * 0.09,
+                                            height: size.height * 0.04,
+                                            child: PopupMenuButton(
+                                              color: Clrs.txtColor,
+                                              onSelected: (value) {
+                                                status5 = value;
+                                                String stat5 =
+                                                    status5.toString();
+                                                String id = snapshot
+                                                    .data!.docs[index]["id"];
+                                                StatusUpdateServices
+                                                    .updateStatus5(id, stat5);
+                                                setState(() {});
+                                              },
+                                              child: Text(
+                                                StatusUpdateServices.statusget5(
+                                                    clsta),
+                                                style: TxtStls.stl1,
+                                              ),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    value: "IRRELEVANT",
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: irrClr,
+                                                      child: Text(
+                                                        "IRRELEVANT",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: "BUDGET ISSUE",
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      color: clsClr,
+                                                      child: Text(
+                                                        "BUDGET ISSUE",
+                                                        style: TxtStls.stl1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      value: "INFORMATIVE",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: flwClr,
+                                                        child: Text(
+                                                          "INFORMATIVE",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      )),
+                                                  PopupMenuItem(
+                                                      value: "NO ANSWER",
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        color: conClr,
+                                                        child: Text(
+                                                          "NO ANSWER",
+                                                          style: TxtStls.stl1,
+                                                        ),
+                                                      )),
+                                                ];
+                                              },
+                                            ),
+                                          ),
+                                    // more option here....
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.09,
+                                      child: PopupMenuButton(
+                                        color: Clrs.txtColor,
+                                        onSelected: (value) {
+                                          if (value == "DELETE") {
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            CrudOperations.deleteTask(id);
+                                          }
+                                          if (value == "MOVE") {
+                                            String cat = snapshot
+                                                .data!.docs[index]["cat"];
+                                            String id = snapshot
+                                                .data!.docs[index]["id"];
+                                            String enddate = snapshot
+                                                .data!.docs[index]["endDate"];
+
+                                            moveBox(context, id, cat, enddate);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.more_vert_outlined,
+                                        ),
+                                        itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              value: "DELETE",
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.delete_outline,
+                                                    color: Colors.pink[300],
+                                                  ),
+                                                  Text(
+                                                    "Delete",
+                                                    style: TxtStls.stl2,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                                value: "MOVE",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.arrow_left_outlined,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Move To",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                            PopupMenuItem(
+                                                value: "CANCEL",
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.cancel,
+                                                      color: Clrs.bgColor,
+                                                    ),
+                                                    Text(
+                                                      "Cancel",
+                                                      style: TxtStls.stl2,
+                                                    )
+                                                  ],
+                                                )),
+                                          ];
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : deco(tap6, closelength),
+        ],
       ),
     );
   }
@@ -3590,8 +2987,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       cemail,
       cphone,
       cert) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
       logo,
@@ -3635,14 +3031,14 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
-            width: width * 0.85,
-            height: height * 0.85,
+            width: size.width * 0.85,
+            height: size.height * 0.85,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  height: height * 0.08,
-                  width: width * 0.85,
+                  height: size.height * 0.08,
+                  width: size.width * 0.85,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Color(0xFFEEEEEE),
@@ -3726,7 +3122,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         message: "Priority",
                         child: Container(
                             alignment: Alignment.center,
-                            width: width * 0.09,
+                            width: size.width * 0.09,
                             child: Icon(
                               Icons.flag,
                               color: FlagService.pricolorget(flagres),
@@ -3930,8 +3326,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                   ),
                 ),
                 Container(
-                  height: height * 0.77,
-                  width: width * 0.85,
+                  height: size.height * 0.77,
+                  width: size.width * 0.85,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -3952,8 +3348,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           EdgeInsets.symmetric(horizontal: 25),
                                       color: Colors.white,
                                       alignment: Alignment.topLeft,
-                                      width: width * 0.4045,
-                                      height: height * 0.31,
+                                      width: size.width * 0.4045,
+                                      height: size.height * 0.31,
                                       child: Form(
                                         key: _formKey,
                                         child: Column(
@@ -3966,7 +3362,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   alignment:
                                                       Alignment.centerRight,
                                                   height: 25,
-                                                  width: width * 0.4045 / 2.7,
+                                                  width:
+                                                      size.width * 0.4045 / 2.7,
                                                   child: Shimmer.fromColors(
                                                     child: Text(
                                                         "Fill This Details"),
@@ -3978,7 +3375,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   alignment:
                                                       Alignment.centerRight,
                                                   height: 25,
-                                                  width: width * 0.4045 / 1.8,
+                                                  width:
+                                                      size.width * 0.4045 / 1.8,
                                                   child: _isChecked
                                                       ? IconButton(
                                                           icon: Icon(
@@ -4034,11 +3432,11 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               ],
                                             ),
                                             Container(
-                                              width: width * 0.4,
+                                              width: size.width * 0.4,
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: width * 0.13,
+                                                    width: size.width * 0.13,
                                                     child: Text("Organisation"),
                                                   ),
                                                   Container(
@@ -4057,8 +3455,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         Container(
-                                                          width: width * 0.18,
-                                                          height: height * 0.05,
+                                                          width:
+                                                              size.width * 0.18,
+                                                          height: size.height *
+                                                              0.05,
                                                           child: eble
                                                               ? form(
                                                                   _comnameController,
@@ -4095,16 +3495,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             Container(
-                                              height: height * 0.001,
-                                              width: width * 0.39,
+                                              height: size.height * 0.001,
+                                              width: size.width * 0.39,
                                               color: Color(0xFFE0E0E0),
                                             ),
                                             Container(
-                                              width: width * 0.4,
+                                              width: size.width * 0.4,
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: width * 0.13,
+                                                    width: size.width * 0.13,
                                                     child:
                                                         Text("Company Website"),
                                                   ),
@@ -4124,8 +3524,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         Container(
-                                                          width: width * 0.18,
-                                                          height: height * 0.05,
+                                                          width:
+                                                              size.width * 0.18,
+                                                          height: size.height *
+                                                              0.05,
                                                           child: eble4
                                                               ? form(
                                                                   _comwebController,
@@ -4162,16 +3564,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             Container(
-                                              height: height * 0.001,
-                                              width: width * 0.39,
+                                              height: size.height * 0.001,
+                                              width: size.width * 0.39,
                                               color: Color(0xFFE0E0E0),
                                             ),
                                             Container(
-                                              width: width * 0.4,
+                                              width: size.width * 0.4,
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: width * 0.13,
+                                                    width: size.width * 0.13,
                                                     child:
                                                         Text("Contact Person"),
                                                   ),
@@ -4192,10 +3594,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                     .spaceBetween,
                                                             children: [
                                                               Container(
-                                                                width: width *
-                                                                    0.18,
-                                                                height: height *
-                                                                    0.05,
+                                                                width:
+                                                                    size.width *
+                                                                        0.18,
+                                                                height:
+                                                                    size.height *
+                                                                        0.05,
                                                                 child: eble1
                                                                     ? form(
                                                                         _conpersonController,
@@ -4237,16 +3641,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             Container(
-                                              height: height * 0.001,
-                                              width: width * 0.39,
+                                              height: size.height * 0.001,
+                                              width: size.width * 0.39,
                                               color: Color(0xFFE0E0E0),
                                             ),
                                             Container(
-                                              width: width * 0.4,
+                                              width: size.width * 0.4,
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: width * 0.13,
+                                                    width: size.width * 0.13,
                                                     child: Text("Email"),
                                                   ),
                                                   Container(
@@ -4266,10 +3670,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                     .spaceBetween,
                                                             children: [
                                                               Container(
-                                                                width: width *
-                                                                    0.18,
-                                                                height: height *
-                                                                    0.05,
+                                                                width:
+                                                                    size.width *
+                                                                        0.18,
+                                                                height:
+                                                                    size.height *
+                                                                        0.05,
                                                                 child: eble2
                                                                     ? form(
                                                                         _commailController,
@@ -4311,16 +3717,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             Container(
-                                              height: height * 0.001,
-                                              width: width * 0.39,
+                                              height: size.height * 0.001,
+                                              width: size.width * 0.39,
                                               color: Color(0xFFE0E0E0),
                                             ),
                                             Container(
-                                              width: width * 0.4,
+                                              width: size.width * 0.4,
                                               child: Row(
                                                 children: [
                                                   Container(
-                                                    width: width * 0.13,
+                                                    width: size.width * 0.13,
                                                     child: Text("PhoneNumber"),
                                                   ),
                                                   Container(
@@ -4340,10 +3746,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                     .spaceBetween,
                                                             children: [
                                                               Container(
-                                                                width: width *
-                                                                    0.18,
-                                                                height: height *
-                                                                    0.05,
+                                                                width:
+                                                                    size.width *
+                                                                        0.18,
+                                                                height:
+                                                                    size.height *
+                                                                        0.05,
                                                                 child: eble3
                                                                     ? form(
                                                                         _comphoController,
@@ -4384,8 +3792,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             Container(
-                                              height: height * 0.001,
-                                              width: width * 0.39,
+                                              height: size.height * 0.001,
+                                              width: size.width * 0.39,
                                               color: Color(0xFFE0E0E0),
                                             ),
                                           ],
@@ -4397,13 +3805,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                               : Container(
                                   decoration: BoxDecoration(color: txtColor),
                                   alignment: Alignment.topLeft,
-                                  width: width * 0.4045,
-                                  height: height * 0.29,
+                                  width: size.width * 0.4045,
+                                  height: size.height * 0.29,
                                   child: Column(
                                     children: [
                                       Container(
-                                        width: width * 0.4045,
-                                        height: height * 0.07,
+                                        width: size.width * 0.4045,
+                                        height: size.height * 0.07,
                                         decoration: BoxDecoration(
                                             color: txtColor,
                                             border: Border(
@@ -4417,7 +3825,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         child: Row(
                                           children: [
                                             Container(
-                                              width: width * 0.15,
+                                              width: size.width * 0.15,
                                               child: Row(
                                                 children: [
                                                   Lottie.asset(
@@ -4432,7 +3840,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               width: 1,
                                             ),
                                             Container(
-                                                width: width * 0.21,
+                                                width: size.width * 0.21,
                                                 child: StreamBuilder(
                                                   stream: _fireStore
                                                       .collection("Tasks")
@@ -4490,8 +3898,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         alignment: Alignment.centerLeft,
                                       ),
                                       Container(
-                                        width: width * 0.4045,
-                                        height: height * 0.05,
+                                        width: size.width * 0.4045,
+                                        height: size.height * 0.05,
                                         decoration: BoxDecoration(
                                           color: txtColor,
                                           border: Border(
@@ -4528,8 +3936,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         alignment: Alignment.centerLeft,
                                       ),
                                       Container(
-                                        width: width * 0.4045,
-                                        height: height * 0.17,
+                                        width: size.width * 0.4045,
+                                        height: size.height * 0.17,
                                         child: StreamBuilder(
                                           stream: _fireStore
                                               .collection("Tasks")
@@ -4563,8 +3971,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                 .start,
                                                         children: [
                                                           SizedBox(
-                                                            width:
-                                                                width * 0.315,
+                                                            width: size.width *
+                                                                0.315,
                                                             child: Card(
                                                               color: txtColor,
                                                               elevation: 10.0,
@@ -4668,23 +4076,23 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   ),
                                 ),
                           Container(
-                            height: height * 0.001,
-                            width: width * 0.39,
+                            height: size.height * 0.001,
+                            width: size.width * 0.39,
                             color: Color(0xFFE0E0E0),
                           ),
                           Row(
                             children: [
                               Container(
-                                height: height * 0.20,
-                                width: width * 0.20,
+                                height: size.height * 0.20,
+                                width: size.width * 0.20,
                                 child: Column(
                                   children: [
                                     Container(
-                                        width: width * 0.20,
+                                        width: size.width * 0.20,
                                         child: Text("Attachments :")),
                                     Container(
-                                      width: width * 0.20,
-                                      height: height * 0.12,
+                                      width: size.width * 0.20,
+                                      height: size.height * 0.12,
                                       child: StreamBuilder(
                                           stream: _fireStore
                                               .collection("Tasks")
@@ -4748,8 +4156,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                       margin:
                                           EdgeInsets.symmetric(horizontal: 10),
                                       alignment: Alignment.center,
-                                      height: height * 0.05,
-                                      width: width * 0.20,
+                                      height: size.height * 0.05,
+                                      width: size.width * 0.20,
                                       decoration: BoxDecoration(
                                           border: Border(
                                               top: BorderSide(color: bgColor))),
@@ -4776,8 +4184,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                               ),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 25),
-                                height: height * 0.20,
-                                width: width * 0.19,
+                                height: size.height * 0.20,
+                                width: size.width * 0.19,
                                 decoration: BoxDecoration(
                                     border: Border(
                                         left: BorderSide(color: bgColor))),
@@ -4787,13 +4195,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   physics: ClampingScrollPhysics(),
                                   children: [
                                     Container(
-                                      width: width * 0.13,
+                                      width: size.width * 0.13,
                                       child: Text("Services Obtained :"),
                                     ),
                                     Container(
                                       padding: EdgeInsets.only(right: 25.0),
-                                      width: width * 0.19,
-                                      height: height * 0.05,
+                                      width: size.width * 0.19,
+                                      height: size.height * 0.05,
                                       child: Material(
                                         color: grClr,
                                         borderRadius: BorderRadius.all(
@@ -4837,7 +4245,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     ),
                                     SizedBox(height: 10),
                                     Container(
-                                      width: width * 0.13,
+                                      width: size.width * 0.13,
                                       child: StreamBuilder(
                                           stream: _fireStore
                                               .collection("Tasks")
@@ -4879,14 +4287,14 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             ],
                           ),
                           Container(
-                            height: height * 0.001,
-                            width: width * 0.39,
+                            height: size.height * 0.001,
+                            width: size.width * 0.39,
                             color: Color(0xFFE0E0E0),
                           ),
                           catstat == "WON"
                               ? Container(
-                                  width: width * 0.4,
-                                  height: height * 0.27,
+                                  width: size.width * 0.4,
+                                  height: size.height * 0.27,
                                   child: DefaultTabController(
                                     length: 4,
                                     child: Scaffold(
@@ -4922,11 +4330,11 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               Row(
                                                 children: [
                                                   SizedBox(
-                                                      width: width * 0.05,
+                                                      width: size.width * 0.05,
                                                       child: Text("Deal Size")),
                                                   SizedBox(
-                                                    width: width * 0.1,
-                                                    height: height * 0.05,
+                                                    width: size.width * 0.1,
+                                                    height: size.height * 0.05,
                                                     child: TextFormField(
                                                       controller:
                                                           _dealsizeController,
@@ -4957,11 +4365,11 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                               Row(
                                                 children: [
                                                   SizedBox(
-                                                      width: width * 0.05,
+                                                      width: size.width * 0.05,
                                                       child: Text("Advance")),
                                                   SizedBox(
-                                                    width: width * 0.1,
-                                                    height: height * 0.05,
+                                                    width: size.width * 0.1,
+                                                    height: size.height * 0.05,
                                                     child: TextFormField(
                                                       controller:
                                                           _advanceController,
@@ -4993,8 +4401,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           Column(
                                             children: [
                                               Container(
-                                                width: width * 0.3,
-                                                height: height * 0.07,
+                                                width: size.width * 0.3,
+                                                height: size.height * 0.07,
                                                 child: Row(
                                                   children: [
                                                     Theme(
@@ -5022,8 +4430,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 ),
                                               ),
                                               Container(
-                                                width: width * 0.3,
-                                                height: height * 0.07,
+                                                width: size.width * 0.3,
+                                                height: size.height * 0.07,
                                                 child: Row(
                                                   children: [
                                                     Theme(
@@ -5057,8 +4465,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                           Column(
                                             children: [
                                               Container(
-                                                width: width * 0.3,
-                                                height: height * 0.07,
+                                                width: size.width * 0.3,
+                                                height: size.height * 0.07,
                                                 child: Row(
                                                   children: [
                                                     Theme(
@@ -5085,8 +4493,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 ),
                                               ),
                                               Container(
-                                                width: width * 0.3,
-                                                height: height * 0.07,
+                                                width: size.width * 0.3,
+                                                height: size.height * 0.07,
                                                 child: Row(
                                                   children: [
                                                     Theme(
@@ -5131,18 +4539,18 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                       ),
                       Container(
                         color: Color(0xFFEEEEEE),
-                        width: width * 0.0005,
-                        height: height * 0.77,
+                        width: size.width * 0.0005,
+                        height: size.height * 0.77,
                       ),
                       company == ""
                           ? Container(
                               alignment: Alignment.center,
-                              width: width * 0.445,
-                              height: height * 0.70,
+                              width: size.width * 0.445,
+                              height: size.height * 0.70,
                               child: Lottie.asset("assets/Lotties/empty.json"))
                           : Container(
-                              width: width * 0.445,
-                              height: height * 0.70,
+                              width: size.width * 0.445,
+                              height: size.height * 0.70,
                               child: _isStatic
                                   ? TranslationAnimatedWidget.tween(
                                       translationDisabled: Offset(200, 0),
@@ -5307,9 +4715,11 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                       ],
                                                                     ),
                                                                     Container(
-                                                                      height: height *
+                                                                      height: size
+                                                                              .height *
                                                                           0.001,
-                                                                      width: width *
+                                                                      width: size
+                                                                              .width *
                                                                           0.45,
                                                                       color: Color(
                                                                           0xFFE0E0E0),
@@ -5322,7 +4732,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                             Row(
                                                                           children: [
                                                                             Container(
-                                                                              width: width * 0.1,
+                                                                              width: size.width * 0.1,
                                                                               alignment: Alignment.centerLeft,
                                                                               child: Text(
                                                                                 lr[index]["Who"],
@@ -5333,7 +4743,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                               padding: const EdgeInsets.all(8.0),
                                                                               child: Container(
                                                                                 alignment: Alignment.center,
-                                                                                width: width * 0.12,
+                                                                                width: size.width * 0.12,
                                                                                 child: Text(lr[index]["From"], style: TxtStls.stl1),
                                                                                 color: FlagService.stateClr(statecolor),
                                                                               ),
@@ -5341,16 +4751,18 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                             Text("TO : "),
                                                                             Container(
                                                                               alignment: Alignment.center,
-                                                                              width: width * 0.12,
+                                                                              width: size.width * 0.12,
                                                                               child: Text(lr[index]["To"], style: TxtStls.stl1),
                                                                               color: FlagService.stateClr1(statecolor1),
                                                                             )
                                                                           ],
                                                                         )),
                                                                     Container(
-                                                                      height: height *
+                                                                      height: size
+                                                                              .height *
                                                                           0.001,
-                                                                      width: width *
+                                                                      width: size
+                                                                              .width *
                                                                           0.45,
                                                                       color: Color(
                                                                           0xFFE0E0E0),
@@ -5392,7 +4804,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                             Row(
                                                                           children: [
                                                                             Container(
-                                                                              width: width * 0.05,
+                                                                              width: size.width * 0.05,
                                                                               child: Text("Note"),
                                                                               alignment: Alignment.centerLeft,
                                                                             ),
@@ -5405,7 +4817,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                                 alignment: Alignment.centerLeft,
                                                                                 padding: EdgeInsets.all(10.0),
                                                                                 height: 100,
-                                                                                width: width * 0.35,
+                                                                                width: size.width * 0.35,
                                                                                 child: Text(lr[index]["Note"]))
                                                                           ],
                                                                         )),
@@ -5441,8 +4853,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
 
   // move box here
   moveBox(BuildContext context, id, cat, endDate) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     var alertDialog = AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
       actionsPadding: EdgeInsets.all(0),
@@ -5453,8 +4864,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
-            width: width * 0.20,
-            height: height * 0.35,
+            width: size.width * 0.20,
+            height: size.height * 0.35,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: _visible
@@ -5611,8 +5022,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                         color: prosClr,
                                         alignment: Alignment.center,
-                                        width: width * 0.09,
-                                        height: height * 0.04,
+                                        width: size.width * 0.09,
+                                        height: size.height * 0.04,
                                         child: Text(
                                           "PROSPECT",
                                           style: TxtStls.stl1,
@@ -5641,8 +5052,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                         color: ipClr,
                                         alignment: Alignment.center,
-                                        width: width * 0.09,
-                                        height: height * 0.04,
+                                        width: size.width * 0.09,
+                                        height: size.height * 0.04,
                                         child: Text("IN PROGRESS",
                                             style: TxtStls.stl1)),
                                   ),
@@ -5669,8 +5080,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                         color: wonClr,
                                         alignment: Alignment.center,
-                                        width: width * 0.09,
-                                        height: height * 0.04,
+                                        width: size.width * 0.09,
+                                        height: size.height * 0.04,
                                         child:
                                             Text("WON", style: TxtStls.stl1)),
                                   ),
@@ -5697,8 +5108,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                         color: clsClr,
                                         alignment: Alignment.center,
-                                        width: width * 0.09,
-                                        height: height * 0.04,
+                                        width: size.width * 0.09,
+                                        height: size.height * 0.04,
                                         child:
                                             Text("CLOSE", style: TxtStls.stl1)),
                                   ),
@@ -5820,7 +5231,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10.0),
-                                      width: width * 1,
+                                      width: size.width * 1,
                                       decoration: BoxDecoration(
                                           color: goodClr,
                                           borderRadius: BorderRadius.all(
@@ -5860,7 +5271,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10.0),
-                                      width: width * 1,
+                                      width: size.width * 1,
                                       decoration: BoxDecoration(
                                           color: avgClr,
                                           borderRadius: BorderRadius.all(
@@ -5929,8 +5340,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   }
 
   certficateBox(BuildContext context, id, cat, endDate) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     var alertDialog = AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
       actionsPadding: EdgeInsets.all(0),
@@ -5941,8 +5351,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
-            width: width * 0.20,
-            height: height * 0.35,
+            width: size.width * 0.20,
+            height: size.height * 0.35,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: TranslationAnimatedWidget.tween(
@@ -5953,8 +5363,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                   opacityEnabled: 1,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 25),
-                    height: height * 0.20,
-                    width: width * 0.19,
+                    height: size.height * 0.20,
+                    width: size.width * 0.19,
                     child: Column(
                       children: [
                         Container(
@@ -5992,8 +5402,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                         ),
                         SizedBox(height: 10),
                         Container(
-                          width: width * 0.13,
-                          height: height * 0.15,
+                          width: size.width * 0.13,
+                          height: size.height * 0.15,
                           child: StreamBuilder(
                               stream: _fireStore
                                   .collection("Tasks")
@@ -6103,20 +5513,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   }
 
   Widget head() {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     return Container(
-      padding: Responsive.isSmallScreen(context)
-          ? const EdgeInsets.symmetric(horizontal: 15)
-          : const EdgeInsets.symmetric(horizontal: 20),
       color: Colors.grey,
-      height: height * 0.05,
+      height: size.height * 0.04,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            width: width * 0.325,
+            width: size.width * 0.325,
             child: const Text(
               "TO DO",
               style: TxtStls.stl1,
@@ -6124,7 +5530,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
           ),
           Container(
             alignment: Alignment.center,
-            width: width * 0.09,
+            width: size.width * 0.09,
             child: IconButton(
               icon: const Icon(Icons.person_add_alt_1_outlined),
               onPressed: () {},
@@ -6132,7 +5538,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
             ),
           ),
           Container(
-            width: width * 0.09,
+            width: size.width * 0.09,
             alignment: Alignment.center,
             child: IconButton(
               icon: const Icon(Icons.calendar_today_outlined),
@@ -6141,7 +5547,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
             ),
           ),
           Container(
-            width: width * 0.09,
+            width: size.width * 0.09,
             alignment: Alignment.center,
             child: IconButton(
               icon: const Icon(Icons.flag),
@@ -6150,7 +5556,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
             ),
           ),
           Container(
-            width: width * 0.09,
+            width: size.width * 0.09,
             alignment: Alignment.center,
             child: const Text(
               "STATUS",
@@ -6158,7 +5564,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
             ),
           ),
           Container(
-              width: width * 0.09,
+              width: size.width * 0.09,
               alignment: Alignment.center,
               child: const Text(
                 "ACTIONS",
@@ -6170,17 +5576,17 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   }
 
   Widget tBtn(taps, title, clr, _ontap) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 7.5),
-      child: RaisedButton.icon(
-          elevation: 0.0,
-          color: clr,
-          onPressed: _ontap,
-          icon: taps
-              ? const Icon(Icons.arrow_drop_down_outlined)
-              : const Icon(Icons.arrow_drop_up_outlined),
-          label: Text(title)),
-    );
+    return RaisedButton.icon(
+        elevation: 0.0,
+        color: clr,
+        onPressed: _ontap,
+        icon: taps
+            ? const Icon(Icons.arrow_drop_down_outlined)
+            : const Icon(Icons.arrow_drop_up_outlined),
+        label: Text(
+          title,
+          style: TxtStls.fieldstyle,
+        ));
   }
 
   Widget service(e, id) {
@@ -6215,15 +5621,16 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
 
   // Alert Box for task here..
   void taskBox(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
+
     var alertDialog = AlertDialog(
       backgroundColor: txtColor,
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return SizedBox(
-            width:
-                Responsive.isSmallScreen(context) ? width * 0.16 : width * 0.16,
+            width: Responsive.isSmallScreen(context)
+                ? size.width * 0.16
+                : size.width * 0.16,
             child: Form(
               key: _formKey,
               child: Column(
@@ -6244,10 +5651,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: height * 0.01,
+                    height: size.height * 0.01,
                   ),
                   SizedBox(
-                    height: height * 0.05,
+                    height: size.height * 0.05,
                     child: Material(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: grClr,
@@ -6278,7 +5685,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                       setState(() {});
                     },
                     child: SizedBox(
-                      height: height * 0.05,
+                      height: size.height * 0.05,
                       child: Material(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
@@ -6337,41 +5744,52 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   }
 
   Widget deco(bool _taps, int length) {
-    final height = MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
     if (length == 0) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: const BorderRadius.all(Radius.circular(10.0))),
-          padding: const EdgeInsets.only(bottom: 50),
-          alignment: Alignment.center,
-          height: _taps ? height * 0 : height * 0.30,
-          child: Lottie.asset("assets/Lotties/notask.json"),
+      return Container(
+        width: size.width,
+        height: size.height * 0.15,
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10.0),
+            bottomRight: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
         ),
+        alignment: Alignment.center,
+        child: Lottie.asset("assets/Lotties/notask.json"),
       );
     } else if (length > 0 && length <= 10) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: const BorderRadius.all(Radius.circular(10.0))),
-            padding: const EdgeInsets.only(bottom: 50),
-            alignment: Alignment.topCenter,
-            height: _taps ? height * 0 : height * 0.35,
-            child: Lottie.asset("assets/Lotties/chillwork.json")),
-      );
+      return Container(
+          width: size.width,
+          height: size.height * 0.15,
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10.0),
+              bottomRight: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Lottie.asset("assets/Lotties/chillwork.json"));
     } else if (length >= 10 && length <= 20) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
+              width: size.width,
+              height: size.height * 0.15,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0))),
-              height: _taps ? height * 0 : height * 0.35,
+                color: bgColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10.0),
+                  bottomRight: Radius.circular(10.0),
+                  topRight: Radius.circular(10.0),
+                ),
+              ),
+              alignment: Alignment.center,
               child: Lottie.asset("assets/Lotties/normalwork.json")),
         ),
       );
@@ -6380,10 +5798,17 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
+              width: size.width,
+              height: size.height * 0.15,
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0))),
-              height: _taps ? height * 0 : height * 0.35,
+                color: bgColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10.0),
+                  bottomRight: Radius.circular(10.0),
+                  topRight: Radius.circular(10.0),
+                ),
+              ),
+              alignment: Alignment.center,
               child: Lottie.asset("assets/Lotties/highworkpressure.json")),
         ),
       );
@@ -6391,8 +5816,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
   }
 
   addContact(BuildContext context, id, logo) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     var alertDialog = AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
       actionsPadding: EdgeInsets.all(0),
@@ -6405,8 +5829,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             color: Colors.blueAccent[100],
-            width: width * 0.175,
-            height: height * 0.35,
+            width: size.width * 0.175,
+            height: size.height * 0.35,
             child: SingleChildScrollView(
               child: Form(
                 key: _formKey,

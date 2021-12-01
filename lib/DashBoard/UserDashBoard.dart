@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/tasklength.dart';
 
 class UserDashBoard extends StatefulWidget {
@@ -20,19 +22,8 @@ class UserDashBoard extends StatefulWidget {
 
 class _UserDashBoardState extends State<UserDashBoard> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  int? chartval = 1;
-  int? duelistval = 1;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    this.userTasks(imageUrl);
-    this.userTasks1(imageUrl);
-    this.userTasks2(imageUrl);
-    this.userTasks3(imageUrl);
-  }
+  int chartval = 4;
+  int duelistval = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +103,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        prospectLength == null
+                        newLength == null
                             ? Text("0+", style: TxtStls.numstyle)
                             : Row(
                                 children: [
@@ -159,7 +150,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        prospectLength == null
+                        ipLength == null
                             ? Text("0+", style: TxtStls.numstyle)
                             : Row(
                                 children: [
@@ -203,7 +194,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        prospectLength == null
+                        wonLength == null
                             ? Text("0+", style: TxtStls.numstyle)
                             : Row(
                                 children: [
@@ -249,12 +240,64 @@ class _UserDashBoardState extends State<UserDashBoard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Reports", style: TxtStls.fieldtitlestyle),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.more_horiz_rounded)),
+                            PopupMenuButton(
+                              offset: Offset(0, 32),
+                              elevation: 10.0,
+                              shape: TooltipShape(),
+                              icon: Icon(
+                                Icons.more_horiz,
+                              ),
+                              onSelected: (int value) {},
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: 4,
+                                    child: Text(
+                                      "Leads",
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                      value: 5,
+                                      child: Text(
+                                        "Transactions",
+                                        style: TxtStls.fieldstyle,
+                                      )),
+                                ];
+                              },
+                            ),
                           ],
                         ),
-                      )
+                      ),
+                      Container(
+                          height: size.height * 0.3,
+                          child: SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              // Chart title
+                              title: ChartTitle(
+                                  text: 'Half yearly sales analysis',
+                                  textStyle: TxtStls.fieldstyle),
+                              // Enable legend
+                              legend: Legend(isVisible: true),
+                              // Enable tooltip
+
+                              series: <LineSeries<SalesData, String>>[
+                                LineSeries<SalesData, String>(
+                                    dataSource: <SalesData>[
+                                      SalesData('Jan', 35),
+                                      SalesData('Feb', 28),
+                                      SalesData('Mar', 34),
+                                      SalesData('Apr', 32),
+                                      SalesData('May', 40)
+                                    ],
+                                    xValueMapper: (SalesData sales, _) =>
+                                        sales.year,
+                                    yValueMapper: (SalesData sales, _) =>
+                                        sales.sales,
+                                    // Enable data label
+                                    dataLabelSettings:
+                                        DataLabelSettings(isVisible: true))
+                              ]))
                     ],
                   )),
               Container(
@@ -304,11 +347,15 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                       )),
                                 ];
                               },
-                            )
+                            ),
                           ],
                         ),
                       ),
-                      showchart(chartval, size),
+                      Container(
+                        height: size.height * 0.3,
+                        width: size.width * 0.28,
+                        child: showbody(chartval),
+                      ),
                       showbottom(chartval),
                     ],
                   )),
@@ -374,9 +421,32 @@ class _UserDashBoardState extends State<UserDashBoard> {
                           children: [
                             Text("Recent Interactions",
                                 style: TxtStls.fieldtitlestyle),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.more_horiz_rounded)),
+                            PopupMenuButton(
+                              offset: Offset(0, 32),
+                              elevation: 10.0,
+                              shape: TooltipShape(),
+                              icon: Icon(
+                                Icons.more_horiz,
+                              ),
+                              onSelected: (int value) {},
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: 4,
+                                    child: Text(
+                                      "Leads",
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                      value: 5,
+                                      child: Text(
+                                        "Transactions",
+                                        style: TxtStls.fieldstyle,
+                                      )),
+                                ];
+                              },
+                            ),
                           ],
                         ),
                       )
@@ -447,12 +517,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
                         child: StreamBuilder(
                           stream: FirebaseFirestore.instance
                               .collection("Tasks")
-                              .where("Attachments", arrayContains: {
-                                "uid": _auth.currentUser!.uid.toString(),
-                                "uid1": imageUrl.toString(),
-                              })
                               .where("endDate", isEqualTo: showLead(duelistval))
-                              .snapshots(),
+                              .where("Attachments", arrayContains: {
+                            "uid": _auth.currentUser!.uid.toString(),
+                          }).snapshots(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (!snapshot.hasData) {
@@ -500,7 +568,9 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                     style: TxtStls.fieldstyle,
                                   ),
                                   trailing: Icon(Icons.arrow_forward),
-                                  onTap: () {},
+                                  onTap: () {
+                                    descBox();
+                                  },
                                 );
                               },
                             );
@@ -517,21 +587,100 @@ class _UserDashBoardState extends State<UserDashBoard> {
   }
 
   showtitle1(cval) {
-    if (cval == 5) {
+    if (cval == 4) {
+      return Text(
+        "Leads Analytics",
+        style: TxtStls.fieldtitlestyle,
+      );
+    } else if (cval == 5) {
       return Text(
         "Transactions",
         style: TxtStls.fieldtitlestyle,
       );
     }
-    return Text(
-      "Leads Analytics",
-      style: TxtStls.fieldtitlestyle,
-    );
+  }
+
+  showbody(cval) {
+    if (cval == 4) {
+      return PieChart(
+        PieChartData(
+          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
+            if (clickResponse.clickHappened) {}
+          }),
+          sectionsSpace: 0,
+          centerSpaceRadius: 50,
+          startDegreeOffset: -50,
+          sections: [
+            PieChartSectionData(
+              color: Colors.blueAccent.withOpacity(0.75),
+              value: prospectLength == null ? 0 : prospectLength!.toDouble(),
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: Colors.orangeAccent.withOpacity(0.75),
+              value: newLength == null ? 0 : newLength!.toDouble(),
+              showTitle: true,
+              radius: 22,
+            ),
+            PieChartSectionData(
+              color: Colors.yellowAccent.withOpacity(0.75),
+              value: ipLength == null ? 0 : ipLength!.toDouble(),
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: btnColor.withOpacity(0.75),
+              value: wonLength == null ? 0 : wonLength!.toDouble(),
+              showTitle: true,
+              radius: 22,
+            ),
+          ],
+        ),
+      );
+    } else if (cval == 5) {
+      return PieChart(
+        PieChartData(
+          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
+            if (clickResponse.clickHappened) {}
+          }),
+          sectionsSpace: 0,
+          centerSpaceRadius: 50,
+          startDegreeOffset: -50,
+          sections: [
+            PieChartSectionData(
+              color: Colors.blueAccent.withOpacity(0.75),
+              value: 178,
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: Colors.orangeAccent.withOpacity(0.75),
+              value: 20,
+              showTitle: true,
+              radius: 22,
+            ),
+            PieChartSectionData(
+              color: Colors.yellowAccent.withOpacity(0.75),
+              value: 198,
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: btnColor.withOpacity(0.75),
+              value: 12,
+              showTitle: true,
+              radius: 22,
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   showbottom(cval) {
-    if (cval == 5) {
-      Row(
+    if (cval == 4) {
+      return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -581,142 +730,47 @@ class _UserDashBoardState extends State<UserDashBoard> {
               )),
         ],
       );
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.circle,
-              color: Colors.blueAccent.withOpacity(0.75),
-              size: 15,
-            ),
-            label: Text(
-              "Prospect",
-              style: TxtStls.fieldstyle,
-            )),
-        TextButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.circle,
-              color: Colors.orangeAccent.withOpacity(0.75),
-              size: 15,
-            ),
-            label: Text(
-              "New",
-              style: TxtStls.fieldstyle,
-            )),
-        TextButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.circle,
-              color: Colors.yellowAccent.withOpacity(0.75),
-              size: 15,
-            ),
-            label: Text(
-              "InProgress",
-              style: TxtStls.fieldstyle,
-            )),
-        TextButton.icon(
-            onPressed: () {},
-            icon: Icon(
-              Icons.circle,
-              color: btnColor.withOpacity(0.75),
-              size: 15,
-            ),
-            label: Text(
-              "Won",
-              style: TxtStls.fieldstyle,
-            )),
-      ],
-    );
-  }
-
-  showchart(cval, size) {
-    if (cval == 5) {
-      return Container(
-        height: size.height * 0.3,
-        width: size.width * 0.28,
-        child: PieChart(
-          PieChartData(
-            pieTouchData: PieTouchData(touchCallback: (clickResponse) {
-              if (clickResponse.clickHappened) {}
-            }),
-            sectionsSpace: 0,
-            centerSpaceRadius: 50,
-            startDegreeOffset: -50,
-            sections: [
-              PieChartSectionData(
+    } else if (cval == 5) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
                 color: Colors.blueAccent.withOpacity(0.75),
-                value: 178,
-                showTitle: true,
-                radius: 19,
+                size: 15,
               ),
-              PieChartSectionData(
-                color: Colors.orangeAccent.withOpacity(0.75),
-                value: 20,
-                showTitle: true,
-                radius: 22,
-              ),
-              PieChartSectionData(
+              label: Text(
+                "Prospect",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
                 color: Colors.yellowAccent.withOpacity(0.75),
-                value: 198,
-                showTitle: true,
-                radius: 19,
+                size: 15,
               ),
-              PieChartSectionData(
+              label: Text(
+                "InProgress",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
                 color: btnColor.withOpacity(0.75),
-                value: 12,
-                showTitle: true,
-                radius: 22,
+                size: 15,
               ),
-            ],
-          ),
-        ),
+              label: Text(
+                "Won",
+                style: TxtStls.fieldstyle,
+              )),
+        ],
       );
     }
-    return Container(
-      height: size.height * 0.3,
-      width: size.width * 0.28,
-      child: PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
-            if (clickResponse.clickHappened) {}
-          }),
-          sectionsSpace: 0,
-          centerSpaceRadius: 80,
-          startDegreeOffset: -60,
-          sections: [
-            PieChartSectionData(
-              color: Colors.blueAccent.withOpacity(0.75),
-              value: prospectLength == null ? 0 : prospectLength!.toDouble(),
-              showTitle: true,
-              radius: 25,
-            ),
-            PieChartSectionData(
-              color: Colors.orangeAccent.withOpacity(0.75),
-              value: newLength == null ? 0 : newLength!.toDouble(),
-              showTitle: true,
-              radius: 30,
-            ),
-            PieChartSectionData(
-              color: Colors.yellowAccent.withOpacity(0.75),
-              value: ipLength == null ? 0 : ipLength!.toDouble(),
-              showTitle: true,
-              radius: 25,
-            ),
-            PieChartSectionData(
-              color: btnColor.withOpacity(0.75),
-              value: wonLength == null ? 0 : wonLength!.toDouble(),
-              showTitle: true,
-              radius: 30,
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   showtitle(dval) {
@@ -751,112 +805,316 @@ class _UserDashBoardState extends State<UserDashBoard> {
     }
   }
 
-  Future<void> userTasks(img) async {
-    fireStore
-        .collection("Tasks")
-        .where("Attachments", arrayContains: {
-          "uid": _auth.currentUser!.uid.toString(),
-          "uid1": img.toString(),
-        })
-        .get()
-        .then((value) {
-          prospectLength = value.docs.length.toDouble();
-          setState(() {});
+  descBox() {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0.0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: txtColor,
+      title: Container(
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+            color: Colors.grey[350],
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10.0),
+                topLeft: Radius.circular(10.0))),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("taskname"),
+            IconButton(
+              tooltip: "Close Window",
+              icon: Icon(Icons.cancel_presentation),
+              color: Colors.pink[400],
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      ),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            width: width * 0.85,
+            height: height * 0.85,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  height: height * 0.08,
+                  width: width * 0.85,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        child: Tooltip(
+                          message: "Create Date",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Lottie.asset("assets/Lotties/createdate.json"),
+                                Text("createDate"),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onHover: (value) {},
+                        onTap: () {},
+                      ),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      InkWell(
+                        child: Tooltip(
+                          message: "End Date",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Lottie.asset("assets/Lotties/lastdate.json",
+                                    fit: BoxFit.fill),
+                                Text("deadline"),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onHover: (value) {
+                          setState(() {});
+                        },
+                        onTap: () {},
+                      ),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      Tooltip(
+                        message: "Priority",
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: width * 0.09,
+                            child: Icon(
+                              Icons.flag,
+                            )),
+                      ),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      InkWell(
+                        child: Tooltip(
+                          message: "Last Seen",
+                          child: Container(
+                            width: 200,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Lottie.asset("assets/Lotties/lastseen.json"),
+                                Column(
+                                  children: [
+                                    Text("lastview"),
+                                    Text(
+                                      "lastviewTime",
+                                      style: TextStyle(fontSize: 15),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        onHover: (value) {
+                          setState(() {});
+                        },
+                        onTap: () {},
+                      ),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 70,
+                        width: 1,
+                      ),
+                      InkWell(
+                          child: Tooltip(
+                            message: "Agent",
+                            child: Container(
+                              padding: EdgeInsets.all(9),
+                              width: 200,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Lottie.asset("assets/Lotties/agent.json"),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onHover: (value) {},
+                          onTap: () {}),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      InkWell(
+                          onTap: () {},
+                          child: Tooltip(
+                            message: "Filters",
+                            child: Container(
+                              padding: EdgeInsets.all(9),
+                              width: 200,
+                              child: Row(
+                                children: [
+                                  Lottie.asset("assets/Lotties/filter.json"),
+                                  Text("Await")
+                                ],
+                              ),
+                            ),
+                          ),
+                          onHover: (value) {}),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Tooltip(
+                          message: "Current Status",
+                          child: Container(
+                            padding: EdgeInsets.all(9),
+                            width: 125,
+                            height: 50,
+                            child: SizedBox(
+                                child: Lottie.asset("assets/Lotties/live.json",
+                                    fit: BoxFit.fill)),
+                          ),
+                        ),
+                        onHover: (value) {},
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 60 / 2,
+                            width: 200,
+                            child: Text(
+                              " catstat",
+                              style: TxtStls.stl1,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 25,
+                            width: 200,
+                            child: Text(
+                              "scatstat",
+                              style: TxtStls.stl1,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(width: 20),
+                      Container(
+                        color: Color(0xFFEEEEEE),
+                        height: 40,
+                        width: 1,
+                      ),
+                      InkWell(
+                        child: Tooltip(
+                          message: "Statistics",
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 80,
+                            height: 50,
+                            child: Lottie.asset("assets/Lotties/stats.json"),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {});
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return alertDialog;
         });
   }
 
-  Future<void> userTasks1(img) async {
-    fireStore
-        .collection("Tasks")
-        .where("Attachments", arrayContains: {
-          "uid": _auth.currentUser!.uid.toString(),
-          "uid1": img.toString(),
-        })
-        .get()
-        .then((value) {
-          newLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-  }
-
-  Future<void> userTasks2(img) async {
-    fireStore
-        .collection("Tasks")
-        .where("Attachments", arrayContains: {
-          "uid": _auth.currentUser!.uid.toString(),
-          "uid1": img.toString(),
-        })
-        .get()
-        .then((value) {
-          ipLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-  }
-
-  Future<void> userTasks3(img) async {
-    fireStore
-        .collection("Tasks")
-        .where("Attachments", arrayContains: {
-          "uid": _auth.currentUser!.uid.toString(),
-          "uid1": img.toString(),
-        })
-        .get()
-        .then((value) {
-          wonLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-  }
+  //
+  // Future<void> userTasks1(img) async {
+  //   fireStore
+  //       .collection("Tasks")
+  //       .where("Attachments", arrayContains: {
+  //         "uid": _auth.currentUser!.uid.toString(),
+  //         "uid1": img.toString(),
+  //       })
+  //       .get()
+  //       .then((value) {
+  //         newLength = value.docs.length.toDouble();
+  //         setState(() {});
+  //       });
+  // }
+  //
+  // Future<void> userTasks2(img) async {
+  //   fireStore
+  //       .collection("Tasks")
+  //       .where("Attachments", arrayContains: {
+  //         "uid": _auth.currentUser!.uid.toString(),
+  //         "uid1": img.toString(),
+  //       })
+  //       .get()
+  //       .then((value) {
+  //         ipLength = value.docs.length.toDouble();
+  //         setState(() {});
+  //       });
+  // }
+  //
+  // Future<void> userTasks3(img) async {
+  //   fireStore
+  //       .collection("Tasks")
+  //       .where("Attachments", arrayContains: {
+  //         "uid": _auth.currentUser!.uid.toString(),
+  //         "uid1": img.toString(),
+  //       })
+  //       .get()
+  //       .then((value) {
+  //         wonLength = value.docs.length.toDouble();
+  //         setState(() {});
+  //       });
+  // }
 }
 
-class TooltipShape extends ShapeBorder {
-  const TooltipShape();
+class SalesData {
+  SalesData(this.year, this.sales);
 
-  final BorderSide _side = BorderSide.none;
-  final BorderRadiusGeometry _borderRadius = BorderRadius.zero;
-
-  @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.all(_side.width);
-
-  @override
-  Path getInnerPath(
-    Rect rect, {
-    TextDirection? textDirection,
-  }) {
-    final Path path = Path();
-
-    path.addRRect(
-      _borderRadius.resolve(textDirection).toRRect(rect).deflate(_side.width),
-    );
-
-    return path;
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    final Path path = Path();
-    final RRect rrect = _borderRadius.resolve(textDirection).toRRect(rect);
-
-    path.moveTo(0, 10);
-    path.quadraticBezierTo(0, 0, 10, 0);
-    path.lineTo(rrect.width - 30, 0);
-    path.lineTo(rrect.width - 20, -10);
-    path.lineTo(rrect.width - 10, 0);
-    path.quadraticBezierTo(rrect.width, 0, rrect.width, 10);
-    path.lineTo(rrect.width, rrect.height - 10);
-    path.quadraticBezierTo(
-        rrect.width, rrect.height, rrect.width - 10, rrect.height);
-    path.lineTo(10, rrect.height);
-    path.quadraticBezierTo(0, rrect.height, 0, rrect.height - 10);
-
-    return path;
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
-
-  @override
-  ShapeBorder scale(double t) => RoundedRectangleBorder(
-        side: _side.scale(t),
-        borderRadius: _borderRadius * t,
-      );
+  final String year;
+  final double sales;
 }

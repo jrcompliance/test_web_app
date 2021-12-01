@@ -25,7 +25,7 @@ class Countup extends StatefulWidget {
     required this.end,
     this.precision = 0,
     this.curve = Curves.linear,
-    this.duration = const Duration(milliseconds: 250),
+    this.duration = const Duration(milliseconds: 500),
     this.style,
     this.textAlign,
     this.textDirection,
