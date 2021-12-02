@@ -30,9 +30,10 @@ class TxtStls {
   static const btnstyle = TextStyle(color: btnColor, fontSize: 12.5);
   static const numstyle =
       TextStyle(color: txtColor, fontSize: 20, fontWeight: FontWeight.bold);
+  static const fieldstyle1 =
+      TextStyle(fontSize: 12.5, color: bgColor, letterSpacing: 0.2);
 
-  static const stl1 =
-      TextStyle(color: Clrs.txtColor, fontWeight: FontWeight.w200);
+  static const stl1 = TextStyle(color: bt, fontWeight: FontWeight.w200);
   static const stl2 =
       TextStyle(color: Clrs.bgColor, fontWeight: FontWeight.w100);
   static const stl3 = TextStyle(color: grClr);

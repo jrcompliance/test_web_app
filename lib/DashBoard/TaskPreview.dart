@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 class TaskPreview extends StatefulWidget {
@@ -18,16 +19,16 @@ class _TaskPreviewState extends State<TaskPreview> {
   final ScrollController _scrollController = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<String> _list = ["List", "Board", "Timeline"];
-  List<String> _boardtitlelist = [
+  final List<String> _list = ["List", "Board", "Timeline"];
+  final List<String> _boardtitlelist = [
     "NEW",
     "PROSPECT",
     "INPROGRESS",
     "WON",
     "CLOSE"
   ];
-  List _clrslist = [neClr, prosClr, ipClr, wonClr, clsClr];
-  List<String> _titlelist = [
+  final List _clrslist = [neClr, prosClr, ipClr, wonClr, clsClr];
+  final List<String> _titlelist = [
     "Check Box",
     "Task Name",
     "Start Date",
@@ -36,9 +37,11 @@ class _TaskPreviewState extends State<TaskPreview> {
     "Status",
     "Actions"
   ];
+  final List<bool> _tapslist = [true, true, true, true, true];
   String activeid = "List";
-  int i = 1;
-  bool _isCheck = false;
+
+  bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,16 +50,18 @@ class _TaskPreviewState extends State<TaskPreview> {
       width: size.width,
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-              decoration: BoxDecoration(
-                  color: bgColor.withOpacity(0.0001),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              height: size.height * 0.07,
-              alignment: Alignment.center,
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
+            child: Container(
+              color: bgColor,
+              width: 266,
               child: Row(
-                children: _list.map((e) => newMethod(e, i++, () {})).toList(),
-              )),
+                children: _list.map((e) => newMethod(e, () {})).toList(),
+              ),
+            ),
+          ),
           SizedBox(height: 10.0),
           if (activeid == "List")
             Container(
@@ -72,100 +77,124 @@ class _TaskPreviewState extends State<TaskPreview> {
                   scrollDirection: Axis.vertical,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         color: bgColor,
                       ),
                       width: size.width,
-                      height: size.height * 0.3,
+                      height: size.height * 0.31,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle("NEW"),
+                          listtitle(_clrslist[0], "NEW", _tapslist[0], () {
+                            setState(() {
+                              _tapslist[0] = !_tapslist[0];
+                            });
+                          }),
                           SizedBox(height: 30.0),
-                          listheader(),
+                          Visibility(
+                              child: listheader(), visible: _tapslist[0]),
                           SizedBox(height: 30.0),
-                          listmiddle(),
+                          Visibility(
+                            child: listmiddle("NEW"),
+                            visible: _tapslist[0],
+                          ),
                         ],
                       ),
                     ),
                     SizedBox(height: 15.0),
                     Container(
-                      padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         color: bgColor,
                       ),
                       width: size.width,
-                      height: size.height * 0.3,
+                      height: size.height * 0.31,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle("PROSPECT"),
+                          listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
+                            setState(() {
+                              _tapslist[1] = !_tapslist[1];
+                            });
+                          }),
                           SizedBox(height: 30.0),
                           listheader(),
                           SizedBox(height: 30.0),
-                          listmiddle(),
+                          listmiddle("PROSPECT"),
                         ],
                       ),
                     ),
                     SizedBox(height: 15.0),
                     Container(
-                      padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         color: bgColor,
                       ),
                       width: size.width,
-                      height: size.height * 0.3,
+                      height: size.height * 0.31,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle("INPROGRESS"),
+                          listtitle(_clrslist[2], "INPROGRESS", _tapslist[2],
+                              () {
+                            setState(() {
+                              _tapslist[2] = !_tapslist[2];
+                            });
+                          }),
                           SizedBox(height: 30.0),
                           listheader(),
                           SizedBox(height: 30.0),
-                          listmiddle(),
+                          listmiddle("INPROGRESS"),
                         ],
                       ),
                     ),
                     SizedBox(height: 15.0),
                     Container(
-                      padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         color: bgColor,
                       ),
                       width: size.width,
-                      height: size.height * 0.3,
+                      height: size.height * 0.31,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle("WON"),
+                          listtitle(_clrslist[3], "WON", _tapslist[3], () {
+                            setState(() {
+                              _tapslist[3] = !_tapslist[3];
+                            });
+                          }),
                           SizedBox(height: 30.0),
                           listheader(),
                           SizedBox(height: 30.0),
-                          listmiddle(),
+                          listmiddle("WON"),
                         ],
                       ),
                     ),
                     SizedBox(height: 15.0),
                     Container(
-                      padding: EdgeInsets.all(30.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         color: bgColor,
                       ),
                       width: size.width,
-                      height: size.height * 0.3,
+                      height: size.height * 0.31,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle("CLOSE"),
+                          listtitle(_clrslist[4], "CLOSE", _tapslist[4], () {
+                            setState(() {
+                              _tapslist[4] = !_tapslist[4];
+                            });
+                          }),
                           SizedBox(height: 30.0),
                           listheader(),
                           SizedBox(height: 30.0),
-                          listmiddle(),
+                          listmiddle("CLOSE"),
                         ],
                       ),
                     ),
-                    SizedBox(height: 15.0),
                   ],
                 ),
               ),
@@ -228,15 +257,19 @@ class _TaskPreviewState extends State<TaskPreview> {
     );
   }
 
-  Widget newMethod(e, i, callack) {
+  Widget newMethod(e, callack) {
     return RaisedButton(
       elevation: 0.0,
       color: activeid == e ? btnColor : bgColor,
+      hoverColor: Colors.transparent,
+      hoverElevation: 0.0,
       onPressed: () {
-        setState(() => activeid = e);
+        setState(() {
+          activeid = e;
+        });
       },
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(15.0),
         child: Text(
           e,
           style: TextStyle(
@@ -248,47 +281,67 @@ class _TaskPreviewState extends State<TaskPreview> {
     );
   }
 
-  Widget listtitle(title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TxtStls.fieldtitlestyle,
-        ),
-        Text("See More")
-      ],
-    );
+  Widget listtitle(clr, title, taps, _ontap) {
+    return RaisedButton.icon(
+        elevation: 0.0,
+        color: clr,
+        hoverColor: Colors.transparent,
+        highlightElevation: 0.0,
+        disabledElevation: 0.0,
+        onPressed: _ontap,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0))),
+        icon: taps
+            ? const Icon(
+                Icons.arrow_drop_down_outlined,
+                color: bgColor,
+              )
+            : const Icon(
+                Icons.arrow_drop_up_outlined,
+                color: bgColor,
+              ),
+        label: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(title, style: TxtStls.fieldstyle1),
+        ));
   }
 
   Widget listheader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: _titlelist
-          .map((e) => Row(
-                children: [
-                  Text(
-                    e,
-                    style: TxtStls.fieldtitlestyle2,
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down_outlined,
-                    color: AbgColor.withOpacity(0.75),
-                  )
-                ],
-              ))
-          .toList(),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: _titlelist
+            .map((e) => Row(
+                  children: [
+                    Text(
+                      e,
+                      style: TxtStls.fieldtitlestyle2,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down_outlined,
+                      color: AbgColor.withOpacity(0.75),
+                    )
+                  ],
+                ))
+            .toList(),
+      ),
     );
   }
 
-  Widget listmiddle() {
+  Widget listmiddle(cat) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.1,
+      padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("Tasks")
-            .where("endDate", isEqualTo: "2021-12-01")
+            .where("Attachments", arrayContains: {
+              "uid": _auth.currentUser!.uid.toString(),
+            })
+            .where("cat", isEqualTo: cat)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -302,122 +355,272 @@ class _TaskPreviewState extends State<TaskPreview> {
           if (snapshot.data!.docs.length == 0) {
             return Center(
                 child: Text(
-              "No Data Found",
+              "No Leads Found",
               style: TxtStls.fieldtitlestyle,
             ));
           }
-          return ListView.separated(
-            separatorBuilder: (_, i) => SizedBox(height: 5.0),
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (_, index) {
-              String logo = snapshot.data!.docs[index]["logo"];
-              // ignore: undefined_prefixed_name
-              ui.platformViewRegistry.registerViewFactory(
-                logo,
-                (int _) => ImageElement()..src = logo,
-              );
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 240,
-                    alignment: Alignment.centerLeft,
-                    child: Checkbox(
-                        value: _isCheck,
-                        onChanged: (value) {
-                          setState(() {
-                            _isCheck = !_isCheck;
-                          });
-                        },
-                        activeColor: btnColor),
-                  ),
-                  Container(
-                      width: 255,
+          return Scrollbar(
+            controller: _scrollController,
+            isAlwaysShown: true,
+            showTrackOnHover: true,
+            child: ListView.separated(
+              separatorBuilder: (_, i) => SizedBox(height: 5.0),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (_, index) {
+                String newres = snapshot.data!.docs[index]["status"];
+                String newsta = snapshot.data!.docs[index]["status"];
+                String logo = snapshot.data!.docs[index]["logo"];
+                // ignore: undefined_prefixed_name
+                ui.platformViewRegistry.registerViewFactory(
+                  logo,
+                  (int _) => ImageElement()..src = logo,
+                );
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 240,
                       alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                              ),
-                              child: ClipRRect(
+                      child: Checkbox(
+                          hoverColor: btnColor.withOpacity(0.0001),
+                          value: isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              print(value);
+                              isChecked = value!;
+                            });
+                          },
+                          activeColor: btnColor),
+                    ),
+                    Container(
+                        width: 255,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
-                                  child: HtmlElementView(
-                                    viewType: logo,
-                                  ))),
-                          SizedBox(width: 2),
-                          Text(
-                            snapshot.data!.docs[index]["task"],
-                            style: ClrStls.tnClr,
+                                ),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: HtmlElementView(
+                                      viewType: logo,
+                                    ))),
+                            SizedBox(width: 2),
+                            Text(
+                              snapshot.data!.docs[index]["task"],
+                              style: ClrStls.tnClr,
+                            ),
+                          ],
+                        )),
+                    Container(
+                      width: 247,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        snapshot.data!.docs[index]["startDate"]
+                            .toDate()
+                            .toString()
+                            .split(" ")[0],
+                        style: TxtStls.fieldstyle,
+                      ),
+                    ),
+                    Container(
+                        width: 240,
+                        alignment: Alignment.centerLeft,
+                        child: Text(snapshot.data!.docs[index]["endDate"],
+                            style: ClrStls.endClr)),
+                    Container(
+                        width: 240,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            snapshot.data!.docs[index]["Attachments"].length
+                                .toString(),
+                            style: TxtStls.fieldstyle)),
+                    Container(
+                      width: 200,
+                      alignment: Alignment.centerLeft,
+                      child: snapshot.data!.docs[index]["status"] == ""
+                          ? Container(
+                              alignment: Alignment.center,
+                              width: 130,
+                              decoration: BoxDecoration(
+                                  color:
+                                      StatusUpdateServices.statcolorget(newres),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0))),
+                              child: PopupMenuButton(
+                                color: Clrs.txtColor,
+                                onSelected: (value) {
+                                  String stat1 = value.toString();
+                                  String id = snapshot.data!.docs[index]["id"];
+                                  StatusUpdateServices.updateStatus(id, stat1);
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        StatusUpdateServices.statusget(newsta),
+                                        style: TxtStls.fieldstyle1,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down_outlined,
+                                        color: bgColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      value: "FRESH",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: wonClr,
+                                        child: Text(
+                                          "FRESH",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: "ASSIGNED",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: flwClr,
+                                        child: Text(
+                                          "ASSIGNED",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: "CONTACTED",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: conClr,
+                                        child: Text(
+                                          "CONTACTED",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                  ];
+                                },
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      StatusUpdateServices.statcolorget(newres),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0))),
+                              alignment: Alignment.center,
+                              width: 130,
+                              child: PopupMenuButton(
+                                color: Clrs.txtColor,
+                                onSelected: (value) {
+                                  String stat1 = value.toString();
+                                  String id = snapshot.data!.docs[index]["id"];
+                                  StatusUpdateServices.updateStatus(id, stat1);
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        StatusUpdateServices.statusget(newsta),
+                                        style: TxtStls.fieldstyle1,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down_outlined,
+                                        color: bgColor,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      value: "FRESH",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: wonClr,
+                                        child: Text(
+                                          "FRESH",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: "ASSIGNED",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: flwClr,
+                                        child: Text(
+                                          "ASSIGNED",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                      value: "CONTACTED",
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        color: conClr,
+                                        child: Text(
+                                          "CONTACTED",
+                                          style: TxtStls.stl1,
+                                        ),
+                                      ),
+                                    ),
+                                  ];
+                                },
+                              ),
+                            ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {},
+                            ),
+                            backgroundColor: btnColor.withOpacity(0.075),
+                          ),
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 12.5,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {},
+                            ),
+                            backgroundColor: Colors.red.withOpacity(0.075),
                           ),
                         ],
-                      )),
-                  Container(
-                    width: 247,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      snapshot.data!.docs[index]["startDate"]
-                          .toDate()
-                          .toString()
-                          .split(" ")[0],
-                      style: TxtStls.fieldstyle,
-                    ),
-                  ),
-                  Container(
-                      width: 240,
-                      alignment: Alignment.centerLeft,
-                      child: Text(snapshot.data!.docs[index]["endDate"],
-                          style: ClrStls.endClr)),
-                  Container(
-                      width: 240,
-                      alignment: Alignment.centerLeft,
-                      child: Text("5 Members", style: TxtStls.fieldstyle)),
-                  Container(
-                    width: 200,
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Text("pending",
-                          style: TextStyle(
-                              fontSize: 12.5,
-                              color: bgColor,
-                              letterSpacing: 0.2)),
-                      color: neClr,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CircleAvatar(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              size: 12.5,
-                              color: btnColor,
-                            ),
-                            onPressed: () {},
-                          ),
-                          backgroundColor: btnColor.withOpacity(0.075),
-                        ),
-                        CircleAvatar(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              size: 12.5,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {},
-                          ),
-                          backgroundColor: Colors.red.withOpacity(0.075),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              );
-            },
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
           );
         },
       ),
@@ -497,17 +700,17 @@ class _TaskPreviewState extends State<TaskPreview> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Checkbox(
-                              value: _isCheck,
-                              onChanged: (value) {
-                                _isCheck = !_isCheck;
-                                setState(() {});
-                              },
-                              activeColor: btnColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                            ),
+                            // Checkbox(
+                            //   value: _isCheck,
+                            //   onChanged: (value) {
+                            //     _isCheck = !_isCheck;
+                            //     setState(() {});
+                            //   },
+                            //   activeColor: btnColor,
+                            //   shape: RoundedRectangleBorder(
+                            //       borderRadius:
+                            //           BorderRadius.all(Radius.circular(20.0))),
+                            // ),
                             Expanded(
                                 child: Text(
                               snapshot.data!.docs[index]["task"],

@@ -3004,7 +3004,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
       titlePadding: EdgeInsets.all(0),
       insetPadding: EdgeInsets.all(0),
       buttonPadding: EdgeInsets.all(0),
-      backgroundColor: txtColor,
+      backgroundColor: Colors.white,
       title: Container(
         padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
@@ -3015,7 +3015,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(taskname),
+            Text(
+              taskname,
+              style: TxtStls.stl1,
+            ),
             IconButton(
               tooltip: "Close Window",
               icon: Icon(Icons.cancel_presentation),
@@ -3033,6 +3036,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
           return Container(
             width: size.width * 0.85,
             height: size.height * 0.85,
+            color: bgColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -3055,17 +3059,14 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _isHover[0]
-                                    ? Lottie.asset(
-                                        "assets/Lotties/createdate.json")
-                                    : SizedBox(
-                                        width: 25,
-                                        height: 25,
-                                        child: Image.asset(
-                                          "assets/animal/calendar.png",
-                                          fit: BoxFit.fill,
-                                        )),
-                                Text(createDate),
+                                SizedBox(
+                                    width: 25,
+                                    height: 25,
+                                    child: Lottie.asset(
+                                      "assets/Lotties/createdate.json",
+                                      fit: BoxFit.fill,
+                                    )),
+                                Text(createDate, style: TxtStls.stl1),
                               ],
                             ),
                           ),
@@ -3090,19 +3091,15 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _isHover[1]
-                                    ? Lottie.asset(
-                                        "assets/Lotties/lastdate.json",
-                                        fit: BoxFit.fill)
-                                    : SizedBox(
-                                        width: 30,
-                                        height: 35,
-                                        child: Image.asset(
-                                          "assets/animal/announcement.png",
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                Text(deadline),
+                                SizedBox(
+                                  width: 30,
+                                  height: 35,
+                                  child: Lottie.asset(
+                                    "assets/Lotties/lastdate.json",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Text(deadline, style: TxtStls.stl1),
                               ],
                             ),
                           ),
@@ -3141,21 +3138,18 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _isHover[2]
-                                    ? Lottie.asset(
-                                        "assets/Lotties/lastseen.json")
-                                    : SizedBox(
-                                        width: 50,
-                                        height: 50,
-                                        child: Image.asset(
-                                            "assets/animal/view.png",
-                                            fit: BoxFit.fill)),
+                                SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Lottie.asset(
+                                        "assets/Lotties/lastseen.json",
+                                        fit: BoxFit.fill)),
                                 Column(
                                   children: [
-                                    Text(lastview),
+                                    Text(lastview, style: TxtStls.stl1),
                                     Text(
                                       lastviewTime,
-                                      style: TextStyle(fontSize: 15),
+                                      style: TextStyle(color: bt, fontSize: 15),
                                     )
                                   ],
                                 )
@@ -3184,34 +3178,31 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  _isHover[3]
-                                      ? Lottie.asset(
-                                          "assets/Lotties/agent.json")
-                                      : SizedBox(
-                                          width: 35,
-                                          height: 35,
-                                          child: Image.asset(
-                                            "assets/animal/call-center-agent.png",
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      physics: ClampingScrollPhysics(),
-                                      itemCount: cert.length,
-                                      itemBuilder: (_, index) {
-                                        return ClipRRect(
-                                            clipBehavior:
-                                                Clip.antiAliasWithSaveLayer,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(30.0)),
-                                            child: SizedBox(
-                                                width: 30,
-                                                height: 30,
-                                                child: Image.network(
-                                                    cert[index]["uid1"])));
-                                      })
+                                  SizedBox(
+                                    width: 35,
+                                    height: 35,
+                                    child: Lottie.asset(
+                                      "assets/Lotties/agent.json",
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  // ListView.builder(
+                                  //     shrinkWrap: true,
+                                  //     scrollDirection: Axis.horizontal,
+                                  //     physics: ClampingScrollPhysics(),
+                                  //     itemCount: cert.length,
+                                  //     itemBuilder: (_, index) {
+                                  //       return ClipRRect(
+                                  //           clipBehavior:
+                                  //               Clip.antiAliasWithSaveLayer,
+                                  //           borderRadius: BorderRadius.all(
+                                  //               Radius.circular(30.0)),
+                                  //           child: SizedBox(
+                                  //               width: 30,
+                                  //               height: 30,
+                                  //               child: Image.network(
+                                  //                   cert[index]["uid1"])));
+                                  //     })
                                 ],
                               ),
                             ),
@@ -3235,12 +3226,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                               width: 200,
                               child: Row(
                                 children: [
-                                  _isHover[4]
-                                      ? Lottie.asset(
-                                          "assets/Lotties/filter.json")
-                                      : Image.asset(
-                                          "assets/animal/setting.png"),
-                                  Text("Await")
+                                  Lottie.asset("assets/Lotties/filter.json"),
+                                  Text("Await", style: TxtStls.stl1)
                                 ],
                               ),
                             ),
@@ -3263,12 +3250,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                             width: 125,
                             height: 50,
                             child: SizedBox(
-                              child: _isHover[5]
-                                  ? Lottie.asset("assets/Lotties/live.json",
-                                      fit: BoxFit.fill)
-                                  : Image.asset(
-                                      "assets/animal/instagram-stories.png"),
-                            ),
+                                child: Lottie.asset("assets/Lotties/live.json",
+                                    fit: BoxFit.fill)),
                           ),
                         ),
                         onHover: (value) {
@@ -3328,6 +3311,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                 Container(
                   height: size.height * 0.77,
                   width: size.width * 0.85,
+                  color: bgColor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -3813,7 +3797,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         width: size.width * 0.4045,
                                         height: size.height * 0.07,
                                         decoration: BoxDecoration(
-                                            color: txtColor,
+                                            color: bgColor,
                                             border: Border(
                                               bottom: BorderSide(
                                                 width: 1,
@@ -3830,7 +3814,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 children: [
                                                   Lottie.asset(
                                                       "assets/Lotties/check1.json"),
-                                                  Text("Organisation")
+                                                  Text("Organisation",
+                                                      style: TxtStls.stl1)
                                                 ],
                                               ),
                                             ),
@@ -3872,19 +3857,24 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                       viewType: snapshot
                                                                           .data!
                                                                           .docs[index]["logo"]))),
-                                                          title: Text(snapshot
-                                                                  .data!
-                                                                  .docs[index]
-                                                              ["companyname"]),
+                                                          title: Text(
+                                                              snapshot.data!
+                                                                          .docs[
+                                                                      index][
+                                                                  "companyname"],
+                                                              style:
+                                                                  TxtStls.stl1),
                                                           subtitle: Text(
                                                               snapshot.data!
                                                                           .docs[
                                                                       index]
-                                                                  ["website"]),
+                                                                  ["website"],
+                                                              style:
+                                                                  TxtStls.stl1),
                                                           trailing: IconButton(
                                                             icon: Icon(
                                                               Icons.edit,
-                                                              color: bgColor,
+                                                              color: txtColor,
                                                             ),
                                                             onPressed: () {},
                                                           ),
@@ -3901,7 +3891,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                         width: size.width * 0.4045,
                                         height: size.height * 0.05,
                                         decoration: BoxDecoration(
-                                          color: txtColor,
+                                          color: bgColor,
                                           border: Border(
                                             bottom: BorderSide(
                                               width: 1,
@@ -3920,7 +3910,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 Lottie.asset(
                                                     "assets/Lotties/check.json",
                                                     fit: BoxFit.fitHeight),
-                                                Text("Manage Contacts"),
+                                                Text("Manage Contacts",
+                                                    style: TxtStls.stl1),
                                               ],
                                             ),
                                             TextButton.icon(
@@ -3929,8 +3920,10 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   _isCompany = !_isCompany;
                                                   setState(() {});
                                                 },
-                                                icon: Icon(Icons.add),
-                                                label: Text("Add New Contact"))
+                                                icon: Icon(Icons.add,
+                                                    color: txtColor),
+                                                label: Text("Add New Contact",
+                                                    style: TxtStls.stl1))
                                           ],
                                         ),
                                         alignment: Alignment.centerLeft,
@@ -3938,6 +3931,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                       Container(
                                         width: size.width * 0.4045,
                                         height: size.height * 0.17,
+                                        color: bgColor,
                                         child: StreamBuilder(
                                           stream: _fireStore
                                               .collection("Tasks")
@@ -3974,7 +3968,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                             width: size.width *
                                                                 0.315,
                                                             child: Card(
-                                                              color: txtColor,
+                                                              color: bgColor,
                                                               elevation: 10.0,
                                                               child:
                                                                   ExpansionTile(
@@ -4000,7 +3994,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                       title: Text(
                                                                           contactlist[i]
                                                                               [
-                                                                              "contactperson"]),
+                                                                              "contactperson"],
+                                                                          style:
+                                                                              TxtStls.stl1),
                                                                       children: [
                                                                     Align(
                                                                       alignment:
@@ -4012,13 +4008,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                           Icon(
                                                                             Icons.call,
                                                                             color:
-                                                                                bgColor,
+                                                                                txtColor,
                                                                           ),
                                                                           SizedBox(
                                                                               width: 20),
-                                                                          Text(contactlist[i]
-                                                                              [
-                                                                              "phone"])
+                                                                          Text(
+                                                                              contactlist[i]["phone"],
+                                                                              style: TxtStls.stl1)
                                                                         ],
                                                                       ),
                                                                     ),
@@ -4032,13 +4028,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                           Icon(
                                                                             Icons.email,
                                                                             color:
-                                                                                bgColor,
+                                                                                txtColor,
                                                                           ),
                                                                           SizedBox(
                                                                               width: 20),
-                                                                          Text(contactlist[i]
-                                                                              [
-                                                                              "email"])
+                                                                          Text(
+                                                                              contactlist[i]["email"],
+                                                                              style: TxtStls.stl1)
                                                                         ],
                                                                       ),
                                                                     ),
@@ -4048,7 +4044,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           IconButton(
                                                             icon: Icon(
                                                               Icons.delete,
-                                                              color: bgColor,
+                                                              color: txtColor,
                                                             ),
                                                             onPressed: () {
                                                               _showMyDialog(
@@ -4060,7 +4056,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                           IconButton(
                                                             icon: Icon(
                                                               Icons.edit,
-                                                              color: bgColor,
+                                                              color: txtColor,
                                                             ),
                                                             onPressed: () {},
                                                           ),
@@ -4085,11 +4081,13 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                               Container(
                                 height: size.height * 0.20,
                                 width: size.width * 0.20,
+                                color: bgColor,
                                 child: Column(
                                   children: [
                                     Container(
                                         width: size.width * 0.20,
-                                        child: Text("Attachments :")),
+                                        child: Text("Attachments :",
+                                            style: TxtStls.stl1)),
                                     Container(
                                       width: size.width * 0.20,
                                       height: size.height * 0.12,
@@ -4135,7 +4133,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                       ),
                                                       title: Text(
                                                         attachments1[i]['name'],
-                                                        style: TxtStls.stl122,
+                                                        style: TxtStls.stl1,
                                                       ),
                                                       onTap: () {
                                                         fileview1(
@@ -4173,7 +4171,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                 "assets/Lotties/attachments.json"),
                                             Text(
                                               "Browse",
-                                              style: TxtStls.stl2,
+                                              style: TxtStls.stl1,
                                             )
                                           ],
                                         ),
@@ -4196,7 +4194,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                   children: [
                                     Container(
                                       width: size.width * 0.13,
-                                      child: Text("Services Obtained :"),
+                                      child: Text("Services Obtained :",
+                                          style: TxtStls.stl1),
                                     ),
                                     Container(
                                       padding: EdgeInsets.only(right: 25.0),
@@ -4225,7 +4224,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                             ),
                                             focusedBorder: OutlineInputBorder(
                                               borderSide:
-                                                  BorderSide(color: bgColor),
+                                                  BorderSide(color: txtColor),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(15)),
@@ -4551,6 +4550,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                           : Container(
                               width: size.width * 0.445,
                               height: size.height * 0.70,
+                              color: bgColor,
                               child: _isStatic
                                   ? TranslationAnimatedWidget.tween(
                                       translationDisabled: Offset(200, 0),
@@ -4598,11 +4598,12 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                   return Column(
                                                     children: [
                                                       Text(
-                                                        "First Message : " +
-                                                            snapshot.data!
-                                                                    .docs[index]
-                                                                ["message"],
-                                                      ),
+                                                          "First Message : " +
+                                                              snapshot.data!
+                                                                          .docs[
+                                                                      index]
+                                                                  ["message"],
+                                                          style: TxtStls.stl1),
                                                       ListView.builder(
                                                         shrinkWrap: true,
                                                         itemCount: lr.length,
@@ -4640,7 +4641,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                     horizontal:
                                                                         16.0),
                                                             child: Card(
-                                                              color: txtColor,
+                                                              color: bgColor,
                                                               elevation: 10.0,
                                                               child: Container(
                                                                 padding:
@@ -4658,13 +4659,9 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                             Container(
                                                                                 child: Text(
                                                                               "MoveDate : " + date,
-                                                                              style: TextStyle(fontSize: 15),
+                                                                              style: TxtStls.stl1,
                                                                             )),
-                                                                            Container(
-                                                                                child: Text(
-                                                                              "Time : " + time,
-                                                                              style: TextStyle(fontSize: 12.5),
-                                                                            )),
+                                                                            Container(child: Text("Time : " + time, style: TxtStls.stl1)),
                                                                           ],
                                                                         ),
                                                                         SizedBox(
@@ -4684,10 +4681,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                         Container(
                                                                             alignment:
                                                                                 Alignment.centerLeft,
-                                                                            child: Text(
-                                                                              "EndDate : " + lastDate,
-                                                                              style: TextStyle(fontSize: 15),
-                                                                            )),
+                                                                            child: Text("EndDate : " + lastDate, style: TxtStls.stl1)),
                                                                         SizedBox(
                                                                             width:
                                                                                 60),
@@ -4738,7 +4732,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                                 lr[index]["Who"],
                                                                               ),
                                                                             ),
-                                                                            Text("FROM : "),
+                                                                            Text("FROM : ",
+                                                                                style: TxtStls.stl1),
                                                                             Padding(
                                                                               padding: const EdgeInsets.all(8.0),
                                                                               child: Container(
@@ -4748,7 +4743,8 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                                 color: FlagService.stateClr(statecolor),
                                                                               ),
                                                                             ),
-                                                                            Text("TO : "),
+                                                                            Text("TO : ",
+                                                                                style: TxtStls.stl1),
                                                                             Container(
                                                                               alignment: Alignment.center,
                                                                               width: size.width * 0.12,
@@ -4805,7 +4801,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                           children: [
                                                                             Container(
                                                                               width: size.width * 0.05,
-                                                                              child: Text("Note"),
+                                                                              child: Text("Note", style: TxtStls.stl1),
                                                                               alignment: Alignment.centerLeft,
                                                                             ),
                                                                             Container(
@@ -4818,7 +4814,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                                                                 padding: EdgeInsets.all(10.0),
                                                                                 height: 100,
                                                                                 width: size.width * 0.35,
-                                                                                child: Text(lr[index]["Note"]))
+                                                                                child: Text(lr[index]["Note"], style: TxtStls.stl1))
                                                                           ],
                                                                         )),
                                                                   ],

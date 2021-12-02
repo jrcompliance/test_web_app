@@ -161,11 +161,19 @@ class _MainScreenState extends State<MainScreen> {
               Tabs.Notification),
           DrawerListTile(
               "Settings", "assets/Notations/Setting.png", Tabs.Settings),
-          SizedBox(height: 250),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                border: Border.all(color: txtColor.withOpacity(0.1))),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SizedBox(
+              height: 260,
+              width: 50,
+              child: Image.asset(
+                "assets/Logos/lamp.png",
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Card(
+            elevation: 10.0,
             child: ListTile(
               leading: imageUrl == null || imageUrl == ""
                   ? Icon(
@@ -212,7 +220,7 @@ class _MainScreenState extends State<MainScreen> {
       return Column(
         children: [
           Header(title: "Analytics"),
-          DashBoardBodyScreen(),
+          //DashBoardBodyScreen(),
         ],
       );
     } else if (active == Tabs.Invoice) {
