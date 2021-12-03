@@ -115,8 +115,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
       extendBodyBehindAppBar: true,
       drawer: SideDrawer(context),
+      endDrawer: Drawer(
+        child: Column(
+          children: [
+            DrawerListTile(
+                "Yalagala", "assets/Notations/Category.png", Tabs.Notification)
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

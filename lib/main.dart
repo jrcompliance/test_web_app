@@ -1,19 +1,12 @@
 import 'dart:async';
-import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Auth_Views/RecoverPassword_View.dart';
-import 'package:test_web_app/Auth_Views/Register_View.dart';
-import 'package:test_web_app/Auth_Views/Success_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 
@@ -140,3 +133,20 @@ class _LandingScreenState extends State<LandingScreen> {
 //     }
 //   }
 // }
+
+class MoveDrawer extends StatefulWidget {
+  const MoveDrawer({Key? key}) : super(key: key);
+
+  @override
+  _MoveDrawerState createState() => _MoveDrawerState();
+}
+
+class _MoveDrawerState extends State<MoveDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      endDrawer: Drawer(),
+    );
+  }
+}
