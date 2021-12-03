@@ -490,9 +490,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                                 size: 12.5,
                                 color: btnColor,
                               ),
-                              onPressed: () {
-                                movedrawer(context);
-                              },
+                              onPressed: () {},
                             ),
                             backgroundColor: btnColor.withOpacity(0.075),
                           ),
@@ -1171,35 +1169,5 @@ class _TaskPreviewState extends State<TaskPreview> {
         },
       ),
     );
-  }
-
-  movedrawer(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    var alertDialog = AlertDialog(
-      contentPadding: EdgeInsets.all(0.0),
-      actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
-      insetPadding: EdgeInsets.all(0),
-      buttonPadding: EdgeInsets.all(0),
-      backgroundColor: bgColor,
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-                alignment: Alignment.centerRight,
-                width: size.width * 0.25,
-                height: size.height,
-                child: Text("HELLO Wait")),
-          );
-        },
-      ),
-    );
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) {
-          return alertDialog;
-        });
   }
 }
