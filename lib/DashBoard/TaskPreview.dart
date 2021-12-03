@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Constants/shape.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -18,7 +19,6 @@ class TaskPreview extends StatefulWidget {
 class _TaskPreviewState extends State<TaskPreview> {
   final ScrollController _scrollController = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final List<String> _list = ["List", "Board", "Timeline"];
   final List<String> _boardtitlelist = [
     "NEW",
@@ -367,31 +367,53 @@ class _TaskPreviewState extends State<TaskPreview> {
               separatorBuilder: (_, i) => SizedBox(height: 5.0),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (_, index) {
-                String newres = snapshot.data!.docs[index]["status"];
+                String id = snapshot.data!.docs[index]["id"];
+                String cat = snapshot.data!.docs[index]["cat"];
                 String newsta = snapshot.data!.docs[index]["status"];
+                String prosta = snapshot.data!.docs[index]["status1"];
+                String insta = snapshot.data!.docs[index]["status2"];
+                String wonsta = snapshot.data!.docs[index]["status4"];
+                String clsta = snapshot.data!.docs[index]["status5"];
                 String logo = snapshot.data!.docs[index]["logo"];
                 // ignore: undefined_prefixed_name
                 ui.platformViewRegistry.registerViewFactory(
                   logo,
                   (int _) => ImageElement()..src = logo,
                 );
-
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       width: 240,
                       alignment: Alignment.centerLeft,
-                      child: Checkbox(
-                          hoverColor: btnColor.withOpacity(0.0001),
-                          value: isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              print(value);
-                              isChecked = value!;
-                            });
-                          },
-                          activeColor: btnColor),
+                      child: Row(
+                        children: [
+                          Checkbox(
+                              hoverColor: btnColor.withOpacity(0.0001),
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  print(value);
+                                  isChecked = value!;
+                                });
+                              },
+                              activeColor: btnColor),
+                          SizedBox(width: 10),
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 12.5,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                _showMyDialog(id);
+                              },
+                            ),
+                            backgroundColor: Colors.red.withOpacity(0.075),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                         width: 255,
@@ -442,151 +464,8 @@ class _TaskPreviewState extends State<TaskPreview> {
                     Container(
                       width: 200,
                       alignment: Alignment.centerLeft,
-                      child: snapshot.data!.docs[index]["status"] == ""
-                          ? Container(
-                              alignment: Alignment.center,
-                              width: 130,
-                              decoration: BoxDecoration(
-                                  color:
-                                      StatusUpdateServices.statcolorget(newres),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                              child: PopupMenuButton(
-                                color: Clrs.txtColor,
-                                onSelected: (value) {
-                                  String stat1 = value.toString();
-                                  String id = snapshot.data!.docs[index]["id"];
-                                  StatusUpdateServices.updateStatus(id, stat1);
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        StatusUpdateServices.statusget(newsta),
-                                        style: TxtStls.fieldstyle1,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_drop_down_outlined,
-                                        color: bgColor,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                itemBuilder: (context) {
-                                  return [
-                                    PopupMenuItem(
-                                      value: "FRESH",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: wonClr,
-                                        child: Text(
-                                          "FRESH",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: "ASSIGNED",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: flwClr,
-                                        child: Text(
-                                          "ASSIGNED",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: "CONTACTED",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: conClr,
-                                        child: Text(
-                                          "CONTACTED",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                  ];
-                                },
-                              ),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                  color:
-                                      StatusUpdateServices.statcolorget(newres),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                              alignment: Alignment.center,
-                              width: 130,
-                              child: PopupMenuButton(
-                                color: Clrs.txtColor,
-                                onSelected: (value) {
-                                  String stat1 = value.toString();
-                                  String id = snapshot.data!.docs[index]["id"];
-                                  StatusUpdateServices.updateStatus(id, stat1);
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        StatusUpdateServices.statusget(newsta),
-                                        style: TxtStls.fieldstyle1,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_drop_down_outlined,
-                                        color: bgColor,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                itemBuilder: (context) {
-                                  return [
-                                    PopupMenuItem(
-                                      value: "FRESH",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: wonClr,
-                                        child: Text(
-                                          "FRESH",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: "ASSIGNED",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: flwClr,
-                                        child: Text(
-                                          "ASSIGNED",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: "CONTACTED",
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        color: conClr,
-                                        child: Text(
-                                          "CONTACTED",
-                                          style: TxtStls.stl1,
-                                        ),
-                                      ),
-                                    ),
-                                  ];
-                                },
-                              ),
-                            ),
+                      child: dropdowns(
+                          id, cat, newsta, prosta, insta, wonsta, clsta),
                     ),
                     Expanded(
                       child: Row(
@@ -606,13 +485,15 @@ class _TaskPreviewState extends State<TaskPreview> {
                           CircleAvatar(
                             child: IconButton(
                               icon: Icon(
-                                Icons.delete,
+                                Icons.fast_forward,
                                 size: 12.5,
-                                color: Colors.red,
+                                color: btnColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                _showMyDialog(id);
+                              },
                             ),
-                            backgroundColor: Colors.red.withOpacity(0.075),
+                            backgroundColor: btnColor.withOpacity(0.075),
                           ),
                         ],
                       ),
@@ -624,6 +505,487 @@ class _TaskPreviewState extends State<TaskPreview> {
           );
         },
       ),
+    );
+  }
+
+  Widget dropdowns(id, cat, newsta, prosta, insta, wonsta, clsta) {
+    if (cat == "NEW") {
+      return Container(
+        alignment: Alignment.center,
+        width: 130,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, 32),
+          onSelected: (value) {
+            StatusUpdateServices.updateStatus(id, value.toString());
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget(newsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "FRESH",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: wonClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "FRESH",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "ASSIGNED",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "ASSIGNED",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "CONTACTED",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: conClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "CONTACTED",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "PROSPECT") {
+      return Container(
+        alignment: Alignment.center,
+        width: 130,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget1(prosta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, 32),
+          onSelected: (value) {
+            StatusUpdateServices.updateStatus1(id, value.toString());
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget1(prosta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "AVERAGE",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: avgClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "   AVERAGE   ",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "GOOD",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: goodClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "   GOOD   ",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "INPROGRESS") {
+      return Container(
+        alignment: Alignment.center,
+        width: 140,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget2(insta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, 32),
+          onSelected: (value) {
+            StatusUpdateServices.updateStatus2(id, value.toString());
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget2(insta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "FOLLOWUP",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "FOLLOWUP",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "SPECIFICATION",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: spClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "SPECIFICATION",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "QUOTATION",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: qtoClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "QUOTATION",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "WON") {
+      return Container(
+        alignment: Alignment.center,
+        width: 130,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget4(wonsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, 32),
+          onSelected: (value) {
+            StatusUpdateServices.updateStatus4(id, value.toString());
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget4(wonsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "PAYMENT",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: wonClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "PAYMENT",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "DOCUMENTS",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "DOCUMENTS",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "SAMPLES",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: goodClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "SAMPLES",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    }
+    return Container(
+      alignment: Alignment.center,
+      width: 130,
+      decoration: BoxDecoration(
+          color: StatusUpdateServices.statcolorget5(clsta),
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      child: PopupMenuButton(
+        padding: EdgeInsets.zero,
+        shape: TooltipShape(),
+        offset: Offset(0, 32),
+        onSelected: (value) {
+          StatusUpdateServices.updateStatus5(id, value.toString());
+          setState(() {});
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                StatusUpdateServices.statusget5(clsta),
+                style: TxtStls.fieldstyle1,
+              ),
+              Icon(
+                Icons.arrow_drop_down_outlined,
+                color: bgColor,
+              )
+            ],
+          ),
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "IRRELEVANT",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: irrClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "IRRELEVANT",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "BUDGET ISSUE",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: clsClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "BUDGET ISSUE",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "INFORMATIVE",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: flwClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "INFORMATIVE",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "NO ANSWER",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: conClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "NO ANSWER",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            )
+          ];
+        },
+      ),
+    );
+  }
+
+  Future<void> _showMyDialog(id) async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: const Text(
+            'Are you sure to Delete ?',
+            style: TxtStls.fieldtitlestyle,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancel',
+                style: TxtStls.fieldstyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Delete',
+                style: TxtStls.fieldstyle,
+              ),
+              onPressed: () {
+                CrudOperations.deleteTask(id);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
