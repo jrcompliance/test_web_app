@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,10 +11,10 @@ import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/tasklength.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/MyDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Header.dart';
+import 'package:test_web_app/DashBoard/MoveDrawer.dart';
 import 'package:test_web_app/DashBoard/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/UserDashBoard.dart';
 
@@ -29,7 +28,6 @@ class _MainScreenState extends State<MainScreen> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   Tabs active = Tabs.DashBoard;
   final GlobalKey<FormState> _formKey = GlobalKey();
-
   final TextEditingController _taskController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -94,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
         .collection("Tasks")
         .where("Attachments",
             arrayContains: {"uid": _auth.currentUser!.uid.toString()})
-        .where("cat", isEqualTo: "INPROGRESS")
+        .where("cat", isEqualTo: "IN PROGRESS")
         .snapshots()
         .listen((value) {
           ipLength = value.docs.length.toDouble();
@@ -115,17 +113,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
-      extendBodyBehindAppBar: true,
       drawer: SideDrawer(context),
-      endDrawer: Drawer(
-        child: Column(
-          children: [
-            DrawerListTile(
-                "Yalagala", "assets/Notations/Category.png", Tabs.Notification)
-          ],
-        ),
-      ),
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,6 +137,7 @@ class _MainScreenState extends State<MainScreen> {
         },
         child: Icon(Icons.add),
       ),
+      endDrawer: MoveDrawer(),
     );
   }
 
@@ -237,7 +228,7 @@ class _MainScreenState extends State<MainScreen> {
       return Column(
         children: [
           Header(title: "Analytics"),
-          //DashBoardBodyScreen(),
+          DashBoardBodyScreen(),
         ],
       );
     } else if (active == Tabs.Invoice) {
@@ -258,7 +249,7 @@ class _MainScreenState extends State<MainScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     var alertDialog = AlertDialog(
-      backgroundColor: txtColor,
+      backgroundColor: bgColor,
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return SizedBox(
@@ -271,16 +262,24 @@ class _MainScreenState extends State<MainScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Create New Task"),
+                      Text(
+                        "Create New Task",
+                        style: TxtStls.fieldtitlestyle,
+                      ),
                       SizedBox(width: 50),
-                      IconButton(
-                        color: Colors.red,
-                        icon: const Icon(Icons.cancel),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                      CircleAvatar(
+                        backgroundColor: neClr.withOpacity(0.2),
+                        child: IconButton(
+                          iconSize: 15.0,
+                          hoverColor: Colors.transparent,
+                          color: neClr,
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                     ],
                   ),

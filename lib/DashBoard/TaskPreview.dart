@@ -18,7 +18,7 @@ class TaskPreview extends StatefulWidget {
 
 class _TaskPreviewState extends State<TaskPreview> {
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<String> _list = ["List", "Board", "Timeline"];
   final List<String> _boardtitlelist = [
@@ -40,7 +40,6 @@ class _TaskPreviewState extends State<TaskPreview> {
   ];
   final List<bool> _tapslist = [true, true, true, true, true];
   String activeid = "List";
-
   bool isChecked = false;
 
   @override
@@ -137,7 +136,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          listtitle(_clrslist[2], "INPROGRESS", _tapslist[2],
+                          listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2],
                               () {
                             setState(() {
                               _tapslist[2] = !_tapslist[2];
@@ -146,7 +145,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                           SizedBox(height: 30.0),
                           listheader(),
                           SizedBox(height: 30.0),
-                          listmiddle("INPROGRESS"),
+                          listmiddle("IN PROGRESS"),
                         ],
                       ),
                     ),
@@ -226,7 +225,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                         children: [
                           boardtitle(_clrslist[2], _boardtitlelist[2]),
                           SizedBox(height: 10),
-                          boardmiddle("INPROGRESS")
+                          boardmiddle("IN PROGRESS")
                         ],
                       ),
                       Column(
@@ -249,9 +248,53 @@ class _TaskPreviewState extends State<TaskPreview> {
               ),
             ),
           if (activeid == "Timeline")
-            Container(
-              color: txtColor,
-              height: size.height * 0.845,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    color: bgColor,
+                    height: size.height * 0.845,
+                    child: Column(
+                      children: [
+                        timelinetitle(_clrslist[0], _boardtitlelist[0]),
+                        timelinetitle(_clrslist[1], _boardtitlelist[1]),
+                        timelinetitle(_clrslist[2], _boardtitlelist[2]),
+                        timelinetitle(_clrslist[3], _boardtitlelist[3]),
+                        timelinetitle(_clrslist[4], _boardtitlelist[4]),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 40),
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    color: bgColor,
+                    height: size.height * 0.845,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      physics: ClampingScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: 30,
+                      itemBuilder: (BuildContext context, index) {
+                        return Container(
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0))),
+                          child: Text(
+                            "$index",
+                            style: TxtStls.fieldstyle,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
         ],
       ),
@@ -334,6 +377,7 @@ class _TaskPreviewState extends State<TaskPreview> {
 
   Widget listmiddle(cat) {
     return Container(
+      color: bgColor,
       height: MediaQuery.of(context).size.height * 0.1,
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: StreamBuilder(
@@ -369,6 +413,7 @@ class _TaskPreviewState extends State<TaskPreview> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (_, index) {
                 String id = snapshot.data!.docs[index]["id"];
+                String taskname = snapshot.data!.docs[index]["task"];
                 String cat = snapshot.data!.docs[index]["cat"];
                 String newsta = snapshot.data!.docs[index]["status"];
                 String prosta = snapshot.data!.docs[index]["status1"];
@@ -416,29 +461,34 @@ class _TaskPreviewState extends State<TaskPreview> {
                         ],
                       ),
                     ),
-                    Container(
-                        width: 255,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                child: ClipRRect(
+                    InkWell(
+                      child: Container(
+                          width: 255,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(40),
-                                    child: HtmlElementView(
-                                      viewType: logo,
-                                    ))),
-                            SizedBox(width: 2),
-                            Text(
-                              snapshot.data!.docs[index]["task"],
-                              style: ClrStls.tnClr,
-                            ),
-                          ],
-                        )),
+                                  ),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: HtmlElementView(
+                                        viewType: logo,
+                                      ))),
+                              SizedBox(width: 2),
+                              Text(
+                                taskname,
+                                style: ClrStls.tnClr,
+                              ),
+                            ],
+                          )),
+                      onTap: () {
+                        detailspopBox(context, taskname);
+                      },
+                    ),
                     Container(
                       width: 247,
                       alignment: Alignment.centerLeft,
@@ -490,7 +540,9 @@ class _TaskPreviewState extends State<TaskPreview> {
                                 size: 12.5,
                                 color: btnColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
                             ),
                             backgroundColor: btnColor.withOpacity(0.075),
                           ),
@@ -504,6 +556,297 @@ class _TaskPreviewState extends State<TaskPreview> {
           );
         },
       ),
+    );
+  }
+
+  Widget boardtitle(c, e) {
+    return Container(
+      decoration: BoxDecoration(
+          color: c, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      alignment: Alignment.center,
+      width: 300,
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+        e,
+        style: TextStyle(
+            fontSize: 15,
+            color: bgColor,
+            letterSpacing: 0.2,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget boardmiddle(cat) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.78,
+      width: 300,
+      color: AbgColor.withOpacity(0.0001),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("Tasks")
+            .where("Attachments", arrayContains: {
+              "uid": _auth.currentUser!.uid.toString(),
+            })
+            .where("cat", isEqualTo: cat)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: SpinKitFadingCube(
+                color: btnColor,
+                size: 20,
+              ),
+            );
+          }
+          if (snapshot.data!.docs.length == 0) {
+            return Center(
+                child: Text(
+              "No Data Found",
+              style: TxtStls.fieldtitlestyle,
+            ));
+          }
+          return GridView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (_, index) {
+              String id = snapshot.data!.docs[index]["id"];
+              String cat = snapshot.data!.docs[index]["cat"];
+              String newsta = snapshot.data!.docs[index]["status"];
+              String prosta = snapshot.data!.docs[index]["status1"];
+              String insta = snapshot.data!.docs[index]["status2"];
+              String wonsta = snapshot.data!.docs[index]["status4"];
+              String clsta = snapshot.data!.docs[index]["status5"];
+              String logo = snapshot.data!.docs[index]["logo"];
+              String flagres = snapshot.data!.docs[index]["priority"];
+              // ignore: undefined_prefixed_name
+              ui.platformViewRegistry.registerViewFactory(
+                logo,
+                (int _) => ImageElement()..src = logo,
+              );
+              return Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 300,
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Checkbox(
+                            //   value: _isCheck,
+                            //   onChanged: (value) {
+                            //     _isCheck = !_isCheck;
+                            //     setState(() {});
+                            //   },
+                            //   activeColor: btnColor,
+                            //   shape: RoundedRectangleBorder(
+                            //       borderRadius:
+                            //           BorderRadius.all(Radius.circular(20.0))),
+                            // ),
+                            Expanded(
+                                child: Text(
+                              snapshot.data!.docs[index]["task"],
+                              style: TxtStls.fieldstyle,
+                            )),
+                            IconButton(
+                                onPressed: () {}, icon: Icon(Icons.more_horiz)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 300,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: FlagService.pricolorget(flagres)
+                                  .withOpacity(0.1),
+                              child: PopupMenuButton(
+                                offset: Offset(0, 32),
+                                shape: TooltipShape(),
+                                onSelected: (value) {
+                                  FlagService.updateFlag(id, value.toString());
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  Icons.flag,
+                                  color: FlagService.pricolorget(flagres),
+                                ),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      value: "U",
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.flag,
+                                            color: Clrs.urgent,
+                                          ),
+                                          Text(
+                                            "Urgent",
+                                            style: TxtStls.stl2,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem(
+                                        value: "E",
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.clear,
+                                              color: Clrs.bgColor,
+                                            ),
+                                            Text(
+                                              "Clear",
+                                              style: TxtStls.stl2,
+                                            )
+                                          ],
+                                        )),
+                                  ];
+                                },
+                              ),
+                            ),
+                            dropdowns(
+                                id, cat, newsta, prosta, insta, wonsta, clsta)
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 300,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          snapshot.data!.docs[index]["message"],
+                          style: TxtStls.fieldstyle,
+                        ),
+                      ),
+                      Container(
+                          width: 300,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.all(10.0),
+                          child: Text("5 Members", style: TxtStls.fieldstyle)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {},
+                            ),
+                            backgroundColor: btnColor.withOpacity(0.075),
+                          ),
+                          SizedBox(width: 10),
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 12.5,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                _showMyDialog(id);
+                              },
+                            ),
+                            backgroundColor: Colors.red.withOpacity(0.075),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget timelinetitle(c, e) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: c, borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        alignment: Alignment.center,
+        width: 300,
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              e,
+              style: TextStyle(
+                  fontSize: 15,
+                  color: bgColor,
+                  letterSpacing: 0.2,
+                  fontWeight: FontWeight.bold),
+            ),
+            Icon(
+              Icons.arrow_right,
+              color: bgColor,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showMyDialog(id) async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: const Text(
+            'Are you sure to Delete ?',
+            style: TxtStls.fieldtitlestyle,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancel',
+                style: TxtStls.fieldstyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Delete',
+                style: TxtStls.fieldstyle,
+              ),
+              onPressed: () {
+                CrudOperations.deleteTask(id);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -667,7 +1010,7 @@ class _TaskPreviewState extends State<TaskPreview> {
           },
         ),
       );
-    } else if (cat == "INPROGRESS") {
+    } else if (cat == "IN PROGRESS") {
       return Container(
         alignment: Alignment.center,
         width: 140,
@@ -950,224 +1293,72 @@ class _TaskPreviewState extends State<TaskPreview> {
     );
   }
 
-  Future<void> _showMyDialog(id) async {
-    return showDialog<void>(
-      barrierColor: Colors.transparent,
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          title: const Text(
-            'Are you sure to Delete ?',
-            style: TxtStls.fieldtitlestyle,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Cancel',
-                style: TxtStls.fieldstyle,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Delete',
-                style: TxtStls.fieldstyle,
-              ),
-              onPressed: () {
-                CrudOperations.deleteTask(id);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  detailspopBox(BuildContext context, taskname) {
+    Size size = MediaQuery.of(context).size;
 
-  Widget boardtitle(c, e) {
-    return Container(
-      decoration: BoxDecoration(
-          color: c, borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      alignment: Alignment.center,
-      width: 300,
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        e,
-        style: TextStyle(
-            fontSize: 17.5,
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0.0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: Colors.white,
+      title: Container(
+        width: size.width * 0.75,
+        padding: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
             color: bgColor,
-            letterSpacing: 0.2,
-            fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget boardmiddle(cat) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.78,
-      width: 300,
-      color: AbgColor.withOpacity(0.0001),
-      child: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("Tasks")
-            .where("cat", isEqualTo: cat)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: SpinKitFadingCube(
-                color: btnColor,
-                size: 20,
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(10.0),
+                topLeft: Radius.circular(10.0))),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: 30,
+              child: SizedBox(
+                  height: 30, child: Image.asset("assets/Logos/Ologo.png")),
+            ),
+            Expanded(
+              child: Text(
+                taskname,
+                style: TxtStls.fieldstyle,
               ),
-            );
-          }
-          if (snapshot.data!.docs.length == 0) {
-            return Center(
-                child: Text(
-              "No Data Found",
-              style: TxtStls.fieldtitlestyle,
-            ));
-          }
-          return GridView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (_, index) {
-              String logo = snapshot.data!.docs[index]["logo"];
-              // ignore: undefined_prefixed_name
-              ui.platformViewRegistry.registerViewFactory(
-                logo,
-                (int _) => ImageElement()..src = logo,
-              );
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: bgColor,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 300,
-                        padding: EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Checkbox(
-                            //   value: _isCheck,
-                            //   onChanged: (value) {
-                            //     _isCheck = !_isCheck;
-                            //     setState(() {});
-                            //   },
-                            //   activeColor: btnColor,
-                            //   shape: RoundedRectangleBorder(
-                            //       borderRadius:
-                            //           BorderRadius.all(Radius.circular(20.0))),
-                            // ),
-                            Expanded(
-                                child: Text(
-                              snapshot.data!.docs[index]["task"],
-                              style: TxtStls.fieldstyle,
-                            )),
-                            IconButton(
-                                onPressed: () {}, icon: Icon(Icons.more_horiz)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 300,
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: ipClr,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                              padding: EdgeInsets.all(5),
-                              alignment: Alignment.center,
-                              width: 100,
-                              child: Text(
-                                "LOW",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            ),
-                            SizedBox(width: 10.0),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0)),
-                                  color: Colors.yellow),
-                              padding: EdgeInsets.all(5),
-                              alignment: Alignment.center,
-                              width: 100,
-                              child: Text(
-                                "On Track",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 300,
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          snapshot.data!.docs[index]["message"],
-                          style: TxtStls.fieldstyle,
-                        ),
-                      ),
-                      Container(
-                          width: 300,
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(10.0),
-                          child: Text("5 Members", style: TxtStls.fieldstyle)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CircleAvatar(
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                size: 12.5,
-                                color: btnColor,
-                              ),
-                              onPressed: () {},
-                            ),
-                            backgroundColor: btnColor.withOpacity(0.075),
-                          ),
-                          SizedBox(width: 10),
-                          CircleAvatar(
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                size: 12.5,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {},
-                            ),
-                            backgroundColor: Colors.red.withOpacity(0.075),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
+            ),
+            CircleAvatar(
+              backgroundColor: neClr.withOpacity(0.1),
+              child: IconButton(
+                hoverColor: Colors.transparent,
+                tooltip: "Close Window",
+                icon: Icon(Icons.close),
+                color: neClr,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            width: size.width * 0.8,
+            height: size.height * 0.8,
+            child: Text(
+              "Yalagala Srinivas",
+              style: TxtStls.fieldstyle,
+            ),
           );
         },
       ),
     );
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return alertDialog;
+        });
   }
 }

@@ -133,20 +133,3 @@ class _LandingScreenState extends State<LandingScreen> {
 //     }
 //   }
 // }
-
-class MoveDrawer extends StatefulWidget {
-  const MoveDrawer({Key? key}) : super(key: key);
-
-  @override
-  _MoveDrawerState createState() => _MoveDrawerState();
-}
-
-class _MoveDrawerState extends State<MoveDrawer> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      endDrawer: Drawer(),
-    );
-  }
-}

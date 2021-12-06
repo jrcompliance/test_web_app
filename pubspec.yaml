@@ -57,6 +57,7 @@ dependencies:
   google_sign_in: ^5.2.1
   flutter_charts: ^0.2.0
   syncfusion_flutter_charts: ^19.3.56
+  dropdown_button2: ^1.0.5
 
 
 
