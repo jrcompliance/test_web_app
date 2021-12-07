@@ -74,137 +74,131 @@ class _TaskPreviewState extends State<TaskPreview> {
           if (activeid == "List")
             Container(
               height: size.height * 0.845,
-              child: Scrollbar(
+              child: ListView(
                 controller: _scrollController,
-                isAlwaysShown: true,
-                showTrackOnHover: true,
-                child: ListView(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        color: bgColor,
-                      ),
-                      width: size.width,
-                      height: size.height * 0.31,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          listtitle(_clrslist[0], "NEW", _tapslist[0], () {
-                            setState(() {
-                              _tapslist[0] = !_tapslist[0];
-                            });
-                          }),
-                          SizedBox(height: 30.0),
-                          Visibility(
-                              child: listheader(), visible: _tapslist[0]),
-                          SizedBox(height: 30.0),
-                          Visibility(
-                            child: listmiddle("NEW"),
-                            visible: _tapslist[0],
-                          ),
-                        ],
-                      ),
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor,
                     ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        color: bgColor,
-                      ),
-                      width: size.width,
-                      height: size.height * 0.31,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
-                            setState(() {
-                              _tapslist[1] = !_tapslist[1];
-                            });
-                          }),
-                          SizedBox(height: 30.0),
-                          listheader(),
-                          SizedBox(height: 30.0),
-                          listmiddle("PROSPECT"),
-                        ],
-                      ),
+                    width: size.width,
+                    height: size.height * 0.31,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listtitle(_clrslist[0], "NEW", _tapslist[0], () {
+                          setState(() {
+                            _tapslist[0] = !_tapslist[0];
+                          });
+                        }),
+                        SizedBox(height: 30.0),
+                        Visibility(child: listheader(), visible: _tapslist[0]),
+                        SizedBox(height: 30.0),
+                        Visibility(
+                          child: listmiddle("NEW"),
+                          visible: _tapslist[0],
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        color: bgColor,
-                      ),
-                      width: size.width,
-                      height: size.height * 0.31,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2],
-                              () {
-                            setState(() {
-                              _tapslist[2] = !_tapslist[2];
-                            });
-                          }),
-                          SizedBox(height: 30.0),
-                          listheader(),
-                          SizedBox(height: 30.0),
-                          listmiddle("IN PROGRESS"),
-                        ],
-                      ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor,
                     ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        color: bgColor,
-                      ),
-                      width: size.width,
-                      height: size.height * 0.31,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          listtitle(_clrslist[3], "WON", _tapslist[3], () {
-                            setState(() {
-                              _tapslist[3] = !_tapslist[3];
-                            });
-                          }),
-                          SizedBox(height: 30.0),
-                          listheader(),
-                          SizedBox(height: 30.0),
-                          listmiddle("WON"),
-                        ],
-                      ),
+                    width: size.width,
+                    height: size.height * 0.31,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
+                          setState(() {
+                            _tapslist[1] = !_tapslist[1];
+                          });
+                        }),
+                        SizedBox(height: 30.0),
+                        listheader(),
+                        SizedBox(height: 30.0),
+                        listmiddle("PROSPECT"),
+                      ],
                     ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        color: bgColor,
-                      ),
-                      width: size.width,
-                      height: size.height * 0.31,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          listtitle(_clrslist[4], "CLOSE", _tapslist[4], () {
-                            setState(() {
-                              _tapslist[4] = !_tapslist[4];
-                            });
-                          }),
-                          SizedBox(height: 30.0),
-                          listheader(),
-                          SizedBox(height: 30.0),
-                          listmiddle("CLOSE"),
-                        ],
-                      ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor,
                     ),
-                  ],
-                ),
+                    width: size.width,
+                    height: size.height * 0.31,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2],
+                            () {
+                          setState(() {
+                            _tapslist[2] = !_tapslist[2];
+                          });
+                        }),
+                        SizedBox(height: 30.0),
+                        listheader(),
+                        SizedBox(height: 30.0),
+                        listmiddle("IN PROGRESS"),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor,
+                    ),
+                    width: size.width,
+                    height: size.height * 0.31,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listtitle(_clrslist[3], "WON", _tapslist[3], () {
+                          setState(() {
+                            _tapslist[3] = !_tapslist[3];
+                          });
+                        }),
+                        SizedBox(height: 30.0),
+                        listheader(),
+                        SizedBox(height: 30.0),
+                        listmiddle("WON"),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor,
+                    ),
+                    width: size.width,
+                    height: size.height * 0.31,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listtitle(_clrslist[4], "CLOSE", _tapslist[4], () {
+                          setState(() {
+                            _tapslist[4] = !_tapslist[4];
+                          });
+                        }),
+                        SizedBox(height: 30.0),
+                        listheader(),
+                        SizedBox(height: 30.0),
+                        listmiddle("CLOSE"),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           if (activeid == "Board")
@@ -2090,341 +2084,326 @@ class _TaskPreviewState extends State<TaskPreview> {
                         ),
                         Expanded(
                           flex: 8,
-                          child: Scrollbar(
-                            showTrackOnHover: true,
-                            isAlwaysShown: true,
-                            controller: _scrollController,
-                            thickness: 10,
-                            hoverThickness: 10,
-                            child: StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection("Tasks")
-                                    .where("id", isEqualTo: id)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Container();
-                                  }
-                                  return ListView.separated(
-                                      shrinkWrap: true,
-                                      separatorBuilder: (_, i) => Divider(
-                                            height: 10,
-                                            color: Color(0xFFE0E0E0),
-                                          ),
-                                      controller: _scrollController,
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: (context, index) {
-                                        List lr = snapshot.data!.docs[index]
-                                            ["Activity"];
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: lr.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            String statecolor =
-                                                lr[index]["From"];
-                                            String statecolor1 =
-                                                lr[index]["To"];
-                                            String date =
-                                                DateFormat('dd-MMM-yy').format(
-                                                    lr[index]["When"].toDate());
-                                            String time = DateFormat('hh:mm a')
-                                                .format(
-                                                    lr[index]["When"].toDate());
-                                            DateTime dt1 = DateTime.parse(
-                                                lr[index]["LatDate"]);
-                                            String lastDate =
-                                                DateFormat('dd-MMM-yy')
-                                                    .format(dt1);
+                          child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("Tasks")
+                                  .where("id", isEqualTo: id)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Container();
+                                }
+                                return ListView.separated(
+                                    shrinkWrap: true,
+                                    separatorBuilder: (_, i) => Divider(
+                                          height: 10,
+                                          color: Color(0xFFE0E0E0),
+                                        ),
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (context, index) {
+                                      List lr = snapshot.data!.docs[index]
+                                          ["Activity"];
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: lr.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          String statecolor = lr[index]["From"];
+                                          String statecolor1 = lr[index]["To"];
+                                          String date = DateFormat('dd-MMM-yy')
+                                              .format(
+                                                  lr[index]["When"].toDate());
+                                          String time = DateFormat('hh:mm a')
+                                              .format(
+                                                  lr[index]["When"].toDate());
+                                          DateTime dt1 = DateTime.parse(
+                                              lr[index]["LatDate"]);
+                                          String lastDate =
+                                              DateFormat('dd-MMM-yy')
+                                                  .format(dt1);
 
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                padding: EdgeInsets.all(8.0),
-                                                decoration: BoxDecoration(
-                                                    color: bgColor,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0))),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Container(
-                                                            child: Row(
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                  color: bgColor,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0))),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Container(
+                                                          child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Icon(
+                                                              Icons
+                                                                  .fast_forward,
+                                                              color: btnColor),
+                                                          Text(
+                                                            date,
+                                                            style: TxtStls
+                                                                .fieldstyle,
+                                                          ),
+                                                        ],
+                                                      )),
+                                                      Container(
+                                                        color:
+                                                            Color(0xFFE0E0E0),
+                                                        height: 40,
+                                                        width: 1,
+                                                      ),
+                                                      Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(Icons.timer,
+                                                                  color:
+                                                                      btnColor),
+                                                              Text(time,
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                            ],
+                                                          )),
+                                                      Container(
+                                                        color:
+                                                            Color(0xFFE0E0E0),
+                                                        height: 40,
+                                                        width: 1,
+                                                      ),
+                                                      Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                  Icons
+                                                                      .date_range,
+                                                                  color:
+                                                                      btnColor),
+                                                              Text(lastDate,
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                            ],
+                                                          )),
+                                                      Container(
+                                                        color:
+                                                            Color(0xFFE0E0E0),
+                                                        height: 40,
+                                                        width: 1,
+                                                      ),
+                                                      Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          width: 50,
+                                                          child: lr[index]
+                                                                      ["Yes"] ==
+                                                                  true
+                                                              ? Lottie.asset(
+                                                                  "assets/Lotties/success.json")
+                                                              : Lottie.asset(
+                                                                  "assets/Lotties/fail.json"))
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    height: size.height * 0.001,
+                                                    width: size.width * 0.45,
+                                                    color: Color(0xFFE0E0E0),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .spaceBetween,
+                                                                  .spaceEvenly,
                                                           children: [
-                                                            Icon(
-                                                                Icons
-                                                                    .fast_forward,
-                                                                color:
-                                                                    btnColor),
-                                                            Text(
-                                                              date,
-                                                              style: TxtStls
-                                                                  .fieldstyle,
+                                                            Text("From",
+                                                                style: TxtStls
+                                                                    .fieldstyle),
+                                                            Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 120,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10.0)),
+                                                                color: FlagService
+                                                                    .stateClr(
+                                                                        statecolor),
+                                                              ),
+                                                              child: Text(
+                                                                  lr[index]
+                                                                      ["From"],
+                                                                  style: TxtStls
+                                                                      .fieldstyle1),
                                                             ),
+                                                            Text("TO",
+                                                                style: TxtStls
+                                                                    .fieldstyle),
+                                                            Container(
+                                                              width: 120,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10.0)),
+                                                                color: FlagService
+                                                                    .stateClr1(
+                                                                        statecolor1),
+                                                              ),
+                                                              child: Text(
+                                                                  lr[index]
+                                                                      ["To"],
+                                                                  style: TxtStls
+                                                                      .fieldstyle1),
+                                                            )
                                                           ],
-                                                        )),
-                                                        Container(
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                          height: 40,
-                                                          width: 1,
                                                         ),
-                                                        Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                    Icons.timer,
-                                                                    color:
-                                                                        btnColor),
-                                                                Text(time,
-                                                                    style: TxtStls
-                                                                        .fieldstyle),
-                                                              ],
-                                                            )),
-                                                        Container(
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                          height: 40,
-                                                          width: 1,
-                                                        ),
-                                                        Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                    Icons
-                                                                        .date_range,
-                                                                    color:
-                                                                        btnColor),
-                                                                Text(lastDate,
-                                                                    style: TxtStls
-                                                                        .fieldstyle),
-                                                              ],
-                                                            )),
-                                                        Container(
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                          height: 40,
-                                                          width: 1,
-                                                        ),
-                                                        Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            width: 50,
-                                                            child: lr[index][
-                                                                        "Yes"] ==
-                                                                    true
-                                                                ? Lottie.asset(
-                                                                    "assets/Lotties/success.json")
-                                                                : Lottie.asset(
-                                                                    "assets/Lotties/fail.json"))
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      height:
-                                                          size.height * 0.001,
-                                                      width: size.width * 0.45,
-                                                      color: Color(0xFFE0E0E0),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Row(
+                                                      ),
+                                                      Container(
+                                                        color:
+                                                            Color(0xFFE0E0E0),
+                                                        height: 40,
+                                                        width: 1,
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .spaceEvenly,
                                                             children: [
-                                                              Text("From",
-                                                                  style: TxtStls
-                                                                      .fieldstyle),
+                                                              Icon(
+                                                                  Icons
+                                                                      .videogame_asset,
+                                                                  color:
+                                                                      btnColor),
                                                               Container(
                                                                 alignment:
                                                                     Alignment
                                                                         .center,
                                                                 width: 120,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0)),
-                                                                  color: FlagService
-                                                                      .stateClr(
-                                                                          statecolor),
+                                                                decoration: BoxDecoration(
+                                                                    color: lr[index]["Bound"] ==
+                                                                            "InBound"
+                                                                        ? goodClr
+                                                                        : avgClr,
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(10.0))),
+                                                                child: Text(
+                                                                  lr[index]
+                                                                      ["Bound"],
+                                                                  style: TxtStls
+                                                                      .fieldstyle1,
                                                                 ),
+                                                              ),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                decoration: BoxDecoration(
+                                                                    color:
+                                                                        avgClr,
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(10.0))),
                                                                 child: Text(
                                                                     lr[index][
-                                                                        "From"],
+                                                                        "Action"],
                                                                     style: TxtStls
                                                                         .fieldstyle1),
                                                               ),
-                                                              Text("TO",
+                                                            ]),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Text("Notes : ",
                                                                   style: TxtStls
                                                                       .fieldstyle),
                                                               Container(
-                                                                width: 120,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0)),
-                                                                  color: FlagService
-                                                                      .stateClr1(
-                                                                          statecolor1),
-                                                                ),
+                                                                alignment: Alignment
+                                                                    .centerLeft,
                                                                 child: Text(
-                                                                    lr[index]
-                                                                        ["To"],
-                                                                    style: TxtStls
-                                                                        .fieldstyle1),
-                                                              )
+                                                                  lr[index]
+                                                                      ["Who"],
+                                                                  style: TxtStls
+                                                                      .fieldstyle,
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
+                                                          alignment: Alignment
+                                                              .centerLeft,
                                                         ),
-                                                        Container(
-                                                          color:
-                                                              Color(0xFFE0E0E0),
-                                                          height: 40,
-                                                          width: 1,
-                                                        ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Icon(
-                                                                    Icons
-                                                                        .videogame_asset,
-                                                                    color:
-                                                                        btnColor),
-                                                                Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  width: 120,
-                                                                  decoration: BoxDecoration(
-                                                                      color: lr[index]["Bound"] ==
-                                                                              "InBound"
-                                                                          ? goodClr
-                                                                          : avgClr,
-                                                                      borderRadius:
-                                                                          BorderRadius.all(
-                                                                              Radius.circular(10.0))),
-                                                                  child: Text(
-                                                                    lr[index][
-                                                                        "Bound"],
-                                                                    style: TxtStls
-                                                                        .fieldstyle1,
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  width: 120,
-                                                                  decoration: BoxDecoration(
-                                                                      color:
-                                                                          avgClr,
-                                                                      borderRadius:
-                                                                          BorderRadius.all(
-                                                                              Radius.circular(10.0))),
-                                                                  child: Text(
-                                                                      lr[index][
-                                                                          "Action"],
-                                                                      style: TxtStls
-                                                                          .fieldstyle1),
-                                                                ),
-                                                              ]),
-                                                        ),
+                                                        Card(
+                                                          elevation: 2,
+                                                          child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              height: 100,
+                                                              width:
+                                                                  size.width *
+                                                                      0.35,
+                                                              child: Text(
+                                                                  lr[index]
+                                                                      ["Note"],
+                                                                  style: TxtStls
+                                                                      .fieldstyle)),
+                                                        )
                                                       ],
                                                     ),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Container(
-                                                            child: Row(
-                                                              children: [
-                                                                Text("Notes : ",
-                                                                    style: TxtStls
-                                                                        .fieldstyle),
-                                                                Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    lr[index]
-                                                                        ["Who"],
-                                                                    style: TxtStls
-                                                                        .fieldstyle,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                          ),
-                                                          Card(
-                                                            elevation: 2,
-                                                            child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                height: 100,
-                                                                width:
-                                                                    size.width *
-                                                                        0.35,
-                                                                child: Text(
-                                                                    lr[index][
-                                                                        "Note"],
-                                                                    style: TxtStls
-                                                                        .fieldstyle)),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                            );
-                                          },
-                                        );
-                                      });
-                                }),
-                          ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    });
+                              }),
                         ),
                       ],
                     ),
