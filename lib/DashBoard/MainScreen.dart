@@ -228,7 +228,6 @@ class _MainScreenState extends State<MainScreen> {
       return Column(
         children: [
           Header(title: "Analytics"),
-          DashBoardBodyScreen(),
         ],
       );
     } else if (active == Tabs.Invoice) {
