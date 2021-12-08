@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,6 @@ class MyApp extends StatelessWidget {
         scrollbarTheme:
             ScrollbarThemeData(thumbColor: MaterialStateProperty.all(btnColor)),
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
-        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: AbgColor.withOpacity(0.1)),
         canvasColor: bgColor.withOpacity(1),
       ),
       home: LandingScreen(),
@@ -64,6 +63,136 @@ class _LandingScreenState extends State<LandingScreen> {
         size: 50.0,
         color: btnColor,
       )),
+    );
+  }
+}
+
+class CheckScreen extends StatefulWidget {
+  const CheckScreen({Key? key}) : super(key: key);
+
+  @override
+  _CheckScreenState createState() => _CheckScreenState();
+}
+
+class _CheckScreenState extends State<CheckScreen> {
+  int _currentStep = 0;
+  int currentStep = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _buildStepper(StepperType.horizontal),
+    );
+  }
+
+  Widget steps() {
+    List<Step> stepslist() => [
+          Step(
+            title: Text("Pay"),
+            content: Container(),
+            state: _currentStep <= 0 ? StepState.editing : StepState.complete,
+            isActive: _currentStep >= 0,
+          ),
+          Step(
+            title: Text("Recieve"),
+            content: Container(),
+            state: _currentStep <= 1 ? StepState.editing : StepState.complete,
+            isActive: _currentStep >= 1,
+          ),
+          Step(
+            title: Text("Pay"),
+            content: Container(),
+            state: _currentStep <= 2 ? StepState.editing : StepState.complete,
+            isActive: _currentStep >= 2,
+          ),
+          Step(
+            title: Text("Recieve"),
+            content: Container(),
+            state: _currentStep <= 3 ? StepState.editing : StepState.complete,
+            isActive: _currentStep >= 3,
+          ),
+        ];
+    return Stepper(
+      type: StepperType.horizontal,
+      currentStep: _currentStep,
+      physics: ClampingScrollPhysics(),
+      elevation: 10,
+      steps: stepslist(),
+
+      onStepContinue: () {
+        if (_currentStep < (stepslist().length - 1)) {
+          setState(() {
+            _currentStep += 1;
+          });
+        }
+      },
+
+      // onStepCancel takes us to the previous step
+      onStepCancel: () {
+        if (_currentStep == 0) {
+          return;
+        }
+
+        setState(() {
+          _currentStep -= 1;
+        });
+      },
+
+      // onStepTap allows to directly click on the particular step we want
+      onStepTapped: (step) {
+        setState(() {
+          _currentStep = step;
+        });
+      },
+    );
+  }
+
+  CupertinoStepper _buildStepper(StepperType type) {
+    final canCancel = currentStep > 0;
+    final canContinue = currentStep < 3;
+    return CupertinoStepper(
+      type: type,
+      currentStep: currentStep,
+      onStepTapped: (step) => setState(() => currentStep = step),
+      onStepCancel: canCancel ? () => setState(() => --currentStep) : null,
+      onStepContinue: canContinue ? () => setState(() => ++currentStep) : null,
+      steps: [
+        for (var i = 0; i < 3; ++i)
+          _buildStep(
+            title: Text('Step ${i + 1}'),
+            isActive: i == currentStep,
+            state: i == currentStep
+                ? StepState.editing
+                : i < currentStep
+                    ? StepState.complete
+                    : StepState.indexed,
+          ),
+        _buildStep(
+          title: Text('Error'),
+          state: StepState.error,
+        ),
+        _buildStep(
+          title: Text('Disabled'),
+          state: StepState.disabled,
+        )
+      ],
+    );
+  }
+
+  Step _buildStep({
+    required Widget title,
+    StepState state = StepState.indexed,
+    bool isActive = false,
+  }) {
+    return Step(
+      title: title,
+      subtitle: Text('Subtitle'),
+      state: state,
+      isActive: isActive,
+      content: LimitedBox(
+        maxWidth: 300,
+        maxHeight: 300,
+        child: Container(color: CupertinoColors.systemGrey),
+      ),
     );
   }
 }

@@ -58,6 +58,8 @@ dependencies:
   flutter_charts: ^0.2.0
   syncfusion_flutter_charts: ^19.3.56
   dropdown_button2: ^1.0.5
+  cupertino_stepper: ^0.2.0
+
 
 
 
@@ -96,9 +98,7 @@ flutter:
     - assets/Logos/3.png
     - assets/Logos/4.png
     - assets/Logos/lamp.png
-
     - assets/Lotties/registeredsucees.json
-
     - assets/Notations/Category.png
     - assets/Notations/Chart.png
     - assets/Notations/Ticket.png
@@ -107,8 +107,6 @@ flutter:
     - assets/Notations/Activity.png
     - assets/Notations/Notification.png
     - assets/Notations/Setting.png
-
-
     - assets/Lotties/stats.json
     - assets/Lotties/filter.json
     - assets/Lotties/lastdate.json
