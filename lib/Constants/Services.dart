@@ -46,6 +46,20 @@ class CatUpdateServices {
 }
 
 class StatusUpdateServices {
+  static Color CatColor(cat) {
+    if (cat == "PROSPECT") {
+      return prosClr;
+    } else if (cat == "IN PROGRESS") {
+      return ipClr;
+    } else if (cat == "WON") {
+      return wonClr;
+    } else if (cat == "CLOSE") {
+      return clsClr;
+    } else {
+      return neClr;
+    }
+  }
+
   // new status update here...
   static updateStatus(id, stat1) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");

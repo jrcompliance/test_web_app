@@ -148,7 +148,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 Expanded(
                   child: Text(
                     'Choose Action Type',
-                    style: TxtStls.fieldstyle1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -195,7 +194,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 Expanded(
                   child: Text(
                     'Choose Action Type',
-                    style: TxtStls.fieldstyle1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

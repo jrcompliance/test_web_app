@@ -487,7 +487,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                           )),
                       onTap: () {
                         detailspopBox(context, id, taskname, startDate, endDate,
-                            priority, lastseen);
+                            priority, lastseen, cat);
                       },
                     ),
                     Container(
@@ -820,13 +820,11 @@ class _TaskPreviewState extends State<TaskPreview> {
           backgroundColor: bgColor,
           title: const Text(
             'Are you sure to Delete ?',
-            style: TxtStls.fieldtitlestyle,
           ),
           actions: <Widget>[
             TextButton(
               child: const Text(
                 'Cancel',
-                style: TxtStls.fieldstyle,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -835,7 +833,6 @@ class _TaskPreviewState extends State<TaskPreview> {
             TextButton(
               child: const Text(
                 'Delete',
-                style: TxtStls.fieldstyle,
               ),
               onPressed: () {
                 CrudOperations.deleteTask(id);

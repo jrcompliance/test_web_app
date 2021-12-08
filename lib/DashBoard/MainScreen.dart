@@ -489,13 +489,11 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: bgColor,
           title: const Text(
             'Are you sure to LogOut?',
-            style: TxtStls.fieldtitlestyle,
           ),
           actions: <Widget>[
             TextButton(
               child: const Text(
                 'Cancel',
-                style: TxtStls.fieldstyle,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -504,7 +502,6 @@ class _MainScreenState extends State<MainScreen> {
             TextButton(
               child: const Text(
                 'Ok',
-                style: TxtStls.fieldstyle,
               ),
               onPressed: () {
                 logout();

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const bgColor = Colors.white;
 const AbgColor = Colors.grey;
@@ -16,22 +17,37 @@ const deco = BoxDecoration(
   color: fieldColor,
   borderRadius: BorderRadius.all(Radius.circular(5.0)),
 );
+//fontSize: 12.5, color: AbgColor, letterSpacing: 0.2
 
 class TxtStls {
   static const titlestyle = TextStyle(fontSize: 30, color: txtColor);
-  static const fieldtitlestyle =
-      TextStyle(fontSize: 13, color: txtColor, fontWeight: FontWeight.bold);
+  static TextStyle fieldtitlestyle = GoogleFonts.nunito(
+      textStyle:
+          TextStyle(fontSize: 13, color: txtColor, fontWeight: FontWeight.bold),
+      fontSize: 13,
+      color: txtColor,
+      fontWeight: FontWeight.bold);
+  static TextStyle notestyle = GoogleFonts.nunito(
+      textStyle: TextStyle(fontSize: 13, color: txtColor),
+      fontSize: 13,
+      color: txtColor);
   static const fieldtitlestyle1 =
       TextStyle(fontSize: 13, color: txtColor, fontStyle: FontStyle.italic);
   static const fieldtitlestyle2 =
       TextStyle(fontSize: 12, color: txtColor, fontWeight: FontWeight.bold);
-  static const fieldstyle =
-      TextStyle(fontSize: 12.5, color: txtColor, letterSpacing: 0.2);
+  static TextStyle fieldstyle = GoogleFonts.nunito(
+      textStyle: TextStyle(color: txtColor, fontSize: 12.5, letterSpacing: 0.2),
+      color: txtColor,
+      letterSpacing: 0.2,
+      fontSize: 12.5);
   static const btnstyle = TextStyle(color: btnColor, fontSize: 12.5);
   static const numstyle =
       TextStyle(color: txtColor, fontSize: 20, fontWeight: FontWeight.bold);
-  static const fieldstyle1 =
-      TextStyle(fontSize: 12.5, color: bgColor, letterSpacing: 0.2);
+  static TextStyle fieldstyle1 = GoogleFonts.nunito(
+      textStyle: TextStyle(color: bgColor, fontSize: 12.5, letterSpacing: 0.2),
+      color: bgColor,
+      letterSpacing: 0.2,
+      fontSize: 12.5);
 
   static const stl1 = TextStyle(color: bt, fontWeight: FontWeight.w200);
   static const stl2 =
