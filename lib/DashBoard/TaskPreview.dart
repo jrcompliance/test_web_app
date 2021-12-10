@@ -10,10 +10,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
+import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
+import 'package:test_web_app/Constants/tasklength.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -36,6 +38,7 @@ class _TaskPreviewState extends State<TaskPreview> {
   final List<String> _titlelist = [
     "Check Box",
     "Task Name",
+    "CxID",
     "Start Date",
     "End Date",
     "Members",
@@ -411,11 +414,11 @@ class _TaskPreviewState extends State<TaskPreview> {
             itemBuilder: (_, index) {
               String id = snapshot.data!.docs[index]["id"];
               String taskname = snapshot.data!.docs[index]["task"];
+              String CxID = snapshot.data!.docs[index]["CxID"].toString();
               Timestamp startDate = snapshot.data!.docs[index]["startDate"];
               String endDate = snapshot.data!.docs[index]["endDate"];
               String priority = snapshot.data!.docs[index]["priority"];
               Timestamp lastseen = snapshot.data!.docs[index]["lastseen"];
-
               String cat = snapshot.data!.docs[index]["cat"];
               String newsta = snapshot.data!.docs[index]["status"];
               String prosta = snapshot.data!.docs[index]["status1"];
@@ -432,7 +435,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: 240,
+                    width: 210,
                     alignment: Alignment.centerLeft,
                     child: Row(
                       children: [
@@ -460,12 +463,23 @@ class _TaskPreviewState extends State<TaskPreview> {
                           ),
                           backgroundColor: Colors.red.withOpacity(0.075),
                         ),
+                        CircleAvatar(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              size: 12.5,
+                              color: btnColor,
+                            ),
+                            onPressed: () {},
+                          ),
+                          backgroundColor: btnColor.withOpacity(0.075),
+                        ),
                       ],
                     ),
                   ),
                   InkWell(
                     child: Container(
-                        width: 255,
+                        width: 230,
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: [
@@ -482,7 +496,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                                     ))),
                             SizedBox(width: 2),
                             Text(
-                              taskname,
+                              "${taskname}",
                               style: ClrStls.tnClr,
                             ),
                           ],
@@ -493,7 +507,14 @@ class _TaskPreviewState extends State<TaskPreview> {
                     },
                   ),
                   Container(
-                    width: 247,
+                    width: 180,
+                    child: Text(
+                      CxID,
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Container(
+                    width: 220,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       startDate.toDate().toString().split(" ")[0],
@@ -501,19 +522,19 @@ class _TaskPreviewState extends State<TaskPreview> {
                     ),
                   ),
                   Container(
-                      width: 240,
+                      width: 205,
                       alignment: Alignment.centerLeft,
                       child: Text(snapshot.data!.docs[index]["endDate"],
                           style: ClrStls.endClr)),
                   Container(
-                      width: 240,
+                      width: 190,
                       alignment: Alignment.centerLeft,
                       child: Text(
                           snapshot.data!.docs[index]["Attachments"].length
                               .toString(),
                           style: TxtStls.fieldstyle)),
                   Container(
-                    width: 200,
+                    width: 190,
                     alignment: Alignment.centerLeft,
                     child: dropdowns(
                         id, cat, newsta, prosta, insta, wonsta, clsta),
@@ -525,7 +546,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                         CircleAvatar(
                           child: IconButton(
                             icon: Icon(
-                              Icons.edit,
+                              Icons.update,
                               size: 12.5,
                               color: btnColor,
                             ),
@@ -541,6 +562,13 @@ class _TaskPreviewState extends State<TaskPreview> {
                               color: btnColor,
                             ),
                             onPressed: () {
+                              setState(() {
+                                did = id;
+                                dcat = cat;
+                                dname = taskname;
+                                cxID = CxID;
+                                dendDate = endDate.toString();
+                              });
                               Scaffold.of(context).openEndDrawer();
                             },
                           ),

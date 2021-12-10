@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
@@ -12,7 +14,6 @@ import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/tasklength.dart';
-import 'package:test_web_app/DashBoard/Comonents/DashBoard/MyDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Header.dart';
 import 'package:test_web_app/DashBoard/MoveDrawer.dart';
 import 'package:test_web_app/DashBoard/TaskPreview.dart';
@@ -116,6 +117,7 @@ class _MainScreenState extends State<MainScreen> {
       endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
       drawer: SideDrawer(context),
+      endDrawer: MoveDrawer(),
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +139,6 @@ class _MainScreenState extends State<MainScreen> {
         },
         child: Icon(Icons.add),
       ),
-      endDrawer: MoveDrawer(),
     );
   }
 

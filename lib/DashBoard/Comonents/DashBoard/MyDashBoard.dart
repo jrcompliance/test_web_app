@@ -4998,7 +4998,7 @@ class _DashBoardBodyScreenState extends State<DashBoardBodyScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      CatUpdateServices.updateCat(id);
+                                      //CatUpdateServices.updateCat(id);
                                       _ismove = !_ismove;
                                       _visible = !_visible;
                                       GraphValueServices.graph(endDate, id);

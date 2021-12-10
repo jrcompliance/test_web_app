@@ -6,6 +6,33 @@ import 'package:test_web_app/Constants/reusable.dart';
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];
 
+class ProgressUpdsate {
+  static updateCat(
+      id, cat, activeid, noteController, lastDate, radioItem, action) async {
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    collectionReference.doc(id).update({
+      "cat": activeid,
+    }).then((value) {
+      CollectionReference collectionReference = _firestore.collection("Tasks");
+      collectionReference.doc(id).update({
+        "Activity": FieldValue.arrayUnion([
+          {
+            "From": cat,
+            "To": activeid,
+            "Who": username.toString(),
+            "When": Timestamp.now(),
+            "Note": noteController.text.toString(),
+            "LatDate": lastDate,
+            "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+            "Bound": radioItem,
+            "Action": action,
+          }
+        ])
+      });
+    });
+  }
+}
+
 class UpdateServices {
   static lastseenUpdate(id) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
@@ -16,13 +43,6 @@ class UpdateServices {
 }
 
 class CatUpdateServices {
-  static updateCat(id) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "cat": "PROSPECT",
-    });
-  }
-
   static updateCat1(id) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({

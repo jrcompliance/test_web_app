@@ -27,6 +27,12 @@ class TxtStls {
       fontSize: 13,
       color: txtColor,
       fontWeight: FontWeight.bold);
+  static TextStyle fieldtitlestyle11 = GoogleFonts.nunito(
+      textStyle:
+          TextStyle(fontSize: 21, color: txtColor, fontWeight: FontWeight.bold),
+      fontSize: 17,
+      color: txtColor,
+      fontWeight: FontWeight.bold);
   static TextStyle notestyle = GoogleFonts.nunito(
       textStyle: TextStyle(fontSize: 13, color: txtColor),
       fontSize: 13,
@@ -112,3 +118,6 @@ class statClr {
   static const com = Colors.green;
   static const com1 = Colors.indigoAccent;
 }
+
+const _boardtitlelist = ["NEW", "PROSPECT", "INPROGRESS", "WON", "CLOSE"];
+const _clrslist = [neClr, prosClr, ipClr, wonClr, clsClr];
