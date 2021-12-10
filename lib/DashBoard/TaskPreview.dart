@@ -1,7 +1,6 @@
 import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
-import 'package:test_web_app/Constants/tasklength.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -24,7 +22,8 @@ class TaskPreview extends StatefulWidget {
   _TaskPreviewState createState() => _TaskPreviewState();
 }
 
-class _TaskPreviewState extends State<TaskPreview> {
+class _TaskPreviewState extends State<TaskPreview>
+    with TickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<String> _list = ["List", "Board", "Timeline"];
   final List<String> _boardtitlelist = [
@@ -50,6 +49,20 @@ class _TaskPreviewState extends State<TaskPreview> {
   bool isChecked = false;
 
   int currentStep = 0;
+
+  int? opts;
+
+  TabController? _controller;
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TabController(
+      length: 3,
+      vsync: this,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -420,6 +433,7 @@ class _TaskPreviewState extends State<TaskPreview> {
               String priority = snapshot.data!.docs[index]["priority"];
               Timestamp lastseen = snapshot.data!.docs[index]["lastseen"];
               String cat = snapshot.data!.docs[index]["cat"];
+              String message = snapshot.data!.docs[index]["message"];
               String newsta = snapshot.data!.docs[index]["status"];
               String prosta = snapshot.data!.docs[index]["status1"];
               String insta = snapshot.data!.docs[index]["status2"];
@@ -449,8 +463,9 @@ class _TaskPreviewState extends State<TaskPreview> {
                               });
                             },
                             activeColor: btnColor),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         CircleAvatar(
+                          maxRadius: 15,
                           child: IconButton(
                             icon: Icon(
                               Icons.delete,
@@ -463,7 +478,9 @@ class _TaskPreviewState extends State<TaskPreview> {
                           ),
                           backgroundColor: Colors.red.withOpacity(0.075),
                         ),
+                        SizedBox(width: 2.5),
                         CircleAvatar(
+                          maxRadius: 15,
                           child: IconButton(
                             icon: Icon(
                               Icons.edit,
@@ -503,7 +520,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                         )),
                     onTap: () {
                       detailspopBox(context, id, taskname, startDate, endDate,
-                          priority, lastseen, cat);
+                          priority, lastseen, cat, message);
                     },
                   ),
                   Container(
@@ -1317,8 +1334,8 @@ class _TaskPreviewState extends State<TaskPreview> {
     );
   }
 
-  detailspopBox(
-      context, id, taskname, startDate, endDate, priority, lastseen, cat) {
+  detailspopBox(context, id, taskname, startDate, endDate, priority, lastseen,
+      cat, message) {
     Size size = MediaQuery.of(context).size;
     TextEditingController _certificateConroller = TextEditingController();
     String createDate = DateFormat('dd-MMM-yy').format(startDate.toDate());
@@ -1342,7 +1359,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                 topRight: Radius.circular(10.0),
                 topLeft: Radius.circular(10.0))),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               alignment: Alignment.centerLeft,
@@ -1350,11 +1367,9 @@ class _TaskPreviewState extends State<TaskPreview> {
               child: Image.asset("assets/Logos/Controlifylogo.png",
                   filterQuality: FilterQuality.high, fit: BoxFit.fill),
             ),
-            Expanded(
-              child: Text(
-                taskname,
-                style: TxtStls.fieldtitlestyle,
-              ),
+            Text(
+              taskname,
+              style: TxtStls.fieldtitlestyle,
             ),
             CircleAvatar(
               backgroundColor: neClr.withOpacity(0.1),
@@ -1588,12 +1603,20 @@ class _TaskPreviewState extends State<TaskPreview> {
                                                   snapshot.data!.docs[index]
                                                       ["companyname"],
                                                   style: TxtStls.fieldstyle),
-                                              trailing: IconButton(
-                                                icon: Icon(
-                                                  Icons.edit,
-                                                  color: txtColor,
+                                              trailing: CircleAvatar(
+                                                maxRadius: 15,
+                                                child: IconButton(
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                    size: 12.5,
+                                                    color: btnColor,
+                                                  ),
+                                                  onPressed: () {},
                                                 ),
-                                                onPressed: () {},
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.075),
                                               ),
                                             );
                                           },
@@ -1637,6 +1660,7 @@ class _TaskPreviewState extends State<TaskPreview> {
                                   width: size.width * 0.85 / 3.1,
                                   alignment: Alignment.centerRight,
                                   child: IconButton(
+                                      hoverColor: Colors.transparent,
                                       onPressed: () {},
                                       icon: Icon(
                                         Icons.add_box_rounded,
@@ -1759,12 +1783,101 @@ class _TaskPreviewState extends State<TaskPreview> {
                                                     ),
                                                     Expanded(
                                                         flex: 1,
-                                                        child: IconButton(
-                                                          icon: Icon(
-                                                            Icons.more_horiz,
-                                                            color: btnColor,
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                              btnColor
+                                                                  .withOpacity(
+                                                                      0.1),
+                                                          child:
+                                                              PopupMenuButton(
+                                                            offset:
+                                                                Offset(-50, 32),
+                                                            elevation: 10.0,
+                                                            shape:
+                                                                TooltipShape(),
+                                                            icon: Icon(
+                                                              Icons.more_horiz,
+                                                              color: btnColor,
+                                                            ),
+                                                            onSelected:
+                                                                (int value) {
+                                                              opts = value;
+                                                              setState(() {});
+                                                            },
+                                                            itemBuilder:
+                                                                (context) {
+                                                              return [
+                                                                PopupMenuItem(
+                                                                    value: 1,
+                                                                    child:
+                                                                        Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              5),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(5)),
+                                                                        color: btnColor
+                                                                            .withOpacity(0.1),
+                                                                      ),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceEvenly,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.edit,
+                                                                            size:
+                                                                                15,
+                                                                            color:
+                                                                                btnColor,
+                                                                          ),
+                                                                          Text(
+                                                                            "Edit",
+                                                                            style:
+                                                                                ClrStls.tnClr,
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                                PopupMenuItem(
+                                                                    value: 2,
+                                                                    child:
+                                                                        Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              5),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(5)),
+                                                                        color: neClr
+                                                                            .withOpacity(0.1),
+                                                                      ),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceEvenly,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.delete,
+                                                                            size:
+                                                                                15,
+                                                                            color:
+                                                                                neClr,
+                                                                          ),
+                                                                          Text(
+                                                                            "Delete",
+                                                                            style:
+                                                                                ClrStls.endClr,
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                              ];
+                                                            },
                                                           ),
-                                                          onPressed: () {},
                                                         ))
                                                   ],
                                                 ),
@@ -1812,8 +1925,10 @@ class _TaskPreviewState extends State<TaskPreview> {
                                                     snapshot) {
                                               if (!snapshot.hasData) {
                                                 return Container(
-                                                  child: Text("Loading"),
-                                                );
+                                                    width: 100,
+                                                    height: 100,
+                                                    child: Image.asset(
+                                                        "assets/Logos/upload.png"));
                                               }
                                               return ListView.separated(
                                                 separatorBuilder: (_, index) =>
@@ -1841,12 +1956,13 @@ class _TaskPreviewState extends State<TaskPreview> {
                                                         leading: SizedBox(
                                                           height: 40,
                                                           child: Image.asset(
-                                                              "assets/Logos/pdflogo.png"),
+                                                              "assets/Logos/upload.png"),
                                                         ),
                                                         title: Text(
                                                           attachments1[i]
                                                               ['name'],
-                                                          style: TxtStls.stl1,
+                                                          style: TxtStls
+                                                              .fieldstyle,
                                                         ),
                                                         onTap: () {
                                                           fileview1(
@@ -1911,25 +2027,36 @@ class _TaskPreviewState extends State<TaskPreview> {
                                       Row(
                                         children: [
                                           Flexible(
-                                            child: Card(
-                                              shape: RoundedRectangleBorder(
+                                            child: Container(
+                                              decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.all(
-                                                          Radius.circular(10))),
-                                              elevation: 5.0,
-                                              color: bgColor,
-                                              shadowColor: bgColor,
-                                              child: TextFormField(
-                                                style: TxtStls.fieldtitlestyle,
-                                                controller:
-                                                    _certificateConroller,
-                                                decoration: InputDecoration(
-                                                  hintText: "TYPE...",
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10))),
+                                                          Radius.circular(7)),
+                                                  color: bgColor),
+                                              child: Card(
+                                                color: bgColor,
+                                                elevation: 25,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                7))),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      right: 15,
+                                                      top: 2),
+                                                  child: TextFormField(
+                                                    controller:
+                                                        _certificateConroller,
+                                                    style: TxtStls.fieldstyle,
+                                                    decoration: InputDecoration(
+                                                      hintText: "Type...",
+                                                      hintStyle:
+                                                          TxtStls.fieldstyle,
+                                                      border: InputBorder.none,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -2004,7 +2131,40 @@ class _TaskPreviewState extends State<TaskPreview> {
                                   BorderRadius.all(Radius.circular(10.0)),
                               color: bgColor,
                             ),
-                            child: _buildStepper(StepperType.horizontal),
+                            child: DefaultTabController(
+                              initialIndex: _selectedIndex,
+                              length: 3,
+                              child: Scaffold(
+                                backgroundColor: bgColor,
+                                appBar: AppBar(
+                                  toolbarHeight: 40,
+                                  backgroundColor: bgColor,
+                                  elevation: 0.0,
+                                  automaticallyImplyLeading: false,
+                                  centerTitle: true,
+                                  title: TabBar(
+                                    controller: _controller,
+                                    indicator: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: neClr,
+                                    ),
+                                    tabs: [
+                                      Tab(child: Text("Payment Terms 1")),
+                                      Tab(child: Text("Payment Terms 2")),
+                                      Tab(child: Text("Comments")),
+                                    ],
+                                  ),
+                                ),
+                                body: TabBarView(
+                                  controller: _controller,
+                                  children: [
+                                    tab1(),
+                                    tab2(),
+                                    tab3(),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -2189,11 +2349,31 @@ class _TaskPreviewState extends State<TaskPreview> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 50),
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Colors.green.withOpacity(0.25),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
                             width: size.width * 0.85 / 2,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Intial Message : " + createDate,
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 7,
+                                  child: Text(
+                                    message,
+                                    style: TxtStls.fieldtitlestyle,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -2207,7 +2387,11 @@ class _TaskPreviewState extends State<TaskPreview> {
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (!snapshot.hasData) {
-                                return Container();
+                                return Container(
+                                    alignment: Alignment.center,
+                                    width: size.width * 0.85 / 2,
+                                    child: Lottie.asset(
+                                        "assets/Lotties/empty.json"));
                               }
                               return ListView.separated(
                                   shrinkWrap: true,
@@ -2535,8 +2719,11 @@ class _TaskPreviewState extends State<TaskPreview> {
                                                         ),
                                                         elevation: 10,
                                                         child: Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 10),
                                                             alignment: Alignment
-                                                                .center,
+                                                                .centerLeft,
                                                             height: 100,
                                                             width: size.width *
                                                                 0.35,
@@ -2607,52 +2794,307 @@ class _TaskPreviewState extends State<TaskPreview> {
     );
   }
 
-  CupertinoStepper _buildStepper(StepperType type) {
-    final canCancel = currentStep > 0;
-    final canContinue = currentStep < 3;
-    return CupertinoStepper(
-      type: type,
-      currentStep: currentStep,
-      onStepTapped: (step) => setState(() => currentStep = step),
-      onStepCancel: canCancel ? () => setState(() => --currentStep) : null,
-      onStepContinue: canContinue ? () => setState(() => ++currentStep) : null,
-      steps: [
-        for (var i = 0; i < 3; ++i)
-          _buildStep(
-            title: Text('Step ${i + 1}'),
-            isActive: i == currentStep,
-            state: i == currentStep
-                ? StepState.editing
-                : i < currentStep
-                    ? StepState.complete
-                    : StepState.indexed,
+  Widget tab1() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Advance required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Sample required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+            ],
           ),
-        _buildStep(
-          title: Text('Error'),
-          state: StepState.error,
-        ),
-        _buildStep(
-          title: Text('Disabled'),
-          state: StepState.disabled,
-        )
-      ],
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              icon: Icon(Icons.arrow_forward_rounded, color: btnColor),
+              onPressed: () {
+                _controller!.animateTo(_selectedIndex += 1);
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Step _buildStep({
-    required Widget title,
-    StepState state = StepState.indexed,
-    bool isActive = false,
-  }) {
-    return Step(
-      title: title,
-      subtitle: Text('Subtitle'),
-      state: state,
-      isActive: isActive,
-      content: LimitedBox(
-        maxWidth: 300,
-        maxHeight: 300,
-        child: Container(color: CupertinoColors.systemGrey),
+  Widget tab2() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Advance required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Sample required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back_rounded, color: btnColor),
+                onPressed: () {
+                  _controller!.animateTo(_selectedIndex -= 1);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_forward_rounded, color: btnColor),
+                onPressed: () {
+                  _controller!.animateTo(_selectedIndex += 1);
+                },
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget tab3() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Advance required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Sample required", style: TxtStls.fieldtitlestyle),
+                  Checkbox(value: false, onChanged: (value) {}),
+                  Checkbox(value: false, onChanged: (value) {}),
+                ],
+              ),
+              Container(
+                color: Color(0xFFE0E0E0),
+                height: 80,
+                width: 1,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back_rounded, color: btnColor),
+                onPressed: () {
+                  _controller!.animateTo(_selectedIndex -= 1);
+                },
+              ),
+              MaterialButton(
+                color: btnColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Text(
+                  "Save",
+                  style: TxtStls.fieldstyle1,
+                ),
+                onPressed: () {},
+              )
+            ],
+          )
+        ],
       ),
     );
   }

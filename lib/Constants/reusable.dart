@@ -72,10 +72,10 @@ class TxtStls {
 }
 
 class ClrStls {
-  static const tnClr =
-      TextStyle(fontSize: 12, color: btnColor, fontWeight: FontWeight.bold);
-  static const endClr =
-      TextStyle(fontSize: 12, color: neClr, fontWeight: FontWeight.bold);
+  static TextStyle tnClr = GoogleFonts.nunito(
+      fontSize: 12, color: btnColor, fontWeight: FontWeight.bold);
+  static TextStyle endClr = GoogleFonts.nunito(
+      fontSize: 12, color: neClr, fontWeight: FontWeight.bold);
 }
 
 const primaryColor = Color(0xFF2697FF);
