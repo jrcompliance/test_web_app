@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -55,6 +56,23 @@ class _TaskPreviewState extends State<TaskPreview>
   TabController? _controller;
   int _selectedIndex = 0;
 
+  var _isadvance;
+  var _istds;
+  var _isgst;
+  var _islocation;
+  var _issample;
+  var _govtfee;
+  var _testfee;
+
+  TextEditingController _paymentController = TextEditingController();
+  TextEditingController _dealController = TextEditingController();
+  TextEditingController _paymentRecieveController = TextEditingController();
+  TextEditingController _sampleController = TextEditingController();
+  TextEditingController _advanceController = TextEditingController();
+  TextEditingController _taxController = TextEditingController();
+  TextEditingController _balanceController = TextEditingController();
+  TextEditingController _tdsController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -74,15 +92,39 @@ class _TaskPreviewState extends State<TaskPreview>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            child: Container(
-              color: bgColor,
-              width: 266,
-              child: Row(
-                children: _list.map((e) => newMethod(e, () {})).toList(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                child: Container(
+                  color: bgColor,
+                  width: 258,
+                  child: Row(
+                    children: _list.map((e) => newMethod(e, () {})).toList(),
+                  ),
+                ),
               ),
-            ),
+              RaisedButton.icon(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                onPressed: () {
+                  lead = "Lead";
+                  Scaffold.of(context).openEndDrawer();
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: bgColor,
+                ),
+                label: Text(
+                  "Create New Lead",
+                  style: TxtStls.fieldstyle1,
+                ),
+                color: btnColor,
+                elevation: 0.0,
+              ),
+            ],
           ),
           SizedBox(height: 10.0),
           if (activeid == "List")
@@ -551,7 +593,7 @@ class _TaskPreviewState extends State<TaskPreview>
                               .toString(),
                           style: TxtStls.fieldstyle)),
                   Container(
-                    width: 190,
+                    width: 200,
                     alignment: Alignment.centerLeft,
                     child: dropdowns(
                         id, cat, newsta, prosta, insta, wonsta, clsta),
@@ -585,8 +627,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                 dname = taskname;
                                 cxID = CxID;
                                 dendDate = endDate.toString();
+                                lead = "update";
+                                Scaffold.of(context).openEndDrawer();
                               });
-                              Scaffold.of(context).openEndDrawer();
                             },
                           ),
                           backgroundColor: btnColor.withOpacity(0.075),
@@ -1249,7 +1292,7 @@ class _TaskPreviewState extends State<TaskPreview>
             children: [
               Text(
                 StatusUpdateServices.statusget5(clsta),
-                style: TxtStls.fieldstyle1,
+                style: TxtStls.fieldstyle11,
               ),
               Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1673,7 +1716,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                       ),
                       Expanded(
-                        flex: 2,
+                        flex: 1,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -2123,50 +2166,1178 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                       Expanded(
                         flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: bgColor,
-                            ),
-                            child: DefaultTabController(
-                              initialIndex: _selectedIndex,
-                              length: 3,
-                              child: Scaffold(
-                                backgroundColor: bgColor,
-                                appBar: AppBar(
-                                  toolbarHeight: 40,
-                                  backgroundColor: bgColor,
-                                  elevation: 0.0,
-                                  automaticallyImplyLeading: false,
-                                  centerTitle: true,
-                                  title: TabBar(
-                                    controller: _controller,
-                                    indicator: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: neClr,
+                        child: cat == "WON"
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    color: bgColor,
+                                  ),
+                                  child: DefaultTabController(
+                                    initialIndex: _selectedIndex,
+                                    length: 3,
+                                    child: Scaffold(
+                                      backgroundColor: bgColor,
+                                      appBar: AppBar(
+                                        toolbarHeight: 30,
+                                        backgroundColor: bgColor,
+                                        elevation: 0.0,
+                                        automaticallyImplyLeading: false,
+                                        centerTitle: true,
+                                        title: TabBar(
+                                          controller: _controller,
+                                          indicator: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: neClr,
+                                          ),
+                                          tabs: [
+                                            Tab(child: Text("Payment Terms 1")),
+                                            Tab(child: Text("Payment Terms 2")),
+                                            Tab(child: Text("Comments")),
+                                          ],
+                                        ),
+                                      ),
+                                      body: TabBarView(
+                                        controller: _controller,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Advance required",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _isadvance,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isadvance =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _isadvance,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isadvance =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("TDS Applicable",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _istds,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _istds =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _istds,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _istds =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("GST Applicable",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _isgst,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isgst =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _isgst,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isgst =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Clients Location",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value:
+                                                                    "Domestic",
+                                                                groupValue:
+                                                                    _islocation,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _islocation =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("Domestic",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value:
+                                                                    "International",
+                                                                groupValue:
+                                                                    _islocation,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _islocation =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text(
+                                                                "International",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Sample required",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _issample,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _issample =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _issample,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _issample =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: btnColor
+                                                        .withOpacity(0.1),
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                          Icons
+                                                              .arrow_forward_rounded,
+                                                          color: btnColor),
+                                                      onPressed: () {
+                                                        _controller!.animateTo(
+                                                            _selectedIndex +=
+                                                                1);
+                                                      },
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 100,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Text("Slab Percentage",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Advance : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _advanceController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[
+                                                                            WhitelistingTextInputFormatter.digitsOnly
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_advanceController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _advanceController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_advanceController.text);
+                                                                              setState(() {
+                                                                                print("Setting state");
+                                                                                currentValue--;
+                                                                                _advanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Tax : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _taxController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[
+                                                                            WhitelistingTextInputFormatter.digitsOnly
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_taxController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _taxController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_taxController.text);
+                                                                              setState(() {
+                                                                                print("Setting state");
+                                                                                currentValue--;
+                                                                                _taxController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Balance : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _balanceController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[
+                                                                            WhitelistingTextInputFormatter.digitsOnly
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_balanceController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _balanceController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_balanceController.text);
+                                                                              setState(() {
+                                                                                print("Setting state");
+                                                                                currentValue--;
+                                                                                _balanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("TDS : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _tdsController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[
+                                                                            WhitelistingTextInputFormatter.digitsOnly
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_tdsController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _tdsController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_tdsController.text);
+                                                                              setState(() {
+                                                                                print("Setting state");
+                                                                                currentValue--;
+                                                                                _tdsController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Fee Payment",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    "Government Fee",
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "Client",
+                                                                        groupValue:
+                                                                            _govtfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _govtfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By Client",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "jr",
+                                                                        groupValue:
+                                                                            _govtfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _govtfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By JrCompliance",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    "Testing Fee",
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "Client",
+                                                                        groupValue:
+                                                                            _testfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _testfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By Client",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "jr",
+                                                                        groupValue:
+                                                                            _testfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _testfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By JrCompliance",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Deal Size : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _dealController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Payment Recieved Date : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _paymentRecieveController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Samples Recieved Date : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _sampleController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor: btnColor
+                                                          .withOpacity(0.1),
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                            Icons
+                                                                .arrow_back_rounded,
+                                                            color: btnColor),
+                                                        onPressed: () {
+                                                          _controller!.animateTo(
+                                                              _selectedIndex -=
+                                                                  1);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    CircleAvatar(
+                                                      backgroundColor: btnColor
+                                                          .withOpacity(0.1),
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                            Icons
+                                                                .arrow_forward_rounded,
+                                                            color: btnColor),
+                                                        onPressed: () {
+                                                          _controller!.animateTo(
+                                                              _selectedIndex +=
+                                                                  1);
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          tab3(),
+                                        ],
+                                      ),
                                     ),
-                                    tabs: [
-                                      Tab(child: Text("Payment Terms 1")),
-                                      Tab(child: Text("Payment Terms 2")),
-                                      Tab(child: Text("Comments")),
-                                    ],
                                   ),
                                 ),
-                                body: TabBarView(
-                                  controller: _controller,
-                                  children: [
-                                    tab1(),
-                                    tab2(),
-                                    tab3(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                              )
+                            : Container(),
                       ),
                     ],
                   ),
@@ -2794,306 +3965,67 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  Widget tab1() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Advance required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Sample required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon: Icon(Icons.arrow_forward_rounded, color: btnColor),
-              onPressed: () {
-                _controller!.animateTo(_selectedIndex += 1);
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget tab2() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Advance required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Sample required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_rounded, color: btnColor),
-                onPressed: () {
-                  _controller!.animateTo(_selectedIndex -= 1);
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_forward_rounded, color: btnColor),
-                onPressed: () {
-                  _controller!.animateTo(_selectedIndex += 1);
-                },
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   Widget tab3() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
+          Container(
+            decoration: deco,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 2,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Advance required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("TDS Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("GST Applicable", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Clients Location", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Sample required", style: TxtStls.fieldtitlestyle),
-                  Checkbox(value: false, onChanged: (value) {}),
-                  Checkbox(value: false, onChanged: (value) {}),
-                ],
-              ),
-              Container(
-                color: Color(0xFFE0E0E0),
-                height: 80,
-                width: 1,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_rounded, color: btnColor),
-                onPressed: () {
-                  _controller!.animateTo(_selectedIndex -= 1);
+              child: TextFormField(
+                controller: _paymentController,
+                maxLines: 5,
+                style: TxtStls.fieldstyle,
+                decoration: InputDecoration(
+                  hintText: "Enter a valid Comment",
+                  hintStyle: TxtStls.fieldstyle,
+                  border: InputBorder.none,
+                ),
+                validator: (fullname) {
+                  if (fullname!.isEmpty) {
+                    return "Name can not be empty";
+                  } else if (fullname.length < 3) {
+                    return "Name should be atleast 3 letters";
+                  } else {
+                    return null;
+                  }
                 },
               ),
-              MaterialButton(
-                color: btnColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: Text(
-                  "Save",
-                  style: TxtStls.fieldstyle1,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundColor: btnColor.withOpacity(0.1),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_rounded, color: btnColor),
+                    onPressed: () {
+                      _controller!.animateTo(_selectedIndex -= 1);
+                    },
+                  ),
                 ),
-                onPressed: () {},
-              )
-            ],
-          )
+                MaterialButton(
+                  color: btnColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Text(
+                    "Save",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                  onPressed: () {},
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );

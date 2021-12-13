@@ -17,7 +17,6 @@ const deco = BoxDecoration(
   color: fieldColor,
   borderRadius: BorderRadius.all(Radius.circular(5.0)),
 );
-//fontSize: 12.5, color: AbgColor, letterSpacing: 0.2
 
 class TxtStls {
   static const titlestyle = TextStyle(fontSize: 30, color: txtColor);
@@ -54,6 +53,11 @@ class TxtStls {
       color: bgColor,
       letterSpacing: 0.2,
       fontSize: 12.5);
+  static TextStyle fieldstyle11 = GoogleFonts.nunito(
+      textStyle: TextStyle(color: bgColor, fontSize: 12.5, letterSpacing: 0.2),
+      color: bgColor,
+      letterSpacing: 0.1,
+      fontSize: 12);
 
   static const stl1 = TextStyle(color: bt, fontWeight: FontWeight.w200);
   static const stl2 =
