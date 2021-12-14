@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
@@ -440,9 +441,12 @@ class _TaskPreviewState extends State<TaskPreview>
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("Tasks")
-            .where("Attachments", arrayContains: {
-              "uid": _auth.currentUser!.uid.toString(),
-            })
+            .where("Attachments", arrayContainsAny: [
+              {
+                "image": imageUrl,
+                "uid": _auth.currentUser!.uid.toString(),
+              }
+            ])
             .where("cat", isEqualTo: cat)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -481,6 +485,7 @@ class _TaskPreviewState extends State<TaskPreview>
               String insta = snapshot.data!.docs[index]["status2"];
               String wonsta = snapshot.data!.docs[index]["status4"];
               String clsta = snapshot.data!.docs[index]["status5"];
+              List assign = snapshot.data!.docs[index]["Attachments"];
               String logo = snapshot.data!.docs[index]["logo"];
               // ignore: undefined_prefixed_name
               ui.platformViewRegistry.registerViewFactory(
@@ -586,12 +591,25 @@ class _TaskPreviewState extends State<TaskPreview>
                       child: Text(snapshot.data!.docs[index]["endDate"],
                           style: ClrStls.endClr)),
                   Container(
-                      width: 190,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          snapshot.data!.docs[index]["Attachments"].length
-                              .toString(),
-                          style: TxtStls.fieldstyle)),
+                    width: 190,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: assign
+                          .map((e) => InkWell(
+                                onTap: () {
+                                  AssignServices.remove(id, e);
+                                },
+                                child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40.0)),
+                                    child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: Image.network(e["image"]))),
+                              ))
+                          .toList(),
+                    ),
+                  ),
                   Container(
                     width: 200,
                     alignment: Alignment.centerLeft,
@@ -672,9 +690,9 @@ class _TaskPreviewState extends State<TaskPreview>
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("Tasks")
-            .where("Attachments", arrayContains: {
-              "uid": _auth.currentUser!.uid.toString(),
-            })
+            .where("Attachments", arrayContainsAny: [
+              _auth.currentUser!.uid.toString(),
+            ])
             .where("cat", isEqualTo: cat)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

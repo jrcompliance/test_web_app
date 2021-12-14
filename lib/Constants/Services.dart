@@ -294,12 +294,20 @@ class EndDateOperations {
 }
 
 class CrudOperations {
-  static uploadTask(_taskController, _endDateController, _nameController,
-      _emailController, _phoneController, _messageController) async {
+  static uploadTask(
+      _taskController,
+      _endDateController,
+      _nameController,
+      _emailController,
+      _phoneController,
+      _messageController,
+      uid,
+      image) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     String did = collectionReference.doc().id;
     print(did);
     collectionReference.doc(did).set({
+      "CxID": 100 + 1,
       "id": did,
       "task": _taskController.text.toString(),
       "startDate": Timestamp.fromDate(DateTime.now()),
@@ -312,7 +320,9 @@ class CrudOperations {
       "status2": "FOLLOWUP",
       "status4": "PAYMENT",
       "status5": "IRRELEVANT",
-      "Attachments": [],
+      "Attachments": [
+        {"uid": uid, "image": image}
+      ],
       "Attachments1": [],
       "companyname": "",
       "logo": "",
@@ -535,14 +545,11 @@ class GraphValueServices {
 }
 
 class AssignServices {
-  static assign(id, uid, img) async {
+  static assign(id, uid, image) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Attachments": FieldValue.arrayUnion([
-        {
-          "uid": uid,
-          "uid1": img,
-        }
+        {"uid": uid, "image": image}
       ]),
     });
   }

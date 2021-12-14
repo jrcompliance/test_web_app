@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Auth_Views/MyLogo.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/DashBoard/MainScreen.dart';
 
 class SuccessScreen extends StatefulWidget {
   const SuccessScreen({Key? key}) : super(key: key);
@@ -54,6 +52,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     child: Text(
                       "Your account created successfully",
+                      style: TxtStls.fieldstyle1,
                     ),
                   ),
                   onTap: () {

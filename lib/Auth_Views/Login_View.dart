@@ -9,7 +9,7 @@ import 'package:test_web_app/Auth_Views/MyLogo.dart';
 import 'package:test_web_app/Auth_Views/RecoverPassword_View.dart';
 import 'package:test_web_app/Auth_Views/Register_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/DashBoard/MainScreen.dart';
+import 'package:test_web_app/Constants/MainScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

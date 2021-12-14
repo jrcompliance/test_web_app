@@ -356,8 +356,8 @@ class _LeadScreenState extends State<LeadScreen> {
                                                   .toList(),
                                               onSelected: (value) {
                                                 print(img);
-                                                AssignServices.assign(
-                                                    id, value, img);
+                                                // AssignServices.assign(
+                                                //     id, value, img);
                                               },
                                             );
                                           }),

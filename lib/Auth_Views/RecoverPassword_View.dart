@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
-
 import 'package:test_web_app/Auth_Views/MyLogo.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 

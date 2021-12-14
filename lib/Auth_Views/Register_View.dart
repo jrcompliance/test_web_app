@@ -496,7 +496,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "uname": _usernameController.text.toString(),
       "uemail": _emailController.text.toString(),
       "uphoneNumber": _phonenumberController.text.toString(),
-      "uimage": "",
+      "uimage":
+          "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/profiles%2Fpersonpng.jpeg?alt=media&token=6f6aca6c-7da0-48d1-805d-1580d345fa0f",
       "password": _passwordController.text.toString(),
       "urole": "Employee",
       "TCPB": _isAgree,

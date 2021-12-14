@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/tasklength.dart';
@@ -21,9 +21,71 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
+  Future<void> userTasks() async {
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("cat", isEqualTo: "NEW")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .snapshots()
+        .listen((value) {
+          setState(() {
+            newLength = value.docs.length.toDouble();
+          });
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("cat", isEqualTo: "PROSPECT")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .snapshots()
+        .listen((value) {
+          prospectLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .where("cat", isEqualTo: "IN PROGRESS")
+        .snapshots()
+        .listen((value) {
+          ipLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance.collection("Tasks")
+      ..where("Attachments", arrayContainsAny: [
+        {
+          "image": imageUrl,
+          "uid": _auth.currentUser!.uid.toString(),
+        }
+      ]).where("cat", isEqualTo: "WON").snapshots().listen((value) {
+        wonLength = value.docs.length.toDouble();
+        setState(() {});
+      });
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int chartval = 4;
   int duelistval = 1;
+  @override
+  void initState() {
+    super.initState();
+    this.userTasks();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -518,9 +580,12 @@ class _UserDashBoardState extends State<UserDashBoard> {
                           stream: FirebaseFirestore.instance
                               .collection("Tasks")
                               .where("endDate", isEqualTo: showLead(duelistval))
-                              .where("Attachments", arrayContains: {
-                            "uid": _auth.currentUser!.uid.toString(),
-                          }).snapshots(),
+                              .where("Attachments", arrayContainsAny: [
+                            {
+                              "image": imageUrl,
+                              "uid": _auth.currentUser!.uid.toString(),
+                            }
+                          ]).snapshots(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (!snapshot.hasData) {
@@ -568,9 +633,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                     style: TxtStls.fieldstyle,
                                   ),
                                   trailing: Icon(Icons.arrow_forward),
-                                  onTap: () {
-                                    descBox();
-                                  },
+                                  onTap: () {},
                                 );
                               },
                             );
@@ -804,312 +867,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
       return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
     }
   }
-
-  descBox() {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    var alertDialog = AlertDialog(
-      contentPadding: EdgeInsets.all(0.0),
-      actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
-      insetPadding: EdgeInsets.all(0),
-      buttonPadding: EdgeInsets.all(0),
-      backgroundColor: txtColor,
-      title: Container(
-        padding: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-            color: Colors.grey[350],
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(10.0),
-                topLeft: Radius.circular(10.0))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("taskname"),
-            IconButton(
-              tooltip: "Close Window",
-              icon: Icon(Icons.cancel_presentation),
-              color: Colors.pink[400],
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        ),
-      ),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            width: width * 0.85,
-            height: height * 0.85,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  height: height * 0.08,
-                  width: width * 0.85,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(0xFFEEEEEE),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        child: Tooltip(
-                          message: "Create Date",
-                          child: Container(
-                            padding: EdgeInsets.all(9),
-                            width: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Lottie.asset("assets/Lotties/createdate.json"),
-                                Text("createDate"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        onHover: (value) {},
-                        onTap: () {},
-                      ),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      InkWell(
-                        child: Tooltip(
-                          message: "End Date",
-                          child: Container(
-                            padding: EdgeInsets.all(9),
-                            width: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Lottie.asset("assets/Lotties/lastdate.json",
-                                    fit: BoxFit.fill),
-                                Text("deadline"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        onHover: (value) {
-                          setState(() {});
-                        },
-                        onTap: () {},
-                      ),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      Tooltip(
-                        message: "Priority",
-                        child: Container(
-                            alignment: Alignment.center,
-                            width: width * 0.09,
-                            child: Icon(
-                              Icons.flag,
-                            )),
-                      ),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      InkWell(
-                        child: Tooltip(
-                          message: "Last Seen",
-                          child: Container(
-                            width: 200,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Lottie.asset("assets/Lotties/lastseen.json"),
-                                Column(
-                                  children: [
-                                    Text("lastview"),
-                                    Text(
-                                      "lastviewTime",
-                                      style: TextStyle(fontSize: 15),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        onHover: (value) {
-                          setState(() {});
-                        },
-                        onTap: () {},
-                      ),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 70,
-                        width: 1,
-                      ),
-                      InkWell(
-                          child: Tooltip(
-                            message: "Agent",
-                            child: Container(
-                              padding: EdgeInsets.all(9),
-                              width: 200,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Lottie.asset("assets/Lotties/agent.json"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onHover: (value) {},
-                          onTap: () {}),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      InkWell(
-                          onTap: () {},
-                          child: Tooltip(
-                            message: "Filters",
-                            child: Container(
-                              padding: EdgeInsets.all(9),
-                              width: 200,
-                              child: Row(
-                                children: [
-                                  Lottie.asset("assets/Lotties/filter.json"),
-                                  Text("Await")
-                                ],
-                              ),
-                            ),
-                          ),
-                          onHover: (value) {}),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Tooltip(
-                          message: "Current Status",
-                          child: Container(
-                            padding: EdgeInsets.all(9),
-                            width: 125,
-                            height: 50,
-                            child: SizedBox(
-                                child: Lottie.asset("assets/Lotties/live.json",
-                                    fit: BoxFit.fill)),
-                          ),
-                        ),
-                        onHover: (value) {},
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 60 / 2,
-                            width: 200,
-                            child: Text(
-                              " catstat",
-                              style: TxtStls.stl1,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            alignment: Alignment.center,
-                            height: 25,
-                            width: 200,
-                            child: Text(
-                              "scatstat",
-                              style: TxtStls.stl1,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(width: 20),
-                      Container(
-                        color: Color(0xFFEEEEEE),
-                        height: 40,
-                        width: 1,
-                      ),
-                      InkWell(
-                        child: Tooltip(
-                          message: "Statistics",
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 80,
-                            height: 50,
-                            child: Lottie.asset("assets/Lotties/stats.json"),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {});
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) {
-          return alertDialog;
-        });
-  }
-
-  //
-  // Future<void> userTasks1(img) async {
-  //   fireStore
-  //       .collection("Tasks")
-  //       .where("Attachments", arrayContains: {
-  //         "uid": _auth.currentUser!.uid.toString(),
-  //         "uid1": img.toString(),
-  //       })
-  //       .get()
-  //       .then((value) {
-  //         newLength = value.docs.length.toDouble();
-  //         setState(() {});
-  //       });
-  // }
-  //
-  // Future<void> userTasks2(img) async {
-  //   fireStore
-  //       .collection("Tasks")
-  //       .where("Attachments", arrayContains: {
-  //         "uid": _auth.currentUser!.uid.toString(),
-  //         "uid1": img.toString(),
-  //       })
-  //       .get()
-  //       .then((value) {
-  //         ipLength = value.docs.length.toDouble();
-  //         setState(() {});
-  //       });
-  // }
-  //
-  // Future<void> userTasks3(img) async {
-  //   fireStore
-  //       .collection("Tasks")
-  //       .where("Attachments", arrayContains: {
-  //         "uid": _auth.currentUser!.uid.toString(),
-  //         "uid1": img.toString(),
-  //       })
-  //       .get()
-  //       .then((value) {
-  //         wonLength = value.docs.length.toDouble();
-  //         setState(() {});
-  //       });
-  // }
 }
 
 class SalesData {
