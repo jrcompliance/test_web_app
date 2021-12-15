@@ -627,7 +627,17 @@ class _TaskPreviewState extends State<TaskPreview>
                               size: 12.5,
                               color: btnColor,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                did = id;
+                                dcat = cat;
+                                dname = taskname;
+                                cxID = CxID;
+                                dendDate = endDate.toString();
+                                lead = "update";
+                                Scaffold.of(context).openEndDrawer();
+                              });
+                            },
                           ),
                           backgroundColor: btnColor.withOpacity(0.075),
                         ),
@@ -645,7 +655,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                 dname = taskname;
                                 cxID = CxID;
                                 dendDate = endDate.toString();
-                                lead = "update";
+                                lead = "move";
                                 Scaffold.of(context).openEndDrawer();
                               });
                             },
@@ -691,7 +701,10 @@ class _TaskPreviewState extends State<TaskPreview>
         stream: FirebaseFirestore.instance
             .collection("Tasks")
             .where("Attachments", arrayContainsAny: [
-              _auth.currentUser!.uid.toString(),
+              {
+                "image": imageUrl,
+                "uid": _auth.currentUser!.uid.toString(),
+              }
             ])
             .where("cat", isEqualTo: cat)
             .snapshots(),
@@ -2599,9 +2612,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 true,
                                                                           ),
                                                                           inputFormatters: <
-                                                                              TextInputFormatter>[
-                                                                            WhitelistingTextInputFormatter.digitsOnly
-                                                                          ],
+                                                                              TextInputFormatter>[],
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2707,9 +2718,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 true,
                                                                           ),
                                                                           inputFormatters: <
-                                                                              TextInputFormatter>[
-                                                                            WhitelistingTextInputFormatter.digitsOnly
-                                                                          ],
+                                                                              TextInputFormatter>[],
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2815,9 +2824,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 true,
                                                                           ),
                                                                           inputFormatters: <
-                                                                              TextInputFormatter>[
-                                                                            WhitelistingTextInputFormatter.digitsOnly
-                                                                          ],
+                                                                              TextInputFormatter>[],
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2923,9 +2930,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 true,
                                                                           ),
                                                                           inputFormatters: <
-                                                                              TextInputFormatter>[
-                                                                            WhitelistingTextInputFormatter.digitsOnly
-                                                                          ],
+                                                                              TextInputFormatter>[],
                                                                         ),
                                                                       ),
                                                                     ),

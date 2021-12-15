@@ -122,6 +122,3 @@ class statClr {
   static const com = Colors.green;
   static const com1 = Colors.indigoAccent;
 }
-
-const _boardtitlelist = ["NEW", "PROSPECT", "INPROGRESS", "WON", "CLOSE"];
-const _clrslist = [neClr, prosClr, ipClr, wonClr, clsClr];

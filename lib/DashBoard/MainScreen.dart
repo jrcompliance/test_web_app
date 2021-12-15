@@ -67,13 +67,8 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!Responsive.isSmallScreen(context))
-              Expanded(
-                child: SideDrawer(context),
-              ),
-            Expanded(
-              flex: 6,
-              child: DashboardBody(context),
-            ),
+              Expanded(child: SideDrawer(context)),
+            Expanded(flex: 6, child: DashboardBody(context)),
           ],
         ),
       ),

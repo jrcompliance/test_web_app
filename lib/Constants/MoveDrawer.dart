@@ -58,15 +58,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
         child: DropdownButtonHideUnderline(
           child: DropdownButton2(
             isExpanded: true,
-            hint: Row(
-              children: const [
-                Expanded(
-                  child: Text(
-                    'Choose Action Type',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+            hint: Expanded(
+              child: Text(
+                'Choose Option',
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             items: radioItem == "InBound"
                 ? inbounditems
@@ -263,7 +259,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ],
       );
     }
-    if (lead == "update") {
+    if (lead == "move") {
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,7 +552,182 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ),
       );
     }
-    return Text('');
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: CircleAvatar(
+              backgroundColor: neClr.withOpacity(0.1),
+              child: IconButton(
+                  hoverColor: Colors.transparent,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: neClr,
+                    size: 15,
+                  )),
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Update",
+            style: TxtStls.fieldtitlestyle11,
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                dname!,
+                style: TxtStls.fieldtitlestyle11,
+              ),
+              SizedBox(width: 5),
+              Text(
+                cxID!,
+                style: TxtStls.fieldtitlestyle11,
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(Icons.access_time_rounded, color: btnColor),
+              ),
+              SizedBox(width: 5),
+              Column(
+                children: [
+                  Text(
+                      DateFormat('dd,MMMM,yyyy,hh:mm a').format(DateTime.now()),
+                      style: TxtStls.fieldtitlestyle),
+                  Text("${DateTime.now().timeZoneName}",
+                      style: TxtStls.fieldstyle),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.work,
+                  color: btnColor,
+                ),
+              ),
+              SizedBox(width: 5),
+              Column(
+                children: [
+                  Text(
+                    "Type of Activity",
+                    style: TxtStls.fieldtitlestyle,
+                  ),
+                ],
+              )
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: 100,
+                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  color: statClr.inpro,
+                ),
+                child: Row(
+                  children: [
+                    Theme(
+                      data: ThemeData(unselectedWidgetColor: bgColor),
+                      child: Radio(
+                        activeColor: btnColor,
+                        value: "InBound",
+                        groupValue: radioItem,
+                        onChanged: (val) {
+                          radioItem = val.toString();
+                          setState(() {});
+                        },
+                        toggleable: true,
+                      ),
+                    ),
+                    Text(
+                      "INBOUND",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 5),
+              Container(
+                width: 120,
+                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  color: wonClr,
+                ),
+                child: Row(
+                  children: [
+                    Theme(
+                      data: ThemeData(unselectedWidgetColor: bgColor),
+                      child: Radio(
+                        activeColor: btnColor,
+                        value: "OutBound",
+                        groupValue: radioItem,
+                        onChanged: (val) {
+                          radioItem = val.toString();
+                          setState(() {});
+                        },
+                        toggleable: true,
+                      ),
+                    ),
+                    Text(
+                      "OUTBOUND",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 10),
+          actions(),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MaterialButton(
+                hoverColor: Colors.transparent,
+                color: AbgColor.withOpacity(0.001),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Text("Cancel", style: TxtStls.fieldstyle1),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                hoverColor: Colors.transparent,
+                color: btnColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Text("Update", style: TxtStls.fieldstyle1),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {});
+                },
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   Widget _field(
@@ -588,28 +759,3 @@ class Model {
   final Color color;
   Model({required this.name, required this.color});
 }
-//
-// PopupMenuButton(
-// icon: Icon(Icons.person_add),
-// color: txtColor,
-// itemBuilder: (context) => snp
-//     .map((item) => PopupMenuItem(
-// onTap: () {
-// img = item.get("uimage");
-// setState(() {});
-// },
-// value: item.get("uid"),
-// child: Row(
-// children: [
-// CircleAvatar(
-// backgroundImage:
-// NetworkImage(item.get("uimage")),
-// ),
-// Text(
-// item.get("uname"),
-// ),
-// ],
-// )))
-// .toList(),
-// onSelected: (value) {},
-// );
