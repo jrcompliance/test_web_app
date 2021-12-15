@@ -58,8 +58,7 @@ dependencies:
   flutter_charts: ^0.2.0
   syncfusion_flutter_charts: ^19.3.56
   dropdown_button2: ^1.0.5
-  cupertino_stepper: ^0.2.0
-
+  flutter_countdown_timer: ^4.1.0
 
 dev_dependencies:
   flutter_test:

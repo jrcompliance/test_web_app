@@ -29,6 +29,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
   var _image;
   final inbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA"];
   final outbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA", "NO RESPONSE"];
+  final _timelist = ["1 HR", "2 HR", "3 HR", "4 HR", "6 HR", "Custom"];
+  String? activetime;
   String? activeid;
 
   TextEditingController _companyController = TextEditingController();
@@ -49,72 +51,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: _check(),
     ));
-  }
-
-  Widget actions() {
-    if (radioItem != null) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 40),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Expanded(
-              child: Text(
-                'Choose Option',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            items: radioItem == "InBound"
-                ? inbounditems
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: TxtStls.fieldstyle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ))
-                    .toList()
-                : outbounditems
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: TxtStls.fieldstyle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ))
-                    .toList(),
-            value: _choosenValue,
-            onChanged: (value) {
-              setState(() {
-                _choosenValue = value as String;
-              });
-            },
-            iconEnabledColor: txtColor,
-            buttonPadding: EdgeInsets.symmetric(horizontal: 15),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            itemPadding: const EdgeInsets.symmetric(horizontal: 15),
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: bgColor,
-            ),
-          ),
-        ),
-      );
-    }
-    return Text("");
-  }
-
-  final List<Model> _list = [];
-  menu() {
-    _list.add(Model(name: "NEW", color: neClr));
-    _list.add(Model(name: "PROSPECT", color: prosClr));
-    _list.add(Model(name: "IN PROGRESS", color: ipClr));
-    _list.add(Model(name: "WON", color: wonClr));
-    _list.add(Model(name: "CLOSE", color: clsClr));
   }
 
   Widget _check() {
@@ -349,7 +285,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    color: statClr.inpro,
+                    color: Colors.orangeAccent,
                   ),
                   child: Row(
                     children: [
@@ -640,7 +576,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  color: statClr.inpro,
+                  color: Colors.orangeAccent,
                 ),
                 child: Row(
                   children: [
@@ -698,6 +634,41 @@ class _MoveDrawerState extends State<MoveDrawer> {
           ),
           SizedBox(height: 10),
           actions(),
+          Wrap(
+              children: _timelist
+                  .map((e) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          child: Material(
+                            shadowColor: btnColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            elevation: activetime == e ? 10 : 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              width: 60,
+                              height: 30,
+                              child: Text(
+                                e,
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            activetime = e;
+                            setState(() {});
+                          },
+                          onDoubleTap: () {
+                            activetime = null;
+                            setState(() {});
+                          },
+                        ),
+                      ))
+                  .toList()),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -719,22 +690,84 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Text("Update", style: TxtStls.fieldstyle1),
                 onPressed: () {
-                  Navigator.pop(context);
+                  print(radioItem + _choosenValue + activetime);
                   setState(() {});
                 },
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _field(
-    _controller,
-    bool enable,
-    hint,
-  ) {
+  Widget actions() {
+    if (radioItem != null) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 40),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton2(
+            isExpanded: true,
+            hint: Expanded(
+              child: Text(
+                'Choose Option',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            items: radioItem == "InBound"
+                ? inbounditems
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: TxtStls.fieldstyle,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ))
+                    .toList()
+                : outbounditems
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: TxtStls.fieldstyle,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ))
+                    .toList(),
+            value: _choosenValue,
+            onChanged: (value) {
+              setState(() {
+                _choosenValue = value as String;
+              });
+            },
+            iconEnabledColor: txtColor,
+            buttonPadding: EdgeInsets.symmetric(horizontal: 15),
+            buttonDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            itemPadding: const EdgeInsets.symmetric(horizontal: 15),
+            dropdownDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: bgColor,
+            ),
+          ),
+        ),
+      );
+    }
+    return Text("");
+  }
+
+  final List<Model> _list = [];
+  menu() {
+    _list.add(Model(name: "NEW", color: neClr));
+    _list.add(Model(name: "PROSPECT", color: prosClr));
+    _list.add(Model(name: "IN PROGRESS", color: ipClr));
+    _list.add(Model(name: "WON", color: wonClr));
+    _list.add(Model(name: "CLOSE", color: clsClr));
+  }
+
+  Widget _field(_controller, bool enable, hint) {
     return Container(
       decoration: deco,
       child: Padding(

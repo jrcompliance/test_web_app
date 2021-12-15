@@ -65,41 +65,128 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 }
 
-class CheckScreen extends StatefulWidget {
-  const CheckScreen({Key? key}) : super(key: key);
-
+class TimerApp extends StatefulWidget {
   @override
-  _CheckScreenState createState() => _CheckScreenState();
+  _TimerAppState createState() => _TimerAppState();
 }
 
-class _CheckScreenState extends State<CheckScreen> {
-  int _currentStep = 0;
-  int currentStep = 0;
+//Update the time in 'YYYY-MM-DD HH:MM:SS' format
+final eventTime = DateTime.parse('2021-12-16 15:34:00');
 
-  bool _isadvance = false;
+class _TimerAppState extends State<TimerApp> {
+  static const duration = const Duration(seconds: 1);
+
+  int timeDiff = eventTime.difference(DateTime.now()).inSeconds;
+  bool isActive = false;
+
+  Timer? timer;
+
+  void handleTick() {
+    if (timeDiff > 0) {
+      if (isActive) {
+        setState(() {
+          if (eventTime != DateTime.now()) {
+            timeDiff = timeDiff - 1;
+          } else {
+            print('Times up!');
+            //Do something
+          }
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Checkbox(
-                  value: _isadvance,
-                  onChanged: (value) {
+    if (timer == null) {
+      timer = Timer.periodic(duration, (Timer t) {
+        handleTick();
+      });
+    }
+
+    int days = timeDiff ~/ (24 * 60 * 60) % 24;
+    int hours = timeDiff ~/ (60 * 60) % 24;
+    int minutes = (timeDiff ~/ 60) % 60;
+    int seconds = timeDiff % 60;
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.grey[700],
+          title: Center(
+            child: Text('Countdown Timer'),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  LabelText(
+                      label: 'HRS', value: hours.toString().padLeft(2, '0')),
+                  LabelText(
+                      label: 'MIN', value: minutes.toString().padLeft(2, '0')),
+                  LabelText(
+                      label: 'SEC', value: seconds.toString().padLeft(2, '0')),
+                ],
+              ),
+              SizedBox(height: 60),
+              Container(
+                width: 200,
+                height: 47,
+                margin: EdgeInsets.only(top: 30),
+                child: RaisedButton(
+                  color: isActive ? Colors.grey : Colors.green,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25)),
+                  child: Text(isActive ? 'STOP' : 'START'),
+                  onPressed: () {
                     setState(() {
-                      _isadvance = value!;
-                      setState(() {});
+                      isActive = !isActive;
                     });
-                  }),
-              Text("YES", style: TxtStls.fieldstyle)
+                  },
+                ),
+              )
             ],
           ),
-          Row(
-            children: [
-              Checkbox(value: false, onChanged: (value) {}),
-              Text("NO", style: TxtStls.fieldstyle)
-            ],
+        ),
+      ),
+    );
+  }
+}
+
+class LabelText extends StatelessWidget {
+  LabelText({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: btnColor,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '$value',
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            '$label',
+            style: TextStyle(
+              color: Colors.white70,
+            ),
           ),
         ],
       ),

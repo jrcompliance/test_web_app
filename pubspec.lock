@@ -120,13 +120,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  cupertino_stepper:
-    dependency: "direct main"
-    description:
-      name: cupertino_stepper
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   decimal:
     dependency: transitive
     description:
@@ -279,6 +272,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  flutter_countdown_timer:
+    dependency: "direct main"
+    description:
+      name: flutter_countdown_timer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
