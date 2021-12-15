@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
+import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
@@ -23,6 +25,8 @@ class TaskPreview extends StatefulWidget {
   @override
   _TaskPreviewState createState() => _TaskPreviewState();
 }
+
+final eventTime = DateTime.parse('2021-12-15 17:30:00');
 
 class _TaskPreviewState extends State<TaskPreview>
     with TickerProviderStateMixin {
@@ -81,6 +85,29 @@ class _TaskPreviewState extends State<TaskPreview>
       length: 3,
       vsync: this,
     );
+  }
+
+  static const duration = const Duration(seconds: 1);
+
+  int timeDiff = eventTime.difference(DateTime.now()).inSeconds;
+  bool isActive = false;
+
+  Timer? timer;
+
+  void handleTick() {
+    if (timeDiff > 0) {
+      if (isActive) {
+        setState(() {
+          if (eventTime != DateTime.now()) {
+            timeDiff = timeDiff - 1;
+          } else {
+            isActive = false;
+            setState(() {});
+            //Do something
+          }
+        });
+      }
+    }
   }
 
   @override
@@ -434,6 +461,14 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listmiddle(cat) {
+    if (timer == null) {
+      timer = Timer.periodic(duration, (Timer t) {
+        handleTick();
+      });
+    }
+    int hours = timeDiff ~/ (60 * 60) % 24;
+    int minutes = (timeDiff ~/ 60) % 60;
+    int seconds = timeDiff % 60;
     return Container(
       color: bgColor,
       height: MediaQuery.of(context).size.height * 0.1,
@@ -616,53 +651,55 @@ class _TaskPreviewState extends State<TaskPreview>
                     child: dropdowns(
                         id, cat, newsta, prosta, insta, wonsta, clsta),
                   ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CircleAvatar(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.update,
-                              size: 12.5,
-                              color: btnColor,
+                  Container(
+                    child: Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.update,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  did = id;
+                                  dcat = cat;
+                                  dname = taskname;
+                                  cxID = CxID;
+                                  dendDate = endDate.toString();
+                                  lead = "update";
+                                  Scaffold.of(context).openEndDrawer();
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                did = id;
-                                dcat = cat;
-                                dname = taskname;
-                                cxID = CxID;
-                                dendDate = endDate.toString();
-                                lead = "update";
-                                Scaffold.of(context).openEndDrawer();
-                              });
-                            },
+                            backgroundColor: btnColor.withOpacity(0.075),
                           ),
-                          backgroundColor: btnColor.withOpacity(0.075),
-                        ),
-                        CircleAvatar(
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.fast_forward,
-                              size: 12.5,
-                              color: btnColor,
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.fast_forward,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  did = id;
+                                  dcat = cat;
+                                  dname = taskname;
+                                  cxID = CxID;
+                                  dendDate = endDate.toString();
+                                  lead = "move";
+                                  Scaffold.of(context).openEndDrawer();
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                did = id;
-                                dcat = cat;
-                                dname = taskname;
-                                cxID = CxID;
-                                dendDate = endDate.toString();
-                                lead = "move";
-                                Scaffold.of(context).openEndDrawer();
-                              });
-                            },
+                            backgroundColor: btnColor.withOpacity(0.075),
                           ),
-                          backgroundColor: btnColor.withOpacity(0.075),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   )
                 ],

@@ -216,12 +216,12 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     )),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Text(
               "Progress Update",
               style: TxtStls.fieldtitlestyle11,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Row(
               children: [
                 Text(
@@ -364,7 +364,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   alignment: WrapAlignment.start,
                   children: _list
                       .map((e) => Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: InkWell(
                               child: Card(
                                 shadowColor: btnColor,
@@ -401,6 +401,14 @@ class _MoveDrawerState extends State<MoveDrawer> {
                           ))
                       .toList()),
             ),
+            InkWell(
+              child: _field(_endDateController, false, "End Date"),
+              onTap: () {
+                MyCalenders.pickEndDate(context, _endDateController);
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 5),
             dcat == "NEW"
                 ? _field(_companyController, true, "Enter Company name")
                 : SizedBox(),
@@ -479,6 +487,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         : null;
                     ProgressUpdsate.updateCat(did, dcat, activeid,
                         noteController, dendDate, radioItem, _choosenValue);
+                    EndDateOperations.updateEdateTask(did, _endDateController);
                     Navigator.pop(context);
                   },
                 ),
@@ -669,6 +678,61 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         ),
                       ))
                   .toList()),
+          SizedBox(height: 10),
+          activetime == "Custom"
+              ? Container(
+                  height: 200,
+                  child: CalendarDatePicker(
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2200),
+                      onDateChanged: (value) {}),
+                )
+              : SizedBox(),
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.message,
+                  color: btnColor,
+                ),
+              ),
+              SizedBox(width: 5),
+              Text(
+                "Comments",
+                style: TxtStls.fieldtitlestyle,
+              )
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 40, top: 2),
+            child: Container(
+              decoration: deco,
+              child: Padding(
+                padding: EdgeInsets.only(left: 20, right: 0, top: 2),
+                child: TextFormField(
+                  controller: noteController,
+                  maxLines: 6,
+                  style: TxtStls.fieldstyle,
+                  decoration: InputDecoration(
+                    hintText: "Enter a valid Comment",
+                    hintStyle: TxtStls.fieldstyle,
+                    border: InputBorder.none,
+                  ),
+                  validator: (fullname) {
+                    if (fullname!.isEmpty) {
+                      return "Name can not be empty";
+                    } else if (fullname.length < 3) {
+                      return "Name should be atleast 3 letters";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

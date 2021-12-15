@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_web_app/Constants/reusable.dart';
 
 class LabelText extends StatelessWidget {
   LabelText({required this.label, required this.value});
@@ -8,25 +9,23 @@ class LabelText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      padding: EdgeInsets.all(20),
+      width: 25,
+      margin: EdgeInsets.all(1),
+      padding: EdgeInsets.all(3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.grey,
+        borderRadius: BorderRadius.circular(10),
+        color: btnColor,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-            '$value',
-            style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            '$label',
+            style: TxtStls.fieldstyle1,
           ),
           Text(
-            '$label',
-            style: TextStyle(
-              color: Colors.white70,
-            ),
+            '$value',
+            style: TxtStls.fieldstyle1,
           ),
         ],
       ),

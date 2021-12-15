@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_countdown_timer/countdown.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
@@ -65,130 +67,21 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 }
 
-class TimerApp extends StatefulWidget {
+class Dummy extends StatefulWidget {
+  const Dummy({Key? key}) : super(key: key);
+
   @override
-  _TimerAppState createState() => _TimerAppState();
+  _DummyState createState() => _DummyState();
 }
 
-//Update the time in 'YYYY-MM-DD HH:MM:SS' format
-final eventTime = DateTime.parse('2021-12-16 15:34:00');
-
-class _TimerAppState extends State<TimerApp> {
-  static const duration = const Duration(seconds: 1);
-
-  int timeDiff = eventTime.difference(DateTime.now()).inSeconds;
-  bool isActive = false;
-
-  Timer? timer;
-
-  void handleTick() {
-    if (timeDiff > 0) {
-      if (isActive) {
-        setState(() {
-          if (eventTime != DateTime.now()) {
-            timeDiff = timeDiff - 1;
-          } else {
-            print('Times up!');
-            //Do something
-          }
-        });
-      }
-    }
-  }
-
+class _DummyState extends State<Dummy> {
   @override
   Widget build(BuildContext context) {
-    if (timer == null) {
-      timer = Timer.periodic(duration, (Timer t) {
-        handleTick();
-      });
-    }
-
-    int days = timeDiff ~/ (24 * 60 * 60) % 24;
-    int hours = timeDiff ~/ (60 * 60) % 24;
-    int minutes = (timeDiff ~/ 60) % 60;
-    int seconds = timeDiff % 60;
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.grey[700],
-          title: Center(
-            child: Text('Countdown Timer'),
-          ),
+    return Scaffold(
+      body: Center(
+        child: CountdownTimer(
+          endTime: 9999999999999,
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  LabelText(
-                      label: 'HRS', value: hours.toString().padLeft(2, '0')),
-                  LabelText(
-                      label: 'MIN', value: minutes.toString().padLeft(2, '0')),
-                  LabelText(
-                      label: 'SEC', value: seconds.toString().padLeft(2, '0')),
-                ],
-              ),
-              SizedBox(height: 60),
-              Container(
-                width: 200,
-                height: 47,
-                margin: EdgeInsets.only(top: 30),
-                child: RaisedButton(
-                  color: isActive ? Colors.grey : Colors.green,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)),
-                  child: Text(isActive ? 'STOP' : 'START'),
-                  onPressed: () {
-                    setState(() {
-                      isActive = !isActive;
-                    });
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LabelText extends StatelessWidget {
-  LabelText({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: btnColor,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            '$value',
-            style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            '$label',
-            style: TextStyle(
-              color: Colors.white70,
-            ),
-          ),
-        ],
       ),
     );
   }
