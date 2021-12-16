@@ -305,7 +305,7 @@ class CrudOperations {
       image) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     String did = collectionReference.doc().id;
-    print(did);
+
     collectionReference.doc(did).set({
       "CxID": 100 + 1,
       "id": did,
@@ -367,7 +367,7 @@ class CrudOperations {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "Certificates": FieldValue.arrayRemove([element])
-    }).then((value) => print("Removed"));
+    });
   }
 }
 
@@ -392,7 +392,6 @@ class StateUpdateServices {
     }).then((value) {
       note.clear();
     });
-    print("update");
   }
 
   static InprosUpdate(
@@ -415,7 +414,6 @@ class StateUpdateServices {
     }).then((value) {
       note.clear();
     });
-    print("update");
   }
 
   static wonUpdate(
@@ -438,7 +436,6 @@ class StateUpdateServices {
     }).then((value) {
       note.clear();
     });
-    print("update");
   }
 
   static closeUpdate(
@@ -461,7 +458,6 @@ class StateUpdateServices {
     }).then((value) {
       note.clear();
     });
-    print("update");
   }
 }
 
@@ -477,7 +473,6 @@ class ComapnyUpdateServices {
       cl1.clear();
       cl5.clear();
     });
-    print("update");
   }
 
   static addMoreContacts(id, cl2, cl3, cl4) async {

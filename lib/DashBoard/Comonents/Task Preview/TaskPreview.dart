@@ -11,7 +11,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
-import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
@@ -51,11 +50,23 @@ class _TaskPreviewState extends State<TaskPreview>
     "Actions"
   ];
   final List<bool> _tapslist = [true, true, true, true, true];
+
+  final List<bool> _isHover = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
   String activeid = "List";
   bool isChecked = false;
 
   int currentStep = 0;
-
   int? opts;
 
   TabController? _controller;
@@ -1528,18 +1539,25 @@ class _TaskPreviewState extends State<TaskPreview>
                               children: [
                                 InkWell(
                                     child: Tooltip(
-                                      message: "Agent",
+                                      message: "Create Date",
                                       child: Container(
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             CircleAvatar(
-                                              backgroundColor:
-                                                  btnColor.withOpacity(0.1),
-                                              child: Icon(Icons.calendar_today,
-                                                  color: btnColor),
-                                            ),
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.1),
+                                                child: _isHover[0]
+                                                    ? Lottie.asset(
+                                                        "assets/Lotties/createdate.json",
+                                                      )
+                                                    : Icon(
+                                                        Icons
+                                                            .calendar_today_outlined,
+                                                        color: btnColor,
+                                                        size: 20,
+                                                      )),
                                             Text(createDate,
                                                 style: TxtStls.fieldstyle),
                                           ],
@@ -1547,6 +1565,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                       ),
                                     ),
                                     onHover: (value) {
+                                      _isHover[0] = value;
                                       setState(() {});
                                     },
                                     onTap: () {}),
@@ -1558,20 +1577,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                 InkWell(
                                     onTap: () {},
                                     child: Tooltip(
-                                      message: "Filters",
+                                      message: "End Date",
                                       child: Container(
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             CircleAvatar(
-                                              backgroundColor:
-                                                  btnColor.withOpacity(0.1),
-                                              child: Icon(
-                                                Icons.date_range,
-                                                color: btnColor,
-                                              ),
-                                            ),
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.1),
+                                                child: Lottie.asset(
+                                                    "assets/Lotties/lastdate.json",
+                                                    animate: _isHover[1])),
                                             Text(deadline,
                                                 style: TxtStls.fieldstyle)
                                           ],
@@ -1579,6 +1596,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                       ),
                                     ),
                                     onHover: (value) {
+                                      _isHover[1] = value;
                                       setState(() {});
                                     }),
                                 Container(
@@ -1616,15 +1634,22 @@ class _TaskPreviewState extends State<TaskPreview>
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           CircleAvatar(
-                                            backgroundColor:
-                                                btnColor.withOpacity(0.1),
-                                            child: SizedBox(
+                                              backgroundColor:
+                                                  btnColor.withOpacity(0.1),
+                                              child: SizedBox(
                                                 width: 50,
                                                 height: 50,
-                                                child: Lottie.asset(
-                                                    "assets/Lotties/lastseen.json",
-                                                    fit: BoxFit.fill)),
-                                          ),
+                                                child: _isHover[2]
+                                                    ? Lottie.asset(
+                                                        "assets/Lotties/lastseen.json",
+                                                        fit: BoxFit.fill,
+                                                      )
+                                                    : Icon(
+                                                        Icons.remove_red_eye,
+                                                        color: btnColor,
+                                                        size: 32,
+                                                      ),
+                                              )),
                                           Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -1642,6 +1667,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                     ),
                                   ),
                                   onHover: (value) {
+                                    _isHover[2] = value;
                                     setState(() {});
                                   },
                                   onTap: () {},
@@ -3431,13 +3457,13 @@ class _TaskPreviewState extends State<TaskPreview>
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             CircleAvatar(
-                                              backgroundColor:
-                                                  btnColor.withOpacity(0.1),
-                                              child: Lottie.asset(
-                                                "assets/Lotties/agent.json",
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.1),
+                                                child: Lottie.asset(
+                                                  "assets/Lotties/agent.json",
+                                                  fit: BoxFit.fill,
+                                                  animate: _isHover[3],
+                                                )),
                                             // ListView.builder(
                                             //     shrinkWrap: true,
                                             //     scrollDirection: Axis.horizontal,
@@ -3460,6 +3486,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                       ),
                                     ),
                                     onHover: (value) {
+                                      _isHover[3] = value;
                                       setState(() {});
                                     },
                                     onTap: () {}),
@@ -3477,11 +3504,11 @@ class _TaskPreviewState extends State<TaskPreview>
                                         child: Row(
                                           children: [
                                             CircleAvatar(
-                                              backgroundColor:
-                                                  btnColor.withOpacity(0.1),
-                                              child: Lottie.asset(
-                                                  "assets/Lotties/filter.json"),
-                                            ),
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.1),
+                                                child: Lottie.asset(
+                                                    "assets/Lotties/filter.json",
+                                                    animate: _isHover[4])),
                                             Text("Await",
                                                 style: TxtStls.fieldstyle)
                                           ],
@@ -3489,6 +3516,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                       ),
                                     ),
                                     onHover: (value) {
+                                      _isHover[4] = value;
                                       setState(() {});
                                     }),
                                 Container(
@@ -3503,14 +3531,23 @@ class _TaskPreviewState extends State<TaskPreview>
                                     child: CircleAvatar(
                                       backgroundColor:
                                           btnColor.withOpacity(0.1),
-                                      child: Container(
-                                        child: Lottie.asset(
-                                            "assets/Lotties/live.json",
-                                            fit: BoxFit.fill),
-                                      ),
+                                      child: _isHover[5]
+                                          ? Container(
+                                              child: Lottie.asset(
+                                                  "assets/Lotties/live.json",
+                                                  fit: BoxFit.fill,
+                                                  animate: _isHover[5]),
+                                            )
+                                          : SizedBox(
+                                              width: 200,
+                                              height: 200,
+                                              child: Image.asset(
+                                                  "assets/Images/live.png"),
+                                            ),
                                     ),
                                   ),
                                   onHover: (value) {
+                                    _isHover[5] = value;
                                     setState(() {});
                                   },
                                 ),
@@ -3560,13 +3597,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                       backgroundColor:
                                           btnColor.withOpacity(0.1),
                                       child: Container(
-                                        alignment: Alignment.center,
-                                        child: Lottie.asset(
-                                            "assets/Lotties/stats.json"),
-                                      ),
+                                          alignment: Alignment.center,
+                                          child: Lottie.asset(
+                                              "assets/Lotties/stats.json",
+                                              height: 20,
+                                              animate: _isHover[6])),
                                     ),
                                   ),
                                   onTap: () {
+                                    setState(() {});
+                                  },
+                                  onHover: (value) {
+                                    _isHover[6] = value;
                                     setState(() {});
                                   },
                                 )
@@ -3753,16 +3795,64 @@ class _TaskPreviewState extends State<TaskPreview>
                                                       width: 1,
                                                     ),
                                                     Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        width: 50,
-                                                        child: lr[index]
-                                                                    ["Yes"] ==
-                                                                true
-                                                            ? Lottie.asset(
-                                                                "assets/Lotties/success.json")
-                                                            : Lottie.asset(
-                                                                "assets/Lotties/fail.json"))
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width: 50,
+                                                      child: lr[index]["Yes"] ==
+                                                              true
+                                                          ? InkWell(
+                                                              onTap: () {},
+                                                              onHover: (value) {
+                                                                _isHover[7] =
+                                                                    value;
+                                                                setState(() {});
+                                                              },
+                                                              child: CircleAvatar(
+                                                                  backgroundColor:
+                                                                      btnColor
+                                                                          .withOpacity(
+                                                                              0.2),
+                                                                  child: _isHover[
+                                                                          7]
+                                                                      ? Lottie.asset(
+                                                                          "assets/Lotties/success.json",
+                                                                          reverse:
+                                                                              true)
+                                                                      : Image.asset(
+                                                                          "assets/Images/success.png")))
+                                                          : InkWell(
+                                                              onTap: () {},
+                                                              onHover: (value) {
+                                                                _isHover[8] =
+                                                                    value;
+                                                                setState(() {});
+                                                              },
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundColor:
+                                                                    btnColor
+                                                                        .withOpacity(
+                                                                            0.1),
+                                                                child: _isHover[
+                                                                        8]
+                                                                    ? Lottie.asset(
+                                                                        "assets/Lotties/fail.json",
+                                                                        reverse:
+                                                                            true)
+                                                                    : SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                        width:
+                                                                            30,
+                                                                        child: Image
+                                                                            .network(
+                                                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        ),
+                                                                      ),
+                                                              )),
+                                                    )
                                                   ],
                                                 ),
                                                 Container(

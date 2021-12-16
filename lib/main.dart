@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_countdown_timer/countdown.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -75,13 +76,20 @@ class Dummy extends StatefulWidget {
 }
 
 class _DummyState extends State<Dummy> {
+  bool _hover = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CountdownTimer(
-          endTime: 9999999999999,
-        ),
+        child: InkWell(
+            onTap: () {},
+            onHover: (value) {
+              _hover = value;
+              setState(() {});
+            },
+            child: _hover
+                ? Image.asset("assets/Notations/Chart.png")
+                : Lottie.asset("assets/Lotties/stats.json")),
       ),
     );
   }
