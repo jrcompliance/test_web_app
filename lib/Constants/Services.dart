@@ -31,6 +31,26 @@ class ProgressUpdsate {
       });
     });
   }
+
+  static updatesame(
+      id, cat, noteController, lastDate, radioItem, action) async {
+    CollectionReference _collectionReference = _firestore.collection("Tasks");
+    _collectionReference.doc(id).update({
+      "Activity": FieldValue.arrayUnion([
+        {
+          "From": cat,
+          "To": cat,
+          "Who": username.toString(),
+          "When": Timestamp.now(),
+          "Note": noteController.text.toString(),
+          "LatDate": lastDate,
+          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+          "Bound": radioItem,
+          "Action": action,
+        }
+      ])
+    });
+  }
 }
 
 class UpdateServices {
@@ -554,5 +574,12 @@ class AssignServices {
     collectionReference.doc(id).update({
       "Attachments": FieldValue.arrayRemove([e]),
     });
+  }
+}
+
+class disable {
+  static off(id, addtime) async {
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    collectionReference.doc(id).update({"time": addtime});
   }
 }

@@ -7,10 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
+import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
@@ -88,7 +90,6 @@ class _TaskPreviewState extends State<TaskPreview>
   TextEditingController _taxController = TextEditingController();
   TextEditingController _balanceController = TextEditingController();
   TextEditingController _tdsController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -99,12 +100,9 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   static const duration = const Duration(seconds: 1);
-
   int timeDiff = eventTime.difference(DateTime.now()).inSeconds;
   bool isActive = false;
-
   Timer? timer;
-
   void handleTick() {
     if (timeDiff > 0) {
       if (isActive) {
@@ -538,181 +536,211 @@ class _TaskPreviewState extends State<TaskPreview>
                 logo,
                 (int _) => ImageElement()..src = logo,
               );
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              return Stack(
                 children: [
-                  Container(
-                    width: 210,
-                    alignment: Alignment.centerLeft,
+                  Material(
+                    color: Colors.grey.withOpacity(0.9),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Checkbox(
-                            hoverColor: btnColor.withOpacity(0.0001),
-                            value: isChecked,
-                            onChanged: (value) {
-                              setState(() {
-                                print(value);
-                                isChecked = value!;
-                              });
-                            },
-                            activeColor: btnColor),
-                        SizedBox(width: 5),
-                        CircleAvatar(
-                          maxRadius: 15,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              size: 12.5,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              _showMyDialog(id);
-                            },
+                        Container(
+                          width: 210,
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                  hoverColor: btnColor.withOpacity(0.0001),
+                                  value: isChecked,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      print(value);
+                                      isChecked = value!;
+                                    });
+                                  },
+                                  activeColor: btnColor),
+                              SizedBox(width: 5),
+                              CircleAvatar(
+                                maxRadius: 15,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    size: 12.5,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    _showMyDialog(id);
+                                  },
+                                ),
+                                backgroundColor: Colors.red.withOpacity(0.075),
+                              ),
+                              SizedBox(width: 2.5),
+                              CircleAvatar(
+                                maxRadius: 15,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.edit,
+                                    size: 12.5,
+                                    color: btnColor,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                backgroundColor: btnColor.withOpacity(0.075),
+                              ),
+                            ],
                           ),
-                          backgroundColor: Colors.red.withOpacity(0.075),
                         ),
-                        SizedBox(width: 2.5),
-                        CircleAvatar(
-                          maxRadius: 15,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              size: 12.5,
-                              color: btnColor,
-                            ),
-                            onPressed: () {},
+                        InkWell(
+                          child: Container(
+                              width: 230,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                      ),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: HtmlElementView(
+                                            viewType: logo,
+                                          ))),
+                                  SizedBox(width: 2),
+                                  Text(
+                                    "${taskname}",
+                                    style: ClrStls.tnClr,
+                                  ),
+                                ],
+                              )),
+                          onTap: () {
+                            detailspopBox(context, id, taskname, startDate,
+                                endDate, priority, lastseen, cat, message);
+                          },
+                        ),
+                        Container(
+                          width: 180,
+                          child: Text(
+                            CxID,
+                            style: TxtStls.fieldstyle,
                           ),
-                          backgroundColor: btnColor.withOpacity(0.075),
                         ),
+                        Container(
+                          width: 220,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            startDate.toDate().toString().split(" ")[0],
+                            style: TxtStls.fieldstyle,
+                          ),
+                        ),
+                        Container(
+                            width: 205,
+                            alignment: Alignment.centerLeft,
+                            child: Text(snapshot.data!.docs[index]["endDate"],
+                                style: ClrStls.endClr)),
+                        Container(
+                          width: 190,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: assign
+                                .map((e) => InkWell(
+                                      onTap: () {
+                                        AssignServices.remove(id, e);
+                                      },
+                                      child: ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(40.0)),
+                                          child: SizedBox(
+                                              height: 30,
+                                              width: 30,
+                                              child:
+                                                  Image.network(e["image"]))),
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          alignment: Alignment.centerLeft,
+                          child: dropdowns(
+                              id, cat, newsta, prosta, insta, wonsta, clsta),
+                        ),
+                        Container(
+                          child: Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                CircleAvatar(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.update,
+                                      size: 12.5,
+                                      color: btnColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        did = id;
+                                        dcat = cat;
+                                        dname = taskname;
+                                        cxID = CxID;
+                                        dendDate = endDate.toString();
+                                        lead = "update";
+                                        Scaffold.of(context).openEndDrawer();
+                                      });
+                                    },
+                                  ),
+                                  backgroundColor: btnColor.withOpacity(0.075),
+                                ),
+                                CircleAvatar(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.fast_forward,
+                                      size: 12.5,
+                                      color: btnColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        did = id;
+                                        dcat = cat;
+                                        dname = taskname;
+                                        cxID = CxID;
+                                        dendDate = endDate.toString();
+                                        lead = "move";
+                                        Scaffold.of(context).openEndDrawer();
+                                      });
+                                    },
+                                  ),
+                                  backgroundColor: btnColor.withOpacity(0.075),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  InkWell(
-                    child: Container(
-                        width: 230,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: HtmlElementView(
-                                      viewType: logo,
-                                    ))),
-                            SizedBox(width: 2),
-                            Text(
-                              "${taskname}",
-                              style: ClrStls.tnClr,
-                            ),
-                          ],
-                        )),
-                    onTap: () {
-                      detailspopBox(context, id, taskname, startDate, endDate,
-                          priority, lastseen, cat, message);
-                    },
-                  ),
-                  Container(
-                    width: 180,
-                    child: Text(
-                      CxID,
-                      style: TxtStls.fieldstyle,
-                    ),
-                  ),
-                  Container(
-                    width: 220,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      startDate.toDate().toString().split(" ")[0],
-                      style: TxtStls.fieldstyle,
-                    ),
-                  ),
-                  Container(
-                      width: 205,
-                      alignment: Alignment.centerLeft,
-                      child: Text(snapshot.data!.docs[index]["endDate"],
-                          style: ClrStls.endClr)),
-                  Container(
-                    width: 190,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: assign
-                          .map((e) => InkWell(
-                                onTap: () {
-                                  AssignServices.remove(id, e);
-                                },
-                                child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(40.0)),
-                                    child: SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: Image.network(e["image"]))),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                  Container(
-                    width: 200,
-                    alignment: Alignment.centerLeft,
-                    child: dropdowns(
-                        id, cat, newsta, prosta, insta, wonsta, clsta),
-                  ),
-                  Container(
-                    child: Expanded(
+                  Positioned(
+                      bottom: 0,
+                      top: 0,
+                      right: 0,
+                      left: 0,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircleAvatar(
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.update,
-                                size: 12.5,
-                                color: btnColor,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  did = id;
-                                  dcat = cat;
-                                  dname = taskname;
-                                  cxID = CxID;
-                                  dendDate = endDate.toString();
-                                  lead = "update";
-                                  Scaffold.of(context).openEndDrawer();
-                                });
-                              },
-                            ),
-                            backgroundColor: btnColor.withOpacity(0.075),
-                          ),
-                          CircleAvatar(
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.fast_forward,
-                                size: 12.5,
-                                color: btnColor,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  did = id;
-                                  dcat = cat;
-                                  dname = taskname;
-                                  cxID = CxID;
-                                  dendDate = endDate.toString();
-                                  lead = "move";
-                                  Scaffold.of(context).openEndDrawer();
-                                });
-                              },
-                            ),
-                            backgroundColor: btnColor.withOpacity(0.075),
-                          ),
+                          LabelText(
+                              label: 'HRS',
+                              value: hours.toString().padLeft(2, '0')),
+                          LabelText(
+                              label: 'MIN',
+                              value: minutes.toString().padLeft(2, '0')),
+                          LabelText(
+                              label: 'SEC',
+                              value: seconds.toString().padLeft(2, '0')),
                         ],
-                      ),
-                    ),
-                  )
+                      )),
                 ],
               );
             },
@@ -720,6 +748,20 @@ class _TaskPreviewState extends State<TaskPreview>
         },
       ),
     );
+  }
+
+  subcat(cat, snapshot, index) {
+    if (cat == "NEW") {
+      snapshot.data?.docs[index]["status"];
+    } else if (cat == "PROSPECT") {
+      snapshot.data?.docs[index]["status1"];
+    } else if (cat == "IN PROGRESS") {
+      snapshot.data?.docs[index]["status2"];
+    } else if (cat == "WON") {
+      snapshot.data?.docs[index]["status4"];
+    } else {
+      snapshot.data?.docs[index]["status5"];
+    }
   }
 
   Widget boardtitle(c, e) {
@@ -975,41 +1017,6 @@ class _TaskPreviewState extends State<TaskPreview>
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> _showMyDialog(id) async {
-    return showDialog<void>(
-      barrierColor: Colors.transparent,
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          title: const Text(
-            'Are you sure to Delete ?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Cancel',
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Delete',
-              ),
-              onPressed: () {
-                CrudOperations.deleteTask(id);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -3532,17 +3539,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                       backgroundColor:
                                           btnColor.withOpacity(0.1),
                                       child: _isHover[5]
-                                          ? Container(
-                                              child: Lottie.asset(
-                                                  "assets/Lotties/live.json",
-                                                  fit: BoxFit.fill,
-                                                  animate: _isHover[5]),
-                                            )
+                                          ? Lottie.asset(
+                                              "assets/Lotties/live.json",
+                                              fit: BoxFit.fill,
+                                              reverse: true,
+                                              animate: _isHover[5])
                                           : SizedBox(
-                                              width: 200,
-                                              height: 200,
+                                              width: 35,
+                                              height: 20,
                                               child: Image.asset(
-                                                  "assets/Images/live.png"),
+                                                "assets/Images/live.png",
+                                                fit: BoxFit.fill,
+                                              ),
                                             ),
                                     ),
                                   ),
@@ -3579,7 +3587,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                               Radius.circular(20))),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        "Specification",
+                                        "scat",
                                         style: TxtStls.fieldstyle1,
                                       ),
                                     ),
@@ -3963,7 +3971,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                               "Bound"] ==
                                                                           "InBound"
                                                                       ? goodClr
-                                                                      : avgClr,
+                                                                      : flwClr,
                                                                   borderRadius:
                                                                       BorderRadius.all(
                                                                           Radius.circular(
@@ -3984,7 +3992,10 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                       .center,
                                                               width: 100,
                                                               decoration: BoxDecoration(
-                                                                  color: avgClr,
+                                                                  color: clr(lr[
+                                                                          index]
+                                                                      [
+                                                                      "Action"]),
                                                                   borderRadius:
                                                                       BorderRadius.all(
                                                                           Radius.circular(
@@ -4083,6 +4094,18 @@ class _TaskPreviewState extends State<TaskPreview>
         });
   }
 
+  Color clr(action) {
+    if (action == "CALL") {
+      return wonClr;
+    } else if (action == "EMAIL") {
+      return avgClr;
+    } else if (action == "SOCIAL MEDIA") {
+      return btnColor;
+    } else {
+      return clsClr;
+    }
+  }
+
   Widget service(e, id) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -4112,6 +4135,42 @@ class _TaskPreviewState extends State<TaskPreview>
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showMyDialog(id) async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title:
+              Text('Are you sure to Delete ?', style: TxtStls.fieldtitlestyle),
+          actions: <Widget>[
+            MaterialButton(
+              color: grClr,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Text('Cancel', style: TxtStls.fieldstyle1),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: clsClr,
+              child: Text('Delete', style: TxtStls.fieldstyle1),
+              onPressed: () {
+                CrudOperations.deleteTask(id);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

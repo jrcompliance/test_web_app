@@ -30,7 +30,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
   final inbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA"];
   final outbounditems = ["CALL", "EMAIL", "SOCIAL MEDIA", "NO RESPONSE"];
   final _timelist = ["1 HR", "2 HR", "3 HR", "4 HR", "6 HR", "Custom"];
-  String? activetime;
+  var activetime;
   String? activeid;
 
   TextEditingController _companyController = TextEditingController();
@@ -299,7 +299,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                             radioItem = val.toString();
                             setState(() {});
                           },
-                          toggleable: true,
+                          toggleable: false,
                         ),
                       ),
                       Text(
@@ -329,7 +329,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                             radioItem = val.toString();
                             setState(() {});
                           },
-                          toggleable: true,
+                          toggleable: false,
                         ),
                       ),
                       Text(
@@ -465,8 +465,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MaterialButton(
-                  hoverColor: Colors.transparent,
-                  color: AbgColor.withOpacity(0.001),
+                  color: grClr,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   child: Text("Cancel", style: TxtStls.fieldstyle1),
@@ -599,7 +598,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                           radioItem = val.toString();
                           setState(() {});
                         },
-                        toggleable: true,
+                        toggleable: false,
                       ),
                     ),
                     Text(
@@ -629,7 +628,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                           radioItem = val.toString();
                           setState(() {});
                         },
-                        toggleable: true,
+                        toggleable: false,
                       ),
                     ),
                     Text(
@@ -643,6 +642,22 @@ class _MoveDrawerState extends State<MoveDrawer> {
           ),
           SizedBox(height: 10),
           actions(),
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.calendar_today_sharp,
+                  color: btnColor,
+                ),
+              ),
+              SizedBox(width: 5),
+              Text(
+                "Reschedule",
+                style: TxtStls.fieldtitlestyle,
+              )
+            ],
+          ),
           Wrap(
               children: _timelist
                   .map((e) => Padding(
@@ -738,8 +753,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               MaterialButton(
-                hoverColor: Colors.transparent,
-                color: AbgColor.withOpacity(0.001),
+                color: grClr,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Text("Cancel", style: TxtStls.fieldstyle1),
@@ -754,7 +768,12 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Text("Update", style: TxtStls.fieldstyle1),
                 onPressed: () {
-                  print(radioItem + _choosenValue + activetime);
+                  val();
+                  print(addtime);
+                  disable.off(did, addtime);
+                  ProgressUpdsate.updatesame(did, dcat, noteController,
+                      dendDate, radioItem, _choosenValue);
+                  Navigator.pop(context);
                   setState(() {});
                 },
               ),
@@ -848,6 +867,24 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ),
       ),
     );
+  }
+
+  DateTime? addtime;
+  val() {
+    if (activetime == "1 HR") {
+      addtime = DateTime.now().add(Duration(minutes: 1));
+      setState(() {});
+    } else if (activetime == "2 HR") {
+      addtime = DateTime.now().add(Duration(minutes: 2));
+    } else if (activetime == "3 HR") {
+      addtime = DateTime.now().add(Duration(minutes: 3));
+    } else if (activetime == "4 HR") {
+      addtime = DateTime.now().add(Duration(minutes: 4));
+    } else if (activetime == "6 HR") {
+      addtime = DateTime.now().add(Duration(minutes: 6));
+    } else {
+      addtime = DateTime.now().add(Duration());
+    }
   }
 }
 

@@ -193,22 +193,28 @@ class _MainScreenState extends State<MainScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: bgColor,
-          title: const Text(
+          title: Text(
             'Are you sure to LogOut?',
+            style: TxtStls.fieldtitlestyle,
           ),
           actions: <Widget>[
-            TextButton(
-              child: const Text(
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: grClr,
+              child: Text(
                 'Cancel',
+                style: TxtStls.fieldstyle1,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
-              child: const Text(
-                'Ok',
-              ),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: clsClr,
+              child: Text('Ok', style: TxtStls.fieldstyle1),
               onPressed: () {
                 logout();
               },

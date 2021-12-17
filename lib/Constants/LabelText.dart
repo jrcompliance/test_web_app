@@ -8,26 +8,30 @@ class LabelText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 25,
-      margin: EdgeInsets.all(1),
-      padding: EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: btnColor,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            '$label',
-            style: TxtStls.fieldstyle1,
-          ),
-          Text(
-            '$value',
-            style: TxtStls.fieldstyle1,
-          ),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      elevation: 20.0,
+      child: Container(
+        width: 40,
+        padding: EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: btnColor,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              '$label',
+              style: TxtStls.fieldstyle1,
+            ),
+            Text(
+              '$value',
+              style: TxtStls.fieldstyle1,
+            ),
+          ],
+        ),
       ),
     );
   }
