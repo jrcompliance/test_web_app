@@ -327,6 +327,7 @@ class CrudOperations {
     String did = collectionReference.doc().id;
 
     collectionReference.doc(did).set({
+      "flag": false,
       "CxID": 100 + 1,
       "id": did,
       "task": _taskController.text.toString(),

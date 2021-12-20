@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
+import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 class MoveDrawer extends StatefulWidget {
@@ -767,13 +769,19 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Text("Update", style: TxtStls.fieldstyle1),
-                onPressed: () {
-                  val();
-                  print(addtime);
-                  disable.off(did, addtime);
-                  ProgressUpdsate.updatesame(did, dcat, noteController,
-                      dendDate, radioItem, _choosenValue);
+                onPressed: () async {
                   Navigator.pop(context);
+                  print(did);
+                  print(radioItem);
+                  print(_choosenValue);
+                  print(activetime);
+
+                  // val();
+                  // print(addtime);
+                  // disable.off(did, addtime);
+                  // ProgressUpdsate.updatesame(did, dcat, noteController,
+                  //     dendDate, radioItem, _choosenValue);
+                  // Navigator.pop(context);
                   setState(() {});
                 },
               ),
@@ -869,21 +877,20 @@ class _MoveDrawerState extends State<MoveDrawer> {
     );
   }
 
-  DateTime? addtime;
+  var addtime;
   val() {
     if (activetime == "1 HR") {
-      addtime = DateTime.now().add(Duration(minutes: 1));
-      setState(() {});
+      return addtime = "3600";
     } else if (activetime == "2 HR") {
-      addtime = DateTime.now().add(Duration(minutes: 2));
+      return addtime = "7200";
     } else if (activetime == "3 HR") {
-      addtime = DateTime.now().add(Duration(minutes: 3));
+      return addtime = "10800";
     } else if (activetime == "4 HR") {
-      addtime = DateTime.now().add(Duration(minutes: 4));
+      return addtime = "14400";
     } else if (activetime == "6 HR") {
-      addtime = DateTime.now().add(Duration(minutes: 6));
+      return addtime = "18000";
     } else {
-      addtime = DateTime.now().add(Duration());
+      return addtime = "0";
     }
   }
 }

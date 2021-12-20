@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
@@ -470,17 +471,9 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listmiddle(cat) {
-    if (timer == null) {
-      timer = Timer.periodic(duration, (Timer t) {
-        handleTick();
-      });
-    }
-    int hours = timeDiff ~/ (60 * 60) % 24;
-    int minutes = (timeDiff ~/ 60) % 60;
-    int seconds = timeDiff % 60;
     return Container(
       color: bgColor,
-      height: MediaQuery.of(context).size.height * 0.1,
+      height: MediaQuery.of(context).size.height * 0.14,
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -530,6 +523,8 @@ class _TaskPreviewState extends State<TaskPreview>
               String wonsta = snapshot.data!.docs[index]["status4"];
               String clsta = snapshot.data!.docs[index]["status5"];
               List assign = snapshot.data!.docs[index]["Attachments"];
+              bool val = snapshot.data!.docs[index]["flag"];
+
               String logo = snapshot.data!.docs[index]["logo"];
               // ignore: undefined_prefixed_name
               ui.platformViewRegistry.registerViewFactory(
@@ -537,31 +532,27 @@ class _TaskPreviewState extends State<TaskPreview>
                 (int _) => ImageElement()..src = logo,
               );
 
-              return Stack(
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Material(
-                    color: Colors.grey.withOpacity(0.9),
+                  Container(
+                    width: 210,
+                    height: 50,
+                    alignment: Alignment.centerLeft,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 210,
-                          height: 50,
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                  hoverColor: btnColor.withOpacity(0.0001),
-                                  value: isChecked,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      print(value);
-                                      isChecked = value!;
-                                    });
-                                  },
-                                  activeColor: btnColor),
-                              SizedBox(width: 5),
-                              CircleAvatar(
+                        Checkbox(
+                            hoverColor: btnColor.withOpacity(0.0001),
+                            value: val,
+                            onChanged: (value) {
+                              setState(() {
+                                update(id, value);
+                              });
+                            },
+                            activeColor: btnColor),
+                        SizedBox(width: 5),
+                        val
+                            ? CircleAvatar(
                                 maxRadius: 15,
                                 child: IconButton(
                                   icon: Icon(
@@ -574,9 +565,11 @@ class _TaskPreviewState extends State<TaskPreview>
                                   },
                                 ),
                                 backgroundColor: Colors.red.withOpacity(0.075),
-                              ),
-                              SizedBox(width: 2.5),
-                              CircleAvatar(
+                              )
+                            : SizedBox(),
+                        SizedBox(width: 2.5),
+                        val
+                            ? CircleAvatar(
                                 maxRadius: 15,
                                 child: IconButton(
                                   icon: Icon(
@@ -587,160 +580,137 @@ class _TaskPreviewState extends State<TaskPreview>
                                   onPressed: () {},
                                 ),
                                 backgroundColor: btnColor.withOpacity(0.075),
-                              ),
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          child: Container(
-                              width: 230,
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                      ),
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          child: HtmlElementView(
-                                            viewType: logo,
-                                          ))),
-                                  SizedBox(width: 2),
-                                  Text(
-                                    "${taskname}",
-                                    style: ClrStls.tnClr,
-                                  ),
-                                ],
-                              )),
-                          onTap: () {
-                            detailspopBox(context, id, taskname, startDate,
-                                endDate, priority, lastseen, cat, message);
-                          },
-                        ),
-                        Container(
-                          width: 180,
-                          child: Text(
-                            CxID,
-                            style: TxtStls.fieldstyle,
-                          ),
-                        ),
-                        Container(
-                          width: 220,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            startDate.toDate().toString().split(" ")[0],
-                            style: TxtStls.fieldstyle,
-                          ),
-                        ),
-                        Container(
-                            width: 205,
-                            alignment: Alignment.centerLeft,
-                            child: Text(snapshot.data!.docs[index]["endDate"],
-                                style: ClrStls.endClr)),
-                        Container(
-                          width: 190,
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: assign
-                                .map((e) => InkWell(
-                                      onTap: () {
-                                        AssignServices.remove(id, e);
-                                      },
-                                      child: ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(40.0)),
-                                          child: SizedBox(
-                                              height: 30,
-                                              width: 30,
-                                              child:
-                                                  Image.network(e["image"]))),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          alignment: Alignment.centerLeft,
-                          child: dropdowns(
-                              id, cat, newsta, prosta, insta, wonsta, clsta),
-                        ),
-                        Container(
-                          child: Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleAvatar(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.update,
-                                      size: 12.5,
-                                      color: btnColor,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        did = id;
-                                        dcat = cat;
-                                        dname = taskname;
-                                        cxID = CxID;
-                                        dendDate = endDate.toString();
-                                        lead = "update";
-                                        Scaffold.of(context).openEndDrawer();
-                                      });
-                                    },
-                                  ),
-                                  backgroundColor: btnColor.withOpacity(0.075),
-                                ),
-                                CircleAvatar(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.fast_forward,
-                                      size: 12.5,
-                                      color: btnColor,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        did = id;
-                                        dcat = cat;
-                                        dname = taskname;
-                                        cxID = CxID;
-                                        dendDate = endDate.toString();
-                                        lead = "move";
-                                        Scaffold.of(context).openEndDrawer();
-                                      });
-                                    },
-                                  ),
-                                  backgroundColor: btnColor.withOpacity(0.075),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
+                              )
+                            : SizedBox(),
                       ],
                     ),
                   ),
-                  Positioned(
-                      bottom: 0,
-                      top: 0,
-                      right: 0,
-                      left: 0,
+                  InkWell(
+                    child: Container(
+                        width: 230,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: HtmlElementView(
+                                      viewType: logo,
+                                    ))),
+                            SizedBox(width: 2),
+                            Text(
+                              "${taskname}",
+                              style: ClrStls.tnClr,
+                            ),
+                          ],
+                        )),
+                    onTap: () {
+                      detailspopBox(context, id, taskname, startDate, endDate,
+                          priority, lastseen, cat, message);
+                    },
+                  ),
+                  Container(
+                    width: 180,
+                    child: Text(
+                      CxID,
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Container(
+                    width: 220,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      startDate.toDate().toString().split(" ")[0],
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Container(
+                      width: 205,
+                      alignment: Alignment.centerLeft,
+                      child: Text(snapshot.data!.docs[index]["endDate"],
+                          style: ClrStls.endClr)),
+                  Container(
+                    width: 190,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: assign
+                          .map((e) => InkWell(
+                                onTap: () {
+                                  AssignServices.remove(id, e);
+                                },
+                                child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40.0)),
+                                    child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: Image.network(e["image"]))),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  Container(
+                    width: 200,
+                    alignment: Alignment.centerLeft,
+                    child: dropdowns(
+                        id, cat, newsta, prosta, insta, wonsta, clsta),
+                  ),
+                  Container(
+                    child: Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          LabelText(
-                              label: 'HRS',
-                              value: hours.toString().padLeft(2, '0')),
-                          LabelText(
-                              label: 'MIN',
-                              value: minutes.toString().padLeft(2, '0')),
-                          LabelText(
-                              label: 'SEC',
-                              value: seconds.toString().padLeft(2, '0')),
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.update,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  did = id;
+                                  dcat = cat;
+                                  dname = taskname;
+                                  cxID = CxID;
+                                  dendDate = endDate.toString();
+                                  lead = "update";
+                                  Scaffold.of(context).openEndDrawer();
+                                });
+                              },
+                            ),
+                            backgroundColor: btnColor.withOpacity(0.075),
+                          ),
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.fast_forward,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  did = id;
+                                  dcat = cat;
+                                  dname = taskname;
+                                  cxID = CxID;
+                                  dendDate = endDate.toString();
+                                  lead = "move";
+                                  Scaffold.of(context).openEndDrawer();
+                                });
+                              },
+                            ),
+                            backgroundColor: btnColor.withOpacity(0.075),
+                          ),
                         ],
-                      )),
+                      ),
+                    ),
+                  )
                 ],
               );
             },
@@ -780,6 +750,14 @@ class _TaskPreviewState extends State<TaskPreview>
             fontWeight: FontWeight.bold),
       ),
     );
+  }
+
+  update(id, value) async {
+    CollectionReference collectioReference =
+        FirebaseFirestore.instance.collection("Tasks");
+    collectioReference.doc(id).update({
+      "flag": value,
+    });
   }
 
   Widget boardmiddle(cat) {
@@ -4240,3 +4218,40 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 }
+
+// child: Row(
+//   mainAxisAlignment: MainAxisAlignment.center,
+//   children: [
+//     LabelText(
+//         label: 'HRS',
+//         value: hours.toString().padLeft(2, '0')),
+//     LabelText(
+//         label: 'MIN',
+//         value: minutes.toString().padLeft(2, '0')),
+//     LabelText(
+//         label: 'SEC',
+//         value: seconds.toString().padLeft(2, '0')),
+//   ],
+// ),
+// Positioned(
+//   bottom: 0,
+//   top: 0,
+//   right: 0,
+//   left: 0,
+//   child: CountdownTimer(
+//     endTime: endTime,
+//     widgetBuilder:
+//         (BuildContext context, CurrentRemainingTime? time) {
+//       if (time == null) {
+//         return Text('');
+//       }
+//       return Row(
+//         children: [
+//           LabelText(label: "Hrs", value: "[${time.hours}]"),
+//           LabelText(label: "Min", value: "[${time.min}]"),
+//           LabelText(label: "Sec", value: "[${time.sec}]"),
+//         ],
+//       );
+//     },
+//   ),
+// ),
