@@ -752,20 +752,6 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  subcat(cat, snapshot, index) {
-    if (cat == "NEW") {
-      return snapshot.data?.docs[index]["status"];
-    } else if (cat == "PROSPECT") {
-      return snapshot.data?.docs[index]["status1"];
-    } else if (cat == "IN PROGRESS") {
-      return snapshot.data?.docs[index]["status2"];
-    } else if (cat == "WON") {
-      return snapshot.data?.docs[index]["status4"];
-    } else {
-      return snapshot.data?.docs[index]["status5"];
-    }
-  }
-
   Widget boardtitle(c, e) {
     return Container(
       decoration: BoxDecoration(
