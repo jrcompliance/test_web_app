@@ -3,12 +3,8 @@ import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_countdown_timer/current_remaining_time.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -83,14 +79,15 @@ class _TaskPreviewState extends State<TaskPreview>
   var _govtfee;
   var _testfee;
 
-  TextEditingController _paymentController = TextEditingController();
-  TextEditingController _dealController = TextEditingController();
-  TextEditingController _paymentRecieveController = TextEditingController();
-  TextEditingController _sampleController = TextEditingController();
-  TextEditingController _advanceController = TextEditingController();
-  TextEditingController _taxController = TextEditingController();
-  TextEditingController _balanceController = TextEditingController();
-  TextEditingController _tdsController = TextEditingController();
+  final TextEditingController _paymentController = TextEditingController();
+  final TextEditingController _dealController = TextEditingController();
+  final TextEditingController _paymentRecieveController =
+      TextEditingController();
+  final TextEditingController _sampleController = TextEditingController();
+  final TextEditingController _advanceController = TextEditingController();
+  final TextEditingController _taxController = TextEditingController();
+  final TextEditingController _balanceController = TextEditingController();
+  final TextEditingController _tdsController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -99,26 +96,6 @@ class _TaskPreviewState extends State<TaskPreview>
       vsync: this,
     );
   }
-
-  // static const duration = const Duration(seconds: 1);
-  // int timeDiff = eventTime.difference(DateTime.now()).inSeconds;
-  // bool isActive = false;
-  // Timer? timer;
-  // void handleTick() {
-  //   if (timeDiff > 0) {
-  //     if (isActive) {
-  //       setState(() {
-  //         if (eventTime != DateTime.now()) {
-  //           timeDiff = timeDiff - 1;
-  //         } else {
-  //           isActive = false;
-  //           setState(() {});
-  //           //Do something
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +143,7 @@ class _TaskPreviewState extends State<TaskPreview>
           ),
           SizedBox(height: 10.0),
           if (activeid == "List")
-            Container(
+            SizedBox(
               height: size.height * 0.845,
               child: ListView(
                 shrinkWrap: true,
@@ -619,7 +596,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                         ))),
                                 SizedBox(width: 2),
                                 Text(
-                                  "${taskname}",
+                                  taskname,
                                   style: ClrStls.tnClr,
                                 ),
                               ],
@@ -645,7 +622,7 @@ class _TaskPreviewState extends State<TaskPreview>
                       Container(
                         width: 180,
                         child: Text(
-                          "$CxID",
+                          CxID,
                           style: TxtStls.fieldstyle,
                         ),
                       ),
@@ -660,7 +637,7 @@ class _TaskPreviewState extends State<TaskPreview>
                       Container(
                           width: 205,
                           alignment: Alignment.centerLeft,
-                          child: Text("$endDate", style: ClrStls.endClr)),
+                          child: Text(endDate, style: ClrStls.endClr)),
                       Container(
                         width: 190,
                         alignment: Alignment.centerLeft,
@@ -682,67 +659,67 @@ class _TaskPreviewState extends State<TaskPreview>
                         child: dropdowns(
                             id, cat, newsta, prosta, insta, wonsta, clsta),
                       ),
-                      Container(
-                        child: Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CircleAvatar(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.update,
-                                    size: 12.5,
-                                    color: btnColor,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      did = id;
-                                      dcat = cat;
-                                      dname = taskname;
-                                      cxID = CxID;
-                                      dendDate = endDate.toString();
-                                      lead = "update";
-                                      Scaffold.of(context).openEndDrawer();
-                                    });
-                                  },
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.update,
+                                  size: 12.5,
+                                  color: btnColor,
                                 ),
-                                backgroundColor: btnColor.withOpacity(0.075),
+                                onPressed: () {
+                                  setState(() {
+                                    did = id;
+                                    dcat = cat;
+                                    dname = taskname;
+                                    cxID = CxID;
+                                    dendDate = endDate.toString();
+                                    lead = "update";
+                                    Scaffold.of(context).openEndDrawer();
+                                  });
+                                },
                               ),
-                              CircleAvatar(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.fast_forward,
-                                    size: 12.5,
-                                    color: btnColor,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      did = id;
-                                      dcat = cat;
-                                      dname = taskname;
-                                      cxID = CxID;
-                                      dendDate = endDate.toString();
-                                      lead = "move";
-                                      Scaffold.of(context).openEndDrawer();
-                                    });
-                                  },
+                              backgroundColor: btnColor.withOpacity(0.075),
+                            ),
+                            CircleAvatar(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.fast_forward,
+                                  size: 12.5,
+                                  color: btnColor,
                                 ),
-                                backgroundColor: btnColor.withOpacity(0.075),
+                                onPressed: () {
+                                  setState(() {
+                                    did = id;
+                                    dcat = cat;
+                                    dname = taskname;
+                                    cxID = CxID;
+                                    dendDate = endDate.toString();
+                                    lead = "move";
+                                    Scaffold.of(context).openEndDrawer();
+                                  });
+                                },
                               ),
-                            ],
-                          ),
+                              backgroundColor: btnColor.withOpacity(0.075),
+                            ),
+                          ],
                         ),
                       )
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      LabelText(label: "Hrs", value: "100"),
-                      LabelText(label: "Min", value: "100"),
-                      LabelText(label: "Sec", value: "100"),
-                    ],
-                  )
+                  val
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            LabelText(label: "Hrs", value: "100"),
+                            LabelText(label: "Min", value: "100"),
+                            LabelText(label: "Sec", value: "100"),
+                          ],
+                        )
+                      : SizedBox()
                 ],
               );
             },
@@ -795,7 +772,7 @@ class _TaskPreviewState extends State<TaskPreview>
               ),
             );
           }
-          if (snapshot.data!.docs.length == 0) {
+          if (snapshot.data!.docs.isEmpty) {
             return Center(
                 child: Text(
               "No Data Found",
@@ -2778,7 +2755,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 () {
                                                                               int currentValue = int.parse(_advanceController.text);
                                                                               setState(() {
-                                                                                print("Setting state");
                                                                                 currentValue--;
                                                                                 _advanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
                                                                               });
@@ -2990,7 +2966,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 () {
                                                                               int currentValue = int.parse(_balanceController.text);
                                                                               setState(() {
-                                                                                print("Setting state");
                                                                                 currentValue--;
                                                                                 _balanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
                                                                               });
@@ -3096,7 +3071,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 () {
                                                                               int currentValue = int.parse(_tdsController.text);
                                                                               setState(() {
-                                                                                print("Setting state");
                                                                                 currentValue--;
                                                                                 _tdsController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
                                                                               });
@@ -3712,11 +3686,12 @@ class _TaskPreviewState extends State<TaskPreview>
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (!snapshot.hasData) {
-                                return Container(
-                                    alignment: Alignment.center,
-                                    width: size.width * 0.85 / 2,
-                                    child: Lottie.asset(
-                                        "assets/Lotties/empty.json"));
+                                return Container();
+                              } else if (snapshot.data!.docs.isEmpty) {
+                                return Text(
+                                  "No History Found",
+                                  style: TxtStls.fieldtitlestyle,
+                                );
                               }
                               return ListView.separated(
                                   shrinkWrap: true,
