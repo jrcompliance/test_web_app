@@ -86,6 +86,18 @@ class CatUpdateServices {
 }
 
 class StatusUpdateServices {
+  Color clr(action) {
+    if (action == "CALL") {
+      return wonClr;
+    } else if (action == "EMAIL") {
+      return avgClr;
+    } else if (action == "SOCIAL MEDIA") {
+      return btnColor;
+    } else {
+      return clsClr;
+    }
+  }
+
   static Color CatColor(cat) {
     if (cat == "PROSPECT") {
       return prosClr;
@@ -522,8 +534,17 @@ class ComapnyUpdateServices {
 }
 
 class GraphValueServices {
+  static update(id, value) async {
+    CollectionReference collectioReference =
+        await _firestore.collection("Tasks");
+    collectioReference.doc(id).update({
+      "flag": value,
+    });
+  }
+
   static success(id) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
+    CollectionReference collectionReference =
+        await _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "success": FieldValue.increment(1),
     });
