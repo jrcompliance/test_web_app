@@ -339,6 +339,7 @@ class CrudOperations {
     String did = collectionReference.doc().id;
 
     collectionReference.doc(did).set({
+      "time": Timestamp.now(),
       "flag": false,
       "CxID": 100 + 1,
       "id": did,

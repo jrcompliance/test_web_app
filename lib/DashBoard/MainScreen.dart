@@ -22,7 +22,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Schedule;
+  Tabs active = Tabs.TaskPreview;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
           DrawerListTile(
               "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
           DrawerListTile(
-              "Schedule", "assets/Notations/Document.png", Tabs.Schedule),
+              "Schedule", "assets/Notations/Document.png", Tabs.TaskPreview),
           DrawerListTile(
               "Anylytics", "assets/Notations/Chart.png", Tabs.Analytics),
           DrawerListTile(
@@ -151,7 +151,7 @@ class _MainScreenState extends State<MainScreen> {
           UserDashBoard(),
         ],
       );
-    } else if (active == Tabs.Schedule) {
+    } else if (active == Tabs.TaskPreview) {
       return Column(
         children: [
           Header(title: 'Task Preview'),
@@ -247,7 +247,7 @@ class _MainScreenState extends State<MainScreen> {
 
 enum Tabs {
   DashBoard,
-  Schedule,
+  TaskPreview,
   Analytics,
   Invoice,
   Calendar,

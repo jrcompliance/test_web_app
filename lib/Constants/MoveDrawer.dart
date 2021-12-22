@@ -10,6 +10,7 @@ import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Time%20Model.dart';
 
 class MoveDrawer extends StatefulWidget {
   const MoveDrawer({Key? key}) : super(key: key);
@@ -46,13 +47,18 @@ class _MoveDrawerState extends State<MoveDrawer> {
   TextEditingController _clientemailController = TextEditingController();
   TextEditingController _firstmessageController = TextEditingController();
 
+  TextEditingController _customtimeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-      child: _check(),
-    ));
+    return Container(
+      width: 380,
+      child: Drawer(
+          child: Padding(
+        padding: const EdgeInsets.only(right: 15, left: 20),
+        child: _check(),
+      )),
+    );
   }
 
   Widget _check() {
@@ -280,7 +286,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
             ),
             SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
                   width: 100,
@@ -360,49 +366,45 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 )
               ],
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _list
-                      .map((e) => Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: InkWell(
-                              child: Card(
-                                shadowColor: btnColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                                elevation: activeid == e.name ? 20 : 0,
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    width: 103,
-                                    child: Text(
-                                      e.name,
-                                      style: TxtStls.fieldstyle1,
-                                    ),
-                                    padding: EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                        color: e.color,
-                                        border: Border.all(
-                                            color: activeid == e.name
-                                                ? btnColor
-                                                : bgColor),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)))),
-                              ),
-                              onTap: () {
-                                activeid = e.name;
-                                setState(() {});
-                              },
-                              onDoubleTap: () {
-                                activeid = null;
-                                setState(() {});
-                              },
+            Wrap(
+                children: _list
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: InkWell(
+                            child: Card(
+                              shadowColor: btnColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              elevation: activeid == e.name ? 20 : 0,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  width: 103,
+                                  child: Text(
+                                    e.name,
+                                    style: TxtStls.fieldstyle1,
+                                  ),
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: e.color,
+                                      border: Border.all(
+                                          color: activeid == e.name
+                                              ? btnColor
+                                              : bgColor),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)))),
                             ),
-                          ))
-                      .toList()),
-            ),
+                            onTap: () {
+                              activeid = e.name;
+                              setState(() {});
+                            },
+                            onDoubleTap: () {
+                              activeid = null;
+                              setState(() {});
+                            },
+                          ),
+                        ))
+                    .toList()),
             InkWell(
               child: _field(_endDateController, false, "End Date"),
               onTap: () {
@@ -579,7 +581,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
           ),
           SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 width: 100,
@@ -610,7 +612,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   ],
                 ),
               ),
-              SizedBox(width: 5),
               Container(
                 width: 120,
                 padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
@@ -699,11 +700,21 @@ class _MoveDrawerState extends State<MoveDrawer> {
           activetime == "Custom"
               ? Container(
                   height: 200,
-                  child: CalendarDatePicker(
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2200),
-                      onDateChanged: (value) {}),
+                  child: Theme(
+                    data: ThemeData(
+                      colorScheme: ColorScheme.light(primary: btnColor),
+                      buttonTheme:
+                          ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                    ),
+                    child: CalendarDatePicker(
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2200),
+                        onDateChanged: (value) {
+                          _customtimeController.text = value.toString();
+                          setState(() {});
+                        }),
+                  ),
                 )
               : SizedBox(),
           Row(
@@ -770,11 +781,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Text("Update", style: TxtStls.fieldstyle1),
                 onPressed: () async {
-                  Navigator.pop(context);
-                  print(did);
-                  print(radioItem);
-                  print(_choosenValue);
-                  print(activetime);
+                  setState(() {
+                    val();
+                    myConter(did, addtime!);
+                    Navigator.pop(context);
+                  });
 
                   // val();
                   // print(addtime);
@@ -782,7 +793,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   // ProgressUpdsate.updatesame(did, dcat, noteController,
                   //     dendDate, radioItem, _choosenValue);
                   // Navigator.pop(context);
-                  setState(() {});
                 },
               ),
             ],
@@ -877,20 +887,30 @@ class _MoveDrawerState extends State<MoveDrawer> {
     );
   }
 
-  var addtime;
+  DateTime? addtime;
   val() {
     if (activetime == "1 HR") {
-      return addtime = "3600";
+      setState(() {
+        addtime = DateTime.now().add(Duration(hours: 1));
+      });
     } else if (activetime == "2 HR") {
-      return addtime = "7200";
+      setState(() {
+        addtime = DateTime.now().add(Duration(hours: 2));
+      });
     } else if (activetime == "3 HR") {
-      return addtime = "10800";
+      addtime = DateTime.now().add(Duration(hours: 3));
     } else if (activetime == "4 HR") {
-      return addtime = "14400";
+      setState(() {
+        addtime = DateTime.now().add(Duration(hours: 4));
+      });
     } else if (activetime == "6 HR") {
-      return addtime = "18000";
-    } else {
-      return addtime = "0";
+      setState(() {
+        addtime = DateTime.now().add(Duration(hours: 6));
+      });
+    } else if (activetime == "Custom") {
+      setState(() {
+        print(_customtimeController.text);
+      });
     }
   }
 }

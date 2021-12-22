@@ -3,10 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_countdown_timer/countdown.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -64,33 +61,6 @@ class _LandingScreenState extends State<LandingScreen> {
         size: 50.0,
         color: btnColor,
       )),
-    );
-  }
-}
-
-class Dummy extends StatefulWidget {
-  const Dummy({Key? key}) : super(key: key);
-
-  @override
-  _DummyState createState() => _DummyState();
-}
-
-class _DummyState extends State<Dummy> {
-  bool _hover = false;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: InkWell(
-            onTap: () {},
-            onHover: (value) {
-              _hover = value;
-              setState(() {});
-            },
-            child: _hover
-                ? Image.asset("assets/Notations/Chart.png")
-                : Lottie.asset("assets/Lotties/stats.json")),
-      ),
     );
   }
 }
