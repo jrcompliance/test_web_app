@@ -10,7 +10,6 @@ import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
@@ -19,7 +18,6 @@ import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
-import 'package:test_web_app/Time%20Model.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -90,6 +88,8 @@ class _TaskPreviewState extends State<TaskPreview>
   final TextEditingController _balanceController = TextEditingController();
   final TextEditingController _tdsController = TextEditingController();
 
+  int duefilter = 0;
+
   @override
   void initState() {
     super.initState();
@@ -122,170 +122,964 @@ class _TaskPreviewState extends State<TaskPreview>
                   ),
                 ),
               ),
-              RaisedButton.icon(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                onPressed: () {
-                  lead = "Lead";
-                  Scaffold.of(context).openEndDrawer();
-                  setState(() {});
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: bgColor,
-                ),
-                label: Text(
-                  "Create New Lead",
-                  style: TxtStls.fieldstyle1,
-                ),
-                color: btnColor,
-                elevation: 0.0,
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: size.width * 0.2,
+                    decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius:
+                            BorderRadius.all(ui.Radius.circular(10.0))),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15, top: 2),
+                      child: TextFormField(
+                        style: TxtStls.fieldstyle,
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.search,
+                            color: btnColor,
+                          ),
+                          hintText: "Search...",
+                          hintStyle: TxtStls.fieldstyle,
+                          border: InputBorder.none,
+                        ),
+                        validator: (fullname) {
+                          if (fullname!.isEmpty) {
+                            return "Name can not be empty";
+                          } else if (fullname.length < 3) {
+                            return "Name should be atleast 3 letters";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: size.width * 0.01),
+                  PopupMenuButton(
+                      offset: Offset(0, size.height * 0.037),
+                      child: Container(
+                        width: size.width * 0.05,
+                        height: size.height * 0.035,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            gradient: LinearGradient(colors: [
+                              Colors.pinkAccent,
+                              Colors.deepPurpleAccent
+                            ])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.filter_list_rounded,
+                              color: bgColor,
+                            ),
+                            Text(
+                              "Short",
+                              style: TxtStls.fieldstyle1,
+                            )
+                          ],
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: Text("1"),
+                          ),
+                          PopupMenuItem(
+                            child: Text("1"),
+                          ),
+                          PopupMenuItem(
+                            child: Text("1"),
+                          ),
+                        ];
+                      }),
+                  SizedBox(width: size.width * 0.01),
+                  PopupMenuButton(
+                      offset: Offset(0, size.height * 0.037),
+                      child: Container(
+                        width: size.width * 0.05,
+                        height: size.height * 0.035,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            gradient: LinearGradient(colors: [
+                              Colors.pinkAccent,
+                              Colors.deepPurpleAccent
+                            ])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.filter_alt_rounded,
+                              color: bgColor,
+                            ),
+                            Text(
+                              "Filters",
+                              style: TxtStls.fieldstyle1,
+                            )
+                          ],
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: "FRESH",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: wonClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "FRESH",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "ASSIGNED",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: flwClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "ASSIGNED",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "CONTACTED",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: conClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "CONTACTED",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "AVERAGE",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: avgClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "   AVERAGE   ",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "GOOD",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: goodClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "   GOOD   ",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "FOLLOWUP",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: flwClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "FOLLOWUP",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "SPECIFICATION",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: spClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "SPECIFICATION",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "QUOTATION",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: qtoClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "QUOTATION",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "PAYMENT",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: wonClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "PAYMENT",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "DOCUMENTS",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: flwClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "DOCUMENTS",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "SAMPLES",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: goodClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "SAMPLES",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "IRRELEVANT",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: irrClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "IRRELEVANT",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "BUDGET ISSUE",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: clsClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "BUDGET ISSUE",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "INFORMATIVE",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: flwClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "INFORMATIVE",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: "NO ANSWER",
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: conClr,
+                              ),
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "NO ANSWER",
+                                  style: TxtStls.fieldstyle1,
+                                ),
+                              ),
+                            ),
+                          )
+                        ];
+                      }),
+                  SizedBox(width: size.width * 0.01),
+                  PopupMenuButton(
+                      offset: Offset(0, size.height * 0.037),
+                      child: Container(
+                        width: size.width * 0.05,
+                        height: size.height * 0.035,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            gradient: LinearGradient(colors: [
+                              Colors.pinkAccent,
+                              Colors.deepPurpleAccent
+                            ])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.view_compact_rounded,
+                              color: bgColor,
+                            ),
+                            Text(
+                              "List",
+                              style: TxtStls.fieldstyle1,
+                            )
+                          ],
+                        ),
+                      ),
+                      onSelected: (int value) {
+                        duefilter = value;
+                        print(duefilter);
+                        setState(() {});
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text(
+                              "Today's Duelist",
+                              style: TxtStls.fieldstyle,
+                            ),
+                          ),
+                          PopupMenuItem(
+                              value: 2,
+                              child: Text(
+                                "Outdated List",
+                                style: TxtStls.fieldstyle,
+                              )),
+                          PopupMenuItem(
+                            value: 3,
+                            child: Text(
+                              "Tommorrow's Duelist",
+                              style: TxtStls.fieldstyle,
+                            ),
+                          ),
+                        ];
+                      }),
+                  SizedBox(width: size.width * 0.01),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        gradient: LinearGradient(colors: [
+                          Colors.pinkAccent,
+                          Colors.deepPurpleAccent
+                        ])),
+                    child: RaisedButton.icon(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      onPressed: () {
+                        lead = "Lead";
+                        Scaffold.of(context).openEndDrawer();
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        Icons.add,
+                        color: bgColor,
+                      ),
+                      label: Text(
+                        "Create New Lead",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                      color: Colors.transparent,
+                      elevation: 0.0,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           SizedBox(height: 10.0),
           if (activeid == "List")
-            SizedBox(
-              height: size.height * 0.845,
-              child: ListView(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                scrollDirection: Axis.vertical,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: bgColor,
-                    ),
-                    width: size.width,
-                    height: size.height * 0.31,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            duefilter == 0
+                ? SizedBox(
+                    height: size.height * 0.845,
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      scrollDirection: Axis.vertical,
                       children: [
-                        listtitle(_clrslist[0], "NEW", _tapslist[0], () {
-                          setState(() {
-                            _tapslist[0] = !_tapslist[0];
-                          });
-                        }),
-                        SizedBox(height: 30.0),
-                        listheader(),
-                        SizedBox(height: 30.0),
-                        Visibility(
-                          child: listmiddle("NEW"),
-                          visible: _tapslist[0],
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            color: bgColor,
+                          ),
+                          width: size.width,
+                          height: size.height * 0.31,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listtitle(_clrslist[0], "NEW", _tapslist[0], () {
+                                setState(() {
+                                  _tapslist[0] = !_tapslist[0];
+                                });
+                              }),
+                              SizedBox(height: 30.0),
+                              listheader(),
+                              SizedBox(height: 30.0),
+                              Visibility(
+                                child: listmiddle("NEW"),
+                                visible: _tapslist[0],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 15.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            color: bgColor,
+                          ),
+                          width: size.width,
+                          height: size.height * 0.31,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listtitle(_clrslist[1], "PROSPECT", _tapslist[1],
+                                  () {
+                                setState(() {
+                                  _tapslist[1] = !_tapslist[1];
+                                });
+                              }),
+                              SizedBox(height: 30.0),
+                              listheader(),
+                              SizedBox(height: 30.0),
+                              Visibility(
+                                child: listmiddle("PROSPECT"),
+                                visible: _tapslist[1],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 15.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            color: bgColor,
+                          ),
+                          width: size.width,
+                          height: size.height * 0.31,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listtitle(
+                                  _clrslist[2], "IN PROGRESS", _tapslist[2],
+                                  () {
+                                setState(() {
+                                  _tapslist[2] = !_tapslist[2];
+                                });
+                              }),
+                              SizedBox(height: 30.0),
+                              listheader(),
+                              SizedBox(height: 30.0),
+                              Visibility(
+                                child: listmiddle("IN PROGRESS"),
+                                visible: _tapslist[2],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 15.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            color: bgColor,
+                          ),
+                          width: size.width,
+                          height: size.height * 0.31,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listtitle(_clrslist[3], "WON", _tapslist[3], () {
+                                setState(() {
+                                  _tapslist[3] = !_tapslist[3];
+                                });
+                              }),
+                              SizedBox(height: 30.0),
+                              listheader(),
+                              SizedBox(height: 30.0),
+                              Visibility(
+                                child: listmiddle("WON"),
+                                visible: _tapslist[3],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 15.0),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                            color: bgColor,
+                          ),
+                          width: size.width,
+                          height: size.height * 0.31,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listtitle(_clrslist[4], "CLOSE", _tapslist[4],
+                                  () {
+                                setState(() {
+                                  _tapslist[4] = !_tapslist[4];
+                                });
+                              }),
+                              SizedBox(height: 30.0),
+                              listheader(),
+                              SizedBox(height: 30.0),
+                              Visibility(
+                                child: listmiddle("CLOSE"),
+                                visible: _tapslist[4],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(
+                    width: size.width,
+                    height: size.height * 0.845,
+                    decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Column(
+                      children: [
+                        Expanded(flex: 1, child: listheader()),
+                        Expanded(
+                          flex: 9,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.0),
+                            child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("Tasks")
+                                  .where("endDate",
+                                      isEqualTo: showLead(duefilter))
+                                  .where("Attachments", arrayContainsAny: [
+                                {
+                                  "image": imageUrl,
+                                  "uid": _auth.currentUser!.uid.toString(),
+                                }
+                              ]).snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SpinKitFadingCube(
+                                      color: btnColor,
+                                      size: 25,
+                                    ),
+                                  );
+                                }
+                                if (snapshot.data!.docs.length == 0) {
+                                  return Center(
+                                      child: Text(
+                                    "No Data Found",
+                                    style: TxtStls.fieldtitlestyle,
+                                  ));
+                                }
+                                return ListView.separated(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  separatorBuilder: (_, i) =>
+                                      Divider(height: 5.0),
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (_, index) {
+                                    var snp = snapshot.data!.docs[index];
+                                    String id = snp["id"];
+                                    String taskname = snp["task"];
+                                    String CxID = snp["CxID"].toString();
+                                    Timestamp startDate = snp["startDate"];
+                                    String endDate = snp["endDate"];
+                                    String priority = snp["priority"];
+                                    Timestamp lastseen = snp["lastseen"];
+                                    String cat = snp["cat"];
+                                    String message = snp["message"];
+                                    String newsta = snp["status"];
+                                    String prosta = snp["status1"];
+                                    String insta = snp["status2"];
+                                    String wonsta = snp["status4"];
+                                    String clsta = snp["status5"];
+                                    List assign = snp["Attachments"];
+                                    bool val = snp["flag"];
+                                    String logo = snp["logo"];
+                                    DateTime stamp = snp["time"].toDate();
+                                    int t = stamp
+                                        .difference(DateTime.now())
+                                        .inSeconds;
+                                    // ignore: undefined_prefixed_name
+                                    ui.platformViewRegistry.registerViewFactory(
+                                      logo,
+                                      (int _) => ImageElement()..src = logo,
+                                    );
+                                    return Stack(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              width: 210,
+                                              height: 50,
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                children: [
+                                                  Checkbox(
+                                                      hoverColor: btnColor
+                                                          .withOpacity(0.0001),
+                                                      value: val,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          GraphValueServices
+                                                              .update(
+                                                                  id, value);
+                                                        });
+                                                      },
+                                                      activeColor: btnColor),
+                                                  SizedBox(width: 5),
+                                                  val
+                                                      ? CircleAvatar(
+                                                          maxRadius: 15,
+                                                          child: IconButton(
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              size: 12.5,
+                                                              color: Colors.red,
+                                                            ),
+                                                            onPressed: () {
+                                                              _showMyDialog(id);
+                                                            },
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.red
+                                                                  .withOpacity(
+                                                                      0.075),
+                                                        )
+                                                      : SizedBox(),
+                                                  SizedBox(width: 2.5),
+                                                  val
+                                                      ? CircleAvatar(
+                                                          maxRadius: 15,
+                                                          child: IconButton(
+                                                            icon: Icon(
+                                                              Icons.edit,
+                                                              size: 12.5,
+                                                              color: btnColor,
+                                                            ),
+                                                            onPressed: () {},
+                                                          ),
+                                                          backgroundColor:
+                                                              btnColor
+                                                                  .withOpacity(
+                                                                      0.075),
+                                                        )
+                                                      : SizedBox(),
+                                                ],
+                                              ),
+                                            ),
+                                            InkWell(
+                                              child: Container(
+                                                  width: 230,
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                          width: 30,
+                                                          height: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        40),
+                                                          ),
+                                                          child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          40),
+                                                              child:
+                                                                  HtmlElementView(
+                                                                viewType: logo,
+                                                              ))),
+                                                      SizedBox(width: 2),
+                                                      Text(
+                                                        taskname,
+                                                        style: ClrStls.tnClr,
+                                                      ),
+                                                    ],
+                                                  )),
+                                              onTap: () {
+                                                detailspopBox(
+                                                    context,
+                                                    id,
+                                                    taskname,
+                                                    startDate,
+                                                    endDate,
+                                                    priority,
+                                                    lastseen,
+                                                    cat,
+                                                    message,
+                                                    newsta,
+                                                    prosta,
+                                                    insta,
+                                                    wonsta,
+                                                    clsta);
+                                              },
+                                            ),
+                                            Container(
+                                              width: 180,
+                                              child: Text(
+                                                CxID,
+                                                style: TxtStls.fieldstyle,
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 220,
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                startDate
+                                                    .toDate()
+                                                    .toString()
+                                                    .split(" ")[0],
+                                                style: TxtStls.fieldstyle,
+                                              ),
+                                            ),
+                                            Container(
+                                                width: 205,
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(endDate,
+                                                    style: ClrStls.endClr)),
+                                            Container(
+                                              width: 190,
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                children: assign
+                                                    .map((e) => ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    40.0)),
+                                                        child: SizedBox(
+                                                            height: 30,
+                                                            width: 30,
+                                                            child:
+                                                                Image.network(e[
+                                                                    "image"]))))
+                                                    .toList(),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 200,
+                                              alignment: Alignment.centerLeft,
+                                              child: dropdowns(id, cat, newsta,
+                                                  prosta, insta, wonsta, clsta),
+                                            ),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  CircleAvatar(
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.update,
+                                                        size: 12.5,
+                                                        color: btnColor,
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          did = id;
+                                                          dcat = cat;
+                                                          dname = taskname;
+                                                          cxID = CxID;
+                                                          dendDate = endDate
+                                                              .toString();
+                                                          lead = "update";
+                                                          Scaffold.of(context)
+                                                              .openEndDrawer();
+                                                        });
+                                                      },
+                                                    ),
+                                                    backgroundColor: btnColor
+                                                        .withOpacity(0.075),
+                                                  ),
+                                                  CircleAvatar(
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.fast_forward,
+                                                        size: 12.5,
+                                                        color: btnColor,
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          did = id;
+                                                          dcat = cat;
+                                                          dname = taskname;
+                                                          cxID = CxID;
+                                                          dendDate = endDate
+                                                              .toString();
+                                                          lead = "move";
+                                                          Scaffold.of(context)
+                                                              .openEndDrawer();
+                                                        });
+                                                      },
+                                                    ),
+                                                    backgroundColor: btnColor
+                                                        .withOpacity(0.075),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        CountdownTimer(
+                                          endTime: DateTime.now()
+                                                  .millisecondsSinceEpoch +
+                                              t * 1000,
+                                          widgetBuilder: (BuildContext context,
+                                              CurrentRemainingTime? time) {
+                                            if (time == null) {
+                                              return Text("");
+                                            }
+
+                                            if (time.min == null) {
+                                              return Text("");
+                                            }
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                LabelText(
+                                                    label: "Hrs",
+                                                    value:
+                                                        "${time.hours.toString()}"),
+                                                LabelText(
+                                                    label: "Min",
+                                                    value:
+                                                        "${time.min.toString()}"),
+                                                LabelText(
+                                                    label: "Sec",
+                                                    value:
+                                                        "${time.sec.toString()}"),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 15.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: bgColor,
-                    ),
-                    width: size.width,
-                    height: size.height * 0.31,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
-                          setState(() {
-                            _tapslist[1] = !_tapslist[1];
-                          });
-                        }),
-                        SizedBox(height: 30.0),
-                        listheader(),
-                        SizedBox(height: 30.0),
-                        Visibility(
-                          child: listmiddle("PROSPECT"),
-                          visible: _tapslist[1],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: bgColor,
-                    ),
-                    width: size.width,
-                    height: size.height * 0.31,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2],
-                            () {
-                          setState(() {
-                            _tapslist[2] = !_tapslist[2];
-                          });
-                        }),
-                        SizedBox(height: 30.0),
-                        listheader(),
-                        SizedBox(height: 30.0),
-                        Visibility(
-                          child: listmiddle("IN PROGRESS"),
-                          visible: _tapslist[2],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: bgColor,
-                    ),
-                    width: size.width,
-                    height: size.height * 0.31,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        listtitle(_clrslist[3], "WON", _tapslist[3], () {
-                          setState(() {
-                            _tapslist[3] = !_tapslist[3];
-                          });
-                        }),
-                        SizedBox(height: 30.0),
-                        listheader(),
-                        SizedBox(height: 30.0),
-                        Visibility(
-                          child: listmiddle("WON"),
-                          visible: _tapslist[3],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: bgColor,
-                    ),
-                    width: size.width,
-                    height: size.height * 0.31,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        listtitle(_clrslist[4], "CLOSE", _tapslist[4], () {
-                          setState(() {
-                            _tapslist[4] = !_tapslist[4];
-                          });
-                        }),
-                        SizedBox(height: 30.0),
-                        listheader(),
-                        SizedBox(height: 30.0),
-                        Visibility(
-                          child: listmiddle("CLOSE"),
-                          visible: _tapslist[4],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
           if (activeid == "Board")
             Container(
               height: size.height * 0.845,
@@ -396,6 +1190,7 @@ class _TaskPreviewState extends State<TaskPreview>
       onPressed: () {
         setState(() {
           activeid = e;
+          duefilter = 0;
         });
       },
       child: Padding(
@@ -412,30 +1207,40 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listtitle(clr, title, taps, _ontap) {
-    return RaisedButton.icon(
-        elevation: 0.0,
-        color: clr,
-        hoverColor: Colors.transparent,
-        highlightElevation: 0.0,
-        disabledElevation: 0.0,
-        onPressed: _ontap,
+    Size size = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: _ontap,
+      child: Card(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10.0),
                 bottomRight: Radius.circular(10.0))),
-        icon: taps
-            ? const Icon(
-                Icons.arrow_drop_down_outlined,
-                color: bgColor,
-              )
-            : const Icon(
-                Icons.arrow_drop_up_outlined,
-                color: bgColor,
-              ),
-        label: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(title, style: TxtStls.fieldstyle1),
-        ));
+        child: Container(
+          width: size.width * 0.07,
+          height: size.height * 0.05,
+          decoration: BoxDecoration(
+            color: clr,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0)),
+          ),
+          child: Row(
+            children: [
+              taps
+                  ? const Icon(
+                      Icons.arrow_drop_down_outlined,
+                      color: bgColor,
+                    )
+                  : const Icon(
+                      Icons.arrow_drop_up_outlined,
+                      color: bgColor,
+                    ),
+              Text(title, style: TxtStls.fieldstyle1)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget listheader() {
@@ -462,9 +1267,10 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listmiddle(cat) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       color: bgColor,
-      height: MediaQuery.of(context).size.height * 0.14,
+      height: size.height * 0.14,
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -496,7 +1302,7 @@ class _TaskPreviewState extends State<TaskPreview>
           return ListView.separated(
             physics: AlwaysScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
-            separatorBuilder: (_, i) => SizedBox(height: 5.0),
+            separatorBuilder: (_, i) => Divider(height: 5.0),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (_, index) {
               var snp = snapshot.data!.docs[index];
@@ -1071,6 +1877,7 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget dropdowns(id, cat, newsta, prosta, insta, wonsta, clsta) {
+    Size size = MediaQuery.of(context).size;
     if (cat == "NEW") {
       return Container(
         alignment: Alignment.center,
@@ -1081,7 +1888,7 @@ class _TaskPreviewState extends State<TaskPreview>
         child: PopupMenuButton(
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
-          offset: Offset(0, 32),
+          offset: Offset(0, size.height * 0.035),
           onSelected: (value) {
             StatusUpdateServices.updateStatus(id, value.toString());
             setState(() {});
@@ -1169,7 +1976,7 @@ class _TaskPreviewState extends State<TaskPreview>
         child: PopupMenuButton(
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
-          offset: Offset(0, 32),
+          offset: Offset(0, size.height * 0.035),
           onSelected: (value) {
             StatusUpdateServices.updateStatus1(id, value.toString());
             setState(() {});
@@ -1240,7 +2047,7 @@ class _TaskPreviewState extends State<TaskPreview>
         child: PopupMenuButton(
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
-          offset: Offset(0, 32),
+          offset: Offset(0, size.height * 0.035),
           onSelected: (value) {
             StatusUpdateServices.updateStatus2(id, value.toString());
             setState(() {});
@@ -1328,7 +2135,7 @@ class _TaskPreviewState extends State<TaskPreview>
         child: PopupMenuButton(
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
-          offset: Offset(0, 32),
+          offset: Offset(0, size.height * 0.035),
           onSelected: (value) {
             StatusUpdateServices.updateStatus4(id, value.toString());
             setState(() {});
@@ -1416,7 +2223,7 @@ class _TaskPreviewState extends State<TaskPreview>
       child: PopupMenuButton(
         padding: EdgeInsets.zero,
         shape: TooltipShape(),
-        offset: Offset(0, 32),
+        offset: Offset(0, size.height * 0.035),
         onSelected: (value) {
           StatusUpdateServices.updateStatus5(id, value.toString());
           setState(() {});
@@ -1578,6 +2385,358 @@ class _TaskPreviewState extends State<TaskPreview>
         StatusUpdateServices.statusget5(clsta),
         style: TxtStls.fieldstyle11,
       ),
+    );
+  }
+
+  Widget filters(cat) {
+    Size size = MediaQuery.of(context).size;
+    if (cat == "NEW") {
+      return PopupMenuButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(ui.Radius.circular(10))),
+        offset: Offset(size.width * 0.01, size.height * 0.01),
+        onSelected: (value) {
+          setState(() {});
+        },
+        child: Icon(
+          Icons.filter_list,
+          color: btnColor,
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "FRESH",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: wonClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "FRESH",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "ASSIGNED",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: flwClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "ASSIGNED",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "CONTACTED",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: conClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "CONTACTED",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+      );
+    } else if (cat == "PROSPECT") {
+      return PopupMenuButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(ui.Radius.circular(10))),
+        offset: Offset(size.width * 0.01, size.height * 0.01),
+        onSelected: (value) {
+          setState(() {});
+        },
+        child: Icon(
+          Icons.filter_list,
+          color: btnColor,
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "AVERAGE",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: avgClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "   AVERAGE   ",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "GOOD",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: goodClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "   GOOD   ",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+      );
+    } else if (cat == "IN PROGRESS") {
+      return PopupMenuButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(ui.Radius.circular(10))),
+        offset: Offset(size.width * 0.01, size.height * 0.01),
+        onSelected: (value) {
+          setState(() {});
+        },
+        child: Icon(
+          Icons.filter_list,
+          color: btnColor,
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "FOLLOWUP",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: flwClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "FOLLOWUP",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "SPECIFICATION",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: spClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "SPECIFICATION",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "QUOTATION",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: qtoClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "QUOTATION",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+      );
+    } else if (cat == "WON") {
+      return PopupMenuButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(ui.Radius.circular(10))),
+        offset: Offset(size.width * 0.01, size.height * 0.01),
+        onSelected: (value) {
+          setState(() {});
+        },
+        child: Icon(
+          Icons.filter_list,
+          color: btnColor,
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "PAYMENT",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: wonClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "PAYMENT",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "DOCUMENTS",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: flwClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "DOCUMENTS",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "SAMPLES",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: goodClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "SAMPLES",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+      );
+    }
+    return PopupMenuButton(
+      padding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(ui.Radius.circular(10))),
+      offset: Offset(size.width * 0.01, size.height * 0.01),
+      onSelected: (value) {
+        setState(() {});
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        child: Icon(
+          Icons.filter_list,
+          color: btnColor,
+        ),
+      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            value: "IRRELEVANT",
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: irrClr,
+              ),
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "IRRELEVANT",
+                  style: TxtStls.fieldstyle1,
+                ),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: "BUDGET ISSUE",
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: clsClr,
+              ),
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "BUDGET ISSUE",
+                  style: TxtStls.fieldstyle1,
+                ),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: "INFORMATIVE",
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: flwClr,
+              ),
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "INFORMATIVE",
+                  style: TxtStls.fieldstyle1,
+                ),
+              ),
+            ),
+          ),
+          PopupMenuItem(
+            value: "NO ANSWER",
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: conClr,
+              ),
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  "NO ANSWER",
+                  style: TxtStls.fieldstyle1,
+                ),
+              ),
+            ),
+          )
+        ];
+      },
     );
   }
 
@@ -4379,6 +5538,19 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
+  showLead(dval) {
+    if (dval == 1) {
+      return DateTime.now().toString().split(" ")[0];
+    } else if (dval == 2) {
+      return DateTime.now()
+          .subtract(Duration(days: 1))
+          .toString()
+          .split(" ")[0];
+    } else if (dval == 3) {
+      return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -4386,40 +5558,3 @@ class _TaskPreviewState extends State<TaskPreview>
     Stream.empty();
   }
 }
-
-// child: Row(
-//   mainAxisAlignment: MainAxisAlignment.center,
-//   children: [
-//     LabelText(
-//         label: 'HRS',
-//         value: hours.toString().padLeft(2, '0')),
-//     LabelText(
-//         label: 'MIN',
-//         value: minutes.toString().padLeft(2, '0')),
-//     LabelText(
-//         label: 'SEC',
-//         value: seconds.toString().padLeft(2, '0')),
-//   ],
-// ),
-// Positioned(
-//   bottom: 0,
-//   top: 0,
-//   right: 0,
-//   left: 0,
-//   child: CountdownTimer(
-//     endTime: endTime,
-//     widgetBuilder:
-//         (BuildContext context, CurrentRemainingTime? time) {
-//       if (time == null) {
-//         return Text('');
-//       }
-//       return Row(
-//         children: [
-//           LabelText(label: "Hrs", value: "[${time.hours}]"),
-//           LabelText(label: "Min", value: "[${time.min}]"),
-//           LabelText(label: "Sec", value: "[${time.sec}]"),
-//         ],
-//       );
-//     },
-//   ),
-// ),
