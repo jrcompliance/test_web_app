@@ -808,6 +808,16 @@ class _TaskPreviewState extends State<TaskPreview>
                                     int t = stamp
                                         .difference(DateTime.now())
                                         .inSeconds;
+                                    String createDate = DateFormat("EEE | MMM")
+                                        .format(startDate.toDate());
+                                    String careatedate1 = DateFormat("dd, yy")
+                                        .format(startDate.toDate());
+                                    DateTime dt = DateTime.parse(endDate);
+                                    String edf =
+                                        DateFormat("EEE | MMM").format(dt);
+
+                                    String edf1 =
+                                        DateFormat("dd, yy").format(dt);
                                     // ignore: undefined_prefixed_name
                                     ui.platformViewRegistry.registerViewFactory(
                                       logo,
@@ -940,17 +950,16 @@ class _TaskPreviewState extends State<TaskPreview>
                                               width: 220,
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                startDate
-                                                    .toDate()
-                                                    .toString()
-                                                    .split(" ")[0],
+                                                createDate.toString() +
+                                                    " ${careatedate1.toString()}",
                                                 style: TxtStls.fieldstyle,
                                               ),
                                             ),
                                             Container(
                                                 width: 205,
                                                 alignment: Alignment.centerLeft,
-                                                child: Text(endDate,
+                                                child: Text(
+                                                    " ${edf}" + " ${edf1}",
                                                     style: ClrStls.endClr)),
                                             Container(
                                               width: 190,
@@ -1325,6 +1334,14 @@ class _TaskPreviewState extends State<TaskPreview>
               String logo = snp["logo"];
               DateTime stamp = snp["time"].toDate();
               int t = stamp.difference(DateTime.now()).inSeconds;
+              String createDate =
+                  DateFormat("EEE | MMM").format(startDate.toDate());
+              String careatedate1 =
+                  DateFormat("dd, yy").format(startDate.toDate());
+              DateTime dt = DateTime.parse(endDate);
+              String edf = DateFormat("EEE | MMM").format(dt);
+
+              String edf1 = DateFormat("dd, yy").format(dt);
               // ignore: undefined_prefixed_name
               ui.platformViewRegistry.registerViewFactory(
                 logo,
@@ -1440,14 +1457,15 @@ class _TaskPreviewState extends State<TaskPreview>
                         width: 220,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          startDate.toDate().toString().split(" ")[0],
+                          createDate.toString() + " ${careatedate1.toString()}",
                           style: TxtStls.fieldstyle,
                         ),
                       ),
                       Container(
                           width: 205,
                           alignment: Alignment.centerLeft,
-                          child: Text(endDate, style: ClrStls.endClr)),
+                          child: Text(" ${edf}" + " ${edf1}",
+                              style: ClrStls.endClr)),
                       Container(
                         width: 190,
                         alignment: Alignment.centerLeft,
@@ -2744,10 +2762,11 @@ class _TaskPreviewState extends State<TaskPreview>
       cat, message, newsta, prosta, insta, wonsta, clsta) {
     Size size = MediaQuery.of(context).size;
     TextEditingController _certificateConroller = TextEditingController();
-    String createDate = DateFormat('dd-MMM-yy').format(startDate.toDate());
+    String createDate =
+        DateFormat('EEE | MMM dd, yy').format(startDate.toDate());
     DateTime dt = DateTime.parse(endDate);
-    String deadline = DateFormat('dd-MMM-yy').format(dt);
-    String lastview = DateFormat('dd-MMM-yy').format(lastseen.toDate());
+    String deadline = DateFormat('EEE | MMM dd, yy').format(dt);
+    String lastview = DateFormat('EEE | MMM dd, yy').format(lastseen.toDate());
     String lastviewTime = DateFormat('hh:mm a').format(lastseen.toDate());
     var alertDialog = AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
@@ -4989,14 +5008,16 @@ class _TaskPreviewState extends State<TaskPreview>
                                           (BuildContext context, int index) {
                                         String statecolor = lr[index]["From"];
                                         String statecolor1 = lr[index]["To"];
-                                        String date = DateFormat('dd-MMM-yy')
+                                        String date = DateFormat(
+                                                "EEE | MMM dd, yy")
                                             .format(lr[index]["When"].toDate());
                                         String time = DateFormat('hh:mm a')
                                             .format(lr[index]["When"].toDate());
                                         DateTime dt1 = DateTime.parse(
                                             lr[index]["LatDate"]);
                                         String lastDate =
-                                            DateFormat('dd-MMM-yy').format(dt1);
+                                            DateFormat("EEE | MMM dd, yy")
+                                                .format(dt1);
 
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),
