@@ -388,6 +388,13 @@ class CrudOperations {
     collectionReference.doc(id).delete();
   }
 
+  static stoptimer(id) async {
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    collectionReference.doc(id).update({
+      "time": DateTime.now(),
+    });
+  }
+
   static certificateUpdate(id, certifi) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({

@@ -65,16 +65,20 @@ class _UserDashBoardState extends State<UserDashBoard> {
           ipLength = value.docs.length.toDouble();
           setState(() {});
         });
-    FirebaseFirestore.instance.collection("Tasks")
-      ..where("Attachments", arrayContainsAny: [
-        {
-          "image": imageUrl,
-          "uid": _auth.currentUser!.uid.toString(),
-        }
-      ]).where("cat", isEqualTo: "WON").snapshots().listen((value) {
-        wonLength = value.docs.length.toDouble();
-        setState(() {});
-      });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .where("cat", isEqualTo: "WON")
+        .snapshots()
+        .listen((value) {
+          wonLength = value.docs.length.toDouble();
+          setState(() {});
+        });
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;

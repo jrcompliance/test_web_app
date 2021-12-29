@@ -27,7 +27,7 @@ class _HeaderState extends State<Header> {
       height: size.height * 0.07,
       width: size.width,
       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       child: Responsive.isSmallScreen(context)
           ? Align(
               alignment: Alignment.centerRight,
@@ -37,40 +37,13 @@ class _HeaderState extends State<Header> {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
             )
-          : Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: txtColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                      alignment: Alignment.center,
-                      color: bgColor,
-                      child: Text(
-                        "24-Nov-2021",
-                        style: TxtStls.fieldstyle,
-                      )),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                      alignment: Alignment.center,
-                      color: bgColor,
-                      child: Text(
-                        "24-Nov-2021",
-                        style: TxtStls.fieldstyle,
-                      )),
-                )
-              ],
+          : Expanded(
+              flex: 6,
+              child: Text(
+                widget.title,
+                style: TextStyle(
+                    fontSize: 20, color: txtColor, fontWeight: FontWeight.bold),
+              ),
             ),
     );
   }

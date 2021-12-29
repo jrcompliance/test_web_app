@@ -3,6 +3,7 @@ import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
@@ -18,16 +19,122 @@ import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
+import 'package:test_web_app/tasksearchmodel.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
-
   @override
   _TaskPreviewState createState() => _TaskPreviewState();
 }
 
 class _TaskPreviewState extends State<TaskPreview>
     with TickerProviderStateMixin {
+  //search method starts from here.....
+
+  Widget appBarTitle = new Text(
+    "Search Example",
+    style: new TextStyle(color: Colors.white),
+  );
+  Icon icon = new Icon(
+    Icons.search,
+    color: Colors.white,
+  );
+  final globalKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController _searchController = new TextEditingController();
+  List<TaskSearchModel> _searchList = [];
+  bool _isSearching = false;
+  String _searchText = "";
+  List<TaskSearchModel> searchresult = [];
+
+  _TaskPreviewState() {
+    _searchController.addListener(() {
+      if (_searchController.text.isEmpty) {
+        setState(() {
+          _isSearching = false;
+          _searchText = "";
+        });
+      } else {
+        setState(() {
+          _isSearching = true;
+          _searchText = _searchController.text;
+        });
+      }
+    });
+  }
+
+  void values() {
+    _searchList = [];
+  }
+
+  void _handleSearchStart() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _handleSearchEnd() {
+    setState(() {
+      this.icon = new Icon(
+        Icons.search,
+        color: Colors.white,
+      );
+      this.appBarTitle = new Text(
+        "Search Sample",
+        style: new TextStyle(color: Colors.white),
+      );
+      _isSearching = false;
+      _searchController.clear();
+    });
+  }
+
+  void searchOperation(String searchText) {
+    searchresult.clear();
+    if (_isSearching != null) {
+      for (int i = 0; i < _searchList.length; i++) {
+        String data = _searchList[i].taskname as String;
+        String id = _searchList[i].id as String;
+        int CxID = _searchList[i].CxID as int;
+        Timestamp? startDate = _searchList[i].startDate;
+        String endDate = _searchList[i].endDate as String;
+        String priority = _searchList[i].priority as String;
+        Timestamp? lastseen = _searchList[i].lastseen;
+        String cat = _searchList[i].cat as String;
+        String message = _searchList[i].message as String;
+        String newsta = _searchList[i].newsta as String;
+        String prosta = _searchList[i].prosta as String;
+        String insta = _searchList[i].insta as String;
+        String wonsta = _searchList[i].wonsta as String;
+        String clsta = _searchList[i].clsta as String;
+        List assign = _searchList[i].assign as List;
+        bool val = _searchList[i].val as bool;
+        String logo = _searchList[i].logo as String;
+
+        if (data.toLowerCase().contains(searchText.toLowerCase())) {
+          searchresult.add(TaskSearchModel(
+            id: id,
+            taskname: data,
+            CxID: CxID,
+            startDate: startDate,
+            endDate: endDate,
+            priority: priority,
+            lastseen: lastseen,
+            cat: cat,
+            message: message,
+            newsta: newsta,
+            prosta: prosta,
+            insta: insta,
+            wonsta: wonsta,
+            clsta: clsta,
+            assign: assign,
+            val: val,
+            logo: logo,
+          ));
+        }
+      }
+    }
+  }
+
+  // search method end here....
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<String> _list = ["List", "Board", "Timeline"];
   final List<String> _boardtitlelist = [
@@ -90,9 +197,30 @@ class _TaskPreviewState extends State<TaskPreview>
 
   int duefilter = 0;
 
+  final filterlist = [
+    "Fresh",
+    "Assigned",
+    "Contacted",
+    "Good",
+    "Average",
+    "Followup",
+    "Specification",
+    "Quotation",
+    "Payment",
+    "Sample",
+    "Document",
+    "Irrelevent",
+    "Informative",
+    "BudgetIssue",
+    "NoResponse",
+  ];
+
   @override
   void initState() {
     super.initState();
+    assignvel();
+    values();
+
     _controller = TabController(
       length: 3,
       vsync: this,
@@ -127,32 +255,28 @@ class _TaskPreviewState extends State<TaskPreview>
                 children: [
                   Container(
                     width: size.width * 0.2,
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius:
-                            BorderRadius.all(ui.Radius.circular(10.0))),
+                    decoration: deco,
                     child: Padding(
                       padding: EdgeInsets.only(left: 15, right: 15, top: 2),
-                      child: TextFormField(
+                      child: TextField(
+                        controller: _searchController,
                         style: TxtStls.fieldstyle,
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: btnColor,
-                          ),
-                          hintText: "Search...",
-                          hintStyle: TxtStls.fieldstyle,
-                          border: InputBorder.none,
-                        ),
-                        validator: (fullname) {
-                          if (fullname!.isEmpty) {
-                            return "Name can not be empty";
-                          } else if (fullname.length < 3) {
-                            return "Name should be atleast 3 letters";
-                          } else {
-                            return null;
-                          }
-                        },
+                        decoration: new InputDecoration(
+                            suffixIcon: _isSearching
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: btnColor,
+                                    ),
+                                    onPressed: () {
+                                      _handleSearchEnd();
+                                    },
+                                  )
+                                : Icon(Icons.search, color: btnColor),
+                            border: InputBorder.none,
+                            hintText: "Search...",
+                            hintStyle: TxtStls.fieldstyle),
+                        onChanged: searchOperation,
                       ),
                     ),
                   ),
@@ -186,319 +310,78 @@ class _TaskPreviewState extends State<TaskPreview>
                       itemBuilder: (context) {
                         return [
                           PopupMenuItem(
-                            child: Text("1"),
+                            child: Text("Tec"),
                           ),
                           PopupMenuItem(
-                            child: Text("1"),
+                            child: Text("Bis"),
                           ),
                           PopupMenuItem(
-                            child: Text("1"),
+                            child: Text("Isi"),
                           ),
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
                   PopupMenuButton(
-                      offset: Offset(0, size.height * 0.037),
-                      child: Container(
-                        width: size.width * 0.05,
-                        height: size.height * 0.035,
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            gradient: LinearGradient(colors: [
-                              Colors.pinkAccent,
-                              Colors.deepPurpleAccent
-                            ])),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(
-                              Icons.filter_alt_rounded,
-                              color: bgColor,
-                            ),
-                            Text(
-                              "Filters",
-                              style: TxtStls.fieldstyle1,
-                            )
-                          ],
-                        ),
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            value: "FRESH",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: wonClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "FRESH",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
+                    padding: EdgeInsets.all(0),
+                    offset: Offset(0, size.height * 0.037),
+                    child: Container(
+                      width: size.width * 0.05,
+                      height: size.height * 0.035,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          gradient: LinearGradient(colors: [
+                            Colors.pinkAccent,
+                            Colors.deepPurpleAccent
+                          ])),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.filter_alt_rounded,
+                            color: bgColor,
                           ),
-                          PopupMenuItem(
-                            value: "ASSIGNED",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: flwClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "ASSIGNED",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "CONTACTED",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: conClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "CONTACTED",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "AVERAGE",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: avgClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "   AVERAGE   ",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "GOOD",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: goodClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "   GOOD   ",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "FOLLOWUP",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: flwClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "FOLLOWUP",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "SPECIFICATION",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: spClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "SPECIFICATION",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "QUOTATION",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: qtoClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "QUOTATION",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "PAYMENT",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: wonClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "PAYMENT",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "DOCUMENTS",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: flwClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "DOCUMENTS",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "SAMPLES",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: goodClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "SAMPLES",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "IRRELEVANT",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: irrClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "IRRELEVANT",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "BUDGET ISSUE",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: clsClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "BUDGET ISSUE",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "INFORMATIVE",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: flwClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "INFORMATIVE",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: "NO ANSWER",
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: conClr,
-                              ),
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  "NO ANSWER",
-                                  style: TxtStls.fieldstyle1,
-                                ),
-                              ),
-                            ),
+                          Text(
+                            "Filters",
+                            style: TxtStls.fieldstyle1,
                           )
-                        ];
-                      }),
+                        ],
+                      ),
+                    ),
+                    itemBuilder: (BuildContext context) {
+                      return <PopupMenuEntry<Widget>>[
+                        PopupMenuItem<Widget>(
+                          padding: EdgeInsets.all(0),
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            child: Scrollbar(
+                              child: ListView.builder(
+                                itemCount: filterlist.length,
+                                itemBuilder: (context, index) {
+                                  final trans = filterlist[index];
+                                  return PopupMenuItem(
+                                    child: Text(
+                                      trans.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      ];
+                    },
+                  ),
                   SizedBox(width: size.width * 0.01),
                   PopupMenuButton(
+                      onCanceled: () {
+                        duefilter = 0;
+                        setState(() {});
+                      },
                       offset: Offset(0, size.height * 0.037),
                       child: Container(
                         width: size.width * 0.05,
@@ -588,507 +471,7 @@ class _TaskPreviewState extends State<TaskPreview>
           ),
           SizedBox(height: 10.0),
           if (activeid == "List")
-            duefilter == 0
-                ? SizedBox(
-                    height: size.height * 0.845,
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            color: bgColor,
-                          ),
-                          width: size.width,
-                          height: size.height * 0.31,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              listtitle(_clrslist[0], "NEW", _tapslist[0], () {
-                                setState(() {
-                                  _tapslist[0] = !_tapslist[0];
-                                });
-                              }),
-                              SizedBox(height: 30.0),
-                              listheader(),
-                              SizedBox(height: 30.0),
-                              Visibility(
-                                child: listmiddle("NEW"),
-                                visible: _tapslist[0],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 15.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            color: bgColor,
-                          ),
-                          width: size.width,
-                          height: size.height * 0.31,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              listtitle(_clrslist[1], "PROSPECT", _tapslist[1],
-                                  () {
-                                setState(() {
-                                  _tapslist[1] = !_tapslist[1];
-                                });
-                              }),
-                              SizedBox(height: 30.0),
-                              listheader(),
-                              SizedBox(height: 30.0),
-                              Visibility(
-                                child: listmiddle("PROSPECT"),
-                                visible: _tapslist[1],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 15.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            color: bgColor,
-                          ),
-                          width: size.width,
-                          height: size.height * 0.31,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              listtitle(
-                                  _clrslist[2], "IN PROGRESS", _tapslist[2],
-                                  () {
-                                setState(() {
-                                  _tapslist[2] = !_tapslist[2];
-                                });
-                              }),
-                              SizedBox(height: 30.0),
-                              listheader(),
-                              SizedBox(height: 30.0),
-                              Visibility(
-                                child: listmiddle("IN PROGRESS"),
-                                visible: _tapslist[2],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 15.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            color: bgColor,
-                          ),
-                          width: size.width,
-                          height: size.height * 0.31,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              listtitle(_clrslist[3], "WON", _tapslist[3], () {
-                                setState(() {
-                                  _tapslist[3] = !_tapslist[3];
-                                });
-                              }),
-                              SizedBox(height: 30.0),
-                              listheader(),
-                              SizedBox(height: 30.0),
-                              Visibility(
-                                child: listmiddle("WON"),
-                                visible: _tapslist[3],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 15.0),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            color: bgColor,
-                          ),
-                          width: size.width,
-                          height: size.height * 0.31,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              listtitle(_clrslist[4], "CLOSE", _tapslist[4],
-                                  () {
-                                setState(() {
-                                  _tapslist[4] = !_tapslist[4];
-                                });
-                              }),
-                              SizedBox(height: 30.0),
-                              listheader(),
-                              SizedBox(height: 30.0),
-                              Visibility(
-                                child: listmiddle("CLOSE"),
-                                visible: _tapslist[4],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(
-                    width: size.width,
-                    height: size.height * 0.845,
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                    child: Column(
-                      children: [
-                        Expanded(flex: 1, child: listheader()),
-                        Expanded(
-                          flex: 9,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.0),
-                            child: StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection("Tasks")
-                                  .where("endDate",
-                                      isEqualTo: showLead(duefilter))
-                                  .where("Attachments", arrayContainsAny: [
-                                {
-                                  "image": imageUrl,
-                                  "uid": _auth.currentUser!.uid.toString(),
-                                }
-                              ]).snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SpinKitFadingCube(
-                                      color: btnColor,
-                                      size: 25,
-                                    ),
-                                  );
-                                }
-                                if (snapshot.data!.docs.length == 0) {
-                                  return Center(
-                                      child: Text(
-                                    "No Data Found",
-                                    style: TxtStls.fieldtitlestyle,
-                                  ));
-                                }
-                                return ListView.separated(
-                                  physics: AlwaysScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  separatorBuilder: (_, i) =>
-                                      Divider(height: 5.0),
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (_, index) {
-                                    var snp = snapshot.data!.docs[index];
-                                    String id = snp["id"];
-                                    String taskname = snp["task"];
-                                    String CxID = snp["CxID"].toString();
-                                    Timestamp startDate = snp["startDate"];
-                                    String endDate = snp["endDate"];
-                                    String priority = snp["priority"];
-                                    Timestamp lastseen = snp["lastseen"];
-                                    String cat = snp["cat"];
-                                    String message = snp["message"];
-                                    String newsta = snp["status"];
-                                    String prosta = snp["status1"];
-                                    String insta = snp["status2"];
-                                    String wonsta = snp["status4"];
-                                    String clsta = snp["status5"];
-                                    List assign = snp["Attachments"];
-                                    bool val = snp["flag"];
-                                    String logo = snp["logo"];
-                                    DateTime stamp = snp["time"].toDate();
-                                    int t = stamp
-                                        .difference(DateTime.now())
-                                        .inSeconds;
-                                    String createDate = DateFormat("EEE | MMM")
-                                        .format(startDate.toDate());
-                                    String careatedate1 = DateFormat("dd, yy")
-                                        .format(startDate.toDate());
-                                    DateTime dt = DateTime.parse(endDate);
-                                    String edf =
-                                        DateFormat("EEE | MMM").format(dt);
-
-                                    String edf1 =
-                                        DateFormat("dd, yy").format(dt);
-                                    // ignore: undefined_prefixed_name
-                                    ui.platformViewRegistry.registerViewFactory(
-                                      logo,
-                                      (int _) => ImageElement()..src = logo,
-                                    );
-                                    return Stack(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              width: 210,
-                                              height: 50,
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                children: [
-                                                  Checkbox(
-                                                      hoverColor: btnColor
-                                                          .withOpacity(0.0001),
-                                                      value: val,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          GraphValueServices
-                                                              .update(
-                                                                  id, value);
-                                                        });
-                                                      },
-                                                      activeColor: btnColor),
-                                                  SizedBox(width: 5),
-                                                  val
-                                                      ? CircleAvatar(
-                                                          maxRadius: 15,
-                                                          child: IconButton(
-                                                            icon: Icon(
-                                                              Icons.delete,
-                                                              size: 12.5,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () {
-                                                              _showMyDialog(id);
-                                                            },
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.red
-                                                                  .withOpacity(
-                                                                      0.075),
-                                                        )
-                                                      : SizedBox(),
-                                                  SizedBox(width: 2.5),
-                                                  val
-                                                      ? CircleAvatar(
-                                                          maxRadius: 15,
-                                                          child: IconButton(
-                                                            icon: Icon(
-                                                              Icons.edit,
-                                                              size: 12.5,
-                                                              color: btnColor,
-                                                            ),
-                                                            onPressed: () {},
-                                                          ),
-                                                          backgroundColor:
-                                                              btnColor
-                                                                  .withOpacity(
-                                                                      0.075),
-                                                        )
-                                                      : SizedBox(),
-                                                ],
-                                              ),
-                                            ),
-                                            InkWell(
-                                              child: Container(
-                                                  width: 230,
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        40),
-                                                          ),
-                                                          child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          40),
-                                                              child:
-                                                                  HtmlElementView(
-                                                                viewType: logo,
-                                                              ))),
-                                                      SizedBox(width: 2),
-                                                      Text(
-                                                        taskname,
-                                                        style: ClrStls.tnClr,
-                                                      ),
-                                                    ],
-                                                  )),
-                                              onTap: () {
-                                                detailspopBox(
-                                                    context,
-                                                    id,
-                                                    taskname,
-                                                    startDate,
-                                                    endDate,
-                                                    priority,
-                                                    lastseen,
-                                                    cat,
-                                                    message,
-                                                    newsta,
-                                                    prosta,
-                                                    insta,
-                                                    wonsta,
-                                                    clsta);
-                                              },
-                                            ),
-                                            Container(
-                                              width: 180,
-                                              child: Text(
-                                                CxID,
-                                                style: TxtStls.fieldstyle,
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 220,
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                createDate.toString() +
-                                                    " ${careatedate1.toString()}",
-                                                style: TxtStls.fieldstyle,
-                                              ),
-                                            ),
-                                            Container(
-                                                width: 205,
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                    " ${edf}" + " ${edf1}",
-                                                    style: ClrStls.endClr)),
-                                            Container(
-                                              width: 190,
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                children: assign
-                                                    .map((e) => ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    40.0)),
-                                                        child: SizedBox(
-                                                            height: 30,
-                                                            width: 30,
-                                                            child:
-                                                                Image.network(e[
-                                                                    "image"]))))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              alignment: Alignment.centerLeft,
-                                              child: dropdowns(id, cat, newsta,
-                                                  prosta, insta, wonsta, clsta),
-                                            ),
-                                            Expanded(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  CircleAvatar(
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.update,
-                                                        size: 12.5,
-                                                        color: btnColor,
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          did = id;
-                                                          dcat = cat;
-                                                          dname = taskname;
-                                                          cxID = CxID;
-                                                          dendDate = endDate
-                                                              .toString();
-                                                          lead = "update";
-                                                          Scaffold.of(context)
-                                                              .openEndDrawer();
-                                                        });
-                                                      },
-                                                    ),
-                                                    backgroundColor: btnColor
-                                                        .withOpacity(0.075),
-                                                  ),
-                                                  CircleAvatar(
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.fast_forward,
-                                                        size: 12.5,
-                                                        color: btnColor,
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          did = id;
-                                                          dcat = cat;
-                                                          dname = taskname;
-                                                          cxID = CxID;
-                                                          dendDate = endDate
-                                                              .toString();
-                                                          lead = "move";
-                                                          Scaffold.of(context)
-                                                              .openEndDrawer();
-                                                        });
-                                                      },
-                                                    ),
-                                                    backgroundColor: btnColor
-                                                        .withOpacity(0.075),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        CountdownTimer(
-                                          endTime: DateTime.now()
-                                                  .millisecondsSinceEpoch +
-                                              t * 1000,
-                                          widgetBuilder: (BuildContext context,
-                                              CurrentRemainingTime? time) {
-                                            if (time == null) {
-                                              return Text("");
-                                            }
-
-                                            if (time.min == null) {
-                                              return Text("");
-                                            }
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                LabelText(
-                                                    label: "Hrs",
-                                                    value:
-                                                        "${time.hours.toString()}"),
-                                                LabelText(
-                                                    label: "Min",
-                                                    value:
-                                                        "${time.min.toString()}"),
-                                                LabelText(
-                                                    label: "Sec",
-                                                    value:
-                                                        "${time.sec.toString()}"),
-                                              ],
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            SizedBox(height: size.height * 0.845, child: serachandfilter()),
           if (activeid == "Board")
             Container(
               height: size.height * 0.845,
@@ -1347,6 +730,9 @@ class _TaskPreviewState extends State<TaskPreview>
                 logo,
                 (int _) => ImageElement()..src = logo,
               );
+              String contactname = snp["CompanyDetails"][0]["contactperson"];
+              String email = snp["CompanyDetails"][0]["email"];
+              String phone = snp["CompanyDetails"][0]["phone"];
               return Stack(
                 children: [
                   Row(
@@ -1373,12 +759,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                     maxRadius: 15,
                                     child: IconButton(
                                       icon: Icon(
-                                        Icons.delete,
+                                        Icons.more_horiz,
                                         size: 12.5,
                                         color: Colors.red,
                                       ),
                                       onPressed: () {
-                                        _showMyDialog(id);
+                                        _showMyDialog1(id);
                                       },
                                     ),
                                     backgroundColor:
@@ -1405,29 +791,39 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                       ),
                       InkWell(
-                        child: Container(
-                            width: 230,
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(40),
-                                    ),
-                                    child: ClipRRect(
+                        child: Tooltip(
+                          message: "${contactname}",
+                          decoration: BoxDecoration(
+                            color: btnColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
+                          ),
+                          textStyle: TxtStls.fieldstyle1,
+                          child: Container(
+                              width: 230,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(40),
-                                        child: HtmlElementView(
-                                          viewType: logo,
-                                        ))),
-                                SizedBox(width: 2),
-                                Text(
-                                  taskname,
-                                  style: ClrStls.tnClr,
-                                ),
-                              ],
-                            )),
+                                      ),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: HtmlElementView(
+                                            viewType: logo,
+                                          ))),
+                                  SizedBox(width: 2),
+                                  Text(
+                                    taskname,
+                                    style: ClrStls.tnClr,
+                                  ),
+                                ],
+                              )),
+                        ),
                         onTap: () {
                           detailspopBox(
                               context,
@@ -5493,6 +4889,41 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
+  Future<void> _showMyDialog1(id) async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: Text('Are you sure to StopTimer ?',
+              style: TxtStls.fieldtitlestyle),
+          actions: <Widget>[
+            MaterialButton(
+              color: grClr,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Text('Cancel', style: TxtStls.fieldstyle1),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: clsClr,
+              child: Text('Stop', style: TxtStls.fieldstyle1),
+              onPressed: () {
+                CrudOperations.stoptimer(id);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget tab3() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -5570,6 +5001,765 @@ class _TaskPreviewState extends State<TaskPreview>
     } else if (dval == 3) {
       return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
     }
+  }
+
+  Widget serachandfilter() {
+    Size size = MediaQuery.of(context).size;
+    if (duefilter != 0) {
+      return Container(
+        width: size.width,
+        height: size.height * 0.845,
+        decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Column(
+          children: [
+            Expanded(flex: 1, child: listheader()),
+            Expanded(
+              flex: 9,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Tasks")
+                      .where("endDate", isEqualTo: showLead(duefilter))
+                      .where("Attachments", arrayContainsAny: [
+                    {
+                      "image": imageUrl,
+                      "uid": _auth.currentUser!.uid.toString(),
+                    }
+                  ]).snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SpinKitFadingCube(
+                          color: btnColor,
+                          size: 25,
+                        ),
+                      );
+                    }
+                    if (snapshot.data!.docs.length == 0) {
+                      return Center(
+                          child: Text(
+                        "No Data Found",
+                        style: TxtStls.fieldtitlestyle,
+                      ));
+                    }
+                    return ListView.separated(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      separatorBuilder: (_, i) => Divider(height: 5.0),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (_, index) {
+                        var snp = snapshot.data!.docs[index];
+                        String id = snp["id"];
+                        String taskname = snp["task"];
+                        String CxID = snp["CxID"].toString();
+                        Timestamp startDate = snp["startDate"];
+                        String endDate = snp["endDate"];
+                        String priority = snp["priority"];
+                        Timestamp lastseen = snp["lastseen"];
+                        String cat = snp["cat"];
+                        String message = snp["message"];
+                        String newsta = snp["status"];
+                        String prosta = snp["status1"];
+                        String insta = snp["status2"];
+                        String wonsta = snp["status4"];
+                        String clsta = snp["status5"];
+                        List assign = snp["Attachments"];
+                        bool val = snp["flag"];
+                        String logo = snp["logo"];
+                        DateTime stamp = snp["time"].toDate();
+                        int t = stamp.difference(DateTime.now()).inSeconds;
+                        String createDate =
+                            DateFormat("EEE | MMM").format(startDate.toDate());
+                        String careatedate1 =
+                            DateFormat("dd, yy").format(startDate.toDate());
+                        DateTime dt = DateTime.parse(endDate);
+                        String edf = DateFormat("EEE | MMM").format(dt);
+
+                        String edf1 = DateFormat("dd, yy").format(dt);
+                        // ignore: undefined_prefixed_name
+                        ui.platformViewRegistry.registerViewFactory(
+                          logo,
+                          (int _) => ImageElement()..src = logo,
+                        );
+                        return Stack(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 210,
+                                  height: 50,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                          hoverColor:
+                                              btnColor.withOpacity(0.0001),
+                                          value: val,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              GraphValueServices.update(
+                                                  id, value);
+                                            });
+                                          },
+                                          activeColor: btnColor),
+                                      SizedBox(width: 5),
+                                      val
+                                          ? CircleAvatar(
+                                              maxRadius: 15,
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  size: 12.5,
+                                                  color: Colors.red,
+                                                ),
+                                                onPressed: () {
+                                                  _showMyDialog(id);
+                                                },
+                                              ),
+                                              backgroundColor:
+                                                  Colors.red.withOpacity(0.075),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(width: 2.5),
+                                      val
+                                          ? CircleAvatar(
+                                              maxRadius: 15,
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  Icons.edit,
+                                                  size: 12.5,
+                                                  color: btnColor,
+                                                ),
+                                                onPressed: () {},
+                                              ),
+                                              backgroundColor:
+                                                  btnColor.withOpacity(0.075),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                  child: Container(
+                                      width: 230,
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(40),
+                                              ),
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40),
+                                                  child: HtmlElementView(
+                                                    viewType: logo,
+                                                  ))),
+                                          SizedBox(width: 2),
+                                          Text(
+                                            taskname,
+                                            style: ClrStls.tnClr,
+                                          ),
+                                        ],
+                                      )),
+                                  onTap: () {
+                                    detailspopBox(
+                                        context,
+                                        id,
+                                        taskname,
+                                        startDate,
+                                        endDate,
+                                        priority,
+                                        lastseen,
+                                        cat,
+                                        message,
+                                        newsta,
+                                        prosta,
+                                        insta,
+                                        wonsta,
+                                        clsta);
+                                  },
+                                ),
+                                Container(
+                                  width: 180,
+                                  child: Text(
+                                    CxID,
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ),
+                                Container(
+                                  width: 220,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    createDate.toString() +
+                                        " ${careatedate1.toString()}",
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ),
+                                Container(
+                                    width: 205,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(" ${edf}" + " ${edf1}",
+                                        style: ClrStls.endClr)),
+                                Container(
+                                  width: 190,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: assign
+                                        .map((e) => ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(40.0)),
+                                            child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    Image.network(e["image"]))))
+                                        .toList(),
+                                  ),
+                                ),
+                                Container(
+                                  width: 200,
+                                  alignment: Alignment.centerLeft,
+                                  child: dropdowns(id, cat, newsta, prosta,
+                                      insta, wonsta, clsta),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      CircleAvatar(
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.update,
+                                            size: 12.5,
+                                            color: btnColor,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              did = id;
+                                              dcat = cat;
+                                              dname = taskname;
+                                              cxID = CxID;
+                                              dendDate = endDate.toString();
+                                              lead = "update";
+                                              Scaffold.of(context)
+                                                  .openEndDrawer();
+                                            });
+                                          },
+                                        ),
+                                        backgroundColor:
+                                            btnColor.withOpacity(0.075),
+                                      ),
+                                      CircleAvatar(
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.fast_forward,
+                                            size: 12.5,
+                                            color: btnColor,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              did = id;
+                                              dcat = cat;
+                                              dname = taskname;
+                                              cxID = CxID;
+                                              dendDate = endDate.toString();
+                                              lead = "move";
+                                              Scaffold.of(context)
+                                                  .openEndDrawer();
+                                            });
+                                          },
+                                        ),
+                                        backgroundColor:
+                                            btnColor.withOpacity(0.075),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            CountdownTimer(
+                              endTime: DateTime.now().millisecondsSinceEpoch +
+                                  t * 1000,
+                              widgetBuilder: (BuildContext context,
+                                  CurrentRemainingTime? time) {
+                                if (time == null) {
+                                  return Text("");
+                                }
+
+                                if (time.min == null) {
+                                  return Text("");
+                                }
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    LabelText(
+                                        label: "Hrs",
+                                        value: "${time.hours.toString()}"),
+                                    LabelText(
+                                        label: "Min",
+                                        value: "${time.min.toString()}"),
+                                    LabelText(
+                                        label: "Sec",
+                                        value: "${time.sec.toString()}"),
+                                  ],
+                                );
+                              },
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (_isSearching == true) {
+      return searchresult.length != 0 || _searchController.text.isNotEmpty
+          ? Container(
+              child: Column(
+                children: [
+                  Expanded(flex: 1, child: listheader()),
+                  Expanded(
+                    flex: 9,
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                        child: ListView.separated(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          separatorBuilder: (_, i) => Divider(height: 5.0),
+                          itemCount: searchresult.length,
+                          itemBuilder: (_, index) {
+                            String id = searchresult[index].id as String;
+                            String taskname =
+                                searchresult[index].taskname as String;
+                            int CxID = searchresult[index].CxID as int;
+                            Timestamp startDate = searchresult[index].startDate;
+                            String endDate =
+                                searchresult[index].endDate as String;
+                            String priority = searchresult[index].priority;
+                            Timestamp lastseen = searchresult[index].lastseen;
+                            String cat = searchresult[index].cat;
+                            String message = searchresult[index].message;
+                            String newsta = searchresult[index].newsta;
+                            String prosta = searchresult[index].prosta;
+                            String insta = searchresult[index].insta;
+                            String wonsta = searchresult[index].wonsta;
+                            String clsta = searchresult[index].clsta;
+                            List? assign = searchresult[index].assign;
+                            bool val = searchresult[index].val;
+                            var logo = searchresult[index].logo;
+                            // DateTime stamp =
+                            //     searchresult[index].startDate as DateTime;
+                            // int t = stamp.difference(DateTime.now()).inSeconds;
+                            String createDate = DateFormat("EEE | MMM")
+                                .format(startDate.toDate());
+                            String careatedate1 =
+                                DateFormat("dd, yy").format(startDate.toDate());
+                            DateTime dt = DateTime.parse(endDate);
+                            String edf = DateFormat("EEE | MMM").format(dt);
+
+                            String edf1 = DateFormat("dd, yy").format(dt);
+                            // ignore: undefined_prefixed_name
+                            ui.platformViewRegistry.registerViewFactory(
+                              logo,
+                              (var _) => ImageElement()..src = logo,
+                            );
+                            return Stack(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 210,
+                                      height: 50,
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        children: [
+                                          Checkbox(
+                                              hoverColor:
+                                                  btnColor.withOpacity(0.0001),
+                                              value: val,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  GraphValueServices.update(
+                                                      id, value);
+                                                });
+                                              },
+                                              activeColor: btnColor),
+                                          SizedBox(width: 5),
+                                          val
+                                              ? CircleAvatar(
+                                                  maxRadius: 15,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                      size: 12.5,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {
+                                                      _showMyDialog(id);
+                                                    },
+                                                  ),
+                                                  backgroundColor: Colors.red
+                                                      .withOpacity(0.075),
+                                                )
+                                              : SizedBox(),
+                                          SizedBox(width: 2.5),
+                                          val
+                                              ? CircleAvatar(
+                                                  maxRadius: 15,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.edit,
+                                                      size: 12.5,
+                                                      color: btnColor,
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                  backgroundColor: btnColor
+                                                      .withOpacity(0.075),
+                                                )
+                                              : SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      child: Container(
+                                          width: 230,
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            40),
+                                                  ),
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40),
+                                                      child: HtmlElementView(
+                                                        viewType: logo,
+                                                      ))),
+                                              SizedBox(width: 2),
+                                              Text(
+                                                taskname,
+                                                style: ClrStls.tnClr,
+                                              ),
+                                            ],
+                                          )),
+                                      onTap: () {
+                                        detailspopBox(
+                                            context,
+                                            id,
+                                            taskname,
+                                            startDate,
+                                            endDate,
+                                            priority,
+                                            lastseen,
+                                            cat,
+                                            message,
+                                            newsta,
+                                            prosta,
+                                            insta,
+                                            wonsta,
+                                            clsta);
+                                      },
+                                    ),
+                                    Container(
+                                      width: 180,
+                                      child: Text(
+                                        CxID.toString(),
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 220,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        createDate.toString() +
+                                            " ${careatedate1.toString()}",
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                    ),
+                                    Container(
+                                        width: 205,
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(" ${edf}" + " ${edf1}",
+                                            style: ClrStls.endClr)),
+                                    Container(
+                                      width: 190,
+                                      alignment: Alignment.centerLeft,
+                                      child: Row(
+                                        children: assign
+                                            .map((e) => ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(40.0)),
+                                                child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: Image.network(
+                                                        e["image"]))))
+                                            .toList(),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 200,
+                                      alignment: Alignment.centerLeft,
+                                      child: dropdowns(id, cat, newsta, prosta,
+                                          insta, wonsta, clsta),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          CircleAvatar(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.update,
+                                                size: 12.5,
+                                                color: btnColor,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  did = id;
+                                                  dcat = cat;
+                                                  dname = taskname;
+                                                  cxID = CxID.toString();
+                                                  dendDate = endDate.toString();
+                                                  lead = "update";
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer();
+                                                });
+                                              },
+                                            ),
+                                            backgroundColor:
+                                                btnColor.withOpacity(0.075),
+                                          ),
+                                          CircleAvatar(
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.fast_forward,
+                                                size: 12.5,
+                                                color: btnColor,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  did = id;
+                                                  dcat = cat;
+                                                  dname = taskname;
+                                                  cxID = CxID.toString();
+                                                  dendDate = endDate.toString();
+                                                  lead = "move";
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer();
+                                                });
+                                              },
+                                            ),
+                                            backgroundColor:
+                                                btnColor.withOpacity(0.075),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        )),
+                  ),
+                ],
+              ),
+            )
+          : SizedBox();
+    }
+    return ListView(
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      scrollDirection: Axis.vertical,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: bgColor,
+          ),
+          width: size.width,
+          height: size.height * 0.31,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              listtitle(_clrslist[0], "NEW", _tapslist[0], () {
+                setState(() {
+                  _tapslist[0] = !_tapslist[0];
+                });
+              }),
+              SizedBox(height: 30.0),
+              listheader(),
+              SizedBox(height: 30.0),
+              Visibility(
+                child: listmiddle("NEW"),
+                visible: _tapslist[0],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: bgColor,
+          ),
+          width: size.width,
+          height: size.height * 0.31,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
+                setState(() {
+                  _tapslist[1] = !_tapslist[1];
+                });
+              }),
+              SizedBox(height: 30.0),
+              listheader(),
+              SizedBox(height: 30.0),
+              Visibility(
+                child: listmiddle("PROSPECT"),
+                visible: _tapslist[1],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: bgColor,
+          ),
+          width: size.width,
+          height: size.height * 0.31,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2], () {
+                setState(() {
+                  _tapslist[2] = !_tapslist[2];
+                });
+              }),
+              SizedBox(height: 30.0),
+              listheader(),
+              SizedBox(height: 30.0),
+              Visibility(
+                child: listmiddle("IN PROGRESS"),
+                visible: _tapslist[2],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: bgColor,
+          ),
+          width: size.width,
+          height: size.height * 0.31,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              listtitle(_clrslist[3], "WON", _tapslist[3], () {
+                setState(() {
+                  _tapslist[3] = !_tapslist[3];
+                });
+              }),
+              SizedBox(height: 30.0),
+              listheader(),
+              SizedBox(height: 30.0),
+              Visibility(
+                child: listmiddle("WON"),
+                visible: _tapslist[3],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.0),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            color: bgColor,
+          ),
+          width: size.width,
+          height: size.height * 0.31,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              listtitle(_clrslist[4], "CLOSE", _tapslist[4], () {
+                setState(() {
+                  _tapslist[4] = !_tapslist[4];
+                });
+              }),
+              SizedBox(height: 30.0),
+              listheader(),
+              SizedBox(height: 30.0),
+              Visibility(
+                child: listmiddle("CLOSE"),
+                visible: _tapslist[4],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> assignvel() async {
+    final List<TaskSearchModel> loadeddata = [];
+    FirebaseFirestore.instance.collection("Tasks").snapshots().listen((event) {
+      event.docs.forEach((element) {
+        values();
+        loadeddata.add(
+          TaskSearchModel(
+              id: element.data()["id"],
+              taskname: element.data()["task"],
+              CxID: element.data()["CxID"],
+              endDate: element.data()["endDate"],
+              startDate: element.data()["startDate"],
+              priority: element.data()["priority"],
+              lastseen: element.data()["lastseen"],
+              cat: element.data()["cat"],
+              message: element.data()["message"],
+              newsta: element.data()["status"],
+              prosta: element.data()["status1"],
+              insta: element.data()["status2"],
+              wonsta: element.data()["status4"],
+              clsta: element.data()["status5"],
+              assign: element.data()["Attachments"],
+              val: element.data()["flag"],
+              logo: element.data()["logo"]),
+        );
+        setState(() {
+          _searchList = loadeddata;
+        });
+      });
+    });
   }
 
   @override

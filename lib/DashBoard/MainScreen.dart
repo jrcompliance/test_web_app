@@ -90,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
           DrawerListTile(
               "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
           DrawerListTile(
-              "Schedule", "assets/Notations/Document.png", Tabs.TaskPreview),
+              "TaskPreview", "assets/Notations/Document.png", Tabs.TaskPreview),
           DrawerListTile(
               "Anylytics", "assets/Notations/Chart.png", Tabs.Analytics),
           DrawerListTile(
