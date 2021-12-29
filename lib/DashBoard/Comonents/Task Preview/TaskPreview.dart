@@ -11,6 +11,7 @@ import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:test_web_app/Constants/Charts.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
@@ -45,6 +46,8 @@ class _TaskPreviewState extends State<TaskPreview>
   bool _isSearching = false;
   String _searchText = "";
   List<TaskSearchModel> searchresult = [];
+
+  bool _isGraph = false;
 
   _TaskPreviewState() {
     _searchController.addListener(() {
@@ -698,6 +701,8 @@ class _TaskPreviewState extends State<TaskPreview>
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (_, index) {
               var snp = snapshot.data!.docs[index];
+              int s = snp["success"];
+              int f = snp["fail"];
               String id = snp["id"];
               String taskname = snp["task"];
               String CxID = snp["CxID"].toString();
@@ -733,6 +738,7 @@ class _TaskPreviewState extends State<TaskPreview>
               String contactname = snp["CompanyDetails"][0]["contactperson"];
               String email = snp["CompanyDetails"][0]["email"];
               String phone = snp["CompanyDetails"][0]["phone"];
+
               return Stack(
                 children: [
                   Row(
@@ -792,7 +798,10 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                       InkWell(
                         child: Tooltip(
-                          message: "${contactname}",
+                          preferBelow: true,
+                          padding: EdgeInsets.all(5.0),
+                          message:
+                              "${"Name : " + contactname + "\n" + "Email  : " + email + "\n" + "Phone : " + phone}",
                           decoration: BoxDecoration(
                             color: btnColor,
                             borderRadius:
@@ -839,7 +848,10 @@ class _TaskPreviewState extends State<TaskPreview>
                               prosta,
                               insta,
                               wonsta,
-                              clsta);
+                              clsta,
+                              s,
+                              f,
+                              assign);
                         },
                       ),
                       Container(
@@ -1027,6 +1039,8 @@ class _TaskPreviewState extends State<TaskPreview>
               var snp = snapshot.data!.docs[index];
               String id = snp["id"];
               String taskname = snp["task"];
+              int s = snp["success"];
+              int f = snp['fail'];
               String CxID = snp["CxID"].toString();
               Timestamp startDate = snp["startDate"];
               String endDate = snp["endDate"];
@@ -1249,7 +1263,10 @@ class _TaskPreviewState extends State<TaskPreview>
                         prosta,
                         insta,
                         wonsta,
-                        clsta);
+                        clsta,
+                        s,
+                        f,
+                        assign);
                   },
                 ),
               );
@@ -2155,7 +2172,7 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   detailspopBox(context, id, taskname, startDate, endDate, priority, lastseen,
-      cat, message, newsta, prosta, insta, wonsta, clsta) {
+      cat, message, newsta, prosta, insta, wonsta, clsta, s, f, assign) {
     Size size = MediaQuery.of(context).size;
     TextEditingController _certificateConroller = TextEditingController();
     String createDate =
@@ -4179,15 +4196,15 @@ class _TaskPreviewState extends State<TaskPreview>
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 InkWell(
-                                    child: Tooltip(
-                                      message: "Agent",
-                                      child: Container(
-                                        padding: EdgeInsets.all(9),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            CircleAvatar(
+                                    child: Container(
+                                      padding: EdgeInsets.all(9),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Tooltip(
+                                            message: "Agents",
+                                            child: CircleAvatar(
                                                 backgroundColor:
                                                     btnColor.withOpacity(0.1),
                                                 child: Lottie.asset(
@@ -4195,25 +4212,28 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   fit: BoxFit.fill,
                                                   animate: _isHover[3],
                                                 )),
-                                            // ListView.builder(
-                                            //     shrinkWrap: true,
-                                            //     scrollDirection: Axis.horizontal,
-                                            //     physics: ClampingScrollPhysics(),
-                                            //     itemCount: cert.length,
-                                            //     itemBuilder: (_, index) {
-                                            //       return ClipRRect(
-                                            //           clipBehavior:
-                                            //               Clip.antiAliasWithSaveLayer,
-                                            //           borderRadius: BorderRadius.all(
-                                            //               Radius.circular(30.0)),
-                                            //           child: SizedBox(
-                                            //               width: 30,
-                                            //               height: 30,
-                                            //               child: Image.network(
-                                            //                   cert[index]["uid1"])));
-                                            //     })
-                                          ],
-                                        ),
+                                          ),
+                                          ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              physics: ClampingScrollPhysics(),
+                                              itemCount: assign.length,
+                                              itemBuilder: (_, index) {
+                                                return ClipRRect(
+                                                    clipBehavior: Clip
+                                                        .antiAliasWithSaveLayer,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                30.0)),
+                                                    child: SizedBox(
+                                                        width: 30,
+                                                        height: 30,
+                                                        child: Image.network(
+                                                            assign[index]
+                                                                ["image"])));
+                                              })
+                                        ],
                                       ),
                                     ),
                                     onHover: (value) {
@@ -4325,7 +4345,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                     ),
                                   ),
                                   onTap: () {
-                                    setState(() {});
+                                    setState(() {
+                                      _isGraph = !_isGraph;
+                                    });
                                   },
                                   onHover: (value) {
                                     _isHover[6] = value;
@@ -4372,126 +4394,78 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                       Expanded(
                         flex: 8,
-                        child: StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("Tasks")
-                                .where("id", isEqualTo: id)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) {
-                                return Container();
-                              } else if (snapshot.data!.docs.isEmpty) {
-                                return Text(
-                                  "No History Found",
-                                  style: TxtStls.fieldtitlestyle,
-                                );
-                              }
-                              return ListView.separated(
-                                  shrinkWrap: true,
-                                  separatorBuilder: (_, i) => Divider(
-                                        height: 10,
-                                        color: Color(0xFFE0E0E0),
-                                      ),
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, index) {
-                                    List lr =
-                                        snapshot.data!.docs[index]["Activity"];
-                                    return ListView.builder(
+                        child: _isGraph
+                            ? Chart(context, s, f)
+                            : StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("Tasks")
+                                    .where("id", isEqualTo: id)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Container();
+                                  } else if (snapshot.data!.docs.isEmpty) {
+                                    return Text(
+                                      "No History Found",
+                                      style: TxtStls.fieldtitlestyle,
+                                    );
+                                  }
+                                  return ListView.separated(
                                       shrinkWrap: true,
-                                      itemCount: lr.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        String statecolor = lr[index]["From"];
-                                        String statecolor1 = lr[index]["To"];
-                                        String date = DateFormat(
-                                                "EEE | MMM dd, yy")
-                                            .format(lr[index]["When"].toDate());
-                                        String time = DateFormat('hh:mm a')
-                                            .format(lr[index]["When"].toDate());
-                                        DateTime dt1 = DateTime.parse(
-                                            lr[index]["LatDate"]);
-                                        String lastDate =
-                                            DateFormat("EEE | MMM dd, yy")
-                                                .format(dt1);
+                                      separatorBuilder: (_, i) => Divider(
+                                            height: 10,
+                                            color: Color(0xFFE0E0E0),
+                                          ),
+                                      itemCount: snapshot.data!.docs.length,
+                                      itemBuilder: (context, index) {
+                                        List lr = snapshot.data!.docs[index]
+                                            ["Activity"];
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: lr.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            String statecolor =
+                                                lr[index]["From"];
+                                            String statecolor1 =
+                                                lr[index]["To"];
+                                            String date = DateFormat(
+                                                    "EEE | MMM dd, yy")
+                                                .format(
+                                                    lr[index]["When"].toDate());
+                                            String time = DateFormat('hh:mm a')
+                                                .format(
+                                                    lr[index]["When"].toDate());
+                                            DateTime dt1 = DateTime.parse(
+                                                lr[index]["LatDate"]);
+                                            String lastDate =
+                                                DateFormat("EEE | MMM dd, yy")
+                                                    .format(dt1);
 
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                                color: bgColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0))),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Row(
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                padding: EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                    color: bgColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceAround,
                                                   children: [
-                                                    Container(
-                                                        child: Row(
+                                                    Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                       children: [
-                                                        CircleAvatar(
-                                                          backgroundColor:
-                                                              btnColor
-                                                                  .withOpacity(
-                                                                      0.1),
-                                                          child: Icon(
-                                                              Icons
-                                                                  .fast_forward,
-                                                              color: btnColor),
-                                                        ),
-                                                        Text(
-                                                          date,
-                                                          style: TxtStls
-                                                              .fieldstyle,
-                                                        ),
-                                                      ],
-                                                    )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  btnColor
-                                                                      .withOpacity(
-                                                                          0.1),
-                                                              child: Icon(
-                                                                  Icons.timer,
-                                                                  color:
-                                                                      btnColor),
-                                                            ),
-                                                            Text(time,
-                                                                style: TxtStls
-                                                                    .fieldstyle),
-                                                          ],
-                                                        )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Row(
+                                                        Container(
+                                                            child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .spaceAround,
@@ -4503,294 +4477,368 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           0.1),
                                                               child: Icon(
                                                                   Icons
-                                                                      .date_range,
+                                                                      .fast_forward,
                                                                   color:
                                                                       btnColor),
                                                             ),
-                                                            Text(lastDate,
-                                                                style: TxtStls
-                                                                    .fieldstyle),
+                                                            Text(
+                                                              date,
+                                                              style: TxtStls
+                                                                  .fieldstyle,
+                                                            ),
                                                           ],
                                                         )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 50,
-                                                      child: lr[index]["Yes"] ==
-                                                              true
-                                                          ? InkWell(
-                                                              onTap: () {},
-                                                              onHover: (value) {
-                                                                _isHover[7] =
-                                                                    value;
-                                                                setState(() {});
-                                                              },
-                                                              child: CircleAvatar(
+                                                        Container(
+                                                          color:
+                                                              Color(0xFFE0E0E0),
+                                                          height: 40,
+                                                          width: 1,
+                                                        ),
+                                                        Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              children: [
+                                                                CircleAvatar(
                                                                   backgroundColor:
                                                                       btnColor
                                                                           .withOpacity(
+                                                                              0.1),
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .timer,
+                                                                      color:
+                                                                          btnColor),
+                                                                ),
+                                                                Text(time,
+                                                                    style: TxtStls
+                                                                        .fieldstyle),
+                                                              ],
+                                                            )),
+                                                        Container(
+                                                          color:
+                                                              Color(0xFFE0E0E0),
+                                                          height: 40,
+                                                          width: 1,
+                                                        ),
+                                                        Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  backgroundColor:
+                                                                      btnColor
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .date_range,
+                                                                      color:
+                                                                          btnColor),
+                                                                ),
+                                                                Text(lastDate,
+                                                                    style: TxtStls
+                                                                        .fieldstyle),
+                                                              ],
+                                                            )),
+                                                        Container(
+                                                          color:
+                                                              Color(0xFFE0E0E0),
+                                                          height: 40,
+                                                          width: 1,
+                                                        ),
+                                                        Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          width: 50,
+                                                          child: lr[index]
+                                                                      ["Yes"] ==
+                                                                  true
+                                                              ? InkWell(
+                                                                  onTap: () {},
+                                                                  onHover:
+                                                                      (value) {
+                                                                    _isHover[
+                                                                            7] =
+                                                                        value;
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  child: CircleAvatar(
+                                                                      backgroundColor:
+                                                                          btnColor.withOpacity(
                                                                               0.2),
-                                                                  child: _isHover[
-                                                                          7]
-                                                                      ? Lottie.asset(
-                                                                          "assets/Lotties/success.json",
-                                                                          reverse:
-                                                                              true)
-                                                                      : Image.asset(
-                                                                          "assets/Images/success.png")))
-                                                          : InkWell(
-                                                              onTap: () {},
-                                                              onHover: (value) {
-                                                                _isHover[8] =
-                                                                    value;
-                                                                setState(() {});
-                                                              },
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    btnColor
-                                                                        .withOpacity(
-                                                                            0.1),
-                                                                child: _isHover[
-                                                                        8]
-                                                                    ? Lottie.asset(
-                                                                        "assets/Lotties/fail.json",
-                                                                        reverse:
-                                                                            true)
-                                                                    : SizedBox(
-                                                                        height:
-                                                                            30,
-                                                                        width:
-                                                                            30,
-                                                                        child: Image
-                                                                            .network(
-                                                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        ),
-                                                                      ),
-                                                              )),
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                  height: size.height * 0.001,
-                                                  color: Color(0xFFE0E0E0),
-                                                ),
-                                                SizedBox(height: 5),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Text("From",
-                                                              style: TxtStls
-                                                                  .fieldstyle),
-                                                          Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            width: 120,
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4.0),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                              color: FlagService
-                                                                  .stateClr(
-                                                                      statecolor),
-                                                            ),
-                                                            child: Text(
-                                                                lr[index]
-                                                                    ["From"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1),
+                                                                      child: _isHover[7]
+                                                                          ? Lottie.asset(
+                                                                              "assets/Lotties/success.json",
+                                                                              reverse:
+                                                                                  true)
+                                                                          : Image.asset(
+                                                                              "assets/Images/success.png")))
+                                                              : InkWell(
+                                                                  onTap: () {},
+                                                                  onHover:
+                                                                      (value) {
+                                                                    _isHover[
+                                                                            8] =
+                                                                        value;
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    backgroundColor:
+                                                                        btnColor
+                                                                            .withOpacity(0.1),
+                                                                    child: _isHover[
+                                                                            8]
+                                                                        ? Lottie.asset(
+                                                                            "assets/Lotties/fail.json",
+                                                                            reverse:
+                                                                                true)
+                                                                        : SizedBox(
+                                                                            height:
+                                                                                30,
+                                                                            width:
+                                                                                30,
+                                                                            child:
+                                                                                Image.network(
+                                                                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
+                                                                              fit: BoxFit.fill,
+                                                                            ),
+                                                                          ),
+                                                                  )),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      height:
+                                                          size.height * 0.001,
+                                                      color: Color(0xFFE0E0E0),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              Text("From",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            4.0),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0)),
+                                                                  color: FlagService
+                                                                      .stateClr(
+                                                                          statecolor),
+                                                                ),
+                                                                child: Text(
+                                                                    lr[index][
+                                                                        "From"],
+                                                                    style: TxtStls
+                                                                        .fieldstyle1),
+                                                              ),
+                                                              Text("TO",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            4.0),
+                                                                width: 120,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0)),
+                                                                  color: FlagService
+                                                                      .stateClr1(
+                                                                          statecolor1),
+                                                                ),
+                                                                child: Text(
+                                                                    lr[index]
+                                                                        ["To"],
+                                                                    style: TxtStls
+                                                                        .fieldstyle1),
+                                                              )
+                                                            ],
                                                           ),
-                                                          Text("TO",
-                                                              style: TxtStls
-                                                                  .fieldstyle),
+                                                        ),
+                                                        Container(
+                                                          color:
+                                                              Color(0xFFE0E0E0),
+                                                          height: 40,
+                                                          width: 1,
+                                                        ),
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceEvenly,
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  backgroundColor:
+                                                                      btnColor
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .videogame_asset,
+                                                                      color:
+                                                                          btnColor),
+                                                                ),
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              4.0),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: 150,
+                                                                  decoration: BoxDecoration(
+                                                                      color: lr[index]["Bound"] ==
+                                                                              "InBound"
+                                                                          ? goodClr
+                                                                          : flwClr,
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(10.0))),
+                                                                  child: Text(
+                                                                    lr[index][
+                                                                        "Bound"],
+                                                                    style: TxtStls
+                                                                        .fieldstyle1,
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              4.0),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: 100,
+                                                                  decoration: BoxDecoration(
+                                                                      color: clr(
+                                                                          lr[index]
+                                                                              [
+                                                                              "Action"]),
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(10.0))),
+                                                                  child: Text(
+                                                                      lr[index][
+                                                                          "Action"],
+                                                                      style: TxtStls
+                                                                          .fieldstyle1),
+                                                                ),
+                                                              ]),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
                                                           Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4.0),
-                                                            width: 120,
+                                                            child: Row(
+                                                              children: [
+                                                                Text("Notes : ",
+                                                                    style: TxtStls
+                                                                        .fieldstyle),
+                                                                Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    lr[index]
+                                                                        ["Who"],
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                             alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
+                                                                .centerLeft,
+                                                          ),
+                                                          Card(
+                                                            shape:
+                                                                RoundedRectangleBorder(
                                                               borderRadius: BorderRadius
                                                                   .all(Radius
                                                                       .circular(
                                                                           10.0)),
-                                                              color: FlagService
-                                                                  .stateClr1(
-                                                                      statecolor1),
                                                             ),
-                                                            child: Text(
-                                                                lr[index]["To"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1),
+                                                            elevation: 10,
+                                                            child: Container(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                height: 100,
+                                                                width:
+                                                                    size.width *
+                                                                        0.35,
+                                                                child: Text(
+                                                                    lr[index][
+                                                                        "Note"],
+                                                                    style: TxtStls
+                                                                        .notestyle)),
                                                           )
                                                         ],
                                                       ),
                                                     ),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  btnColor
-                                                                      .withOpacity(
-                                                                          0.1),
-                                                              child: Icon(
-                                                                  Icons
-                                                                      .videogame_asset,
-                                                                  color:
-                                                                      btnColor),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(4.0),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: 150,
-                                                              decoration: BoxDecoration(
-                                                                  color: lr[index]
-                                                                              [
-                                                                              "Bound"] ==
-                                                                          "InBound"
-                                                                      ? goodClr
-                                                                      : flwClr,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              child: Text(
-                                                                lr[index]
-                                                                    ["Bound"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(4.0),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: 100,
-                                                              decoration: BoxDecoration(
-                                                                  color: clr(lr[
-                                                                          index]
-                                                                      [
-                                                                      "Action"]),
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              child: Text(
-                                                                  lr[index][
-                                                                      "Action"],
-                                                                  style: TxtStls
-                                                                      .fieldstyle1),
-                                                            ),
-                                                          ]),
-                                                    ),
                                                   ],
                                                 ),
-                                                Container(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text("Notes : ",
-                                                                style: TxtStls
-                                                                    .fieldstyle),
-                                                            Container(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                lr[index]
-                                                                    ["Who"],
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                      ),
-                                                      Card(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                        ),
-                                                        elevation: 10,
-                                                        child: Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 10),
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            height: 100,
-                                                            width: size.width *
-                                                                0.35,
-                                                            child: Text(
-                                                                lr[index]
-                                                                    ["Note"],
-                                                                style: TxtStls
-                                                                    .notestyle)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                              ),
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  });
-                            }),
+                                      });
+                                }),
                       ),
                     ],
                   ),
@@ -5055,6 +5103,8 @@ class _TaskPreviewState extends State<TaskPreview>
                         var snp = snapshot.data!.docs[index];
                         String id = snp["id"];
                         String taskname = snp["task"];
+                        int s = snp["success"];
+                        int f = snp['fail'];
                         String CxID = snp["CxID"].toString();
                         Timestamp startDate = snp["startDate"];
                         String endDate = snp["endDate"];
@@ -5185,7 +5235,10 @@ class _TaskPreviewState extends State<TaskPreview>
                                         prosta,
                                         insta,
                                         wonsta,
-                                        clsta);
+                                        clsta,
+                                        s,
+                                        f,
+                                        assign);
                                   },
                                 ),
                                 Container(
@@ -5329,6 +5382,9 @@ class _TaskPreviewState extends State<TaskPreview>
     } else if (_isSearching == true) {
       return searchresult.length != 0 || _searchController.text.isNotEmpty
           ? Container(
+              decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
               child: Column(
                 children: [
                   Expanded(flex: 1, child: listheader()),
@@ -5466,21 +5522,21 @@ class _TaskPreviewState extends State<TaskPreview>
                                             ],
                                           )),
                                       onTap: () {
-                                        detailspopBox(
-                                            context,
-                                            id,
-                                            taskname,
-                                            startDate,
-                                            endDate,
-                                            priority,
-                                            lastseen,
-                                            cat,
-                                            message,
-                                            newsta,
-                                            prosta,
-                                            insta,
-                                            wonsta,
-                                            clsta);
+                                        // detailspopBox(
+                                        //     context,
+                                        //     id,
+                                        //     taskname,
+                                        //     startDate,
+                                        //     endDate,
+                                        //     priority,
+                                        //     lastseen,
+                                        //     cat,
+                                        //     message,
+                                        //     newsta,
+                                        //     prosta,
+                                        //     insta,
+                                        //     wonsta,
+                                        //     clsta);
                                       },
                                     ),
                                     Container(
@@ -5733,6 +5789,7 @@ class _TaskPreviewState extends State<TaskPreview>
   Future<void> assignvel() async {
     final List<TaskSearchModel> loadeddata = [];
     FirebaseFirestore.instance.collection("Tasks").snapshots().listen((event) {
+      print(event.docs.length);
       event.docs.forEach((element) {
         values();
         loadeddata.add(

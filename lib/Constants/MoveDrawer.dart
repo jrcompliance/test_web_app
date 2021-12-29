@@ -491,6 +491,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     ProgressUpdsate.updateCat(did, dcat, activeid,
                         noteController, dendDate, radioItem, _choosenValue);
                     EndDateOperations.updateEdateTask(did, _endDateController);
+                    GraphValueServices.graph(dendDate, did);
                     Navigator.pop(context);
                   },
                 ),
@@ -785,14 +786,10 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     val();
                     myConter(did, addtime!);
                     Navigator.pop(context);
+                    ProgressUpdsate.updatesame(did, dcat, noteController,
+                        dendDate, radioItem, _choosenValue);
+                    GraphValueServices.graph(dendDate, did);
                   });
-
-                  // val();
-                  // print(addtime);
-                  // disable.off(did, addtime);
-                  // ProgressUpdsate.updatesame(did, dcat, noteController,
-                  //     dendDate, radioItem, _choosenValue);
-                  // Navigator.pop(context);
                 },
               ),
             ],

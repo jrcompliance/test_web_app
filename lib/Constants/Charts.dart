@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 Widget Chart(BuildContext context, s, f) {
-  final height = MediaQuery.of(context).size.height;
-  final width = MediaQuery.of(context).size.width;
-  return Row(
+  return Column(
     children: [
-      Container(
-        height: height * 0.35,
-        width: width * 0.445 / 2,
+      Expanded(
+        flex: 2,
         child: PieChart(
           PieChartData(
             pieTouchData: PieTouchData(touchCallback: (clickResponse) {
@@ -21,56 +18,45 @@ Widget Chart(BuildContext context, s, f) {
             startDegreeOffset: -90,
             sections: [
               PieChartSectionData(
-                color: wonClr,
-                value: s,
-                showTitle: true,
-                radius: 40,
-              ),
+                  color: wonClr, value: s, showTitle: true, radius: 20),
               PieChartSectionData(
                 color: clsClr,
                 value: f,
                 showTitle: true,
-                radius: 40,
-              ),
-              PieChartSectionData(
-                color: statClr.inpro,
-                value: 0,
-                showTitle: true,
-                radius: 40,
+                radius: 30,
               ),
             ],
           ),
         ),
       ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: wonClr,
-                size: 15,
-              ),
-              label: Text("IN TIME :")),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: clsClr,
-                size: 15,
-              ),
-              label: Text("MISSED UP :")),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: statClr.inpro,
-                size: 15,
-              ),
-              label: Text("ON DEMAND CLIENTS :")),
-        ],
+      Expanded(
+        flex: 1,
+        child: Column(
+          children: [
+            TextButton.icon(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.circle,
+                  color: wonClr,
+                  size: 15,
+                ),
+                label: Text(
+                  "IN TIME : ${s}",
+                  style: TxtStls.fieldstyle,
+                )),
+            TextButton.icon(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.circle,
+                  color: clsClr,
+                  size: 15,
+                ),
+                label: Text(
+                  "MISSED UP : ${f}",
+                  style: TxtStls.fieldstyle,
+                ))
+          ],
+        ),
       )
     ],
   );
