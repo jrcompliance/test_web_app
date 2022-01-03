@@ -43,16 +43,8 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4), () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      if (prefs.getString("email") == null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => LoginScreen()));
-      } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => MainScreen()));
-      }
-    });
+    Future.delayed(Duration(seconds: 4))
+        .then((value) => _checkAuthentication());
   }
 
   @override
@@ -64,6 +56,17 @@ class _LandingScreenState extends State<LandingScreen> {
         color: btnColor,
       )),
     );
+  }
+
+  _checkAuthentication() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("email") == null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LoginScreen()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => MainScreen()));
+    }
   }
 }
 
@@ -293,3 +296,40 @@ class _LandingScreenState extends State<LandingScreen> {
 //     });
 //   }
 // }
+
+class dummy extends StatefulWidget {
+  const dummy({Key? key}) : super(key: key);
+
+  @override
+  _dummyState createState() => _dummyState();
+}
+
+class _dummyState extends State<dummy> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.getData();
+  }
+
+  getData() async {
+    await FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image":
+                "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/profiles%2Fyalagala.png?alt=media&token=dbec4f3b-1a84-4424-9cc2-17f9cece531d",
+            "uid": "t8mdhQXiZfg41Lxq7uUp9SLm1Q52",
+          }
+        ])
+        .snapshots()
+        .listen((event) {
+          print(event.docs.length);
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}

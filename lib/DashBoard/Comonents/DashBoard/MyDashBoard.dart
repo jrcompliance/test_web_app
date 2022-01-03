@@ -5776,7 +5776,6 @@
 //           padding: const EdgeInsets.all(8.0),
 //           child: Container(
 //               width: size.width,
-//               height: size.height * 0.15,
 //               decoration: BoxDecoration(
 //                 color: bgColor,
 //                 borderRadius: BorderRadius.only(
@@ -5809,6 +5808,7 @@
 //         ),
 //       );
 //     }
+//               height: size.height * 0.15,
 //   }
 //
 //   addContact(BuildContext context, id, logo) {

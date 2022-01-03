@@ -3,14 +3,15 @@ import 'dart:html';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Charts.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
@@ -32,16 +33,16 @@ class _TaskPreviewState extends State<TaskPreview>
     with TickerProviderStateMixin {
   //search method starts from here.....
 
-  Widget appBarTitle = new Text(
+  Widget appBarTitle = Text(
     "Search Example",
-    style: new TextStyle(color: Colors.white),
+    style: TextStyle(color: Colors.white),
   );
-  Icon icon = new Icon(
+  Icon icon = Icon(
     Icons.search,
     color: Colors.white,
   );
-  final globalKey = new GlobalKey<ScaffoldState>();
-  final TextEditingController _searchController = new TextEditingController();
+  final globalKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _searchController = TextEditingController();
   List<TaskSearchModel> _searchList = [];
   bool _isSearching = false;
   String _searchText = "";
@@ -77,13 +78,13 @@ class _TaskPreviewState extends State<TaskPreview>
 
   void _handleSearchEnd() {
     setState(() {
-      this.icon = new Icon(
+      this.icon = Icon(
         Icons.search,
         color: Colors.white,
       );
-      this.appBarTitle = new Text(
+      this.appBarTitle = Text(
         "Search Sample",
-        style: new TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.white),
       );
       _isSearching = false;
       _searchController.clear();
@@ -92,47 +93,45 @@ class _TaskPreviewState extends State<TaskPreview>
 
   void searchOperation(String searchText) {
     searchresult.clear();
-    if (_isSearching != null) {
-      for (int i = 0; i < _searchList.length; i++) {
-        String data = _searchList[i].taskname as String;
-        String id = _searchList[i].id as String;
-        int CxID = _searchList[i].CxID as int;
-        Timestamp? startDate = _searchList[i].startDate;
-        String endDate = _searchList[i].endDate as String;
-        String priority = _searchList[i].priority as String;
-        Timestamp? lastseen = _searchList[i].lastseen;
-        String cat = _searchList[i].cat as String;
-        String message = _searchList[i].message as String;
-        String newsta = _searchList[i].newsta as String;
-        String prosta = _searchList[i].prosta as String;
-        String insta = _searchList[i].insta as String;
-        String wonsta = _searchList[i].wonsta as String;
-        String clsta = _searchList[i].clsta as String;
-        List assign = _searchList[i].assign as List;
-        bool val = _searchList[i].val as bool;
-        String logo = _searchList[i].logo as String;
+    for (int i = 0; i < _searchList.length; i++) {
+      String data = _searchList[i].taskname;
+      String id = _searchList[i].id as String;
+      int CxID = _searchList[i].CxID;
+      Timestamp? startDate = _searchList[i].startDate;
+      String endDate = _searchList[i].endDate;
+      String priority = _searchList[i].priority;
+      Timestamp? lastseen = _searchList[i].lastseen;
+      String cat = _searchList[i].cat;
+      String message = _searchList[i].message;
+      String newsta = _searchList[i].newsta;
+      String prosta = _searchList[i].prosta;
+      String insta = _searchList[i].insta;
+      String wonsta = _searchList[i].wonsta;
+      String clsta = _searchList[i].clsta;
+      List assign = _searchList[i].assign;
+      bool val = _searchList[i].val;
+      String logo = _searchList[i].logo;
 
-        if (data.toLowerCase().contains(searchText.toLowerCase())) {
-          searchresult.add(TaskSearchModel(
-            id: id,
-            taskname: data,
-            CxID: CxID,
-            startDate: startDate,
-            endDate: endDate,
-            priority: priority,
-            lastseen: lastseen,
-            cat: cat,
-            message: message,
-            newsta: newsta,
-            prosta: prosta,
-            insta: insta,
-            wonsta: wonsta,
-            clsta: clsta,
-            assign: assign,
-            val: val,
-            logo: logo,
-          ));
-        }
+      if (data.toLowerCase().contains(searchText.toLowerCase())) {
+        searchresult.add(TaskSearchModel(
+          id: id,
+          taskname: data,
+          CxID: CxID,
+          startDate: startDate,
+          endDate: endDate,
+          priority: priority,
+          lastseen: lastseen,
+          cat: cat,
+          message: message,
+          newsta: newsta,
+          prosta: prosta,
+          insta: insta,
+          wonsta: wonsta,
+          clsta: clsta,
+          assign: assign,
+          val: val,
+          logo: logo,
+        ));
       }
     }
   }
@@ -221,13 +220,11 @@ class _TaskPreviewState extends State<TaskPreview>
   @override
   void initState() {
     super.initState();
-    assignvel();
-    values();
-
     _controller = TabController(
       length: 3,
       vsync: this,
     );
+    Future.delayed(Duration(seconds: 5)).then((value) => assignvel());
   }
 
   @override
@@ -258,7 +255,9 @@ class _TaskPreviewState extends State<TaskPreview>
                 children: [
                   Container(
                     width: size.width * 0.2,
-                    decoration: deco,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     child: Padding(
                       padding: EdgeInsets.only(left: 15, right: 15, top: 2),
                       child: TextField(
@@ -324,61 +323,6 @@ class _TaskPreviewState extends State<TaskPreview>
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
-                  PopupMenuButton(
-                    padding: EdgeInsets.all(0),
-                    offset: Offset(0, size.height * 0.037),
-                    child: Container(
-                      width: size.width * 0.05,
-                      height: size.height * 0.035,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          gradient: LinearGradient(colors: [
-                            Colors.pinkAccent,
-                            Colors.deepPurpleAccent
-                          ])),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.filter_alt_rounded,
-                            color: bgColor,
-                          ),
-                          Text(
-                            "Filters",
-                            style: TxtStls.fieldstyle1,
-                          )
-                        ],
-                      ),
-                    ),
-                    itemBuilder: (BuildContext context) {
-                      return <PopupMenuEntry<Widget>>[
-                        PopupMenuItem<Widget>(
-                          padding: EdgeInsets.all(0),
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            child: Scrollbar(
-                              child: ListView.builder(
-                                itemCount: filterlist.length,
-                                itemBuilder: (context, index) {
-                                  final trans = filterlist[index];
-                                  return PopupMenuItem(
-                                    child: Text(
-                                      trans.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      ];
-                    },
-                  ),
                   SizedBox(width: size.width * 0.01),
                   PopupMenuButton(
                       onCanceled: () {
@@ -412,7 +356,6 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                       onSelected: (int value) {
                         duefilter = value;
-                        print(duefilter);
                         setState(() {});
                       },
                       itemBuilder: (context) {
@@ -440,34 +383,37 @@ class _TaskPreviewState extends State<TaskPreview>
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        gradient: LinearGradient(colors: [
-                          Colors.pinkAccent,
-                          Colors.deepPurpleAccent
-                        ])),
-                    child: RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10.0))),
-                      onPressed: () {
-                        lead = "Lead";
-                        Scaffold.of(context).openEndDrawer();
-                        setState(() {});
-                      },
-                      icon: Icon(
-                        Icons.add,
-                        color: bgColor,
-                      ),
-                      label: Text(
-                        "Create New Lead",
-                        style: TxtStls.fieldstyle1,
-                      ),
-                      color: Colors.transparent,
-                      elevation: 0.0,
-                    ),
-                  ),
+                  role == "Admin"
+                      ? Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              gradient: LinearGradient(colors: [
+                                Colors.pinkAccent,
+                                Colors.deepPurpleAccent
+                              ])),
+                          child: RaisedButton.icon(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            onPressed: () {
+                              lead = "Lead";
+                              Scaffold.of(context).openEndDrawer();
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: bgColor,
+                            ),
+                            label: Text(
+                              "Create New Lead",
+                              style: TxtStls.fieldstyle1,
+                            ),
+                            color: Colors.transparent,
+                            elevation: 0.0,
+                          ),
+                        )
+                      : SizedBox(),
                 ],
               )
             ],
@@ -603,38 +549,96 @@ class _TaskPreviewState extends State<TaskPreview>
 
   Widget listtitle(clr, title, taps, _ontap) {
     Size size = MediaQuery.of(context).size;
-    return InkWell(
-      onTap: _ontap,
-      child: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0))),
-        child: Container(
-          width: size.width * 0.07,
-          height: size.height * 0.05,
-          decoration: BoxDecoration(
-            color: clr,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0)),
-          ),
-          child: Row(
-            children: [
-              taps
-                  ? const Icon(
-                      Icons.arrow_drop_down_outlined,
-                      color: bgColor,
-                    )
-                  : const Icon(
-                      Icons.arrow_drop_up_outlined,
-                      color: bgColor,
-                    ),
-              Text(title, style: TxtStls.fieldstyle1)
-            ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        InkWell(
+          onTap: _ontap,
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0))),
+            child: Container(
+              width: size.width * 0.07,
+              height: size.height * 0.05,
+              decoration: BoxDecoration(
+                color: clr,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0)),
+              ),
+              child: Row(
+                children: [
+                  taps
+                      ? const Icon(
+                          Icons.arrow_drop_down_outlined,
+                          color: bgColor,
+                        )
+                      : const Icon(
+                          Icons.arrow_drop_up_outlined,
+                          color: bgColor,
+                        ),
+                  Text(title, style: TxtStls.fieldstyle1)
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        PopupMenuButton(
+          padding: EdgeInsets.all(0),
+          offset: Offset(0, size.height * 0.037),
+          child: Container(
+            width: size.width * 0.05,
+            height: size.height * 0.035,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                gradient: LinearGradient(
+                    colors: [Colors.pinkAccent, Colors.deepPurpleAccent])),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(
+                  Icons.filter_alt_rounded,
+                  color: bgColor,
+                ),
+                Text(
+                  "Filters",
+                  style: TxtStls.fieldstyle1,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (BuildContext context) {
+            return <PopupMenuEntry<Widget>>[
+              PopupMenuItem<Widget>(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: Scrollbar(
+                    child: ListView.builder(
+                      itemCount: filterlist.length,
+                      itemBuilder: (context, index) {
+                        final trans = filterlist[index];
+                        return PopupMenuItem(
+                          child: Text(
+                            trans.toString(),
+                            style: TxtStls.fieldstyle,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ];
+          },
+        ),
+      ],
     );
   }
 
@@ -736,8 +740,8 @@ class _TaskPreviewState extends State<TaskPreview>
                 (int _) => ImageElement()..src = logo,
               );
               String contactname = snp["CompanyDetails"][0]["contactperson"];
-              String email = snp["CompanyDetails"][0]["email"];
-              String phone = snp["CompanyDetails"][0]["phone"];
+              String cemail = snp["CompanyDetails"][0]["email"];
+              String cphone = snp["CompanyDetails"][0]["phone"];
 
               return Stack(
                 children: [
@@ -765,7 +769,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                     maxRadius: 15,
                                     child: IconButton(
                                       icon: Icon(
-                                        Icons.more_horiz,
+                                        Icons.timer_off_rounded,
                                         size: 12.5,
                                         color: Colors.red,
                                       ),
@@ -797,17 +801,9 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                       ),
                       InkWell(
-                        child: Tooltip(
-                          preferBelow: true,
-                          padding: EdgeInsets.all(5.0),
-                          message:
-                              "${"Name : " + contactname + "\n" + "Email  : " + email + "\n" + "Phone : " + phone}",
-                          decoration: BoxDecoration(
-                            color: btnColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(4)),
-                          ),
-                          textStyle: TxtStls.fieldstyle1,
+                        child: JustTheTooltip(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          preferredDirection: AxisDirection.right,
                           child: Container(
                               width: 230,
                               alignment: Alignment.centerLeft,
@@ -832,6 +828,62 @@ class _TaskPreviewState extends State<TaskPreview>
                                   ),
                                 ],
                               )),
+                          content: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10.0),
+                            width: size.width * 0.125,
+                            height: size.height * 0.17,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 15,
+                                      child: Icon(Icons.person,
+                                          color: btnColor, size: 15),
+                                      backgroundColor:
+                                          btnColor.withOpacity(0.1),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(contactname,
+                                        style: TxtStls.fieldstyle),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 15,
+                                      child: Icon(Icons.email,
+                                          color: btnColor, size: 15),
+                                      backgroundColor:
+                                          btnColor.withOpacity(0.1),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(cemail, style: TxtStls.fieldstyle),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 15,
+                                      child: Icon(
+                                        Icons.phone,
+                                        color: btnColor,
+                                        size: 15,
+                                      ),
+                                      backgroundColor:
+                                          btnColor.withOpacity(0.1),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(cphone, style: TxtStls.fieldstyle),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          shadow: Shadow(color: btnColor, blurRadius: 20),
                         ),
                         onTap: () {
                           detailspopBox(
@@ -876,17 +928,75 @@ class _TaskPreviewState extends State<TaskPreview>
                               style: ClrStls.endClr)),
                       Container(
                         width: 190,
+                        height: 30,
                         alignment: Alignment.centerLeft,
                         child: Row(
-                          children: assign
-                              .map((e) => ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(40.0)),
-                                  child: SizedBox(
-                                      height: 30,
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: assign.length,
+                              itemBuilder: (BuildContext context, index) {
+                                return ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    child: SizedBox(
                                       width: 30,
-                                      child: Image.network(e["image"]))))
-                              .toList(),
+                                      height: 500,
+                                      child: Image.network(
+                                        assign[index]["image"],
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                      ),
+                                    ));
+                              },
+                            ),
+                            StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection("EmployeeData")
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  var snp = snapshot.data!.docs;
+                                  String? img;
+                                  if (!snapshot.hasData) {
+                                    return Container();
+                                  }
+                                  return PopupMenuButton(
+                                    icon: Icon(
+                                      Icons.add_circle,
+                                      color: btnColor,
+                                    ),
+                                    color: bgColor,
+                                    itemBuilder: (context) => snp
+                                        .map((item) => PopupMenuItem(
+                                            onTap: () {
+                                              img = item.get("uimage");
+                                              setState(() {});
+                                            },
+                                            value: item.get("uid"),
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      item.get("uimage")),
+                                                ),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  item.get("uname"),
+                                                  style: TxtStls.fieldstyle,
+                                                ),
+                                              ],
+                                            )))
+                                        .toList(),
+                                    onSelected: (value) {
+                                      print(img);
+                                      AssignServices.assign(id, value, img);
+                                    },
+                                  );
+                                }),
+                          ],
                         ),
                       ),
                       Container(
@@ -953,17 +1063,17 @@ class _TaskPreviewState extends State<TaskPreview>
                       if (time == null) {
                         return Text("");
                       }
-
-                      if (time.min == null) {
-                        return Text("");
-                      }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           LabelText(
-                              label: "Hrs", value: "${time.hours.toString()}"),
+                              label: "Hrs",
+                              value:
+                                  "${time.hours == null ? 0 : time.hours.toString()}"),
                           LabelText(
-                              label: "Min", value: "${time.min.toString()}"),
+                              label: "Min",
+                              value:
+                                  "${time.min == null ? 0 : time.min.toString()}"),
                           LabelText(
                               label: "Sec", value: "${time.sec.toString()}"),
                         ],
@@ -1056,6 +1166,8 @@ class _TaskPreviewState extends State<TaskPreview>
               List assign = snp["Attachments"];
               bool val = snp["flag"];
               String logo = snp["logo"];
+              DateTime stamp = snp["time"].toDate();
+              int t = stamp.difference(DateTime.now()).inSeconds;
               // ignore: undefined_prefixed_name
               ui.platformViewRegistry.registerViewFactory(
                 logo,
@@ -1092,21 +1204,11 @@ class _TaskPreviewState extends State<TaskPreview>
                               CircleAvatar(
                                 child: IconButton(
                                   icon: Icon(
-                                    Icons.update,
+                                    Icons.edit,
                                     size: 12.5,
                                     color: btnColor,
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      did = id;
-                                      dcat = cat;
-                                      dname = taskname;
-                                      cxID = CxID;
-                                      dendDate = endDate.toString();
-                                      lead = "update";
-                                      Scaffold.of(context).openEndDrawer();
-                                    });
-                                  },
+                                  onPressed: () {},
                                 ),
                                 backgroundColor: btnColor.withOpacity(0.075),
                               ),
@@ -1189,61 +1291,127 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                         Container(
                             width: 300,
+                            height: 50,
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.all(10.0),
-                            child:
-                                Text("5 Members", style: TxtStls.fieldstyle)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CircleAvatar(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.edit,
-                                  size: 12.5,
-                                  color: btnColor,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                physics: ClampingScrollPhysics(),
+                                itemCount: assign.length,
+                                itemBuilder: (_, index) {
+                                  return ClipRRect(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30.0)),
+                                      child: SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Image.network(
+                                              assign[index]["image"])));
+                                })),
+                        CountdownTimer(
+                          endTime:
+                              DateTime.now().millisecondsSinceEpoch + t * 1000,
+                          widgetBuilder: (BuildContext context,
+                              CurrentRemainingTime? time) {
+                            if (time == null) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  CircleAvatar(
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.update,
+                                        size: 12.5,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          did = id;
+                                          dcat = cat;
+                                          dname = taskname;
+                                          cxID = CxID;
+                                          dendDate = endDate.toString();
+                                          lead = "update";
+                                          Scaffold.of(context).openEndDrawer();
+                                        });
+                                      },
+                                    ),
+                                    backgroundColor:
+                                        btnColor.withOpacity(0.075),
+                                  ),
+                                  SizedBox(width: 10),
+                                  CircleAvatar(
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        size: 12.5,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        _showMyDialog(id);
+                                      },
+                                    ),
+                                    backgroundColor:
+                                        Colors.red.withOpacity(0.075),
+                                  ),
+                                  SizedBox(width: 10),
+                                  CircleAvatar(
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.fast_forward,
+                                        size: 12.5,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          did = id;
+                                          dcat = cat;
+                                          dname = taskname;
+                                          cxID = CxID;
+                                          dendDate = endDate.toString();
+                                          lead = "move";
+                                          Scaffold.of(context).openEndDrawer();
+                                        });
+                                      },
+                                    ),
+                                    backgroundColor:
+                                        btnColor.withOpacity(0.075),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                CircleAvatar(
+                                  child: IconButton(
+                                    tooltip: "Stop Timer",
+                                    icon: Icon(
+                                      Icons.timer_off_rounded,
+                                      size: 12.5,
+                                      color: btnColor,
+                                    ),
+                                    onPressed: () {
+                                      _showMyDialog1(id);
+                                    },
+                                  ),
+                                  backgroundColor: btnColor.withOpacity(0.075),
                                 ),
-                                onPressed: () {},
-                              ),
-                              backgroundColor: btnColor.withOpacity(0.075),
-                            ),
-                            SizedBox(width: 10),
-                            CircleAvatar(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  size: 12.5,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () {
-                                  _showMyDialog(id);
-                                },
-                              ),
-                              backgroundColor: Colors.red.withOpacity(0.075),
-                            ),
-                            SizedBox(width: 10),
-                            CircleAvatar(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.fast_forward,
-                                  size: 12.5,
-                                  color: btnColor,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    did = id;
-                                    dcat = cat;
-                                    dname = taskname;
-                                    cxID = CxID;
-                                    dendDate = endDate.toString();
-                                    lead = "move";
-                                    Scaffold.of(context).openEndDrawer();
-                                  });
-                                },
-                              ),
-                              backgroundColor: btnColor.withOpacity(0.075),
-                            ),
-                          ],
+                                LabelText(
+                                    label: "Hrs",
+                                    value:
+                                        "${time.hours == null ? 0 : time.hours.toString()}"),
+                                LabelText(
+                                    label: "Min",
+                                    value:
+                                        "${time.min == null ? 0 : time.min.toString()}"),
+                                LabelText(
+                                    label: "Sec", value: time.sec.toString()),
+                              ],
+                            );
+                          },
                         )
                       ],
                     ),
@@ -2217,6 +2385,7 @@ class _TaskPreviewState extends State<TaskPreview>
                 icon: Icon(Icons.close),
                 color: neClr,
                 onPressed: () {
+                  UpdateServices.lastseenUpdate(id);
                   Navigator.pop(context);
                 },
               ),
@@ -3571,7 +3740,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                                 () {
                                                                               int currentValue = int.parse(_taxController.text);
                                                                               setState(() {
-                                                                                print("Setting state");
                                                                                 currentValue--;
                                                                                 _taxController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
                                                                               });
@@ -4220,18 +4388,20 @@ class _TaskPreviewState extends State<TaskPreview>
                                               itemCount: assign.length,
                                               itemBuilder: (_, index) {
                                                 return ClipRRect(
-                                                    clipBehavior: Clip
-                                                        .antiAliasWithSaveLayer,
                                                     borderRadius:
                                                         BorderRadius.all(
                                                             Radius.circular(
                                                                 30.0)),
                                                     child: SizedBox(
-                                                        width: 30,
+                                                        width: 35,
                                                         height: 30,
                                                         child: Image.network(
                                                             assign[index]
-                                                                ["image"])));
+                                                                ["image"],
+                                                            fit: BoxFit.cover,
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high)));
                                               })
                                         ],
                                       ),
@@ -5668,9 +5838,9 @@ class _TaskPreviewState extends State<TaskPreview>
                   _tapslist[0] = !_tapslist[0];
                 });
               }),
-              SizedBox(height: 30.0),
+              SizedBox(height: 10.0),
               listheader(),
-              SizedBox(height: 30.0),
+              SizedBox(height: 10.0),
               Visibility(
                 child: listmiddle("NEW"),
                 visible: _tapslist[0],
@@ -5787,42 +5957,42 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Future<void> assignvel() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    uid = prefs.getString("uid");
     final List<TaskSearchModel> loadeddata = [];
-    FirebaseFirestore.instance.collection("Tasks").snapshots().listen((event) {
-      print(event.docs.length);
-      event.docs.forEach((element) {
-        values();
-        loadeddata.add(
-          TaskSearchModel(
-              id: element.data()["id"],
-              taskname: element.data()["task"],
-              CxID: element.data()["CxID"],
-              endDate: element.data()["endDate"],
-              startDate: element.data()["startDate"],
-              priority: element.data()["priority"],
-              lastseen: element.data()["lastseen"],
-              cat: element.data()["cat"],
-              message: element.data()["message"],
-              newsta: element.data()["status"],
-              prosta: element.data()["status1"],
-              insta: element.data()["status2"],
-              wonsta: element.data()["status4"],
-              clsta: element.data()["status5"],
-              assign: element.data()["Attachments"],
-              val: element.data()["flag"],
-              logo: element.data()["logo"]),
-        );
-        setState(() {
-          _searchList = loadeddata;
+    await FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {"image": imageUrl, "uid": uid}
+        ])
+        .snapshots()
+        .listen((event) {
+          event.docs.forEach((element) {
+            values();
+            loadeddata.add(
+              TaskSearchModel(
+                  id: element.data()["id"],
+                  taskname: element.data()["task"],
+                  CxID: element.data()["CxID"],
+                  endDate: element.data()["endDate"],
+                  startDate: element.data()["startDate"],
+                  priority: element.data()["priority"],
+                  lastseen: element.data()["lastseen"],
+                  cat: element.data()["cat"],
+                  message: element.data()["message"],
+                  newsta: element.data()["status"],
+                  prosta: element.data()["status1"],
+                  insta: element.data()["status2"],
+                  wonsta: element.data()["status4"],
+                  clsta: element.data()["status5"],
+                  assign: element.data()["Attachments"],
+                  val: element.data()["flag"],
+                  logo: element.data()["logo"]),
+            );
+            setState(() {
+              _searchList = loadeddata;
+            });
+          });
         });
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    Stream.empty();
   }
 }

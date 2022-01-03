@@ -468,10 +468,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 password: _passwordController.text.toString())
             .then((cred) {
           if (cred.user != null) {
-            prefs.setString("email", _emailController.text.toString());
-            prefs.setString("password", _passwordController.text.toString());
-            prefs.setString("username", _usernameController.text.toString());
-            prefs.setString("phone", _phonenumberController.text.toString());
             storeUserData();
           } else {}
           setState(() => _isLoading = false);
@@ -496,8 +492,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "uname": _usernameController.text.toString(),
       "uemail": _emailController.text.toString(),
       "uphoneNumber": _phonenumberController.text.toString(),
-      "uimage":
-          "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/profiles%2Fpersonpng.jpeg?alt=media&token=6f6aca6c-7da0-48d1-805d-1580d345fa0f",
+      "uimage": "",
       "password": _passwordController.text.toString(),
       "urole": "Employee",
       "TCPB": _isAgree,

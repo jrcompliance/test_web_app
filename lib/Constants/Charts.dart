@@ -23,7 +23,7 @@ Widget Chart(BuildContext context, s, f) {
                 color: clsClr,
                 value: f,
                 showTitle: true,
-                radius: 30,
+                radius: 25,
               ),
             ],
           ),

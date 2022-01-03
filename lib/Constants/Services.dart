@@ -7,7 +7,7 @@ FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];
 
 class ProgressUpdsate {
-  static updateCat(
+  static movetoanotherCategory(
       id, cat, activeid, noteController, lastDate, radioItem, action) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
@@ -58,29 +58,6 @@ class UpdateServices {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
       "lastseen": Timestamp.now(),
-    });
-  }
-}
-
-class CatUpdateServices {
-  static updateCat1(id) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "cat": "IN PROGRESS",
-    });
-  }
-
-  static updateCat3(id) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "cat": "WON",
-    });
-  }
-
-  static updateCat4(id) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "cat": "CLOSE",
     });
   }
 }
@@ -613,3 +590,26 @@ class disable {
     collectionReference.doc(id).update({"time": addtime});
   }
 }
+
+//class CatUpdateServices {
+//   static updateCat1(id) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "cat": "IN PROGRESS",
+//     });
+//   }
+//
+//   static updateCat3(id) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "cat": "WON",
+//     });
+//   }
+//
+//   static updateCat4(id) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "cat": "CLOSE",
+//     });
+//   }
+// }

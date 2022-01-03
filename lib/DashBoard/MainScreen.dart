@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -13,7 +17,6 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Constants/MoveDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
-import 'package:test_web_app/tasksearchmodel.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -31,10 +34,12 @@ class _MainScreenState extends State<MainScreen> {
     this.userdetails();
   }
 
-  Future<void> userdetails() async {
-    fireStore
+  userdetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var uid = prefs.getString("uid");
+    FirebaseFirestore.instance
         .collection("EmployeeData")
-        .where("uid", isEqualTo: _auth.currentUser!.uid.toString())
+        .where("uid", isEqualTo: uid)
         .snapshots()
         .listen((event) {
       event.docs.forEach((element) {
@@ -58,18 +63,29 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
       drawer: SideDrawer(context),
       endDrawer: MoveDrawer(),
       body: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            if (!Responsive.isSmallScreen(context))
-              Expanded(child: SideDrawer(context)),
-            Expanded(flex: 6, child: DashboardBody(context)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!Responsive.isSmallScreen(context))
+                  Expanded(child: SideDrawer(context)),
+                Expanded(flex: 6, child: DashboardBody(context)),
+              ],
+            ),
+            ScaleAnimatedWidget.tween(
+              duration: Duration(milliseconds: 450),
+              scaleDisabled: 1.5,
+              scaleEnabled: 1,
+              child: updateProfile(),
+            )
           ],
         ),
       ),
@@ -77,6 +93,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget SideDrawer(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Drawer(
       elevation: 0.9,
       child: ListView(
@@ -85,8 +102,7 @@ class _MainScreenState extends State<MainScreen> {
           Container(
             alignment: Alignment.center,
             height: 130,
-            child: SizedBox(
-                height: 100, child: Image.asset("assets/Logos/Ologo.png")),
+            child: Image.asset("assets/Logos/Ologo.png"),
           ),
           DrawerListTile(
               "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
@@ -126,7 +142,14 @@ class _MainScreenState extends State<MainScreen> {
                     )
                   : ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      child: Image.network(imageUrl!)),
+                      child: SizedBox(
+                          height: size.height * 0.06,
+                          width: size.width * 0.025,
+                          child: Image.network(
+                            imageUrl!,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                          ))),
               title: username == null
                   ? Text("")
                   : Text(username!, style: TxtStls.fieldstyle),
@@ -181,9 +204,11 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    await _auth.signOut().then((value) => Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false));
+    await _auth.signOut().then((value) {
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
+      prefs.clear();
+    });
   }
 
   Future<void> _showMyDialog() async {
@@ -226,14 +251,119 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  DrawerListTile(title, imageUrl, tab) {
+  updateProfile() {
+    Future.delayed(Duration(seconds: 10));
+    Size size = MediaQuery.of(context).size;
+    if (imageUrl == null || imageUrl == "") {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(0.0),
+        actionsPadding: EdgeInsets.all(0),
+        titlePadding: EdgeInsets.all(0),
+        insetPadding: EdgeInsets.all(0),
+        buttonPadding: EdgeInsets.all(0),
+        backgroundColor: bgColor,
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: bgColor),
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              width: size.width * 0.175,
+              height: size.height * 0.35,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Update Profile Picture",
+                    style: TxtStls.fieldtitlestyle,
+                  ),
+                  InkWell(
+                    child: logoBase64 == null
+                        ? CircleAvatar(
+                            maxRadius: 40.0,
+                            child: Icon(Icons.camera_alt),
+                          )
+                        : CircleAvatar(
+                            maxRadius: 40.0,
+                            backgroundImage: MemoryImage(logoBase64!),
+                          ),
+                    onTap: () {
+                      chooseProfile();
+                    },
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Name : ",
+                        style: TxtStls.fieldstyle,
+                      ),
+                      username == null
+                          ? Text("")
+                          : Text(username!, style: TxtStls.fieldstyle)
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Email : ",
+                        style: TxtStls.fieldstyle,
+                      ),
+                      email == null
+                          ? Text("")
+                          : Text(email!, style: TxtStls.fieldstyle)
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Phone : ",
+                        style: TxtStls.fieldstyle,
+                      ),
+                      phone == null
+                          ? Text("")
+                          : Text(phone!, style: TxtStls.fieldstyle)
+                    ],
+                  ),
+                  logoBase64 == null
+                      ? SizedBox()
+                      : Align(
+                          alignment: Alignment.centerRight,
+                          child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              elevation: 0.0,
+                              onPressed: () {
+                                storeUserData();
+                              },
+                              child: Text(
+                                "Update",
+                                style: TxtStls.fieldstyle1,
+                              ),
+                              color: btnColor),
+                        )
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
+    return Text("");
+  }
+
+  DrawerListTile(title, image, tab) {
     return ListTile(
       hoverColor: btnColor.withOpacity(0.25),
       title: Responsive.isMediumScreen(context)
           ? Text("")
           : Text(title, style: TxtStls.fieldtitlestyle),
       leading: SizedBox(
-        child: Image.asset(imageUrl,
+        child: Image.asset(image,
             fit: BoxFit.fill, filterQuality: FilterQuality.high),
         height: 22.5,
       ),
@@ -243,6 +373,31 @@ class _MainScreenState extends State<MainScreen> {
         });
       },
     );
+  }
+
+  Uint8List? logoBase64;
+  String? name;
+  chooseProfile() async {
+    FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
+    if (pickedfile != null) {
+      Uint8List? fileBytes = pickedfile.files.first.bytes;
+      String fileName = pickedfile.files.first.name;
+      logoBase64 = fileBytes;
+      name = fileName;
+      setState(() {});
+    } else {}
+  }
+
+  Future<void> storeUserData() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    TaskSnapshot upload =
+        await storage.ref('profiles/$name').putData(logoBase64!);
+    String myUrl = await upload.ref.getDownloadURL();
+    String uid = _auth.currentUser!.uid.toString();
+    await fireStore.collection("EmployeeData").doc(uid).update({
+      "uimage": myUrl,
+    }).then((value) => Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
   }
 }
 

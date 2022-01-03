@@ -478,43 +478,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
                       : size.width * 0.5,
                   height: size.height * 0.3,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
+                        alignment: Alignment.centerLeft,
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Recent Interactions",
-                                style: TxtStls.fieldtitlestyle),
-                            PopupMenuButton(
-                              offset: Offset(0, 32),
-                              elevation: 10.0,
-                              shape: TooltipShape(),
-                              icon: Icon(
-                                Icons.more_horiz,
-                              ),
-                              onSelected: (int value) {},
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: 4,
-                                    child: Text(
-                                      "Leads",
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                      value: 5,
-                                      child: Text(
-                                        "Transactions",
-                                        style: TxtStls.fieldstyle,
-                                      )),
-                                ];
-                              },
-                            ),
-                          ],
-                        ),
+                        child: Text("Recent Interactions",
+                            style: TxtStls.fieldtitlestyle),
                       )
                     ],
                   )),

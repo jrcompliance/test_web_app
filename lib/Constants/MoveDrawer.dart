@@ -488,7 +488,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         ? ComapnyUpdateServices.updateCompany(
                             did, _companyController, _websiteController)
                         : null;
-                    ProgressUpdsate.updateCat(did, dcat, activeid,
+                    ProgressUpdsate.movetoanotherCategory(did, dcat, activeid,
                         noteController, dendDate, radioItem, _choosenValue);
                     EndDateOperations.updateEdateTask(did, _endDateController);
                     GraphValueServices.graph(dendDate, did);

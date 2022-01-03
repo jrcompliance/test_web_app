@@ -59,7 +59,7 @@ dependencies:
   syncfusion_flutter_charts: ^19.3.56
   dropdown_button2: ^1.0.5
   flutter_countdown_timer: ^4.1.0
-  simple_tooltip: ^1.0.0
+  just_the_tooltip: ^0.0.11+1
 
 
 dev_dependencies:
