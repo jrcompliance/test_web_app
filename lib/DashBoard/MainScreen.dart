@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
+import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -24,6 +25,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final globalKey = GlobalKey<ScaffoldState>();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   Tabs active = Tabs.TaskPreview;
@@ -133,31 +135,42 @@ class _MainScreenState extends State<MainScreen> {
           ),
           Card(
             elevation: 10.0,
-            child: ListTile(
-              leading: imageUrl == null || imageUrl == ""
-                  ? Icon(
-                      Icons.person,
-                      color: txtColor,
-                      size: 30,
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      child: SizedBox(
-                          height: size.height * 0.06,
-                          width: size.width * 0.025,
-                          child: Image.network(
-                            imageUrl!,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high,
-                          ))),
-              title: username == null
-                  ? Text("")
-                  : Text(username!, style: TxtStls.fieldstyle),
-              trailing: IconButton(
-                  onPressed: () async {
-                    await _showMyDialog();
+            child: Builder(
+              builder: (context) {
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      lead = "Profile";
+                      Scaffold.of(context).openEndDrawer();
+                    });
                   },
-                  icon: Icon(Icons.exit_to_app_outlined)),
+                  leading: imageUrl == null || imageUrl == ""
+                      ? Icon(
+                          Icons.person,
+                          color: txtColor,
+                          size: 30,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          child: SizedBox(
+                              height: size.height * 0.06,
+                              width: size.width * 0.025,
+                              child: Image.network(
+                                imageUrl!,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                              ))),
+                  title: username == null
+                      ? Text("")
+                      : Text(username!, style: TxtStls.fieldstyle),
+                  trailing: IconButton(
+                      onPressed: () async {},
+                      icon: Icon(
+                        Icons.settings,
+                        color: btnColor,
+                      )),
+                );
+              },
             ),
           )
         ],
@@ -199,55 +212,6 @@ class _MainScreenState extends State<MainScreen> {
     }
     return Header(
       title: "Settings",
-    );
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await _auth.signOut().then((value) {
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
-      prefs.clear();
-    });
-  }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      barrierColor: Colors.transparent,
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          title: Text(
-            'Are you sure to LogOut?',
-            style: TxtStls.fieldtitlestyle,
-          ),
-          actions: <Widget>[
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: grClr,
-              child: Text(
-                'Cancel',
-                style: TxtStls.fieldstyle1,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: clsClr,
-              child: Text('Ok', style: TxtStls.fieldstyle1),
-              onPressed: () {
-                logout();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 

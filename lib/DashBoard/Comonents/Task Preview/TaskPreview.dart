@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,6 +32,8 @@ class TaskPreview extends StatefulWidget {
 
 class _TaskPreviewState extends State<TaskPreview>
     with TickerProviderStateMixin {
+  final tooltipController = JustTheController();
+
   //search method starts from here.....
 
   Widget appBarTitle = Text(
@@ -233,7 +236,7 @@ class _TaskPreviewState extends State<TaskPreview>
     return Container(
       color: AbgColor.withOpacity(0.0001),
       width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -244,7 +247,7 @@ class _TaskPreviewState extends State<TaskPreview>
                 borderRadius: BorderRadius.all(Radius.circular(15.0)),
                 child: Container(
                   color: bgColor,
-                  width: 258,
+                  width: size.width * 0.1345,
                   child: Row(
                     children: _list.map((e) => newMethod(e, () {})).toList(),
                   ),
@@ -323,11 +326,11 @@ class _TaskPreviewState extends State<TaskPreview>
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
-                  SizedBox(width: size.width * 0.01),
                   PopupMenuButton(
                       onCanceled: () {
-                        duefilter = 0;
-                        setState(() {});
+                        setState(() {
+                          duefilter = 0;
+                        });
                       },
                       offset: Offset(0, size.height * 0.037),
                       child: Container(
@@ -355,8 +358,9 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                       ),
                       onSelected: (int value) {
-                        duefilter = value;
-                        setState(() {});
+                        setState(() {
+                          duefilter = value;
+                        });
                       },
                       itemBuilder: (context) {
                         return [
@@ -418,7 +422,7 @@ class _TaskPreviewState extends State<TaskPreview>
               )
             ],
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: size.height * 0.01),
           if (activeid == "List")
             SizedBox(height: size.height * 0.845, child: serachandfilter()),
           if (activeid == "Board")
@@ -643,8 +647,9 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listheader() {
+    Size size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.018),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: _titlelist
@@ -668,9 +673,11 @@ class _TaskPreviewState extends State<TaskPreview>
   Widget listmiddle(cat) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: bgColor,
-      height: size.height * 0.14,
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      height: size.height * 0.2,
+      decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.018),
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("Tasks")
@@ -742,99 +749,106 @@ class _TaskPreviewState extends State<TaskPreview>
               String contactname = snp["CompanyDetails"][0]["contactperson"];
               String cemail = snp["CompanyDetails"][0]["email"];
               String cphone = snp["CompanyDetails"][0]["phone"];
+              List comment = snp["Activity"];
 
-              return Stack(
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 210,
-                        height: 50,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Checkbox(
-                                hoverColor: btnColor.withOpacity(0.0001),
-                                value: val,
-                                onChanged: (value) {
-                                  setState(() {
-                                    GraphValueServices.update(id, value);
-                                  });
-                                },
-                                activeColor: btnColor),
-                            SizedBox(width: 5),
-                            val
-                                ? CircleAvatar(
-                                    maxRadius: 15,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.timer_off_rounded,
-                                        size: 12.5,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        _showMyDialog1(id);
-                                      },
-                                    ),
-                                    backgroundColor:
-                                        Colors.red.withOpacity(0.075),
-                                  )
-                                : SizedBox(),
-                            SizedBox(width: 2.5),
-                            val
-                                ? CircleAvatar(
-                                    maxRadius: 15,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.edit,
-                                        size: 12.5,
-                                        color: btnColor,
-                                      ),
-                                      onPressed: () {},
-                                    ),
-                                    backgroundColor:
-                                        btnColor.withOpacity(0.075),
-                                  )
-                                : SizedBox(),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        child: JustTheTooltip(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          preferredDirection: AxisDirection.right,
-                          child: Container(
-                              width: 230,
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                      ),
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          child: HtmlElementView(
-                                            viewType: logo,
-                                          ))),
-                                  SizedBox(width: 2),
-                                  Text(
-                                    taskname,
-                                    style: ClrStls.tnClr,
+                  Container(
+                    width: size.width * 0.115,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                            hoverColor: btnColor.withOpacity(0.0001),
+                            value: val,
+                            onChanged: (value) {
+                              setState(() {
+                                GraphValueServices.update(id, value);
+                              });
+                            },
+                            activeColor: btnColor),
+                        SizedBox(width: 5),
+                        val
+                            ? CircleAvatar(
+                                maxRadius: 15,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.timer_off_rounded,
+                                    size: 12.5,
+                                    color: Colors.red,
                                   ),
-                                ],
-                              )),
-                          content: Container(
+                                  onPressed: () {
+                                    _showMyDialog1(id);
+                                  },
+                                ),
+                                backgroundColor: Colors.red.withOpacity(0.075),
+                              )
+                            : SizedBox(),
+                        SizedBox(width: 2.5),
+                        val
+                            ? CircleAvatar(
+                                maxRadius: 15,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.edit,
+                                    size: 12.5,
+                                    color: btnColor,
+                                  ),
+                                  onPressed: () {
+                                    lead = "Profile";
+                                    Scaffold.of(context).openEndDrawer();
+                                    setState(() {});
+                                  },
+                                ),
+                                backgroundColor: btnColor.withOpacity(0.075),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onHover: (value) {},
+                    child: JustTheTooltip(
+                      showWhenUnlinked: true,
+                      controller: tooltipController,
+                      showDuration: Duration(seconds: 1),
+                      offset: -40.0,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      preferredDirection: AxisDirection.right,
+                      child: Container(
+                          width: size.width * 0.115,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: HtmlElementView(
+                                        viewType: logo,
+                                      ))),
+                              SizedBox(width: 2),
+                              Text(
+                                taskname,
+                                style: ClrStls.tnClr,
+                              ),
+                            ],
+                          )),
+                      content: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setstate) {
+                          return Container(
                             padding: EdgeInsets.symmetric(
                                 vertical: 5, horizontal: 10.0),
                             width: size.width * 0.125,
-                            height: size.height * 0.17,
+                            height: size.height * 0.2,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Row(
@@ -879,138 +893,207 @@ class _TaskPreviewState extends State<TaskPreview>
                                     SizedBox(width: 5),
                                     Text(cphone, style: TxtStls.fieldstyle),
                                   ],
-                                )
+                                ),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 15,
+                                      child: Icon(
+                                        Icons.message_rounded,
+                                        color: btnColor,
+                                        size: 15,
+                                      ),
+                                      backgroundColor:
+                                          btnColor.withOpacity(0.1),
+                                    ),
+                                    SizedBox(width: 5),
+                                    comment.length == 0
+                                        ? Text("No Comments",
+                                            style: TxtStls.fieldstyle)
+                                        : Flexible(
+                                            child: Text(
+                                              comment[comment.length - 1]
+                                                  ["Note"],
+                                              style: TxtStls.fieldstyle,
+                                              softWrap: true,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                  ],
+                                ),
+                                StatefulBuilder(
+                                  builder: (thisLowerContext, innerSetState) {
+                                    return MaterialButton(
+                                      color: btnColor,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      child: Text("More",
+                                          style: TxtStls.fieldstyle1),
+                                      onPressed: () {
+                                        print("Hey yala......");
+                                        detailspopBox(
+                                            context,
+                                            id,
+                                            taskname,
+                                            startDate,
+                                            endDate,
+                                            priority,
+                                            lastseen,
+                                            cat,
+                                            message,
+                                            newsta,
+                                            prosta,
+                                            insta,
+                                            wonsta,
+                                            clsta,
+                                            s,
+                                            f,
+                                            assign);
+                                        setState(() {});
+                                      },
+                                    );
+                                  },
+                                ),
                               ],
                             ),
-                          ),
-                          shadow: Shadow(color: btnColor, blurRadius: 20),
-                        ),
-                        onTap: () {
-                          detailspopBox(
-                              context,
-                              id,
-                              taskname,
-                              startDate,
-                              endDate,
-                              priority,
-                              lastseen,
-                              cat,
-                              message,
-                              newsta,
-                              prosta,
-                              insta,
-                              wonsta,
-                              clsta,
-                              s,
-                              f,
-                              assign);
+                          );
                         },
                       ),
-                      Container(
-                        width: 180,
-                        child: Text(
-                          CxID,
-                          style: TxtStls.fieldstyle,
+                      shadow: Shadow(color: btnColor, blurRadius: 20),
+                    ),
+                    onTap: () {
+                      detailspopBox(
+                          context,
+                          id,
+                          taskname,
+                          startDate,
+                          endDate,
+                          priority,
+                          lastseen,
+                          cat,
+                          message,
+                          newsta,
+                          prosta,
+                          insta,
+                          wonsta,
+                          clsta,
+                          s,
+                          f,
+                          assign);
+                    },
+                  ),
+                  Container(
+                    width: size.width * 0.092,
+                    child: Text(
+                      CxID,
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Container(
+                    width: size.width * 0.111,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      createDate.toString() + " ${careatedate1.toString()}",
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Container(
+                      width: size.width * 0.1,
+                      alignment: Alignment.centerLeft,
+                      child:
+                          Text(" ${edf}" + " ${edf1}", style: ClrStls.endClr)),
+                  Container(
+                    width: size.width * 0.1,
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: assign.length,
+                          itemBuilder: (BuildContext context, index) {
+                            return ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 500,
+                                  child: Image.network(
+                                    assign[index]["image"],
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.high,
+                                  ),
+                                ));
+                          },
                         ),
-                      ),
-                      Container(
-                        width: 220,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          createDate.toString() + " ${careatedate1.toString()}",
-                          style: TxtStls.fieldstyle,
-                        ),
-                      ),
-                      Container(
-                          width: 205,
-                          alignment: Alignment.centerLeft,
-                          child: Text(" ${edf}" + " ${edf1}",
-                              style: ClrStls.endClr)),
-                      Container(
-                        width: 190,
-                        height: 30,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: assign.length,
-                              itemBuilder: (BuildContext context, index) {
-                                return ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0)),
-                                    child: SizedBox(
-                                      width: 30,
-                                      height: 500,
-                                      child: Image.network(
-                                        assign[index]["image"],
-                                        fit: BoxFit.cover,
-                                        filterQuality: FilterQuality.high,
-                                      ),
-                                    ));
-                              },
-                            ),
-                            StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection("EmployeeData")
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  var snp = snapshot.data!.docs;
-                                  String? img;
-                                  if (!snapshot.hasData) {
-                                    return Container();
-                                  }
-                                  return PopupMenuButton(
-                                    icon: Icon(
-                                      Icons.add_circle,
-                                      color: btnColor,
-                                    ),
-                                    color: bgColor,
-                                    itemBuilder: (context) => snp
-                                        .map((item) => PopupMenuItem(
-                                            onTap: () {
-                                              img = item.get("uimage");
-                                              setState(() {});
-                                            },
-                                            value: item.get("uid"),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundImage: NetworkImage(
-                                                      item.get("uimage")),
-                                                ),
-                                                SizedBox(width: 5),
-                                                Text(
-                                                  item.get("uname"),
-                                                  style: TxtStls.fieldstyle,
-                                                ),
-                                              ],
-                                            )))
-                                        .toList(),
-                                    onSelected: (value) {
-                                      print(img);
-                                      AssignServices.assign(id, value, img);
-                                    },
-                                  );
-                                }),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 200,
-                        alignment: Alignment.centerLeft,
-                        child: dropdowns(
-                            id, cat, newsta, prosta, insta, wonsta, clsta),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("EmployeeData")
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              var snp = snapshot.data!.docs;
+                              String? img;
+                              if (!snapshot.hasData) {
+                                return Container();
+                              }
+                              return PopupMenuButton(
+                                tooltip: "Assignee",
+                                icon: Icon(
+                                  Icons.add_circle,
+                                  color: btnColor,
+                                ),
+                                color: bgColor,
+                                itemBuilder: (context) => snp
+                                    .map((item) => PopupMenuItem(
+                                        onTap: () {
+                                          img = item.get("uimage");
+                                          setState(() {});
+                                        },
+                                        value: item.get("uid"),
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  item.get("uimage")),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              item.get("uname"),
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                          ],
+                                        )))
+                                    .toList(),
+                                onSelected: (value) {
+                                  AssignServices.assign(id, value, img);
+                                },
+                              );
+                            }),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: size.width * 0.07,
+                    alignment: Alignment.centerLeft,
+                    child: dropdowns(
+                        id, cat, newsta, prosta, insta, wonsta, clsta),
+                  ),
+                  Expanded(
+                      child: CountdownTimer(
+                    endTime: DateTime.now().millisecondsSinceEpoch + t * 1000,
+                    widgetBuilder:
+                        (BuildContext context, CurrentRemainingTime? time) {
+                      if (time == null) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CircleAvatar(
                               child: IconButton(
+                                tooltip: "Update",
                                 icon: Icon(
                                   Icons.update,
                                   size: 12.5,
@@ -1032,6 +1115,7 @@ class _TaskPreviewState extends State<TaskPreview>
                             ),
                             CircleAvatar(
                               child: IconButton(
+                                tooltip: "Move",
                                 icon: Icon(
                                   Icons.fast_forward,
                                   size: 12.5,
@@ -1052,16 +1136,7 @@ class _TaskPreviewState extends State<TaskPreview>
                               backgroundColor: btnColor.withOpacity(0.075),
                             ),
                           ],
-                        ),
-                      )
-                    ],
-                  ),
-                  CountdownTimer(
-                    endTime: DateTime.now().millisecondsSinceEpoch + t * 1000,
-                    widgetBuilder:
-                        (BuildContext context, CurrentRemainingTime? time) {
-                      if (time == null) {
-                        return Text("");
+                        );
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -1079,7 +1154,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         ],
                       );
                     },
-                  )
+                  ))
                 ],
               );
             },
@@ -1485,6 +1560,7 @@ class _TaskPreviewState extends State<TaskPreview>
             color: StatusUpdateServices.statcolorget(newsta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
+          tooltip: "UpDate Status",
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
           offset: Offset(0, size.height * 0.035),
@@ -1573,6 +1649,7 @@ class _TaskPreviewState extends State<TaskPreview>
             color: StatusUpdateServices.statcolorget1(prosta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
+          tooltip: "UpDate Status",
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
           offset: Offset(0, size.height * 0.035),
@@ -1644,6 +1721,7 @@ class _TaskPreviewState extends State<TaskPreview>
             color: StatusUpdateServices.statcolorget2(insta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
+          tooltip: "UpDate Status",
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
           offset: Offset(0, size.height * 0.035),
@@ -1732,6 +1810,7 @@ class _TaskPreviewState extends State<TaskPreview>
             color: StatusUpdateServices.statcolorget4(wonsta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
+          tooltip: "UpDate Status",
           padding: EdgeInsets.zero,
           shape: TooltipShape(),
           offset: Offset(0, size.height * 0.035),
@@ -1820,6 +1899,7 @@ class _TaskPreviewState extends State<TaskPreview>
           color: StatusUpdateServices.statcolorget5(clsta),
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: PopupMenuButton(
+        tooltip: "UpDate Status",
         padding: EdgeInsets.zero,
         shape: TooltipShape(),
         offset: Offset(0, size.height * 0.035),
@@ -2350,7 +2430,7 @@ class _TaskPreviewState extends State<TaskPreview>
     String lastview = DateFormat('EEE | MMM dd, yy').format(lastseen.toDate());
     String lastviewTime = DateFormat('hh:mm a').format(lastseen.toDate());
     var alertDialog = AlertDialog(
-      contentPadding: EdgeInsets.all(0.0),
+      contentPadding: EdgeInsets.all(0),
       actionsPadding: EdgeInsets.all(0),
       titlePadding: EdgeInsets.all(0),
       insetPadding: EdgeInsets.all(0),
@@ -4592,6 +4672,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                         List lr = snapshot.data!.docs[index]
                                             ["Activity"];
                                         return ListView.builder(
+                                          reverse: true,
                                           shrinkWrap: true,
                                           itemCount: lr.length,
                                           itemBuilder: (BuildContext context,
@@ -5134,6 +5215,7 @@ class _TaskPreviewState extends State<TaskPreview>
               child: Text('Stop', style: TxtStls.fieldstyle1),
               onPressed: () {
                 CrudOperations.stoptimer(id);
+                Navigator.pop(context);
               },
             ),
           ],
@@ -5213,7 +5295,7 @@ class _TaskPreviewState extends State<TaskPreview>
       return DateTime.now().toString().split(" ")[0];
     } else if (dval == 2) {
       return DateTime.now()
-          .subtract(Duration(days: 1))
+          .subtract(Duration(days: 2))
           .toString()
           .split(" ")[0];
     } else if (dval == 3) {
@@ -5829,18 +5911,20 @@ class _TaskPreviewState extends State<TaskPreview>
             color: bgColor,
           ),
           width: size.width,
-          height: size.height * 0.31,
+          height: _tapslist[0] ? size.height * 0.31 : size.height * 0.08,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               listtitle(_clrslist[0], "NEW", _tapslist[0], () {
                 setState(() {
                   _tapslist[0] = !_tapslist[0];
                 });
               }),
-              SizedBox(height: 10.0),
-              listheader(),
-              SizedBox(height: 10.0),
+              SizedBox(height: size.height * 0.01),
+              Visibility(
+                child: listheader(),
+                visible: _tapslist[0],
+              ),
+              SizedBox(height: size.height * 0.01),
               Visibility(
                 child: listmiddle("NEW"),
                 visible: _tapslist[0],
@@ -5848,25 +5932,27 @@ class _TaskPreviewState extends State<TaskPreview>
             ],
           ),
         ),
-        SizedBox(height: 15.0),
+        SizedBox(height: size.height * 0.015),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             color: bgColor,
           ),
           width: size.width,
-          height: size.height * 0.31,
+          height: _tapslist[1] ? size.height * 0.31 : size.height * 0.08,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               listtitle(_clrslist[1], "PROSPECT", _tapslist[1], () {
                 setState(() {
                   _tapslist[1] = !_tapslist[1];
                 });
               }),
-              SizedBox(height: 30.0),
-              listheader(),
-              SizedBox(height: 30.0),
+              SizedBox(height: size.height * 0.01),
+              Visibility(
+                child: listheader(),
+                visible: _tapslist[1],
+              ),
+              SizedBox(height: size.height * 0.01),
               Visibility(
                 child: listmiddle("PROSPECT"),
                 visible: _tapslist[1],
@@ -5874,25 +5960,27 @@ class _TaskPreviewState extends State<TaskPreview>
             ],
           ),
         ),
-        SizedBox(height: 15.0),
+        SizedBox(height: size.height * 0.015),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             color: bgColor,
           ),
           width: size.width,
-          height: size.height * 0.31,
+          height: _tapslist[2] ? size.height * 0.31 : size.height * 0.08,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               listtitle(_clrslist[2], "IN PROGRESS", _tapslist[2], () {
                 setState(() {
                   _tapslist[2] = !_tapslist[2];
                 });
               }),
-              SizedBox(height: 30.0),
-              listheader(),
-              SizedBox(height: 30.0),
+              SizedBox(height: size.height * 0.01),
+              Visibility(
+                child: listheader(),
+                visible: _tapslist[2],
+              ),
+              SizedBox(height: size.height * 0.01),
               Visibility(
                 child: listmiddle("IN PROGRESS"),
                 visible: _tapslist[2],
@@ -5900,14 +5988,14 @@ class _TaskPreviewState extends State<TaskPreview>
             ],
           ),
         ),
-        SizedBox(height: 15.0),
+        SizedBox(height: size.height * 0.015),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             color: bgColor,
           ),
           width: size.width,
-          height: size.height * 0.31,
+          height: _tapslist[3] ? size.height * 0.31 : size.height * 0.08,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -5916,9 +6004,12 @@ class _TaskPreviewState extends State<TaskPreview>
                   _tapslist[3] = !_tapslist[3];
                 });
               }),
-              SizedBox(height: 30.0),
-              listheader(),
-              SizedBox(height: 30.0),
+              SizedBox(height: size.height * 0.01),
+              Visibility(
+                child: listheader(),
+                visible: _tapslist[3],
+              ),
+              SizedBox(height: size.height * 0.01),
               Visibility(
                 child: listmiddle("WON"),
                 visible: _tapslist[3],
@@ -5926,14 +6017,14 @@ class _TaskPreviewState extends State<TaskPreview>
             ],
           ),
         ),
-        SizedBox(height: 15.0),
+        SizedBox(height: size.height * 0.015),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             color: bgColor,
           ),
           width: size.width,
-          height: size.height * 0.31,
+          height: _tapslist[4] ? size.height * 0.31 : size.height * 0.08,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -5942,9 +6033,12 @@ class _TaskPreviewState extends State<TaskPreview>
                   _tapslist[4] = !_tapslist[4];
                 });
               }),
-              SizedBox(height: 30.0),
-              listheader(),
-              SizedBox(height: 30.0),
+              SizedBox(height: size.height * 0.01),
+              Visibility(
+                child: listheader(),
+                visible: _tapslist[4],
+              ),
+              SizedBox(height: size.height * 0.01),
               Visibility(
                 child: listmiddle("CLOSE"),
                 visible: _tapslist[4],

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
@@ -62,6 +64,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
   }
 
   Widget _check() {
+    Size size = MediaQuery.of(context).size;
     if (lead == "Lead") {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,8 +205,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
           )
         ],
       );
-    }
-    if (lead == "move") {
+    } else if (lead == "move") {
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,6 +501,68 @@ class _MoveDrawerState extends State<MoveDrawer> {
             )
           ],
         ),
+      );
+    } else if (lead == "Profile") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            height: size.height * 0.25,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(imageUrl!),
+                  maxRadius: 50,
+                ),
+                SizedBox(height: size.height * 0.025),
+                Text(username!, style: TxtStls.fieldtitlestyle)
+              ],
+            ),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          SizedBox(height: size.height * 0.025),
+          Text("Contact Info", style: TxtStls.fieldtitlestyle),
+          SizedBox(height: size.height * 0.025),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(Icons.email, color: btnColor, size: 15),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text(email!, style: TxtStls.fieldtitlestyle),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(
+                Icons.phone,
+                color: btnColor,
+                size: 15,
+              ),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text(phone!, style: TxtStls.fieldtitlestyle),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(
+                Icons.exit_to_app_outlined,
+                color: btnColor,
+                size: 15,
+              ),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text("LogOut", style: TxtStls.fieldtitlestyle),
+            onTap: () {
+              _showMyDialog();
+            },
+          ),
+        ],
       );
     }
     return SingleChildScrollView(
@@ -909,6 +973,55 @@ class _MoveDrawerState extends State<MoveDrawer> {
         print(_customtimeController.text);
       });
     }
+  }
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await FirebaseAuth.instance.signOut().then((value) {
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
+      prefs.clear();
+    });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      barrierColor: Colors.transparent,
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          title: Text(
+            'Are you sure to LogOut ${username}?',
+            style: TxtStls.fieldtitlestyle,
+          ),
+          actions: <Widget>[
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: grClr,
+              child: Text(
+                'Cancel',
+                style: TxtStls.fieldstyle1,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              color: clsClr,
+              child: Text('Ok', style: TxtStls.fieldstyle1),
+              onPressed: () {
+                logout();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
