@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -295,40 +296,3 @@ class _LandingScreenState extends State<LandingScreen> {
 //     });
 //   }
 // }
-
-class dummy extends StatefulWidget {
-  const dummy({Key? key}) : super(key: key);
-
-  @override
-  _dummyState createState() => _dummyState();
-}
-
-class _dummyState extends State<dummy> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    this.getData();
-  }
-
-  getData() async {
-    await FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image":
-                "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/profiles%2Fyalagala.png?alt=media&token=dbec4f3b-1a84-4424-9cc2-17f9cece531d",
-            "uid": "t8mdhQXiZfg41Lxq7uUp9SLm1Q52",
-          }
-        ])
-        .snapshots()
-        .listen((event) {
-          print(event.docs.length);
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
