@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
+import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'dart:ui' as ui;
 import 'dart:html';

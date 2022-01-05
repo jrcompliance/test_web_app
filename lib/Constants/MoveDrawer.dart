@@ -8,11 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
-import 'package:test_web_app/Constants/MoveModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
+import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Time%20Model.dart';
+import 'package:test_web_app/Models/Time%20Model.dart';
 
 class MoveDrawer extends StatefulWidget {
   const MoveDrawer({Key? key}) : super(key: key);
@@ -51,6 +51,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
 
   TextEditingController _customtimeController = TextEditingController();
 
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,147 +68,539 @@ class _MoveDrawerState extends State<MoveDrawer> {
   Widget _check() {
     Size size = MediaQuery.of(context).size;
     if (lead == "Lead") {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Create New Lead", style: TxtStls.fieldtitlestyle11),
-              CircleAvatar(
-                backgroundColor: neClr.withOpacity(0.1),
-                child: IconButton(
-                    hoverColor: Colors.transparent,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: neClr,
-                      size: 15,
-                    )),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.0),
-          Text("Lead Name", style: TxtStls.fieldtitlestyle),
-          _field(_leadnameController, true, "Lead Name"),
-          SizedBox(height: 10.0),
-          Text("End Date", style: TxtStls.fieldtitlestyle),
-          InkWell(
-            child: _field(_endDateController, false, "End Date"),
-            onTap: () {
-              MyCalenders.pickEndDate(context, _endDateController);
-              setState(() {});
-            },
-          ),
-          SizedBox(height: 10.0),
-          Text("Client Name", style: TxtStls.fieldtitlestyle),
-          _field(_clientnameController, true, "Client Name"),
-          SizedBox(height: 10.0),
-          Text("Client Phone Number", style: TxtStls.fieldtitlestyle),
-          _field(_clientphoneController, true, "Client Phone Number"),
-          SizedBox(height: 10.0),
-          Text("Client Email", style: TxtStls.fieldtitlestyle),
-          _field(_clientemailController, true, "Client email id"),
-          SizedBox(height: 10.0),
-          Text("First Message", style: TxtStls.fieldtitlestyle),
-          _field(_firstmessageController, true, "Enter First Message"),
-          SizedBox(height: 10.0),
-          Text("Assignee", style: TxtStls.fieldtitlestyle),
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("EmployeeData")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                var snp = snapshot.data!.docs;
-                if (snapshot.hasError) {
-                  return Container();
-                }
-                return DropdownButtonHideUnderline(
-                  child: DropdownButton2(
-                    isExpanded: true,
-                    hint: Text(
-                      'Choose Action Type',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 12.5, color: txtColor, letterSpacing: 0.2),
-                    ),
-                    items: snp
-                        .map((item) => DropdownMenuItem<String>(
-                              onTap: () {
-                                _image = item.get("uimage");
-                                setState(() {});
-                              },
-                              value: item.get('uid'),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    child: Image.network(item.get("uimage")),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0)),
-                                  ),
-                                  Text(
-                                    item.get("uname"),
-                                    style: TxtStls.fieldstyle,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ))
-                        .toList(),
-                    value: _selectperson,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectperson = value as String;
-                      });
-                    },
-                    iconEnabledColor: txtColor,
-                    buttonPadding: EdgeInsets.symmetric(horizontal: 15),
-                    buttonDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 15),
-                    dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: bgColor,
-                    ),
-                  ),
-                );
-              }),
-          SizedBox(height: 10.0),
-          InkWell(
-            child: Container(
-              padding: EdgeInsets.all(12.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: btnColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              child: Text(
-                "Create Lead",
-                style: TxtStls.fieldstyle1,
-              ),
+      return Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Create New Lead", style: TxtStls.fieldtitlestyle11),
+                CircleAvatar(
+                  backgroundColor: neClr.withOpacity(0.1),
+                  child: IconButton(
+                      hoverColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: neClr,
+                        size: 15,
+                      )),
+                ),
+              ],
             ),
-            onTap: () {
-              CrudOperations.uploadTask(
-                _leadnameController,
-                _endDateController,
-                _clientnameController,
-                _clientemailController,
-                _clientphoneController,
-                _firstmessageController,
-                _selectperson,
-                _image,
-              );
-
-              Navigator.pop(context);
-            },
-          )
-        ],
+            SizedBox(height: 10.0),
+            Text("Lead Name", style: TxtStls.fieldtitlestyle),
+            _field(_leadnameController, true, "Lead Name"),
+            SizedBox(height: 10.0),
+            Text("End Date", style: TxtStls.fieldtitlestyle),
+            InkWell(
+              child: _field(_endDateController, false, "End Date"),
+              onTap: () {
+                MyCalenders.pickEndDate(context, _endDateController);
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 10.0),
+            Text("Client Name", style: TxtStls.fieldtitlestyle),
+            _field(_clientnameController, true, "Client Name"),
+            SizedBox(height: 10.0),
+            Text("Client Phone Number", style: TxtStls.fieldtitlestyle),
+            _field(_clientphoneController, true, "Client Phone Number"),
+            SizedBox(height: 10.0),
+            Text("Client Email", style: TxtStls.fieldtitlestyle),
+            _field(_clientemailController, true, "Client email id"),
+            SizedBox(height: 10.0),
+            Text("First Message", style: TxtStls.fieldtitlestyle),
+            _field(_firstmessageController, true, "Enter First Message"),
+            SizedBox(height: 10.0),
+            Text("Assignee", style: TxtStls.fieldtitlestyle),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("EmployeeData")
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  var snp = snapshot.data!.docs;
+                  if (snapshot.hasError) {
+                    return Container();
+                  }
+                  return DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: Text(
+                        'Select the agent to assignee',
+                        overflow: TextOverflow.ellipsis,
+                        style: TxtStls.fieldstyle,
+                      ),
+                      items: snp
+                          .map((item) => DropdownMenuItem<String>(
+                                onTap: () {
+                                  _image = item.get("uimage");
+                                  setState(() {});
+                                },
+                                value: item.get('uid'),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        child: SizedBox(
+                                            width: 50,
+                                            height: 80,
+                                            child: Image.network(
+                                              item.get("uimage"),
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high,
+                                            )),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        item.get("uname"),
+                                        style: TxtStls.fieldstyle,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      value: _selectperson,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectperson = value as String;
+                        });
+                      },
+                      iconEnabledColor: txtColor,
+                      buttonPadding: EdgeInsets.symmetric(horizontal: 15),
+                      buttonDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 15),
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: bgColor,
+                      ),
+                    ),
+                  );
+                }),
+            SizedBox(height: 10.0),
+            InkWell(
+              child: Container(
+                padding: EdgeInsets.all(12.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: btnColor,
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Text(
+                  "Create Lead",
+                  style: TxtStls.fieldstyle1,
+                ),
+              ),
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  CrudOperations.uploadTask(
+                    _leadnameController,
+                    _endDateController,
+                    _clientnameController,
+                    _clientemailController,
+                    _clientphoneController,
+                    _firstmessageController,
+                    _selectperson,
+                    _image,
+                  );
+                  Navigator.pop(context);
+                }
+              },
+            )
+          ],
+        ),
       );
     } else if (lead == "move") {
       return SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CircleAvatar(
+                  backgroundColor: neClr.withOpacity(0.1),
+                  child: IconButton(
+                      hoverColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: neClr,
+                        size: 15,
+                      )),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Progress Update",
+                style: TxtStls.fieldtitlestyle11,
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    dname!,
+                    style: TxtStls.fieldtitlestyle11,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    cxID!,
+                    style: TxtStls.fieldtitlestyle11,
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: btnColor.withOpacity(0.1),
+                    child: Icon(Icons.access_time_rounded, color: btnColor),
+                  ),
+                  SizedBox(width: 5),
+                  Column(
+                    children: [
+                      Text(
+                          DateFormat('dd,MMMM,yyyy,hh:mm a')
+                              .format(DateTime.now()),
+                          style: TxtStls.fieldtitlestyle),
+                      Text("${DateTime.now().timeZoneName}",
+                          style: TxtStls.fieldstyle),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: btnColor.withOpacity(0.1),
+                    child: Icon(
+                      Icons.work,
+                      color: btnColor,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Column(
+                    children: [
+                      Text(
+                        "Type of Activity",
+                        style: TxtStls.fieldtitlestyle,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 100,
+                    padding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      color: Colors.orangeAccent,
+                    ),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(unselectedWidgetColor: bgColor),
+                          child: Radio(
+                            activeColor: btnColor,
+                            value: "InBound",
+                            groupValue: radioItem,
+                            onChanged: (val) {
+                              radioItem = val.toString();
+                              setState(() {});
+                            },
+                            toggleable: false,
+                          ),
+                        ),
+                        Text(
+                          "INBOUND",
+                          style: TxtStls.fieldstyle1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Container(
+                    width: 120,
+                    padding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      color: wonClr,
+                    ),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(unselectedWidgetColor: bgColor),
+                          child: Radio(
+                            activeColor: btnColor,
+                            value: "OutBound",
+                            groupValue: radioItem,
+                            onChanged: (val) {
+                              radioItem = val.toString();
+                              setState(() {});
+                            },
+                            toggleable: false,
+                          ),
+                        ),
+                        Text(
+                          "OUTBOUND",
+                          style: TxtStls.fieldstyle1,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              actions(),
+              Row(
+                children: [
+                  CircleAvatar(
+                      backgroundColor: btnColor.withOpacity(0.1),
+                      child: Icon(
+                        Icons.videogame_asset,
+                        color: btnColor,
+                      )),
+                  SizedBox(width: 5),
+                  Text(
+                    "Status Selection",
+                    style: TxtStls.fieldtitlestyle,
+                  )
+                ],
+              ),
+              Wrap(
+                  children: _list
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: InkWell(
+                              child: Card(
+                                shadowColor: btnColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                elevation: activeid == e.name ? 20 : 0,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    width: 103,
+                                    child: Text(
+                                      e.name,
+                                      style: TxtStls.fieldstyle1,
+                                    ),
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                        color: e.color,
+                                        border: Border.all(
+                                            color: activeid == e.name
+                                                ? btnColor
+                                                : bgColor),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)))),
+                              ),
+                              onTap: () {
+                                activeid = e.name;
+                                setState(() {});
+                              },
+                              onDoubleTap: () {
+                                activeid = null;
+                                setState(() {});
+                              },
+                            ),
+                          ))
+                      .toList()),
+              InkWell(
+                child: _field(_endDateController, false, "End Date"),
+                onTap: () {
+                  MyCalenders.pickEndDate(context, _endDateController);
+                  setState(() {});
+                },
+              ),
+              SizedBox(height: 5),
+              dcat == "NEW"
+                  ? _field(_companyController, true, "Enter Company name")
+                  : SizedBox(),
+              SizedBox(height: 5),
+              dcat == "NEW"
+                  ? _field(_websiteController, true, "Enter Company Website")
+                  : SizedBox(),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: btnColor.withOpacity(0.1),
+                    child: Icon(
+                      Icons.message,
+                      color: btnColor,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    "Comments",
+                    style: TxtStls.fieldtitlestyle,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 40, top: 2),
+                child: Container(
+                  decoration: deco,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20, right: 0, top: 2),
+                    child: TextFormField(
+                      controller: noteController,
+                      maxLines: 6,
+                      style: TxtStls.fieldstyle,
+                      decoration: InputDecoration(
+                        hintText: "Enter a valid Comment",
+                        hintStyle: TxtStls.fieldstyle,
+                        border: InputBorder.none,
+                      ),
+                      validator: (fullname) {
+                        if (fullname!.isEmpty) {
+                          return "Name can not be empty";
+                        } else if (fullname.length < 3) {
+                          return "Name should be atleast 3 letters";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  MaterialButton(
+                    color: grClr,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    child: Text("Cancel", style: TxtStls.fieldstyle1),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  MaterialButton(
+                    hoverColor: Colors.transparent,
+                    color: btnColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    child: Text("Save", style: TxtStls.fieldstyle1),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate() &&
+                          radioItem != null &&
+                          _choosenValue != null &&
+                          activeid != null) {
+                        dcat == "NEW"
+                            ? ComapnyUpdateServices.updateCompany(
+                                did, _companyController, _websiteController)
+                            : null;
+                        ProgressUpdsate.movetoanotherCategory(
+                            did,
+                            dcat,
+                            activeid,
+                            noteController,
+                            dendDate,
+                            radioItem,
+                            _choosenValue);
+                        EndDateOperations.updateEdateTask(
+                            did, _endDateController);
+                        GraphValueServices.graph(dendDate, did);
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    } else if (lead == "Profile") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            height: size.height * 0.25,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(imageUrl!),
+                  maxRadius: 50,
+                ),
+                SizedBox(height: size.height * 0.025),
+                Text(username!, style: TxtStls.fieldtitlestyle)
+              ],
+            ),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          SizedBox(height: size.height * 0.025),
+          Text("Contact Info", style: TxtStls.fieldtitlestyle),
+          SizedBox(height: size.height * 0.025),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(Icons.email, color: btnColor, size: 15),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text(email!, style: TxtStls.fieldtitlestyle),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(
+                Icons.phone,
+                color: btnColor,
+                size: 15,
+              ),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text(phone!, style: TxtStls.fieldtitlestyle),
+          ),
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 15,
+              child: Icon(
+                Icons.exit_to_app_outlined,
+                color: btnColor,
+                size: 15,
+              ),
+              backgroundColor: btnColor.withOpacity(0.1),
+            ),
+            title: Text("LogOut", style: TxtStls.fieldtitlestyle),
+            onTap: () {
+              _showMyDialog();
+            },
+          ),
+        ],
+      );
+    }
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -226,12 +620,12 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     )),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Text(
-              "Progress Update",
+              "Update",
               style: TxtStls.fieldtitlestyle11,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Row(
               children: [
                 Text(
@@ -319,7 +713,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     ],
                   ),
                 ),
-                SizedBox(width: 5),
                 Container(
                   width: 120,
                   padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
@@ -356,71 +749,74 @@ class _MoveDrawerState extends State<MoveDrawer> {
             Row(
               children: [
                 CircleAvatar(
-                    backgroundColor: btnColor.withOpacity(0.1),
-                    child: Icon(
-                      Icons.videogame_asset,
-                      color: btnColor,
-                    )),
+                  backgroundColor: btnColor.withOpacity(0.1),
+                  child: Icon(
+                    Icons.calendar_today_sharp,
+                    color: btnColor,
+                  ),
+                ),
                 SizedBox(width: 5),
                 Text(
-                  "Status Selection",
+                  "Reschedule",
                   style: TxtStls.fieldtitlestyle,
                 )
               ],
             ),
             Wrap(
-                children: _list
+                children: _timelist
                     .map((e) => Padding(
-                          padding: const EdgeInsets.all(2.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: InkWell(
-                            child: Card(
+                            child: Material(
                               shadowColor: btnColor,
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0))),
-                              elevation: activeid == e.name ? 20 : 0,
+                              elevation: activetime == e ? 10 : 0,
                               child: Container(
-                                  alignment: Alignment.center,
-                                  width: 103,
-                                  child: Text(
-                                    e.name,
-                                    style: TxtStls.fieldstyle1,
-                                  ),
-                                  padding: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                      color: e.color,
-                                      border: Border.all(
-                                          color: activeid == e.name
-                                              ? btnColor
-                                              : bgColor),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)))),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                width: 60,
+                                height: 30,
+                                child: Text(
+                                  e,
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              ),
                             ),
                             onTap: () {
-                              activeid = e.name;
+                              activetime = e;
                               setState(() {});
                             },
                             onDoubleTap: () {
-                              activeid = null;
+                              activetime = null;
                               setState(() {});
                             },
                           ),
                         ))
                     .toList()),
-            InkWell(
-              child: _field(_endDateController, false, "End Date"),
-              onTap: () {
-                MyCalenders.pickEndDate(context, _endDateController);
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 5),
-            dcat == "NEW"
-                ? _field(_companyController, true, "Enter Company name")
-                : SizedBox(),
-            SizedBox(height: 5),
-            dcat == "NEW"
-                ? _field(_websiteController, true, "Enter Company Website")
+            SizedBox(height: 10),
+            activetime == "Custom"
+                ? Container(
+                    height: 200,
+                    child: Theme(
+                      data: ThemeData(
+                        colorScheme: ColorScheme.light(primary: btnColor),
+                        buttonTheme:
+                            ButtonThemeData(textTheme: ButtonTextTheme.primary),
+                      ),
+                      child: CalendarDatePicker(
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2200),
+                          onDateChanged: (value) {
+                            _customtimeController.text = value.toString();
+                            setState(() {});
+                          }),
+                    ),
+                  )
                 : SizedBox(),
             Row(
               children: [
@@ -484,381 +880,26 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   color: btnColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Text("Save", style: TxtStls.fieldstyle1),
-                  onPressed: () {
-                    dcat == "NEW"
-                        ? ComapnyUpdateServices.updateCompany(
-                            did, _companyController, _websiteController)
-                        : null;
-                    ProgressUpdsate.movetoanotherCategory(did, dcat, activeid,
-                        noteController, dendDate, radioItem, _choosenValue);
-                    EndDateOperations.updateEdateTask(did, _endDateController);
-                    GraphValueServices.graph(dendDate, did);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
-      );
-    } else if (lead == "Profile") {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            height: size.height * 0.25,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(imageUrl!),
-                  maxRadius: 50,
-                ),
-                SizedBox(height: size.height * 0.025),
-                Text(username!, style: TxtStls.fieldtitlestyle)
-              ],
-            ),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          SizedBox(height: size.height * 0.025),
-          Text("Contact Info", style: TxtStls.fieldtitlestyle),
-          SizedBox(height: size.height * 0.025),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(Icons.email, color: btnColor, size: 15),
-              backgroundColor: btnColor.withOpacity(0.1),
-            ),
-            title: Text(email!, style: TxtStls.fieldtitlestyle),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(
-                Icons.phone,
-                color: btnColor,
-                size: 15,
-              ),
-              backgroundColor: btnColor.withOpacity(0.1),
-            ),
-            title: Text(phone!, style: TxtStls.fieldtitlestyle),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(
-                Icons.exit_to_app_outlined,
-                color: btnColor,
-                size: 15,
-              ),
-              backgroundColor: btnColor.withOpacity(0.1),
-            ),
-            title: Text("LogOut", style: TxtStls.fieldtitlestyle),
-            onTap: () {
-              _showMyDialog();
-            },
-          ),
-        ],
-      );
-    }
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: CircleAvatar(
-              backgroundColor: neClr.withOpacity(0.1),
-              child: IconButton(
-                  hoverColor: Colors.transparent,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: neClr,
-                    size: 15,
-                  )),
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Update",
-            style: TxtStls.fieldtitlestyle11,
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                dname!,
-                style: TxtStls.fieldtitlestyle11,
-              ),
-              SizedBox(width: 5),
-              Text(
-                cxID!,
-                style: TxtStls.fieldtitlestyle11,
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: Icon(Icons.access_time_rounded, color: btnColor),
-              ),
-              SizedBox(width: 5),
-              Column(
-                children: [
-                  Text(
-                      DateFormat('dd,MMMM,yyyy,hh:mm a').format(DateTime.now()),
-                      style: TxtStls.fieldtitlestyle),
-                  Text("${DateTime.now().timeZoneName}",
-                      style: TxtStls.fieldstyle),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: Icon(
-                  Icons.work,
-                  color: btnColor,
-                ),
-              ),
-              SizedBox(width: 5),
-              Column(
-                children: [
-                  Text(
-                    "Type of Activity",
-                    style: TxtStls.fieldtitlestyle,
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: 100,
-                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  color: Colors.orangeAccent,
-                ),
-                child: Row(
-                  children: [
-                    Theme(
-                      data: ThemeData(unselectedWidgetColor: bgColor),
-                      child: Radio(
-                        activeColor: btnColor,
-                        value: "InBound",
-                        groupValue: radioItem,
-                        onChanged: (val) {
-                          radioItem = val.toString();
-                          setState(() {});
-                        },
-                        toggleable: false,
-                      ),
-                    ),
-                    Text(
-                      "INBOUND",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 120,
-                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  color: wonClr,
-                ),
-                child: Row(
-                  children: [
-                    Theme(
-                      data: ThemeData(unselectedWidgetColor: bgColor),
-                      child: Radio(
-                        activeColor: btnColor,
-                        value: "OutBound",
-                        groupValue: radioItem,
-                        onChanged: (val) {
-                          radioItem = val.toString();
-                          setState(() {});
-                        },
-                        toggleable: false,
-                      ),
-                    ),
-                    Text(
-                      "OUTBOUND",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 10),
-          actions(),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: Icon(
-                  Icons.calendar_today_sharp,
-                  color: btnColor,
-                ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                "Reschedule",
-                style: TxtStls.fieldtitlestyle,
-              )
-            ],
-          ),
-          Wrap(
-              children: _timelist
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          child: Material(
-                            shadowColor: btnColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            elevation: activetime == e ? 10 : 0,
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              width: 60,
-                              height: 30,
-                              child: Text(
-                                e,
-                                style: TxtStls.fieldstyle,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            activetime = e;
-                            setState(() {});
-                          },
-                          onDoubleTap: () {
-                            activetime = null;
-                            setState(() {});
-                          },
-                        ),
-                      ))
-                  .toList()),
-          SizedBox(height: 10),
-          activetime == "Custom"
-              ? Container(
-                  height: 200,
-                  child: Theme(
-                    data: ThemeData(
-                      colorScheme: ColorScheme.light(primary: btnColor),
-                      buttonTheme:
-                          ButtonThemeData(textTheme: ButtonTextTheme.primary),
-                    ),
-                    child: CalendarDatePicker(
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2200),
-                        onDateChanged: (value) {
-                          _customtimeController.text = value.toString();
-                          setState(() {});
-                        }),
-                  ),
-                )
-              : SizedBox(),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: Icon(
-                  Icons.message,
-                  color: btnColor,
-                ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                "Comments",
-                style: TxtStls.fieldtitlestyle,
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 40, top: 2),
-            child: Container(
-              decoration: deco,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20, right: 0, top: 2),
-                child: TextFormField(
-                  controller: noteController,
-                  maxLines: 6,
-                  style: TxtStls.fieldstyle,
-                  decoration: InputDecoration(
-                    hintText: "Enter a valid Comment",
-                    hintStyle: TxtStls.fieldstyle,
-                    border: InputBorder.none,
-                  ),
-                  validator: (fullname) {
-                    if (fullname!.isEmpty) {
-                      return "Name can not be empty";
-                    } else if (fullname.length < 3) {
-                      return "Name should be atleast 3 letters";
-                    } else {
-                      return null;
+                  child: Text("Update", style: TxtStls.fieldstyle1),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() &&
+                        radioItem != null &&
+                        _choosenValue != null) {
+                      setState(() {
+                        val();
+                        myConter(did, addtime!);
+                        Navigator.pop(context);
+                        ProgressUpdsate.updatesame(did, dcat, noteController,
+                            dendDate, radioItem, _choosenValue);
+                        GraphValueServices.graph(dendDate, did);
+                      });
                     }
                   },
                 ),
-              ),
+              ],
             ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MaterialButton(
-                color: grClr,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Text("Cancel", style: TxtStls.fieldstyle1),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              MaterialButton(
-                hoverColor: Colors.transparent,
-                color: btnColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Text("Update", style: TxtStls.fieldstyle1),
-                onPressed: () async {
-                  setState(() {
-                    val();
-                    myConter(did, addtime!);
-                    Navigator.pop(context);
-                    ProgressUpdsate.updatesame(did, dcat, noteController,
-                        dendDate, radioItem, _choosenValue);
-                    GraphValueServices.graph(dendDate, did);
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -935,6 +976,15 @@ class _MoveDrawerState extends State<MoveDrawer> {
       child: Padding(
         padding: EdgeInsets.only(left: 15, right: 15, top: 2),
         child: TextFormField(
+          validator: (fullname) {
+            if (fullname!.isEmpty) {
+              return "field can not be empty";
+            } else if (fullname.length < 3) {
+              return "field should be atleast 3 letters";
+            } else {
+              return null;
+            }
+          },
           controller: _controller,
           enabled: enable,
           style: TxtStls.fieldstyle,

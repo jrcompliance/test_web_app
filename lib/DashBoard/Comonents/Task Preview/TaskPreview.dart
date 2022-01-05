@@ -16,13 +16,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Charts.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
-import 'package:test_web_app/Constants/MoveModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
+import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
-import 'package:test_web_app/tasksearchmodel.dart';
+import 'package:test_web_app/Models/tasksearchmodel.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -227,7 +227,7 @@ class _TaskPreviewState extends State<TaskPreview>
       length: 3,
       vsync: this,
     );
-    Future.delayed(Duration(seconds: 5)).then((value) => assignvel());
+    Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
   }
 
   @override
@@ -795,11 +795,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                     size: 12.5,
                                     color: btnColor,
                                   ),
-                                  onPressed: () {
-                                    lead = "Profile";
-                                    Scaffold.of(context).openEndDrawer();
-                                    setState(() {});
-                                  },
+                                  onPressed: () {},
                                 ),
                                 backgroundColor: btnColor.withOpacity(0.075),
                               )
@@ -5387,162 +5383,225 @@ class _TaskPreviewState extends State<TaskPreview>
                           logo,
                           (int _) => ImageElement()..src = logo,
                         );
-                        return Stack(
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 210,
-                                  height: 50,
+                            Container(
+                              width: size.width * 0.115,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      hoverColor: btnColor.withOpacity(0.0001),
+                                      value: val,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          GraphValueServices.update(id, value);
+                                        });
+                                      },
+                                      activeColor: btnColor),
+                                  SizedBox(width: 5),
+                                  val
+                                      ? CircleAvatar(
+                                          maxRadius: 15,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.timer_off_rounded,
+                                              size: 12.5,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              _showMyDialog1(id);
+                                            },
+                                          ),
+                                          backgroundColor:
+                                              Colors.red.withOpacity(0.075),
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(width: 2.5),
+                                  val
+                                      ? CircleAvatar(
+                                          maxRadius: 15,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.edit,
+                                              size: 12.5,
+                                              color: btnColor,
+                                            ),
+                                            onPressed: () {},
+                                          ),
+                                          backgroundColor:
+                                              btnColor.withOpacity(0.075),
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onHover: (value) {},
+                              child: Container(
+                                  width: size.width * 0.115,
                                   alignment: Alignment.centerLeft,
                                   child: Row(
                                     children: [
-                                      Checkbox(
-                                          hoverColor:
-                                              btnColor.withOpacity(0.0001),
-                                          value: val,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              GraphValueServices.update(
-                                                  id, value);
-                                            });
-                                          },
-                                          activeColor: btnColor),
-                                      SizedBox(width: 5),
-                                      val
-                                          ? CircleAvatar(
-                                              maxRadius: 15,
-                                              child: IconButton(
-                                                icon: Icon(
-                                                  Icons.delete,
-                                                  size: 12.5,
-                                                  color: Colors.red,
-                                                ),
-                                                onPressed: () {
-                                                  _showMyDialog(id);
-                                                },
-                                              ),
-                                              backgroundColor:
-                                                  Colors.red.withOpacity(0.075),
-                                            )
-                                          : SizedBox(),
-                                      SizedBox(width: 2.5),
-                                      val
-                                          ? CircleAvatar(
-                                              maxRadius: 15,
-                                              child: IconButton(
-                                                icon: Icon(
-                                                  Icons.edit,
-                                                  size: 12.5,
-                                                  color: btnColor,
-                                                ),
-                                                onPressed: () {},
-                                              ),
-                                              backgroundColor:
-                                                  btnColor.withOpacity(0.075),
-                                            )
-                                          : SizedBox(),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  child: Container(
-                                      width: 230,
-                                      alignment: Alignment.centerLeft,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(40),
-                                              ),
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(40),
-                                                  child: HtmlElementView(
-                                                    viewType: logo,
-                                                  ))),
-                                          SizedBox(width: 2),
-                                          Text(
-                                            taskname,
-                                            style: ClrStls.tnClr,
+                                      Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
                                           ),
-                                        ],
-                                      )),
-                                  onTap: () {
-                                    detailspopBox(
-                                        context,
-                                        id,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: HtmlElementView(
+                                                viewType: logo,
+                                              ))),
+                                      SizedBox(width: 2),
+                                      Text(
                                         taskname,
-                                        startDate,
-                                        endDate,
-                                        priority,
-                                        lastseen,
-                                        cat,
-                                        message,
-                                        newsta,
-                                        prosta,
-                                        insta,
-                                        wonsta,
-                                        clsta,
-                                        s,
-                                        f,
-                                        assign);
-                                  },
-                                ),
-                                Container(
-                                  width: 180,
-                                  child: Text(
-                                    CxID,
-                                    style: TxtStls.fieldstyle,
+                                        style: ClrStls.tnClr,
+                                      ),
+                                    ],
+                                  )),
+                              onTap: () {
+                                detailspopBox(
+                                    context,
+                                    id,
+                                    taskname,
+                                    startDate,
+                                    endDate,
+                                    priority,
+                                    lastseen,
+                                    cat,
+                                    message,
+                                    newsta,
+                                    prosta,
+                                    insta,
+                                    wonsta,
+                                    clsta,
+                                    s,
+                                    f,
+                                    assign);
+                              },
+                            ),
+                            Container(
+                              width: size.width * 0.092,
+                              child: Text(
+                                CxID,
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                            Container(
+                              width: size.width * 0.111,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                createDate.toString() +
+                                    " ${careatedate1.toString()}",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                            Container(
+                                width: size.width * 0.1,
+                                alignment: Alignment.centerLeft,
+                                child: Text(" ${edf}" + " ${edf1}",
+                                    style: ClrStls.endClr)),
+                            Container(
+                              width: size.width * 0.1,
+                              height: 30,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    physics: ClampingScrollPhysics(),
+                                    itemCount: assign.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          child: SizedBox(
+                                            width: 30,
+                                            height: 500,
+                                            child: Image.network(
+                                              assign[index]["image"],
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high,
+                                            ),
+                                          ));
+                                    },
                                   ),
-                                ),
-                                Container(
-                                  width: 220,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    createDate.toString() +
-                                        " ${careatedate1.toString()}",
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                ),
-                                Container(
-                                    width: 205,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(" ${edf}" + " ${edf1}",
-                                        style: ClrStls.endClr)),
-                                Container(
-                                  width: 190,
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    children: assign
-                                        .map((e) => ClipRRect(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(40.0)),
-                                            child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                    Image.network(e["image"]))))
-                                        .toList(),
-                                  ),
-                                ),
-                                Container(
-                                  width: 200,
-                                  alignment: Alignment.centerLeft,
-                                  child: dropdowns(id, cat, newsta, prosta,
-                                      insta, wonsta, clsta),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                  StreamBuilder(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("EmployeeData")
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        var snp = snapshot.data!.docs;
+                                        String? img;
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        return PopupMenuButton(
+                                          tooltip: "Assignee",
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: btnColor,
+                                          ),
+                                          color: bgColor,
+                                          itemBuilder: (context) => snp
+                                              .map((item) => PopupMenuItem(
+                                                  onTap: () {
+                                                    img = item.get("uimage");
+                                                    setState(() {});
+                                                  },
+                                                  value: item.get("uid"),
+                                                  child: Row(
+                                                    children: [
+                                                      CircleAvatar(
+                                                        backgroundImage:
+                                                            NetworkImage(item
+                                                                .get("uimage")),
+                                                      ),
+                                                      SizedBox(width: 5),
+                                                      Text(
+                                                        item.get("uname"),
+                                                        style:
+                                                            TxtStls.fieldstyle,
+                                                      ),
+                                                    ],
+                                                  )))
+                                              .toList(),
+                                          onSelected: (value) {
+                                            AssignServices.assign(
+                                                id, value, img);
+                                          },
+                                        );
+                                      }),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: size.width * 0.07,
+                              alignment: Alignment.centerLeft,
+                              child: dropdowns(id, cat, newsta, prosta, insta,
+                                  wonsta, clsta),
+                            ),
+                            Expanded(
+                                child: CountdownTimer(
+                              endTime: DateTime.now().millisecondsSinceEpoch +
+                                  t * 1000,
+                              widgetBuilder: (BuildContext context,
+                                  CurrentRemainingTime? time) {
+                                if (time == null) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       CircleAvatar(
                                         child: IconButton(
+                                          tooltip: "Update",
                                           icon: Icon(
                                             Icons.update,
                                             size: 12.5,
@@ -5566,6 +5625,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                       ),
                                       CircleAvatar(
                                         child: IconButton(
+                                          tooltip: "Move",
                                           icon: Icon(
                                             Icons.fast_forward,
                                             size: 12.5,
@@ -5588,38 +5648,26 @@ class _TaskPreviewState extends State<TaskPreview>
                                             btnColor.withOpacity(0.075),
                                       ),
                                     ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            CountdownTimer(
-                              endTime: DateTime.now().millisecondsSinceEpoch +
-                                  t * 1000,
-                              widgetBuilder: (BuildContext context,
-                                  CurrentRemainingTime? time) {
-                                if (time == null) {
-                                  return Text("");
-                                }
-
-                                if (time.min == null) {
-                                  return Text("");
+                                  );
                                 }
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     LabelText(
                                         label: "Hrs",
-                                        value: "${time.hours.toString()}"),
+                                        value:
+                                            "${time.hours == null ? 0 : time.hours.toString()}"),
                                     LabelText(
                                         label: "Min",
-                                        value: "${time.min.toString()}"),
+                                        value:
+                                            "${time.min == null ? 0 : time.min.toString()}"),
                                     LabelText(
                                         label: "Sec",
                                         value: "${time.sec.toString()}"),
                                   ],
                                 );
                               },
-                            )
+                            ))
                           ],
                         );
                       },

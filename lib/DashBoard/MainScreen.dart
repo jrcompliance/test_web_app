@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Constants/MoveModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
+import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Constants/MoveDrawer.dart';
+import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 
@@ -33,34 +34,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    this.userdetails();
-  }
-
-  userdetails() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var uid = prefs.getString("uid");
-    FirebaseFirestore.instance
-        .collection("EmployeeData")
-        .where("uid", isEqualTo: uid)
-        .snapshots()
-        .listen((event) {
-      event.docs.forEach((element) {
-        setState(() {
-          String uname = element.data()["uname"].toString();
-          String uemail = element.data()["uemail"].toString();
-          String uphoneNumber = element.data()["uphoneNumber"].toString();
-          String uimage = element.data()["uimage"].toString();
-          String urole = element.data()["urole"].toString();
-          String uuid = element.data()["uid"].toString();
-          username = uname;
-          email = uemail;
-          phone = uphoneNumber;
-          imageUrl = uimage;
-          role = urole;
-          uid = uuid;
-        });
-      });
-    });
+    userdetails();
+    Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
   }
 
   @override
@@ -215,6 +190,38 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  DrawerListTile(title, image, tab) {
+    return ListTile(
+      hoverColor: btnColor.withOpacity(0.25),
+      title: Responsive.isMediumScreen(context)
+          ? Text("")
+          : Text(title, style: TxtStls.fieldtitlestyle),
+      leading: SizedBox(
+        child: Image.asset(image,
+            fit: BoxFit.fill, filterQuality: FilterQuality.high),
+        height: 22.5,
+      ),
+      onTap: () {
+        setState(() {
+          active = tab;
+        });
+      },
+    );
+  }
+
+  Uint8List? logoBase64;
+  String? name;
+  chooseProfile() async {
+    FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
+    if (pickedfile != null) {
+      Uint8List? fileBytes = pickedfile.files.first.bytes;
+      String fileName = pickedfile.files.first.name;
+      logoBase64 = fileBytes;
+      name = fileName;
+      setState(() {});
+    } else {}
+  }
+
   updateProfile() {
     Future.delayed(Duration(seconds: 10));
     Size size = MediaQuery.of(context).size;
@@ -320,38 +327,6 @@ class _MainScreenState extends State<MainScreen> {
     return Text("");
   }
 
-  DrawerListTile(title, image, tab) {
-    return ListTile(
-      hoverColor: btnColor.withOpacity(0.25),
-      title: Responsive.isMediumScreen(context)
-          ? Text("")
-          : Text(title, style: TxtStls.fieldtitlestyle),
-      leading: SizedBox(
-        child: Image.asset(image,
-            fit: BoxFit.fill, filterQuality: FilterQuality.high),
-        height: 22.5,
-      ),
-      onTap: () {
-        setState(() {
-          active = tab;
-        });
-      },
-    );
-  }
-
-  Uint8List? logoBase64;
-  String? name;
-  chooseProfile() async {
-    FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
-    if (pickedfile != null) {
-      Uint8List? fileBytes = pickedfile.files.first.bytes;
-      String fileName = pickedfile.files.first.name;
-      logoBase64 = fileBytes;
-      name = fileName;
-      setState(() {});
-    } else {}
-  }
-
   Future<void> storeUserData() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     TaskSnapshot upload =
@@ -362,6 +337,93 @@ class _MainScreenState extends State<MainScreen> {
       "uimage": myUrl,
     }).then((value) => Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
+  }
+
+  userdetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var uid = prefs.getString("uid");
+    FirebaseFirestore.instance
+        .collection("EmployeeData")
+        .where("uid", isEqualTo: uid)
+        .snapshots()
+        .listen((event) {
+      event.docs.forEach((element) {
+        setState(() {
+          String uname = element.data()["uname"].toString();
+          String uemail = element.data()["uemail"].toString();
+          String uphoneNumber = element.data()["uphoneNumber"].toString();
+          String uimage = element.data()["uimage"].toString();
+          String urole = element.data()["urole"].toString();
+          String uuid = element.data()["uid"].toString();
+          username = uname;
+          email = uemail;
+          phone = uphoneNumber;
+          imageUrl = uimage;
+          role = urole;
+          uid = uuid;
+        });
+      });
+    });
+  }
+
+  Future<void> userTasks() async {
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("cat", isEqualTo: "NEW")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .snapshots()
+        .listen((value) {
+          setState(() {
+            newLength = value.docs.length.toDouble();
+          });
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("cat", isEqualTo: "PROSPECT")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .snapshots()
+        .listen((value) {
+          prospectLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .where("cat", isEqualTo: "IN PROGRESS")
+        .snapshots()
+        .listen((value) {
+          ipLength = value.docs.length.toDouble();
+          setState(() {});
+        });
+    FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("Attachments", arrayContainsAny: [
+          {
+            "image": imageUrl,
+            "uid": _auth.currentUser!.uid.toString(),
+          }
+        ])
+        .where("cat", isEqualTo: "WON")
+        .snapshots()
+        .listen((value) {
+          wonLength = value.docs.length.toDouble();
+          setState(() {});
+        });
   }
 }
 

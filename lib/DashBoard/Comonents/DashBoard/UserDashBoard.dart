@@ -8,10 +8,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Constants/UserModels.dart';
+import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
-import 'package:test_web_app/Constants/tasklength.dart';
+import 'package:test_web_app/Models/tasklength.dart';
 
 class UserDashBoard extends StatefulWidget {
   const UserDashBoard({Key? key}) : super(key: key);
@@ -21,75 +21,9 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
-  Future<void> userTasks() async {
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("cat", isEqualTo: "NEW")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .snapshots()
-        .listen((value) {
-          setState(() {
-            newLength = value.docs.length.toDouble();
-          });
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("cat", isEqualTo: "PROSPECT")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .snapshots()
-        .listen((value) {
-          prospectLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .where("cat", isEqualTo: "IN PROGRESS")
-        .snapshots()
-        .listen((value) {
-          ipLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .where("cat", isEqualTo: "WON")
-        .snapshots()
-        .listen((value) {
-          wonLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-  }
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int chartval = 4;
   int duelistval = 1;
-  @override
-  void initState() {
-    super.initState();
-    this.userTasks();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
