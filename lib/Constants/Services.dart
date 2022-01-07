@@ -14,42 +14,34 @@ class ProgressUpdsate {
       "cat": activeid,
     }).then((value) {
       CollectionReference collectionReference = _firestore.collection("Tasks");
-      collectionReference.doc(id).update({
-        "Activity": FieldValue.arrayUnion([
-          {
-            "From": cat,
-            "To": activeid,
-            "Who": username.toString(),
-            "When": Timestamp.now(),
-            "Note": noteController.text.toString(),
-            "LatDate": lastDate,
-            "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-            "Bound": radioItem,
-            "Action": action,
-          }
-        ])
-      });
+      collectionReference.doc(id).collection("Activitys").doc().set({
+        "From": cat,
+        "To": activeid,
+        "Who": username.toString(),
+        "When": Timestamp.now(),
+        "Note": noteController.text.toString(),
+        "LatDate": lastDate,
+        "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+        "Bound": radioItem,
+        "Action": action,
+      }, SetOptions(merge: true));
     });
   }
 
   static updatesame(
       id, cat, noteController, lastDate, radioItem, action) async {
     CollectionReference _collectionReference = _firestore.collection("Tasks");
-    _collectionReference.doc(id).update({
-      "Activity": FieldValue.arrayUnion([
-        {
-          "From": cat,
-          "To": cat,
-          "Who": username.toString(),
-          "When": Timestamp.now(),
-          "Note": noteController.text.toString(),
-          "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-          "Bound": radioItem,
-          "Action": action,
-        }
-      ])
-    });
+    _collectionReference.doc(id).collection("Activitys").doc().set({
+      "From": cat,
+      "To": cat,
+      "Who": username.toString(),
+      "When": Timestamp.now(),
+      "Note": noteController.text.toString(),
+      "LatDate": lastDate,
+      "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+      "Bound": radioItem,
+      "Action": action,
+    }, SetOptions(merge: true));
   }
 }
 
@@ -347,7 +339,6 @@ class CrudOperations {
           "phone": _phoneController.text.toString(),
         }
       ],
-      "Activity": [],
       "lastseen": Timestamp.now(),
       "Certificates": [],
     }).then((value) {

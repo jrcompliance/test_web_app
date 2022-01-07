@@ -749,7 +749,7 @@ class _TaskPreviewState extends State<TaskPreview>
               String contactname = snp["CompanyDetails"][0]["contactperson"];
               String cemail = snp["CompanyDetails"][0]["email"];
               String cphone = snp["CompanyDetails"][0]["phone"];
-              List comment = snp["Activity"];
+              //List comment = snapshot.data.docs.;
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -903,18 +903,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                           btnColor.withOpacity(0.1),
                                     ),
                                     SizedBox(width: 5),
-                                    comment.length == 0
-                                        ? Text("No Comments",
-                                            style: TxtStls.fieldstyle)
-                                        : Flexible(
-                                            child: Text(
-                                              comment[comment.length - 1]
-                                                  ["Note"],
-                                              style: TxtStls.fieldstyle,
-                                              softWrap: true,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          )
+                                    // comment.length == 0
+                                    //     ? Text("No Comments",
+                                    //         style: TxtStls.fieldstyle)
+                                    //     : Flexible(
+                                    //         child: Text(
+                                    //           comment[comment.length - 1]
+                                    //               ["Note"],
+                                    //           style: TxtStls.fieldstyle,
+                                    //           softWrap: true,
+                                    //           overflow: TextOverflow.ellipsis,
+                                    //         ),
+                                    //       )
                                   ],
                                 ),
                                 StatefulBuilder(
@@ -2415,8 +2415,12 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
+  var first;
+  var last;
+
   detailspopBox(context, id, taskname, startDate, endDate, priority, lastseen,
       cat, message, newsta, prosta, insta, wonsta, clsta, s, f, assign) {
+    bool isSelected = false;
     Size size = MediaQuery.of(context).size;
     TextEditingController _certificateConroller = TextEditingController();
     String createDate =
@@ -4493,23 +4497,20 @@ class _TaskPreviewState extends State<TaskPreview>
                                   width: 1,
                                 ),
                                 InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      isSelected = !isSelected;
+                                      setState(() {});
+                                    },
                                     child: Tooltip(
                                       message: "Filters",
                                       child: Container(
                                         padding: EdgeInsets.all(9),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                                backgroundColor:
-                                                    btnColor.withOpacity(0.1),
-                                                child: Lottie.asset(
-                                                    "assets/Lotties/filter.json",
-                                                    animate: _isHover[4])),
-                                            Text("Await",
-                                                style: TxtStls.fieldstyle)
-                                          ],
-                                        ),
+                                        child: CircleAvatar(
+                                            backgroundColor:
+                                                btnColor.withOpacity(0.1),
+                                            child: Lottie.asset(
+                                                "assets/Lotties/filter.json",
+                                                animate: _isHover[4])),
                                       ),
                                     ),
                                     onHover: (value) {
@@ -4639,53 +4640,51 @@ class _TaskPreviewState extends State<TaskPreview>
                         ),
                       ),
                       Expanded(
-                        flex: 8,
-                        child: _isGraph
-                            ? Chart(context, s, f)
-                            : StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection("Tasks")
-                                    .where("id", isEqualTo: id)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Container();
-                                  } else if (snapshot.data!.docs.isEmpty) {
-                                    return Text(
-                                      "No History Found",
-                                      style: TxtStls.fieldtitlestyle,
-                                    );
-                                  }
-                                  return ListView.separated(
-                                      shrinkWrap: true,
-                                      separatorBuilder: (_, i) => Divider(
+                          flex: 8,
+                          child: Stack(
+                            children: [
+                              _isGraph
+                                  ? Chart(context, s, f)
+                                  : StreamBuilder(
+                                      stream: qry(id),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        } else if (snapshot
+                                            .data!.docs.isEmpty) {
+                                          return Text(
+                                            "No History Found",
+                                            style: TxtStls.fieldtitlestyle,
+                                          );
+                                        }
+
+                                        return ListView.separated(
+                                          shrinkWrap: true,
+                                          separatorBuilder: (_, i) => Divider(
                                             height: 10,
                                             color: Color(0xFFE0E0E0),
                                           ),
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: (context, index) {
-                                        List lr = snapshot.data!.docs[index]
-                                            ["Activity"];
-                                        return ListView.builder(
-                                          reverse: true,
-                                          shrinkWrap: true,
-                                          itemCount: lr.length,
+                                          itemCount: snapshot.data!.docs.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            String statecolor =
-                                                lr[index]["From"];
-                                            String statecolor1 =
-                                                lr[index]["To"];
-                                            String date = DateFormat(
-                                                    "EEE | MMM dd, yy")
-                                                .format(
-                                                    lr[index]["When"].toDate());
+                                            String statecolor = snapshot
+                                                .data!.docs[index]["From"];
+                                            String statecolor1 = snapshot
+                                                .data!.docs[index]["To"];
+                                            String date =
+                                                DateFormat("EEE | MMM dd, yy")
+                                                    .format(snapshot.data!
+                                                        .docs[index]["When"]
+                                                        .toDate());
                                             String time = DateFormat('hh:mm a')
-                                                .format(
-                                                    lr[index]["When"].toDate());
+                                                .format(snapshot
+                                                    .data!.docs[index]["When"]
+                                                    .toDate());
                                             DateTime dt1 = DateTime.parse(
-                                                lr[index]["LatDate"]);
+                                                snapshot.data!.docs[index]
+                                                    ["LatDate"]);
                                             String lastDate =
                                                 DateFormat("EEE | MMM dd, yy")
                                                     .format(dt1);
@@ -4805,7 +4804,8 @@ class _TaskPreviewState extends State<TaskPreview>
                                                           alignment:
                                                               Alignment.center,
                                                           width: 50,
-                                                          child: lr[index]
+                                                          child: snapshot.data!.docs[
+                                                                          index]
                                                                       ["Yes"] ==
                                                                   true
                                                               ? InkWell(
@@ -4825,22 +4825,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                       child: _isHover[7]
                                                                           ? Lottie.asset(
                                                                               "assets/Lotties/success.json",
-                                                                              reverse:
-                                                                                  true)
-                                                                          : Image.asset(
-                                                                              "assets/Images/success.png")))
+                                                                              reverse: true)
+                                                                          : Image.asset("assets/Images/success.png")))
                                                               : InkWell(
                                                                   onTap: () {},
-                                                                  onHover:
-                                                                      (value) {
+                                                                  onHover: (value) {
                                                                     _isHover[
                                                                             8] =
                                                                         value;
                                                                     setState(
                                                                         () {});
                                                                   },
-                                                                  child:
-                                                                      CircleAvatar(
+                                                                  child: CircleAvatar(
                                                                     backgroundColor:
                                                                         btnColor
                                                                             .withOpacity(0.1),
@@ -4906,7 +4902,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           statecolor),
                                                                 ),
                                                                 child: Text(
-                                                                    lr[index][
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
                                                                         "From"],
                                                                     style: TxtStls
                                                                         .fieldstyle1),
@@ -4934,7 +4932,8 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           statecolor1),
                                                                 ),
                                                                 child: Text(
-                                                                    lr[index]
+                                                                    snapshot.data!
+                                                                            .docs[index]
                                                                         ["To"],
                                                                     style: TxtStls
                                                                         .fieldstyle1),
@@ -4976,7 +4975,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           .center,
                                                                   width: 150,
                                                                   decoration: BoxDecoration(
-                                                                      color: lr[index]["Bound"] ==
+                                                                      color: snapshot.data!.docs[index]["Bound"] ==
                                                                               "InBound"
                                                                           ? goodClr
                                                                           : flwClr,
@@ -4984,7 +4983,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           BorderRadius.all(
                                                                               Radius.circular(10.0))),
                                                                   child: Text(
-                                                                    lr[index][
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
                                                                         "Bound"],
                                                                     style: TxtStls
                                                                         .fieldstyle1,
@@ -5000,15 +5001,18 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                           .center,
                                                                   width: 100,
                                                                   decoration: BoxDecoration(
-                                                                      color: clr(
-                                                                          lr[index]
-                                                                              [
-                                                                              "Action"]),
+                                                                      color: clr(snapshot
+                                                                              .data!
+                                                                              .docs[index]
+                                                                          [
+                                                                          "Action"]),
                                                                       borderRadius:
                                                                           BorderRadius.all(
                                                                               Radius.circular(10.0))),
                                                                   child: Text(
-                                                                      lr[index][
+                                                                      snapshot.data!
+                                                                              .docs[index]
+                                                                          [
                                                                           "Action"],
                                                                       style: TxtStls
                                                                           .fieldstyle1),
@@ -5038,7 +5042,8 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                       Alignment
                                                                           .centerLeft,
                                                                   child: Text(
-                                                                    lr[index]
+                                                                    snapshot.data!
+                                                                            .docs[index]
                                                                         ["Who"],
                                                                     style: TxtStls
                                                                         .fieldstyle,
@@ -5070,7 +5075,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                                                     size.width *
                                                                         0.35,
                                                                 child: Text(
-                                                                    lr[index][
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
                                                                         "Note"],
                                                                     style: TxtStls
                                                                         .notestyle)),
@@ -5084,9 +5091,148 @@ class _TaskPreviewState extends State<TaskPreview>
                                             );
                                           },
                                         );
-                                      });
-                                }),
-                      ),
+                                      }),
+                              isSelected
+                                  ? Align(
+                                      alignment: Alignment.centerRight,
+                                      child: StatefulBuilder(builder:
+                                          (BuildContext context,
+                                              StateSetter setState) {
+                                        setState(() {});
+                                        return Container(
+                                            width: size.width * 0.2,
+                                            color: Colors.white,
+                                            child: Column(
+                                              children: [
+                                                Column(
+                                                    children: rangelist
+                                                        .map((e) =>
+                                                            RaisedButton(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              elevation: 0.0,
+                                                              color:
+                                                                  rangeid == e
+                                                                      ? btnColor
+                                                                      : bgColor,
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              hoverElevation:
+                                                                  0.0,
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  rangeid = e;
+                                                                  print(e);
+                                                                });
+                                                              },
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        15.0),
+                                                                child: Text(
+                                                                  e,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12.5,
+                                                                      color: rangeid ==
+                                                                              e
+                                                                          ? bgColor
+                                                                          : txtColor,
+                                                                      letterSpacing:
+                                                                          0.2),
+                                                                ),
+                                                              ),
+                                                            ))
+                                                        .toList()),
+                                                rangeid == "Choose Date"
+                                                    ? Container(
+                                                        height: 200,
+                                                        child: Theme(
+                                                          data: ThemeData(
+                                                            colorScheme:
+                                                                ColorScheme.light(
+                                                                    primary:
+                                                                        btnColor),
+                                                            buttonTheme:
+                                                                ButtonThemeData(
+                                                                    textTheme:
+                                                                        ButtonTextTheme
+                                                                            .primary),
+                                                          ),
+                                                          child:
+                                                              CalendarDatePicker(
+                                                                  initialDate:
+                                                                      DateTime
+                                                                          .now(),
+                                                                  firstDate:
+                                                                      DateTime(
+                                                                          2022),
+                                                                  lastDate:
+                                                                      DateTime
+                                                                          .now(),
+                                                                  onDateChanged:
+                                                                      (value) {
+                                                                    _myController
+                                                                            .text =
+                                                                        value
+                                                                            .toString();
+                                                                    setState(
+                                                                        () {});
+                                                                  }),
+                                                        ),
+                                                      )
+                                                    : SizedBox(),
+                                                rangeid == "Choose Date Range"
+                                                    ? Row(
+                                                        children: [
+                                                          Flexible(
+                                                            flex: 1,
+                                                            child: InkWell(
+                                                              child:
+                                                                  TextFormField(
+                                                                enabled: false,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  border:
+                                                                      OutlineInputBorder(),
+                                                                  hintText:
+                                                                      "Pick Start Date",
+                                                                  hintStyle: TxtStls
+                                                                      .fieldstyle,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Flexible(
+                                                            flex: 1,
+                                                            child:
+                                                                TextFormField(
+                                                              enabled: false,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                border:
+                                                                    OutlineInputBorder(),
+                                                                hintText:
+                                                                    "Pick End Date",
+                                                                hintStyle: TxtStls
+                                                                    .fieldstyle,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : SizedBox(),
+                                              ],
+                                            ));
+                                      }),
+                                    )
+                                  : SizedBox()
+                            ],
+                          )),
                     ],
                   ),
                 )
@@ -6136,5 +6282,97 @@ class _TaskPreviewState extends State<TaskPreview>
             });
           });
         });
+  }
+
+  dateTimeRangePicker() async {
+    DateTimeRange? picked = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime(2022),
+        lastDate: DateTime.now(),
+        builder: (context, child) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 400.0, maxHeight: 400),
+                child: child,
+              )
+            ],
+          );
+        });
+    print(picked);
+  }
+
+  final rangelist = ["Today", "Yesterday", "Choose Date", "Choose Date Range"];
+  String rangeid = "";
+  TextEditingController _myController = TextEditingController();
+  Stream<QuerySnapshot<Object?>> qry(id) {
+    if (rangeid == "Today") {
+      return MyCompondQuerys.getCatProQuery(id);
+    } else if (rangeid == "Yesterday") {
+      return MyCompondQuerys.getCatProQuery1(id);
+    } else if (rangeid == "Choose Date") {
+      return MyCompondQuerys.getCatProQuery2(id);
+    } else if (rangeid == "Choose Date Range") {
+      return MyCompondQuerys.getCatProQuery3(id);
+    }
+    return MyCompondQuerys.getCatProQuery4(id);
+  }
+}
+
+class MyCompondQuerys {
+  static getCatProQuery(id) {
+    return FirebaseFirestore.instance
+        .collection("Tasks")
+        .doc(id)
+        .collection("Activitys")
+        .orderBy("When", descending: true)
+        .where("date",
+            isGreaterThan: DateTime.now()
+                .subtract(Duration(days: 1))
+                .toString()
+                .split(" ")[0])
+        .where("date",
+            isLessThanOrEqualTo: DateTime.now().toString().split(" ")[0])
+        .snapshots();
+  }
+
+  static getCatProQuery1(id) {
+    return FirebaseFirestore.instance
+        .collection("Tasks")
+        .doc(id)
+        .collection("Activitys")
+        .orderBy("When", descending: true)
+        .limit(2)
+        .snapshots();
+  }
+
+  static getCatProQuery2(id) {
+    return FirebaseFirestore.instance
+        .collection("Tasks")
+        .doc(id)
+        .collection("Activitys")
+        .orderBy("When", descending: true)
+        .limit(3)
+        .snapshots();
+  }
+
+  static getCatProQuery3(id) {
+    return FirebaseFirestore.instance
+        .collection("Tasks")
+        .doc(id)
+        .collection("Activitys")
+        .orderBy("When", descending: true)
+        .limit(4)
+        .snapshots();
+  }
+
+  static getCatProQuery4(id) {
+    return FirebaseFirestore.instance
+        .collection("Tasks")
+        .doc(id)
+        .collection("Activitys")
+        .orderBy("When", descending: true)
+        .snapshots();
   }
 }

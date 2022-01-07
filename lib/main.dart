@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -296,3 +295,20 @@ class _LandingScreenState extends State<LandingScreen> {
 //     });
 //   }
 // }
+
+class MyDesigner extends StatefulWidget {
+  const MyDesigner({Key? key}) : super(key: key);
+
+  @override
+  _MyDesignerState createState() => _MyDesignerState();
+}
+
+class _MyDesignerState extends State<MyDesigner> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+      title: Text(DateTime.parse(DateTime.now().toString()).toString()),
+    ));
+  }
+}
