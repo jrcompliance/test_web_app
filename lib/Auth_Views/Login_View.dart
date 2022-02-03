@@ -204,24 +204,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     SizedBox(height: size.height * 0.01),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Checkbox(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0))),
-                                          activeColor: btnColor,
-                                          value: _isAgree,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _isAgree = value ?? false;
-                                            });
-                                          },
+                                        Row(
+                                          children: [
+                                            Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              activeColor: btnColor,
+                                              value: _isAgree,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _isAgree = value ?? false;
+                                                });
+                                              },
+                                            ),
+                                            Text(
+                                              "Remember me",
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          "Remember me",
-                                          style: TxtStls.fieldstyle,
-                                        ),
-                                        SizedBox(width: size.width * 0.04),
                                         InkWell(
                                           child: Text("Reset Password?",
                                               style: TxtStls.btnstyle),

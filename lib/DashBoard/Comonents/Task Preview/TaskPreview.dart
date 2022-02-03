@@ -325,13 +325,22 @@ class _TaskPreviewState extends State<TaskPreview>
                   SizedBox(width: size.width * 0.01),
                   CircleAvatar(
                     backgroundColor: btnColor.withOpacity(0.1),
-                    child: IconButton(
-                        hoverColor: Colors.transparent,
-                        icon: Icon(Icons.calendar_today_rounded,
-                            color: btnColor, size: 17.5),
-                        onPressed: () {
-                          dateTimeRangePicker1();
-                        }),
+                    child: date11 == null && date22 == null
+                        ? IconButton(
+                            hoverColor: Colors.transparent,
+                            icon: Icon(Icons.calendar_today_rounded,
+                                color: btnColor, size: 17.5),
+                            onPressed: () {
+                              dateTimeRangePicker1();
+                            })
+                        : IconButton(
+                            hoverColor: Colors.transparent,
+                            icon:
+                                Icon(Icons.cancel, color: btnColor, size: 17.5),
+                            onPressed: () {
+                              date11 = date22 = null;
+                              setState(() {});
+                            }),
                   ),
                   SizedBox(width: size.width * 0.01),
                   role == "Admin"
@@ -1633,7 +1642,7 @@ class _TaskPreviewState extends State<TaskPreview>
     } else if (cat == "PROSPECT") {
       return Container(
         alignment: Alignment.center,
-        width: 130,
+        width: size.width * 0.1,
         decoration: BoxDecoration(
             color: StatusUpdateServices.statcolorget1(prosta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -1705,7 +1714,7 @@ class _TaskPreviewState extends State<TaskPreview>
     } else if (cat == "IN PROGRESS") {
       return Container(
         alignment: Alignment.center,
-        width: 140,
+        width: size.width * 0.1,
         decoration: BoxDecoration(
             color: StatusUpdateServices.statcolorget2(insta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -1794,7 +1803,7 @@ class _TaskPreviewState extends State<TaskPreview>
     } else if (cat == "WON") {
       return Container(
         alignment: Alignment.center,
-        width: 130,
+        width: size.width * 0.1,
         decoration: BoxDecoration(
             color: StatusUpdateServices.statcolorget4(wonsta),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -1883,7 +1892,7 @@ class _TaskPreviewState extends State<TaskPreview>
     }
     return Container(
       alignment: Alignment.center,
-      width: 130,
+      width: size.width * 0.1,
       decoration: BoxDecoration(
           color: StatusUpdateServices.statcolorget5(clsta),
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -4527,8 +4536,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   color: btnColor)),
                                         ),
                                         onTap: () {
-                                          date1 = null;
-                                          date2 = null;
+                                          date1 = date2 = null;
                                           setState(() {});
                                         },
                                       ),
@@ -4664,11 +4672,12 @@ class _TaskPreviewState extends State<TaskPreview>
                           child: _isGraph
                               ? Chart(context, s, f)
                               : StreamBuilder(
-                                  stream: date1 == null
+                                  stream: date1 == null && date2 == null
                                       ? FirebaseFirestore.instance
                                           .collection("Tasks")
                                           .doc(id)
                                           .collection("Activitys")
+                                          .orderBy("When", descending: true)
                                           .snapshots()
                                       : FirebaseFirestore.instance
                                           .collection("Tasks")
@@ -5329,7 +5338,32 @@ class _TaskPreviewState extends State<TaskPreview>
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2022),
-        lastDate: DateTime(3021));
+        lastDate: DateTime(3021),
+        builder: (BuildContext context, Widget ?child) {
+          return Theme(
+            data: ThemeData(
+              primarySwatch: Colors.grey,
+              splashColor: Colors.black,
+              textTheme: TextTheme(
+                subtitle1: TextStyle(color: Colors.black),
+                button: TextStyle(color: Colors.black),
+              ),
+              accentColor: Colors.black,
+              colorScheme: ColorScheme.light(
+                  primary: btnColor,
+                  primaryVariant: Colors.black,
+                  secondaryVariant: Colors.black,
+                  onSecondary: Colors.black,
+                  onPrimary: Colors.white,
+                  surface: Colors.black,
+                  onSurface: Colors.black,
+                  secondary: Colors.black),
+              dialogBackgroundColor: Colors.white,
+            ),
+            child: child ??Text(""),
+          );
+        }
+    );
     if (pickedDate != null) {
       _queryDate = pickedDate.toString().split(" ")[0];
       setState(() {});
@@ -6068,10 +6102,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[1],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("PROSPECT"),
-              //   visible: _tapslist[1],
-              // ),
+              Visibility(
+                child: listmiddle("PROSPECT"),
+                visible: _tapslist[1],
+              ),
             ],
           ),
         ),
@@ -6096,10 +6130,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[2],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("IN PROGRESS"),
-              //   visible: _tapslist[2],
-              // ),
+              Visibility(
+                child: listmiddle("IN PROGRESS"),
+                visible: _tapslist[2],
+              ),
             ],
           ),
         ),
@@ -6125,10 +6159,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[3],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("WON"),
-              //   visible: _tapslist[3],
-              // ),
+              Visibility(
+                child: listmiddle("WON"),
+                visible: _tapslist[3],
+              ),
             ],
           ),
         ),
@@ -6154,10 +6188,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[4],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("CLOSE"),
-              //   visible: _tapslist[4],
-              // ),
+              Visibility(
+                child: listmiddle("CLOSE"),
+                visible: _tapslist[4],
+              ),
             ],
           ),
         ),
@@ -6209,23 +6243,43 @@ class _TaskPreviewState extends State<TaskPreview>
   var date2;
   dateTimeRangePicker() async {
     DateTimeRange? picked = await showDateRangePicker(
+        builder: (BuildContext context, Widget ?child) {
+          return Theme(
+            data: ThemeData(
+              primarySwatch: Colors.grey,
+              splashColor: Colors.black,
+              textTheme: TextTheme(
+                subtitle1: TextStyle(color: Colors.black),
+                button: TextStyle(color: Colors.black),
+              ),
+              accentColor: Colors.black,
+              colorScheme: ColorScheme.light(
+                  primary: btnColor,
+                  primaryVariant: Colors.black,
+                  secondaryVariant: Colors.black,
+                  onSecondary: Colors.black,
+                  onPrimary: Colors.white,
+                  surface: Colors.black,
+                  onSurface: Colors.black,
+                  secondary: Colors.black),
+              dialogBackgroundColor: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
+                  child: child,
+                )
+              ],
+            ),
+          );
+        }
         context: context,
         firstDate: DateTime(2022),
         lastDate: DateTime.now(),
-        builder: (context, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
-                child: child,
-              )
-            ],
-          );
-        });
+       );
     if (picked != null && picked != null) {
-      print(picked.start.toString().split(" ")[0]);
-      print(picked.end.toString().split(" ")[0]);
       setState(() {
         date1 = picked.start.toString().split(" ")[0];
         date2 = picked.end.toString().split(" ")[0];
@@ -6240,20 +6294,39 @@ class _TaskPreviewState extends State<TaskPreview>
         context: context,
         firstDate: DateTime(2022),
         lastDate: DateTime.now(),
-        builder: (context, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
-                child: child,
-              )
-            ],
+        builder: (BuildContext context, Widget ?child) {
+          return Theme(
+            data: ThemeData(
+              primarySwatch: Colors.grey,
+              splashColor: Colors.black,
+              textTheme: TextTheme(
+                subtitle1: TextStyle(color: Colors.black),
+                button: TextStyle(color: Colors.black),
+              ),
+              accentColor: Colors.black,
+              colorScheme: ColorScheme.light(
+                  primary: btnColor,
+                  primaryVariant: Colors.black,
+                  secondaryVariant: Colors.black,
+                  onSecondary: Colors.black,
+                  onPrimary: Colors.white,
+                  surface: Colors.black,
+                  onSurface: Colors.black,
+                  secondary: Colors.black),
+              dialogBackgroundColor: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
+                  child: child,
+                )
+              ],
+            ),
           );
         });
     if (picked != null && picked != null) {
-      print(picked.start.toString().split(" ")[0]);
-      print(picked.end.toString().split(" ")[0]);
       setState(() {
         date11 = picked.start.toString().split(" ")[0];
         date22 = picked.end.toString().split(" ")[0];

@@ -24,6 +24,7 @@ class ProgressUpdsate {
         "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
         "Bound": radioItem,
         "Action": action,
+        "queryDate": DateTime.now().toString().split(" ")[0],
       }, SetOptions(merge: true));
     });
   }
@@ -41,6 +42,7 @@ class ProgressUpdsate {
       "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
       "Bound": radioItem,
       "Action": action,
+      "queryDate": DateTime.now().toString().split(" ")[0],
     }, SetOptions(merge: true));
   }
 }
@@ -314,6 +316,7 @@ class CrudOperations {
       "id": did,
       "task": _taskController.text.toString(),
       "startDate": Timestamp.fromDate(DateTime.now()),
+      "qDate": DateTime.now().toString().split(" ")[0],
       "endDate": _endDateController.text.toString(),
       "message": _messageController.text.toString(),
       "priority": "E",

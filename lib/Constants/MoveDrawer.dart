@@ -55,8 +55,9 @@ class _MoveDrawerState extends State<MoveDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
-      width: 380,
+      width: size.width * 0.25,
       child: Drawer(
           child: Padding(
         padding: const EdgeInsets.only(right: 15, left: 20),
@@ -536,66 +537,122 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ),
       );
     } else if (lead == "Profile") {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            height: size.height * 0.25,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(imageUrl!),
-                  maxRadius: 50,
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: size.height * 0.225,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(imageUrl!),
+                    maxRadius: 50,
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                  Text(username!, style: TxtStls.fieldtitlestyle),
+                  Text("(Flutter Developer)", style: TxtStls.fieldstyle),
+                ],
+              ),
+            ),
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            SizedBox(height: size.height * 0.01),
+            Text("Contact Info", style: TxtStls.fieldtitlestyle),
+            SizedBox(height: size.height * 0.01),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(Icons.email, color: btnColor, size: 15),
+                backgroundColor: btnColor.withOpacity(0.1),
+              ),
+              title: Text("Email", style: TxtStls.fieldtitlestyle),
+              subtitle: Text(email!, style: TxtStls.fieldstyle),
+            ),
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            ListTile(
+              leading: CircleAvatar(
+                child: Icon(
+                  Icons.phone,
+                  color: btnColor,
+                  size: 15,
                 ),
-                SizedBox(height: size.height * 0.025),
-                Text(username!, style: TxtStls.fieldtitlestyle)
-              ],
-            ),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          SizedBox(height: size.height * 0.025),
-          Text("Contact Info", style: TxtStls.fieldtitlestyle),
-          SizedBox(height: size.height * 0.025),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(Icons.email, color: btnColor, size: 15),
-              backgroundColor: btnColor.withOpacity(0.1),
-            ),
-            title: Text(email!, style: TxtStls.fieldtitlestyle),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(
-                Icons.phone,
-                color: btnColor,
-                size: 15,
+                backgroundColor: btnColor.withOpacity(0.1),
               ),
-              backgroundColor: btnColor.withOpacity(0.1),
+              title: Text("Phone Number", style: TxtStls.fieldtitlestyle),
+              subtitle: Text(phone!, style: TxtStls.fieldstyle),
             ),
-            title: Text(phone!, style: TxtStls.fieldtitlestyle),
-          ),
-          Divider(color: Colors.grey.withOpacity(0.2)),
-          ListTile(
-            leading: CircleAvatar(
-              maxRadius: 15,
-              child: Icon(
-                Icons.exit_to_app_outlined,
-                color: btnColor,
-                size: 15,
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            ListTile(
+              title: Text("Address", style: TxtStls.fieldtitlestyle),
+              leading: CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.location_on,
+                  color: btnColor,
+                  size: 15,
+                ),
               ),
-              backgroundColor: btnColor.withOpacity(0.1),
+              subtitle: Text(
+                  "4-19/1, Tana Bazar Dondapadu,Mellachervu,Suryapet,TS",
+                  style: TxtStls.fieldstyle),
             ),
-            title: Text("LogOut", style: TxtStls.fieldtitlestyle),
-            onTap: () {
-              _showMyDialog();
-            },
-          ),
-        ],
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: btnColor.withOpacity(0.1),
+                child: Icon(
+                  Icons.calendar_today,
+                  color: btnColor,
+                  size: 15,
+                ),
+              ),
+              title: Text("Date of Joining", style: TxtStls.fieldtitlestyle),
+              subtitle: Text(
+                "Wed | 12 jan 2021",
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.red.withOpacity(0.1),
+                child: Icon(
+                  Icons.bloodtype_rounded,
+                  color: Colors.red,
+                  size: 15,
+                ),
+              ),
+              title: Text("Blood Group", style: TxtStls.fieldtitlestyle),
+              subtitle: Text(
+                "B+",
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            Divider(color: Colors.grey.withOpacity(0.2)),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.red.withOpacity(0.1),
+                child: Icon(
+                  Icons.call,
+                  color: Colors.red,
+                  size: 15,
+                ),
+              ),
+              title: Text("Emergency Contact", style: TxtStls.fieldtitlestyle),
+              subtitle: Text(
+                "8978511783",
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            RaisedButton(
+                onPressed: () {},
+                child: Text("Upload Files", style: TxtStls.fieldstyle1),
+                color: btnColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))))
+          ],
+        ),
       );
     }
     return SingleChildScrollView(
@@ -1023,55 +1080,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
         print(_customtimeController.text);
       });
     }
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await FirebaseAuth.instance.signOut().then((value) {
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
-      prefs.clear();
-    });
-  }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      barrierColor: Colors.transparent,
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          title: Text(
-            'Are you sure to LogOut ${username}?',
-            style: TxtStls.fieldtitlestyle,
-          ),
-          actions: <Widget>[
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: grClr,
-              child: Text(
-                'Cancel',
-                style: TxtStls.fieldstyle1,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: clsClr,
-              child: Text('Ok', style: TxtStls.fieldstyle1),
-              onPressed: () {
-                logout();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
 
