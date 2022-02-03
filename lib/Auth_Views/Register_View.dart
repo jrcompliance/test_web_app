@@ -53,12 +53,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: _isLoading
                   ? Center(
                       child: SpinKitFadingCube(
-                        size: 50.0,
+                        size: size.height * 0.05,
                         color: btnColor,
                       ),
                     )
-                  : AnimatedContainer(
-                      duration: const Duration(milliseconds: 1),
+                  : Container(
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               'Sign Up',
                               style: TxtStls.titlestyle,
                             ),
-                            SizedBox(height: 40.0),
+                            SizedBox(height: size.height * 0.01),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -106,9 +105,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     }),
                               ],
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: size.height * 0.01),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 140),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.05),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -133,10 +133,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: size.height * 0.01),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 140.0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.075),
                               child: Form(
                                 key: _formkey,
                                 child: Column(

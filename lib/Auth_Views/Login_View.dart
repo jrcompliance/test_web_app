@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: _isLoading
                   ? Center(
                       child: SpinKitFadingCube(
-                        size: 50.0,
+                        size: size.height * 0.05,
                         color: btnColor,
                       ),
                     )
@@ -61,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Log in',
                                 style: TxtStls.titlestyle,
                               ),
-                              SizedBox(height: 40.0),
+                              SizedBox(height: size.height * 0.01),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -98,9 +97,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }),
                                 ],
                               ),
-                              SizedBox(height: 20.0),
+                              SizedBox(height: size.height * 0.01),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 140),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.width * 0.05),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 20.0),
+                              SizedBox(height: size.height * 0.01),
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: size.width * 0.075),
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 10.0),
+                                    SizedBox(height: size.height * 0.01),
                                     Text("Password",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
@@ -202,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 10.0),
+                                    SizedBox(height: size.height * 0.01),
                                     Row(
                                       children: [
                                         Checkbox(
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           "Remember me",
                                           style: TxtStls.fieldstyle,
                                         ),
-                                        SizedBox(width: 120),
+                                        SizedBox(width: size.width * 0.04),
                                         InkWell(
                                           child: Text("Reset Password?",
                                               style: TxtStls.btnstyle),
@@ -235,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         )
                                       ],
                                     ),
-                                    SizedBox(height: 15.0),
+                                    SizedBox(height: size.height * 0.01),
                                     InkWell(
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -254,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             _passwordController);
                                       },
                                     ),
-                                    SizedBox(height: 15.0),
+                                    SizedBox(height: size.height * 0.01),
                                     Align(
                                       alignment: Alignment.center,
                                       child: RichText(
@@ -311,6 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController,
     _passwordController,
   ) async {
+    Size size = MediaQuery.of(context).size;
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (_formKey.currentState!.validate()) {
@@ -329,7 +330,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             dismissDirection: DismissDirection.startToEnd,
             content: Expanded(child: Text("Log in Successfully")),
-            padding: EdgeInsets.symmetric(horizontal: 800, vertical: 15),
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.3, vertical: size.height * 0.02),
             backgroundColor: Colors.green,
           ));
           setState(() => _isLoading = false);
@@ -342,7 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           dismissDirection: DismissDirection.startToEnd,
           content: Expanded(child: Text(e.message.toString())),
-          padding: EdgeInsets.symmetric(horizontal: 600, vertical: 15),
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.3, vertical: size.height * 0.02),
           backgroundColor: Colors.red,
         ));
       }
