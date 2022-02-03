@@ -76,7 +76,6 @@ class _QrLoginScreenState extends State<QrLoginScreen> {
                     ),
                   ),
                 ),
-                Text("Hello"),
               ],
             ),
           ),
