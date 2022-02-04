@@ -338,7 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
             dismissDirection: DismissDirection.startToEnd,
             content: Expanded(child: Text("Log in Successfully")),
             padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.3, vertical: size.height * 0.02),
+                horizontal: size.width * 0.4, vertical: size.height * 0.02),
             backgroundColor: Colors.green,
           ));
           setState(() => _isLoading = false);
