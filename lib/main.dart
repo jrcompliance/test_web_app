@@ -1,75 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/DashBoard/MainScreen.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "JR CRM",
-      theme: ThemeData.light().copyWith(
-        scrollbarTheme:
-            ScrollbarThemeData(thumbColor: MaterialStateProperty.all(btnColor)),
-        scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
-        canvasColor: bgColor.withOpacity(1),
-      ),
-      home: LandingScreen(),
-    );
-  }
-}
-
-class LandingScreen extends StatefulWidget {
-  @override
-  _LandingScreenState createState() => _LandingScreenState();
-}
-
-class _LandingScreenState extends State<LandingScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(seconds: 4))
-        .then((value) => _checkAuthentication());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: SpinKitFadingCube(
-        size: 50.0,
-        color: btnColor,
-      )),
-    );
-  }
-
-  _checkAuthentication() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("email") == null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => LoginScreen()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => MainScreen()));
-    }
-  }
-}
-
 // class APage extends StatefulWidget {
 //   const APage({Key? key}) : super(key: key);
 //
@@ -116,26 +45,6 @@ class _LandingScreenState extends State<LandingScreen> {
 //         ),
 //       ),
 //     );
-//   }
-//
-//   Future<void> login(email, password) async {
-//     try {
-//       await FirebaseAuth.instance
-//           .signInWithEmailAndPassword(email: email, password: password)
-//           .then((cred) async {
-//         if (cred.user != null) {
-//           Navigator.push(
-//               context, MaterialPageRoute(builder: (_) => MainScreen()));
-//         } else {
-//           print('Not loggedin');
-//         }
-//       });
-//     } on Exception catch (e) {
-//       print(e.toString());
-//     }
-//   }
-// }
-
 // class SearchListExample extends StatefulWidget {
 //   @override
 //   _SearchListExampleState createState() => new _SearchListExampleState();
@@ -295,6 +204,82 @@ class _LandingScreenState extends State<LandingScreen> {
 //       });
 //     });
 //   }
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Auth_Views/Login_View.dart';
+import 'package:test_web_app/CheckScreen.dart';
+import 'package:test_web_app/Constants/reusable.dart';
+
+import 'package:test_web_app/DashBoard/MainScreen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "JR CRM",
+      theme: ThemeData.light().copyWith(
+        scrollbarTheme:
+            ScrollbarThemeData(thumbColor: MaterialStateProperty.all(btnColor)),
+        scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
+        canvasColor: bgColor.withOpacity(1),
+      ),
+      home: LandingScreen(),
+    );
+  }
+}
+
+class LandingScreen extends StatefulWidget {
+  @override
+  _LandingScreenState createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 4))
+        .then((value) => _checkAuthentication());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: SpinKitFadingCube(
+        size: 50.0,
+        color: btnColor,
+      )),
+    );
+  }
+
+  _checkAuthentication() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("email") == null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LoginScreen()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => MainScreen()));
+    }
+  }
+}
+
+//   }
+
 // }
 
 class MyDesigner extends StatefulWidget {
@@ -311,5 +296,87 @@ class _MyDesignerState extends State<MyDesigner> {
         appBar: AppBar(
       title: Text(DateTime.parse(DateTime.now().toString()).toString()),
     ));
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController editingController = TextEditingController();
+
+  final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
+  var items = [];
+
+  @override
+  void initState() {
+    items.addAll(duplicateItems);
+    super.initState();
+  }
+
+  void filterSearchResults(String query) {
+    List<String> dummySearchList = [];
+    dummySearchList.addAll(duplicateItems);
+    if (query.isNotEmpty) {
+      List<String> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.contains(query)) {
+          dummyListData.add(item);
+        }
+      });
+      setState(() {
+        items.clear();
+        items.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        items.clear();
+        items.addAll(duplicateItems);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("widget.title"),
+      ),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
+                controller: editingController,
+                decoration: InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('${items[index]}'),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
