@@ -369,7 +369,7 @@ class CrudOperations {
   static certificateUpdate(id, certifi) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
-      "Certificates": FieldValue.arrayUnion([certifi.text.toString()])
+      "Certificates": FieldValue.arrayUnion([certifi.toString()])
     }).then((value) {
       certifi.clear();
     });
