@@ -9,13 +9,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
+import 'package:test_web_app/Constants/MoveDrawer.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
-import 'package:test_web_app/Constants/MoveDrawer.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
@@ -57,12 +56,12 @@ class _MainScreenState extends State<MainScreen> {
                 Expanded(flex: 6, child: DashboardBody(context)),
               ],
             ),
-            ScaleAnimatedWidget.tween(
-              duration: Duration(milliseconds: 450),
-              scaleDisabled: 1.5,
-              scaleEnabled: 1,
-              child: updateProfile(),
-            )
+            // ScaleAnimatedWidget.tween(
+            //   duration: Duration(milliseconds: 450),
+            //   scaleDisabled: 1.5,
+            //   scaleEnabled: 1,
+            //   child: updateProfile(),
+            // )
           ],
         ),
       ),
@@ -72,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget SideDrawer(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Drawer(
-      elevation: 0.9,
+      elevation: 1,
       child: ListView(
         shrinkWrap: true,
         children: [
@@ -209,6 +208,113 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // functions are from here...
+
+  Future<void> userdetails() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var uid = prefs.getString("uid");
+      FirebaseFirestore.instance
+          .collection("EmployeeData")
+          .where("uid", isEqualTo: uid)
+          .snapshots()
+          .listen((event) {
+        event.docs.forEach((element) {
+          setState(() {
+            String uname = element.data()["uname"].toString();
+            String uemail = element.data()["uemail"].toString();
+            String uphoneNumber = element.data()["uphoneNumber"].toString();
+            String uimage = element.data()["uimage"].toString();
+            String urole = element.data()["urole"].toString();
+            String uuid = element.data()["uid"].toString();
+            username = uname;
+            email = uemail;
+            phone = uphoneNumber;
+            imageUrl = uimage;
+            role = urole;
+            uid = uuid;
+          });
+        });
+      });
+    } catch (e) {}
+  }
+
+  Future<void> userTasks() async {
+    try {
+      FirebaseFirestore.instance
+          .collection("Tasks")
+          .where("cat", isEqualTo: "NEW")
+          .where("Attachments", arrayContainsAny: [
+            {
+              "image": imageUrl,
+              "uid": _auth.currentUser!.uid.toString(),
+            }
+          ])
+          .snapshots()
+          .listen((value) {
+            setState(() {
+              newLength = value.docs.length.toDouble();
+            });
+          });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    try {
+      FirebaseFirestore.instance
+          .collection("Tasks")
+          .where("cat", isEqualTo: "PROSPECT")
+          .where("Attachments", arrayContainsAny: [
+            {
+              "image": imageUrl,
+              "uid": _auth.currentUser!.uid.toString(),
+            }
+          ])
+          .snapshots()
+          .listen((value) {
+            prospectLength = value.docs.length.toDouble();
+            setState(() {});
+          });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    try {
+      FirebaseFirestore.instance
+          .collection("Tasks")
+          .where("Attachments", arrayContainsAny: [
+            {
+              "image": imageUrl,
+              "uid": _auth.currentUser!.uid.toString(),
+            }
+          ])
+          .where("cat", isEqualTo: "IN PROGRESS")
+          .snapshots()
+          .listen((value) {
+            ipLength = value.docs.length.toDouble();
+            setState(() {});
+          });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    try {
+      FirebaseFirestore.instance
+          .collection("Tasks")
+          .where("Attachments", arrayContainsAny: [
+            {
+              "image": imageUrl,
+              "uid": _auth.currentUser!.uid.toString(),
+            }
+          ])
+          .where("cat", isEqualTo: "WON")
+          .snapshots()
+          .listen((value) {
+            wonLength = value.docs.length.toDouble();
+            setState(() {});
+          });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+
   Uint8List? logoBase64;
   String? name;
   chooseProfile() async {
@@ -328,102 +434,19 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> storeUserData() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    TaskSnapshot upload =
-        await storage.ref('profiles/$name').putData(logoBase64!);
-    String myUrl = await upload.ref.getDownloadURL();
-    String uid = _auth.currentUser!.uid.toString();
-    await fireStore.collection("EmployeeData").doc(uid).update({
-      "uimage": myUrl,
-    }).then((value) => Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
-  }
-
-  userdetails() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var uid = prefs.getString("uid");
-    FirebaseFirestore.instance
-        .collection("EmployeeData")
-        .where("uid", isEqualTo: uid)
-        .snapshots()
-        .listen((event) {
-      event.docs.forEach((element) {
-        setState(() {
-          String uname = element.data()["uname"].toString();
-          String uemail = element.data()["uemail"].toString();
-          String uphoneNumber = element.data()["uphoneNumber"].toString();
-          String uimage = element.data()["uimage"].toString();
-          String urole = element.data()["urole"].toString();
-          String uuid = element.data()["uid"].toString();
-          username = uname;
-          email = uemail;
-          phone = uphoneNumber;
-          imageUrl = uimage;
-          role = urole;
-          uid = uuid;
-        });
-      });
-    });
-  }
-
-  Future<void> userTasks() async {
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("cat", isEqualTo: "NEW")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .snapshots()
-        .listen((value) {
-          setState(() {
-            newLength = value.docs.length.toDouble();
-          });
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("cat", isEqualTo: "PROSPECT")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .snapshots()
-        .listen((value) {
-          prospectLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .where("cat", isEqualTo: "IN PROGRESS")
-        .snapshots()
-        .listen((value) {
-          ipLength = value.docs.length.toDouble();
-          setState(() {});
-        });
-    FirebaseFirestore.instance
-        .collection("Tasks")
-        .where("Attachments", arrayContainsAny: [
-          {
-            "image": imageUrl,
-            "uid": _auth.currentUser!.uid.toString(),
-          }
-        ])
-        .where("cat", isEqualTo: "WON")
-        .snapshots()
-        .listen((value) {
-          wonLength = value.docs.length.toDouble();
-          setState(() {});
-        });
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      TaskSnapshot upload =
+          await storage.ref('profiles/$name').putData(logoBase64!);
+      String myUrl = await upload.ref.getDownloadURL();
+      String uid = _auth.currentUser!.uid.toString();
+      await fireStore.collection("EmployeeData").doc(uid).update({
+        "uimage": myUrl,
+      }).then((value) => Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }
 

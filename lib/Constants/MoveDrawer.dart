@@ -69,157 +69,160 @@ class _MoveDrawerState extends State<MoveDrawer> {
   Widget _check() {
     Size size = MediaQuery.of(context).size;
     if (lead == "Lead") {
-      return Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Create New Lead", style: TxtStls.fieldtitlestyle11),
-                CircleAvatar(
-                  backgroundColor: neClr.withOpacity(0.1),
-                  child: IconButton(
-                      hoverColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        color: neClr,
-                        size: 15,
-                      )),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-            Text("Lead Name", style: TxtStls.fieldtitlestyle),
-            _field(_leadnameController, true, "Lead Name"),
-            SizedBox(height: 10.0),
-            Text("End Date", style: TxtStls.fieldtitlestyle),
-            InkWell(
-              child: _field(_endDateController, false, "End Date"),
-              onTap: () {
-                MyCalenders.pickEndDate(context, _endDateController);
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 10.0),
-            Text("Client Name", style: TxtStls.fieldtitlestyle),
-            _field(_clientnameController, true, "Client Name"),
-            SizedBox(height: 10.0),
-            Text("Client Phone Number", style: TxtStls.fieldtitlestyle),
-            _field(_clientphoneController, true, "Client Phone Number"),
-            SizedBox(height: 10.0),
-            Text("Client Email", style: TxtStls.fieldtitlestyle),
-            _field(_clientemailController, true, "Client email id"),
-            SizedBox(height: 10.0),
-            Text("First Message", style: TxtStls.fieldtitlestyle),
-            _field(_firstmessageController, true, "Enter First Message"),
-            SizedBox(height: 10.0),
-            Text("Assignee", style: TxtStls.fieldtitlestyle),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("EmployeeData")
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  var snp = snapshot.data!.docs;
-                  if (snapshot.hasError) {
-                    return Container();
-                  }
-                  return DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Text(
-                        'Select the agent to assignee',
-                        overflow: TextOverflow.ellipsis,
-                        style: TxtStls.fieldstyle,
-                      ),
-                      items: snp
-                          .map((item) => DropdownMenuItem<String>(
-                                onTap: () {
-                                  _image = item.get("uimage");
-                                  setState(() {});
-                                },
-                                value: item.get('uid'),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Row(
-                                    children: [
-                                      ClipRRect(
-                                        child: SizedBox(
-                                            width: 50,
-                                            height: 80,
-                                            child: Image.network(
-                                              item.get("uimage"),
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high,
-                                            )),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        item.get("uname"),
-                                        style: TxtStls.fieldstyle,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                      value: _selectperson,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectperson = value as String;
-                        });
-                      },
-                      iconEnabledColor: txtColor,
-                      buttonPadding: EdgeInsets.symmetric(horizontal: 15),
-                      buttonDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 15),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: bgColor,
-                      ),
-                    ),
-                  );
-                }),
-            SizedBox(height: 10.0),
-            InkWell(
-              child: Container(
-                padding: EdgeInsets.all(12.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: btnColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Text(
-                  "Create Lead",
-                  style: TxtStls.fieldstyle1,
-                ),
+      return SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Create New Lead", style: TxtStls.fieldtitlestyle11),
+                  CircleAvatar(
+                    backgroundColor: neClr.withOpacity(0.1),
+                    child: IconButton(
+                        hoverColor: Colors.transparent,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: neClr,
+                          size: 15,
+                        )),
+                  ),
+                ],
               ),
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  CrudOperations.uploadTask(
-                    _leadnameController,
-                    _endDateController,
-                    _clientnameController,
-                    _clientemailController,
-                    _clientphoneController,
-                    _firstmessageController,
-                    _selectperson,
-                    _image,
-                  );
-                  Navigator.pop(context);
-                }
-              },
-            )
-          ],
+              SizedBox(height: 10.0),
+              Text("Lead Name", style: TxtStls.fieldtitlestyle),
+              _field(_leadnameController, true, "Lead Name"),
+              SizedBox(height: 10.0),
+              Text("End Date", style: TxtStls.fieldtitlestyle),
+              InkWell(
+                child: _field(_endDateController, false, "End Date"),
+                onTap: () {
+                  MyCalenders.pickEndDate(context, _endDateController);
+                  setState(() {});
+                },
+              ),
+              SizedBox(height: 10.0),
+              Text("Client Name", style: TxtStls.fieldtitlestyle),
+              _field(_clientnameController, true, "Client Name"),
+              SizedBox(height: 10.0),
+              Text("Client Phone Number", style: TxtStls.fieldtitlestyle),
+              _field(_clientphoneController, true, "Client Phone Number"),
+              SizedBox(height: 10.0),
+              Text("Client Email", style: TxtStls.fieldtitlestyle),
+              _field(_clientemailController, true, "Client email id"),
+              SizedBox(height: 10.0),
+              Text("First Message", style: TxtStls.fieldtitlestyle),
+              _field(_firstmessageController, true, "Enter First Message"),
+              SizedBox(height: 10.0),
+              Text("Assignee", style: TxtStls.fieldtitlestyle),
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("EmployeeData")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    var snp = snapshot.data!.docs;
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          'Select the agent to assignee',
+                          overflow: TextOverflow.ellipsis,
+                          style: TxtStls.fieldstyle,
+                        ),
+                        items: snp
+                            .map((item) => DropdownMenuItem<String>(
+                                  onTap: () {
+                                    _image = item.get("uimage");
+                                    setState(() {});
+                                  },
+                                  value: item.get('uid'),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Row(
+                                      children: [
+                                        ClipRRect(
+                                          child: SizedBox(
+                                              width: 50,
+                                              height: 80,
+                                              child: Image.network(
+                                                item.get("uimage"),
+                                                fit: BoxFit.cover,
+                                                filterQuality:
+                                                    FilterQuality.high,
+                                              )),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          item.get("uname"),
+                                          style: TxtStls.fieldstyle,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: _selectperson,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectperson = value as String;
+                          });
+                        },
+                        iconEnabledColor: txtColor,
+                        buttonPadding: EdgeInsets.symmetric(horizontal: 15),
+                        buttonDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 15),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: bgColor,
+                        ),
+                      ),
+                    );
+                  }),
+              SizedBox(height: 10.0),
+              InkWell(
+                child: Container(
+                  padding: EdgeInsets.all(12.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: btnColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  child: Text(
+                    "Create Lead",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    CrudOperations.uploadTask(
+                      _leadnameController,
+                      _endDateController,
+                      _clientnameController,
+                      _clientemailController,
+                      _clientphoneController,
+                      _firstmessageController,
+                      _selectperson,
+                      _image,
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+              )
+            ],
+          ),
         ),
       );
     } else if (lead == "move") {
@@ -428,20 +431,27 @@ class _MoveDrawerState extends State<MoveDrawer> {
                             ),
                           ))
                       .toList()),
-              InkWell(
-                child: _field(_endDateController, false, "End Date"),
-                onTap: () {
-                  MyCalenders.pickEndDate(context, _endDateController);
-                  setState(() {});
-                },
-              ),
+              activeid == "CLOSE"
+                  ? SizedBox()
+                  : InkWell(
+                      child: _field(_endDateController, false, "End Date"),
+                      onTap: () {
+                        MyCalenders.pickEndDate(context, _endDateController);
+                        setState(() {});
+                      },
+                    ),
               SizedBox(height: 5),
               dcat == "NEW"
-                  ? _field(_companyController, true, "Enter Company name")
+                  ? activeid == "CLOSE"
+                      ? SizedBox()
+                      : _field(_companyController, true, "Enter Company name")
                   : SizedBox(),
               SizedBox(height: 5),
               dcat == "NEW"
-                  ? _field(_websiteController, true, "Enter Company Website")
+                  ? activeid == "CLOSE"
+                      ? SizedBox()
+                      : _field(
+                          _websiteController, true, "Enter Company Website")
                   : SizedBox(),
               Row(
                 children: [

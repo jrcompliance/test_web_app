@@ -3614,6 +3614,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                         builder: (BuildContext context,StateSetter setState) {
                                           return    _mysearchController.text.isNotEmpty
                                               ? Flexible(
+                                            flex:1,
                                                 child: ListView.builder(
                                             shrinkWrap: true,
                                             itemCount: mysearchresult.length,
@@ -3629,12 +3630,16 @@ class _TaskPreviewState extends State<TaskPreview>
                                                       id,
                                                       mysearchresult[index],
                                                     );
+                                                    _mysearchController.clear();
+
+
                                                   },
 
                                                 );
                                             },
                                           ),
-                                              ):Flexible(
+                                              )
+                                              :Flexible(
                                                 child: StreamBuilder(
                                                     stream: FirebaseFirestore.instance
                                                         .collection("Tasks")
@@ -5109,9 +5114,8 @@ class _TaskPreviewState extends State<TaskPreview>
                                     if (!snapshot.hasData) {
                                       return Container();
                                     } else if (snapshot.data!.docs.isEmpty) {
-                                      return Text(
-                                        "No History Found",
-                                        style: TxtStls.fieldtitlestyle,
+                                      return Center(
+                                        child: Lottie.asset("assets/Lotties/empty.json",reverse: true)
                                       );
                                     }
 
@@ -7257,7 +7261,6 @@ class CustomSearchDelegate extends SearchDelegate {
       },
     );
   }
-
 
 }
 

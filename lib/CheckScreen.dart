@@ -79,38 +79,84 @@ class _CheckScreenState extends State<CheckScreen> {
   List _hemathlist = ["FullStackDeveloper", "Designer", "Balck & short"];
   Widget drop1() {
     return Wrap(
-      children: _yalalist.map((e) => Text(e)).toList(),
+      children: _yalalist
+          .map((e) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(e),
+                  color: btnColor,
+                ),
+              ))
+          .toList(),
     );
   }
 
   Widget drop2() {
     return Wrap(
-      children: _sheshulist.map((e) => Text(e)).toList(),
+      children: _sheshulist
+          .map((e) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(e),
+                  color: grClr,
+                ),
+              ))
+          .toList(),
     );
   }
 
   Widget drop3() {
     return Wrap(
-      children: _rajeevlist.map((e) => Text(e)).toList(),
+      children: _rajeevlist
+          .map((e) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(e),
+                  color: goodClr,
+                ),
+              ))
+          .toList(),
     );
   }
 
   Widget drop4() {
     return Wrap(
-      children: _hemathlist.map((e) => Text(e)).toList(),
+      children: _hemathlist
+          .map((e) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(e),
+                  color: wonClr,
+                ),
+              ))
+          .toList(),
     );
   }
 
   showMyWidget() {
-    if (_choosenValue == "Srinivas") {
-      return drop1();
-    } else if (_choosenValue == "Sheshu") {
-      return drop2();
-    } else if (_choosenValue == "Rajeev") {
-      return drop3();
-    } else if (_choosenValue == "Hemanth") {
-      return drop4();
+    switch (_choosenValue) {
+      case "Srinivas":
+        return drop1();
+
+        break;
+      case "Sheshu":
+        return drop2();
+
+        break;
+      case "Rajeev":
+        return drop3();
+
+        break;
+      case "Hemanth":
+        return drop4();
+        break;
+      default:
+        return Text("Choose data");
+        break;
     }
-    return Text("Choose any for info.....");
   }
 }

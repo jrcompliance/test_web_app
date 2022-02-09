@@ -284,7 +284,9 @@ class EndDateOperations {
   static updateEdateTask(id, TextEditingController _endDateController) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
-      "endDate": _endDateController.text.toString(),
+      "endDate": _endDateController.text.toString() == null
+          ? DateTime.now().toString().split(" ")[0]
+          : _endDateController.text.toString(),
     });
   }
 
