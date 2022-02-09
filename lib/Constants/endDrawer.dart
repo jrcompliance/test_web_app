@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
@@ -120,75 +118,103 @@ class _MoveDrawerState extends State<MoveDrawer> {
               _field(_firstmessageController, true, "Enter First Message"),
               SizedBox(height: 10.0),
               Text("Assignee", style: TxtStls.fieldtitlestyle),
-              StreamBuilder(
+              StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("EmployeeData")
                       .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (context, snapshot) {
                     var snp = snapshot.data!.docs;
+                    if (!snapshot.hasData)
+                      return Center(
+                        child: CupertinoActivityIndicator(),
+                      );
                     if (snapshot.hasError) {
                       return Container();
                     }
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          'Select the agent to assignee',
-                          overflow: TextOverflow.ellipsis,
-                          style: TxtStls.fieldstyle,
-                        ),
-                        items: snp
-                            .map((item) => DropdownMenuItem<String>(
-                                  onTap: () {
-                                    _image = item.get("uimage");
-                                    setState(() {});
-                                  },
-                                  value: item.get('uid'),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          child: SizedBox(
-                                              width: 50,
-                                              height: 80,
-                                              child: Image.network(
-                                                item.get("uimage"),
-                                                fit: BoxFit.cover,
-                                                filterQuality:
-                                                    FilterQuality.high,
-                                              )),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0)),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          item.get("uname"),
-                                          style: TxtStls.fieldstyle,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                        value: _selectperson,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectperson = value as String;
-                          });
-                        },
-                        iconEnabledColor: txtColor,
-                        buttonPadding: EdgeInsets.symmetric(horizontal: 15),
-                        buttonDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        itemPadding: const EdgeInsets.symmetric(horizontal: 15),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: bgColor,
-                        ),
+
+                    return Container(
+                      padding: EdgeInsets.only(bottom: 16.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                padding:
+                                    EdgeInsets.fromLTRB(12.0, 10.0, 10.0, 10.0),
+                                child: Text(
+                                  "Shop",
+                                ),
+                              )),
+                          Expanded(
+                            flex: 4,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select the agent to assignee',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TxtStls.fieldstyle,
+                                ),
+                                items: snp
+                                    .map((item) => DropdownMenuItem<String>(
+                                          onTap: () {
+                                            _image = item.get("uimage");
+                                            setState(() {});
+                                          },
+                                          value: item.get('uid'),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Row(
+                                              children: [
+                                                ClipRRect(
+                                                  child: SizedBox(
+                                                      width: 50,
+                                                      height: 80,
+                                                      child: Image.network(
+                                                        item.get("uimage"),
+                                                        fit: BoxFit.cover,
+                                                        filterQuality:
+                                                            FilterQuality.high,
+                                                      )),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0)),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  item.get("uname"),
+                                                  style: TxtStls.fieldstyle,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: _selectperson,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectperson = value as String;
+                                  });
+                                },
+                                iconEnabledColor: txtColor,
+                                buttonPadding:
+                                    EdgeInsets.symmetric(horizontal: 15),
+                                buttonDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                dropdownDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: bgColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }),
@@ -959,6 +985,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         ProgressUpdsate.updatesame(did, dcat, noteController,
                             dendDate, radioItem, _choosenValue);
                         GraphValueServices.graph(dendDate, did);
+                        timeendnotification();
                       });
                     }
                   },
@@ -1090,6 +1117,16 @@ class _MoveDrawerState extends State<MoveDrawer> {
         print(_customtimeController.text);
       });
     }
+  }
+
+  timeendnotification() async {
+    print("delhi");
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    List<String> timerslist = [];
+    timerslist.add('your schedule time has been ended');
+    _sharedPreferences.setStringList("timer", timerslist);
+    print(" to khammam  .......");
   }
 }
 

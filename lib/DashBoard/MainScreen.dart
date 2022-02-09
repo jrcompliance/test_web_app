@@ -9,7 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Constants/MoveDrawer.dart';
+import 'package:test_web_app/Constants/endDrawer.dart';
+import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -159,7 +160,7 @@ class _MainScreenState extends State<MainScreen> {
           Header(
             title: "DashBoard",
           ),
-          UserDashBoard(),
+          //UserDashBoard(),
         ],
       );
     } else if (active == Tabs.TaskPreview) {
@@ -182,7 +183,9 @@ class _MainScreenState extends State<MainScreen> {
     } else if (active == Tabs.Messages) {
       return Header(title: "Messages");
     } else if (active == Tabs.Notification) {
-      return Header(title: "Notification");
+      return Column(
+        children: [Header(title: "Notification"), Notifications()],
+      );
     }
     return Header(
       title: "Settings",
@@ -191,7 +194,6 @@ class _MainScreenState extends State<MainScreen> {
 
   DrawerListTile(title, image, tab) {
     return ListTile(
-      hoverColor: btnColor.withOpacity(0.25),
       title: Responsive.isMediumScreen(context)
           ? Text("")
           : Text(title, style: TxtStls.fieldtitlestyle),
@@ -200,11 +202,9 @@ class _MainScreenState extends State<MainScreen> {
             fit: BoxFit.fill, filterQuality: FilterQuality.high),
         height: 22.5,
       ),
-      onTap: () {
-        setState(() {
-          active = tab;
-        });
-      },
+      onTap: () => setState(() => active = tab),
+      selectedColor: btnColor,
+      hoverColor: btnColor.withOpacity(0.5),
     );
   }
 

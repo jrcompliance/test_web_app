@@ -139,9 +139,6 @@ class _TaskPreviewState extends State<TaskPreview>
     }
   }
 
-  // search method end here....
-
-  // search method for services starts here...
   Widget mytitile = Text(
     "Search Example",
     style: TextStyle(color: Colors.white),
@@ -547,7 +544,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
 
 
-  // search method for services ends here...
+
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final List<String> _list = ["List", "Board", "Timeline"];
@@ -610,10 +607,6 @@ class _TaskPreviewState extends State<TaskPreview>
   final TextEditingController _tdsController = TextEditingController();
 
   int duefilter = 0;
-
-  // search for the sercvices operation starts from here....
-  // search for the services operation ends here...
-
   @override
   void initState() {
     super.initState();
@@ -751,9 +744,13 @@ class _TaskPreviewState extends State<TaskPreview>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
                             onPressed: () {
-                              lead = "Lead";
-                              Scaffold.of(context).openEndDrawer();
-                              setState(() {});
+
+
+                              setState(() {
+                                lead = "Lead";
+                                Scaffold.of(context).openEndDrawer();
+                              });
+
                             },
                             icon: Icon(
                               Icons.add,
@@ -1472,8 +1469,10 @@ class _TaskPreviewState extends State<TaskPreview>
                       child: CountdownTimer(
                     endTime: DateTime.now().millisecondsSinceEpoch + t * 1000,
                     widgetBuilder:
-                        (BuildContext context, CurrentRemainingTime? time) {
+                        (BuildContext context, CurrentRemainingTime? time){
                       if (time == null) {
+
+
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -6796,6 +6795,9 @@ class _TaskPreviewState extends State<TaskPreview>
         .where("cat", isEqualTo: cat)
         .snapshots();
   }
+
+
+
 }
 
 // class MyCompondQuerys {

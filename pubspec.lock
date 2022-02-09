@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  dropdown_search:
+    dependency: "direct main"
+    description:
+      name: dropdown_search
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   equatable:
     dependency: transitive
     description:
@@ -534,13 +541,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
-  responsive_sizer:
-    dependency: "direct main"
-    description:
-      name: responsive_sizer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.5+1"
   rxdart:
     dependency: transitive
     description:
