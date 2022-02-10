@@ -57,12 +57,12 @@ class _MainScreenState extends State<MainScreen> {
                 Expanded(flex: 6, child: DashboardBody(context)),
               ],
             ),
-            // ScaleAnimatedWidget.tween(
-            //   duration: Duration(milliseconds: 450),
-            //   scaleDisabled: 1.5,
-            //   scaleEnabled: 1,
-            //   child: updateProfile(),
-            // )
+            ScaleAnimatedWidget.tween(
+              duration: Duration(milliseconds: 450),
+              scaleDisabled: 1.5,
+              scaleEnabled: 1,
+              child: updateProfile(),
+            )
           ],
         ),
       ),
@@ -160,7 +160,7 @@ class _MainScreenState extends State<MainScreen> {
           Header(
             title: "DashBoard",
           ),
-          //UserDashBoard(),
+          UserDashBoard(),
         ],
       );
     } else if (active == Tabs.TaskPreview) {

@@ -51,6 +51,10 @@ class _TaskPreviewState extends State<TaskPreview>
   bool _isSearching = false;
   String _searchText = "";
   List<TaskSearchModel> searchresult = [];
+
+  var img;
+
+
   _TaskPreviewState() {
 
     _searchController.addListener(() {
@@ -71,12 +75,6 @@ class _TaskPreviewState extends State<TaskPreview>
 
   void values() {
     _searchList = [];
-  }
-
-  void _handleSearchStart() {
-    setState(() {
-      _isSearching = true;
-    });
   }
 
   void _handleSearchEnd() {
@@ -508,11 +506,6 @@ class _TaskPreviewState extends State<TaskPreview>
     _mysearchList.add("Industry Canada (IC) Certification");
   }
 
-  void _myhandleSearchStart() {
-    setState(() {
-      _mySearching = true;
-    });
-  }
 
   void _myhandleSearchEnd() {
     setState(() {
@@ -598,8 +591,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
   final TextEditingController _paymentController = TextEditingController();
   final TextEditingController _dealController = TextEditingController();
-  final TextEditingController _paymentRecieveController =
-      TextEditingController();
+  final TextEditingController _paymentRecieveController = TextEditingController();
   final TextEditingController _sampleController = TextEditingController();
   final TextEditingController _advanceController = TextEditingController();
   final TextEditingController _taxController = TextEditingController();
@@ -616,6 +608,7 @@ class _TaskPreviewState extends State<TaskPreview>
       vsync: this,
     );
     Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
+
   }
 
   @override
@@ -728,6 +721,25 @@ class _TaskPreviewState extends State<TaskPreview>
                               date11 = date22 = null;
                               setState(() {});
                             }),
+                  ),
+                  SizedBox(width: size.width * 0.01),
+                  CircleAvatar(
+                    backgroundColor: btnColor.withOpacity(0.1),
+                    child: _queryDate == null
+                        ? IconButton(
+                        hoverColor: Colors.transparent,
+    onPressed: () {
+    _selectDate(context);
+    },
+    icon:
+    Icon(Icons.calendar_today, color: btnColor, size: 15))
+                        : IconButton(
+                        hoverColor: Colors.transparent,
+                        onPressed: () {
+                          _queryDate = null;
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.close, color: btnColor, size: 15)),
                   ),
                   SizedBox(width: size.width * 0.01),
                   role == "Admin"
@@ -937,26 +949,7 @@ class _TaskPreviewState extends State<TaskPreview>
             ),
           ),
         ),
-        Expanded(child: Text("")),
-        _queryDate == null
-            ? CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: IconButton(
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                    icon:
-                        Icon(Icons.calendar_today, color: btnColor, size: 15)),
-              )
-            : CircleAvatar(
-                backgroundColor: btnColor.withOpacity(0.1),
-                child: IconButton(
-                    onPressed: () {
-                      _queryDate = null;
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.close, color: btnColor, size: 15)),
-              ),
+        Expanded(child: SizedBox()),
         PopupMenuButton(
           tooltip: "Filters",
           padding: EdgeInsets.zero,
@@ -1133,7 +1126,6 @@ class _TaskPreviewState extends State<TaskPreview>
               String cemail = snp["CompanyDetails"][0]["email"];
               String cphone = snp["CompanyDetails"][0]["phone"];
               //List comment = snapshot.data.docs.;
-
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -1392,6 +1384,57 @@ class _TaskPreviewState extends State<TaskPreview>
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
+                        FutureBuilder<QuerySnapshot>(
+                          future:FirebaseFirestore.instance.collection("EmployeeData").get(),
+                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                            if(!snapshot.hasData){
+                              return SpinKitFadingCube(
+                                color: btnColor,
+                                size:10.0,
+                              );
+                            }
+                            else if(snapshot.hasError){
+                              return Text("Something wrong");
+                            }
+                            final List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                            return PopupMenuButton(
+                              tooltip: "Assignee",
+                              icon: Icon(
+                                Icons.add_circle,
+                                color: btnColor,
+                              ),
+                              color: bgColor,
+                              itemBuilder: (context) => documents
+                                  .map((item) => PopupMenuItem(
+                                  onTap: () {
+
+                                    img = item.get("uimage");
+                                    print(img);
+
+                                    setState(() {});
+                                  },
+                                  value: item.get("uid"),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            item.get("uimage")),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        item.get("uname"),
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                    ],
+                                  )))
+                                  .toList(),
+                              onSelected: (value) {
+                                AssignServices.assign(id, value, img);
+                              },
+                            );
+                          },
+                        ),
                         ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -1412,50 +1455,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                 ));
                           },
                         ),
-                        StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("EmployeeData")
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              var snp = snapshot.data!.docs;
-                              String? img;
-                              if (snapshot.hasError) {
-                                return Container();
-                              }
-                              return PopupMenuButton(
-                                tooltip: "Assignee",
-                                icon: Icon(
-                                  Icons.add_circle,
-                                  color: btnColor,
-                                ),
-                                color: bgColor,
-                                itemBuilder: (context) => snp
-                                    .map((item) => PopupMenuItem(
-                                        onTap: () {
-                                          img = item.get("uimage");
-                                          setState(() {});
-                                        },
-                                        value: item.get("uid"),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  item.get("uimage")),
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              item.get("uname"),
-                                              style: TxtStls.fieldstyle,
-                                            ),
-                                          ],
-                                        )))
-                                    .toList(),
-                                onSelected: (value) {
-                                  AssignServices.assign(id, value, img);
-                                },
-                              );
-                            }),
                       ],
                     ),
                   ),
@@ -5738,21 +5737,6 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  //  showLead(dval, context) {
-  //   if (dval == 1) {
-  //     return DateTime.now().toString().split(" ")[0];
-  //   } else if (dval == 2) {
-  //     return DateTime.now()
-  //         .subtract(Duration(days: 1))
-  //         .toString()
-  //         .split(" ")[0];
-  //   } else if (dval == 3) {
-  //     return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
-  //   } else if (dval == 4) {
-  //     _selectDate(context);
-  //   }
-  // }
-
   var _queryDate;
   Future<void> _selectDate(BuildContext context) async {
     var pickedDate = await showDatePicker(
@@ -6201,7 +6185,8 @@ class _TaskPreviewState extends State<TaskPreview>
           ],
         ),
       );
-    } else if (_isSearching == true) {
+    }
+    else if (_isSearching == true) {
       return searchresult.length != 0 || _searchController.text.isNotEmpty
           ? Container(
               decoration: BoxDecoration(
@@ -6469,6 +6454,388 @@ class _TaskPreviewState extends State<TaskPreview>
               ),
             )
           : SizedBox();
+    }
+    else if(_queryDate != null){
+      return Container(
+        width: size.width,
+        height: size.height * 0.845,
+        decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Column(
+          children: [
+            Expanded(flex: 1, child: listheader()),
+            Expanded(
+              flex: 9,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("Tasks")
+                      .where("Attachments", arrayContainsAny: [
+                    {
+                      "image": imageUrl,
+                      "uid": _auth.currentUser!.uid.toString(),
+                    }
+                  ])
+
+                      .where("endDate", isEqualTo: _queryDate)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SpinKitFadingCube(
+                          color: btnColor,
+                          size: 25,
+                        ),
+                      );
+                    }
+                    if (snapshot.data!.docs.length == 0) {
+                      return Center(
+                          child: Text(
+                            "No Data Found",
+                            style: TxtStls.fieldtitlestyle,
+                          ));
+                    }
+                    return ListView.separated(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      separatorBuilder: (_, i) => Divider(height: 5.0),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (_, index) {
+                        var snp = snapshot.data!.docs[index];
+                        String id = snp["id"];
+                        String taskname = snp["task"];
+                        int s = snp["success"];
+                        int f = snp['fail'];
+                        String CxID = snp["CxID"].toString();
+                        Timestamp startDate = snp["startDate"];
+                        String endDate = snp["endDate"];
+                        String priority = snp["priority"];
+                        Timestamp lastseen = snp["lastseen"];
+                        String cat = snp["cat"];
+                        String message = snp["message"];
+                        String newsta = snp["status"];
+                        String prosta = snp["status1"];
+                        String insta = snp["status2"];
+                        String wonsta = snp["status4"];
+                        String clsta = snp["status5"];
+                        List assign = snp["Attachments"];
+                        bool val = snp["flag"];
+                        String logo = snp["logo"];
+                        DateTime stamp = snp["time"].toDate();
+                        int t = stamp.difference(DateTime.now()).inSeconds;
+                        String createDate =
+                        DateFormat("EEE | MMM").format(startDate.toDate());
+                        String careatedate1 =
+                        DateFormat("dd, yy").format(startDate.toDate());
+                        DateTime dt = DateTime.parse(endDate);
+                        String edf = DateFormat("EEE | MMM").format(dt);
+
+                        String edf1 = DateFormat("dd, yy").format(dt);
+                        // ignore: undefined_prefixed_name
+                        ui.platformViewRegistry.registerViewFactory(
+                          logo,
+                              (int _) => ImageElement()..src = logo,
+                        );
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: size.width * 0.115,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                      hoverColor: btnColor.withOpacity(0.0001),
+                                      value: val,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          GraphValueServices.update(id, value);
+                                        });
+                                      },
+                                      activeColor: btnColor),
+                                  SizedBox(width: 5),
+                                  val
+                                      ? CircleAvatar(
+                                    maxRadius: 15,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.timer_off_rounded,
+                                        size: 12.5,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        _showMyDialog1(id);
+                                      },
+                                    ),
+                                    backgroundColor:
+                                    Colors.red.withOpacity(0.075),
+                                  )
+                                      : SizedBox(),
+                                  SizedBox(width: 2.5),
+                                  val
+                                      ? CircleAvatar(
+                                    maxRadius: 15,
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        size: 12.5,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                    backgroundColor:
+                                    btnColor.withOpacity(0.075),
+                                  )
+                                      : SizedBox(),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onHover: (value) {},
+                              child: Container(
+                                  width: size.width * 0.115,
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(40),
+                                          ),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(40),
+                                              child: HtmlElementView(
+                                                viewType: logo,
+                                              ))),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        taskname,
+                                        style: ClrStls.tnClr,
+                                      ),
+                                    ],
+                                  )),
+                              onTap: () {
+                                detailspopBox(
+                                    context,
+                                    id,
+                                    taskname,
+                                    startDate,
+                                    endDate,
+                                    priority,
+                                    lastseen,
+                                    cat,
+                                    message,
+                                    newsta,
+                                    prosta,
+                                    insta,
+                                    wonsta,
+                                    clsta,
+                                    s,
+                                    f,
+                                    assign,
+                                    CxID);
+                              },
+                            ),
+                            Container(
+                              width: size.width * 0.092,
+                              child: Text(
+                                CxID,
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                            Container(
+                              width: size.width * 0.111,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                createDate.toString() +
+                                    " ${careatedate1.toString()}",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                            Container(
+                                width: size.width * 0.1,
+                                alignment: Alignment.centerLeft,
+                                child: Text(" ${edf}" + " ${edf1}",
+                                    style: ClrStls.endClr)),
+                            Container(
+                              width: size.width * 0.1,
+                              height: 30,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    physics: ClampingScrollPhysics(),
+                                    itemCount: assign.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          child: SizedBox(
+                                            width: 30,
+                                            height: 500,
+                                            child: Image.network(
+                                              assign[index]["image"],
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high,
+                                            ),
+                                          ));
+                                    },
+                                  ),
+                                  StreamBuilder(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("EmployeeData")
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                          snapshot) {
+                                        var snp = snapshot.data!.docs;
+                                        String? img;
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        return PopupMenuButton(
+                                          tooltip: "Assignee",
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: btnColor,
+                                          ),
+                                          color: bgColor,
+                                          itemBuilder: (context) => snp
+                                              .map((item) => PopupMenuItem(
+                                              onTap: () {
+                                                img = item.get("uimage");
+                                                setState(() {});
+                                              },
+                                              value: item.get("uid"),
+                                              child: Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundImage:
+                                                    NetworkImage(item
+                                                        .get("uimage")),
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text(
+                                                    item.get("uname"),
+                                                    style:
+                                                    TxtStls.fieldstyle,
+                                                  ),
+                                                ],
+                                              )))
+                                              .toList(),
+                                          onSelected: (value) {
+                                            AssignServices.assign(
+                                                id, value, img);
+                                          },
+                                        );
+                                      }),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: size.width * 0.07,
+                              alignment: Alignment.centerLeft,
+                              child: dropdowns(id, cat, newsta, prosta, insta,
+                                  wonsta, clsta),
+                            ),
+                            Expanded(
+                                child: CountdownTimer(
+                                  endTime: DateTime.now().millisecondsSinceEpoch +
+                                      t * 1000,
+                                  widgetBuilder: (BuildContext context,
+                                      CurrentRemainingTime? time) {
+                                    if (time == null) {
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          CircleAvatar(
+                                            child: IconButton(
+                                              tooltip: "Update",
+                                              icon: Icon(
+                                                Icons.update,
+                                                size: 12.5,
+                                                color: btnColor,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  did = id;
+                                                  dcat = cat;
+                                                  dname = taskname;
+                                                  cxID = CxID;
+                                                  dendDate = endDate.toString();
+                                                  lead = "update";
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer();
+                                                });
+                                              },
+                                            ),
+                                            backgroundColor:
+                                            btnColor.withOpacity(0.075),
+                                          ),
+                                          CircleAvatar(
+                                            child: IconButton(
+                                              tooltip: "Move",
+                                              icon: Icon(
+                                                Icons.fast_forward,
+                                                size: 12.5,
+                                                color: btnColor,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  did = id;
+                                                  dcat = cat;
+                                                  dname = taskname;
+                                                  cxID = CxID;
+                                                  dendDate = endDate.toString();
+                                                  lead = "move";
+                                                  Scaffold.of(context)
+                                                      .openEndDrawer();
+                                                });
+                                              },
+                                            ),
+                                            backgroundColor:
+                                            btnColor.withOpacity(0.075),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        LabelText(
+                                            label: "Hrs",
+                                            value:
+                                            "${time.hours == null ? 0 : time.hours.toString()}"),
+                                        LabelText(
+                                            label: "Min",
+                                            value:
+                                            "${time.min == null ? 0 : time.min.toString()}"),
+                                        LabelText(
+                                            label: "Sec",
+                                            value: "${time.sec.toString()}"),
+                                      ],
+                                    );
+                                  },
+                                ))
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
     return ListView(
       shrinkWrap: true,
@@ -6771,18 +7138,6 @@ class _TaskPreviewState extends State<TaskPreview>
           .where("cat", isEqualTo: cat)
           .where("status", isEqualTo: newfilter)
           .snapshots();
-    } else if (_queryDate != null) {
-      return FirebaseFirestore.instance
-          .collection("Tasks")
-          .where("Attachments", arrayContainsAny: [
-            {
-              "image": imageUrl,
-              "uid": _auth.currentUser!.uid.toString(),
-            }
-          ])
-          .where("cat", isEqualTo: cat)
-          .where("endDate", isEqualTo: _queryDate)
-          .snapshots();
     }
     return FirebaseFirestore.instance
         .collection("Tasks")
@@ -6797,65 +7152,9 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
 
-
 }
 
-// class MyCompondQuerys {
-//   static getCatProQuery(id) {
-//     return FirebaseFirestore.instance
-//         .collection("Tasks")
-//         .doc(id)
-//         .collection("Activitys")
-//         .orderBy("When", descending: true)
-//         .where("date",
-//             isGreaterThan: DateTime.now()
-//                 .subtract(Duration(days: 1))
-//                 .toString()
-//                 .split(" ")[0])
-//         .where("date",
-//             isLessThanOrEqualTo: DateTime.now().toString().split(" ")[0])
-//         .snapshots();
-//   }
 
-//   static getCatProQuery1(id) {
-//     return FirebaseFirestore.instance
-//         .collection("Tasks")
-//         .doc(id)
-//         .collection("Activitys")
-//         .orderBy("When", descending: true)
-//         .limit(2)
-//         .snapshots();
-//   }
-
-//   static getCatProQuery2(id) {
-//     return FirebaseFirestore.instance
-//         .collection("Tasks")
-//         .doc(id)
-//         .collection("Activitys")
-//         .orderBy("When", descending: true)
-//         .limit(3)
-//         .snapshots();
-//   }
-
-//   static getCatProQuery3(id) {
-//     return FirebaseFirestore.instance
-//         .collection("Tasks")
-//         .doc(id)
-//         .collection("Activitys")
-//         .orderBy("When", descending: true)
-//         .limit(4)
-//         .snapshots();
-//   }
-
-//   static getCatProQuery4(id) {
-//     return FirebaseFirestore.instance
-//         .collection("Tasks")
-//         .doc(id)
-//         .collection("Activitys")
-//         .orderBy("When", descending: true)
-//         .snapshots();
-//   }
-// }
 class CustomSearchDelegate extends SearchDelegate {
   final searchTerms = [
     "ETA certificate",
