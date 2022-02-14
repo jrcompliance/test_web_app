@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
+import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
@@ -27,9 +28,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final globalKey = GlobalKey<ScaffoldState>();
+  final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.TaskPreview;
+  Tabs active = Tabs.Analytics;
 
   @override
   void initState() {
@@ -174,6 +176,7 @@ class _MainScreenState extends State<MainScreen> {
       return Column(
         children: [
           Header(title: "Analytics"),
+          Analytics(),
         ],
       );
     } else if (active == Tabs.Invoice) {

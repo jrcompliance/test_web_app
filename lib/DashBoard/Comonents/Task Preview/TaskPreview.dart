@@ -691,56 +691,111 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                       itemBuilder: (context) {
                         return [
+
                           PopupMenuItem(
-                            child: Text("TEC"),
-                          ),
-                          PopupMenuItem(
-                            child: Text("BIS"),
-                          ),
-                          PopupMenuItem(
-                            child: Text("ISI"),
+                            child: Text("We will come soon here..."),
                           ),
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
-                  CircleAvatar(
-                    backgroundColor: btnColor.withOpacity(0.1),
-                    child: date11 == null && date22 == null
-                        ? IconButton(
-                            hoverColor: Colors.transparent,
-                            icon: Icon(Icons.date_range_outlined,
-                                color: btnColor, size: 17.5),
-                            onPressed: () {
-                              dateTimeRangePicker1();
-                            })
-                        : IconButton(
-                            hoverColor: Colors.transparent,
-                            icon:
-                                Icon(Icons.cancel, color: btnColor, size: 17.5),
-                            onPressed: () {
-                              date11 = date22 = null;
-                              setState(() {});
-                            }),
-                  ),
-                  SizedBox(width: size.width * 0.01),
-                  CircleAvatar(
-                    backgroundColor: btnColor.withOpacity(0.1),
-                    child: _queryDate == null
-                        ? IconButton(
-                        hoverColor: Colors.transparent,
-    onPressed: () {
-    _selectDate(context);
-    },
-    icon:
-    Icon(Icons.calendar_today, color: btnColor, size: 15))
-                        : IconButton(
-                        hoverColor: Colors.transparent,
-                        onPressed: () {
-                          _queryDate = null;
-                          setState(() {});
+                  PopupMenuButton(
+                      offset: Offset(0, size.height * 0.037),
+                      child: Container(
+                        width: size.width * 0.05,
+                        height: size.height * 0.035,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10.0)),
+                            gradient: LinearGradient(colors: [
+                              Colors.pinkAccent,
+                              Colors.deepPurpleAccent
+                            ])),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.filter_alt_sharp,
+                              color: bgColor,
+                            ),
+                            Text(
+                              "Calenders",
+                              style: TxtStls.fieldstyle1,
+                            )
+                          ],
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child:  InkWell(
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.1),
+                                    child:  IconButton(
+                                        hoverColor: Colors.transparent,
+                                        icon: Icon(Icons.date_range_outlined,
+                                            color: btnColor, size: 17.5),
+                                        onPressed: () {
+                                          dateTimeRangePicker1();
+                                        })
+
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text("StartDate",style: TxtStls.fieldstyle,)
+                                ],
+                              ),
+                                onTap:(){
+                                  dateTimeRangePicker1();
+                                }
+                            ),
+                              onTap: (){},
+
+                          ),
+                          PopupMenuItem(
+                          onTap: (){},
+                            child: InkWell(
+                                onTap: (){
+                                  _selectDate(context);
+                                },
+                              child: Row(
+
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.1),
+                                    child:
+                                         IconButton(
+                                        hoverColor: Colors.transparent,
+                                        onPressed: () {
+                                          _selectDate(context);
+                                        },
+                                        icon:
+                                        Icon(Icons.calendar_today, color: btnColor, size: 15))
+
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text("EndDate",style: TxtStls.fieldstyle,)
+                                ],
+                              ),
+                            ),
+
+                          ),
+                          PopupMenuItem(
+                            onTap:(){
+                        _queryDate =null;
+                        date11 = date22 = null;
+                        setState((){});
                         },
-                        icon: Icon(Icons.close, color: btnColor, size: 15)),
-                  ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(child: Icon(Icons.clear,color: Colors.red),backgroundColor: Colors.red.withOpacity(0.2)),
+                                SizedBox(width: 5),
+                                Text("ClearFilter",style:TxtStls.fieldstyle),
+                              ],
+                            ),
+                          ),
+                        ];
+                      }),
                   SizedBox(width: size.width * 0.01),
                   role == "Admin"
                       ? Container(
