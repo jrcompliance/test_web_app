@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_web_app/BlockStateManagements/2FirebaseRepos/LeadsRepository.dart';
+import 'package:test_web_app/BlockStateManagements/1Models/CovidModel.dart';
+import 'package:test_web_app/BlockStateManagements/2FirebaseRepos/CovidApiRepo.dart';
 
 class Repository {
-  ShowLeadsRepo showLeadsRepo = ShowLeadsRepo();
-  Future<QuerySnapshot<Map<String, dynamic>>> getshowleaddata() =>
-      showLeadsRepo.showLeads();
+  CovidApiRepo covidApiRepo = CovidApiRepo();
+  Future<List<CovidModel>> getLatestCovidData() =>
+      covidApiRepo.getLatestCovidData();
 }
