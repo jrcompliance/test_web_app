@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Charts.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
@@ -22,6 +23,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
+import 'package:test_web_app/UserProvider/UserProvider.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -608,7 +610,9 @@ class _TaskPreviewState extends State<TaskPreview>
       vsync: this,
     );
     Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
-
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    });
   }
 
   @override
@@ -1111,6 +1115,8 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listmiddle(cat) {
+    final alluserModellist =
+        Provider.of<AllUSerProvider>(context).alluserModellist;
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.2,
@@ -1259,9 +1265,11 @@ class _TaskPreviewState extends State<TaskPreview>
                                         viewType: logo,
                                       ))),
                               SizedBox(width: 2),
-                              Text(
-                                taskname,
-                                style: ClrStls.tnClr,
+                              Flexible(
+                                child: Text(
+                                  taskname,
+                                  style: ClrStls.tnClr,
+                                ),
                               ),
                             ],
                           )),
@@ -1439,46 +1447,34 @@ class _TaskPreviewState extends State<TaskPreview>
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       children: [
-                        FutureBuilder<QuerySnapshot>(
-                          future:FirebaseFirestore.instance.collection("EmployeeData").get(),
-                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-                            if(!snapshot.hasData){
-                              return SpinKitFadingCube(
-                                color: btnColor,
-                                size:10.0,
-                              );
-                            }
-                            else if(snapshot.hasError){
-                              return Text("Something wrong");
-                            }
-                            final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
-                            return PopupMenuButton(
+
+                            PopupMenuButton(
                               tooltip: "Assignee",
                               icon: Icon(
                                 Icons.add_circle,
                                 color: btnColor,
                               ),
                               color: bgColor,
-                              itemBuilder: (context) => documents
+                              itemBuilder: (context) => alluserModellist
                                   .map((item) => PopupMenuItem(
                                   onTap: () {
 
-                                    img = item.get("uimage");
+                                    img = item.auserimage;
                                     print(img);
 
                                     setState(() {});
                                   },
-                                  value: item.get("uid"),
+                                  value: item.uid,
                                   child: Row(
                                     children: [
                                       CircleAvatar(
                                         backgroundImage: NetworkImage(
-                                            item.get("uimage")),
+                                            item.auserimage.toString()),
                                       ),
                                       SizedBox(width: 5),
                                       Text(
-                                        item.get("uname"),
+                                        item.ausername.toString(),
                                         style: TxtStls.fieldstyle,
                                       ),
                                     ],
@@ -1487,9 +1483,8 @@ class _TaskPreviewState extends State<TaskPreview>
                               onSelected: (value) {
                                 AssignServices.assign(id, value, img);
                               },
-                            );
-                          },
-                        ),
+                            ),
+
                         ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,

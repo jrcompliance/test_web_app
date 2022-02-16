@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
@@ -12,6 +13,7 @@ import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/Time%20Model.dart';
+import 'package:test_web_app/UserProvider/UserProvider.dart';
 
 class MoveDrawer extends StatefulWidget {
   const MoveDrawer({Key? key}) : super(key: key);
@@ -24,7 +26,10 @@ class _MoveDrawerState extends State<MoveDrawer> {
   @override
   void initState() {
     super.initState();
-    this.menu();
+    menu();
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    });
   }
 
   var radioItem;
@@ -67,6 +72,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
 
   Widget _check() {
     Size size = MediaQuery.of(context).size;
+    final alluserModellist =
+        Provider.of<AllUSerProvider>(context).alluserModellist;
     if (lead == "Lead") {
       return SingleChildScrollView(
         child: Form(
@@ -119,84 +126,65 @@ class _MoveDrawerState extends State<MoveDrawer> {
               _field(_firstmessageController, true, "Enter First Message"),
               SizedBox(height: 10.0),
               Text("Assignee", style: TxtStls.fieldtitlestyle),
-              FutureBuilder<QuerySnapshot>(
-                future:
-                    FirebaseFirestore.instance.collection("EmployeeData").get(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(
-                      "Something went wrong. Please try again!",
-                      style: TxtStls.fieldstyle,
-                    );
-                  } else if (!snapshot.hasData) {
-                    return SpinKitFadingCube(
-                      color: btnColor,
-                      size: 10.0,
-                    );
-                  }
-                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
-                  return DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Text(
-                        'Select the agent to assignee',
-                        overflow: TextOverflow.ellipsis,
-                        style: TxtStls.fieldstyle,
-                      ),
-                      items: documents
-                          .map((item) => DropdownMenuItem<String>(
-                                onTap: () {
-                                  _image = item.get("uimage");
-                                  setState(() {});
-                                },
-                                value: item.get('uid'),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Row(
-                                    children: [
-                                      ClipRRect(
-                                        child: SizedBox(
-                                            width: 50,
-                                            height: 80,
-                                            child: Image.network(
-                                              item.get("uimage"),
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high,
-                                            )),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0)),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        item.get("uname"),
-                                        style: TxtStls.fieldstyle,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+              DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  isExpanded: true,
+                  hint: Text(
+                    'Select the agent to assignee',
+                    overflow: TextOverflow.ellipsis,
+                    style: TxtStls.fieldstyle,
+                  ),
+                  items: alluserModellist
+                      .map((item) => DropdownMenuItem<String>(
+                            onTap: () {
+                              _image = item.auserimage;
+                              setState(() {});
+                            },
+                            value: item.uid,
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    child: SizedBox(
+                                        width: 50,
+                                        height: 80,
+                                        child: Image.network(
+                                          item.auserimage.toString(),
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                        )),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
                                   ),
-                                ),
-                              ))
-                          .toList(),
-                      value: _selectperson,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectperson = value as String;
-                        });
-                      },
-                      iconEnabledColor: txtColor,
-                      buttonPadding: EdgeInsets.symmetric(horizontal: 15),
-                      buttonDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 15),
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: bgColor,
-                      ),
-                    ),
-                  );
-                },
+                                  SizedBox(width: 10),
+                                  Text(
+                                    item.ausername.toString(),
+                                    style: TxtStls.fieldstyle,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  value: _selectperson,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectperson = value as String;
+                    });
+                  },
+                  iconEnabledColor: txtColor,
+                  buttonPadding: EdgeInsets.symmetric(horizontal: 15),
+                  buttonDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  dropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: bgColor,
+                  ),
+                ),
               ),
               SizedBox(height: 10.0),
               InkWell(
@@ -661,12 +649,6 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 style: TxtStls.fieldstyle,
               ),
             ),
-            RaisedButton(
-                onPressed: () {},
-                child: Text("Upload Files", style: TxtStls.fieldstyle1),
-                color: btnColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))))
           ],
         ),
       );
