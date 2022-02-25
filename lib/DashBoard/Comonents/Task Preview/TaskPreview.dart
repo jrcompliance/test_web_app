@@ -13,8 +13,6 @@ import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/BlockStateManagements/1Models/CovidModel.dart';
-import 'package:test_web_app/BlockStateManagements/4Blocs/CovidBLoC.dart';
 import 'package:test_web_app/Constants/Charts.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
@@ -601,33 +599,18 @@ class _TaskPreviewState extends State<TaskPreview>
   final TextEditingController _taxController = TextEditingController();
   final TextEditingController _balanceController = TextEditingController();
   final TextEditingController _tdsController = TextEditingController();
-  CovidDataBloc covidDataBloc = CovidDataBloc();
+
   int duefilter = 0;
   @override
   void initState() {
     super.initState();
     myvalues();
+    Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
     _controller = TabController(
       length: 3,
       vsync: this,
     );
-    Future.delayed(Duration(seconds: 2)).then((value) => assignvel());
 
-      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-
-
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    covidDataBloc.fetchCoviddata();
-  }
-
-  @override
-  void dispose() {
-    covidDataBloc.dispose();
-    super.dispose();
   }
 
   @override
@@ -906,54 +889,54 @@ class _TaskPreviewState extends State<TaskPreview>
                 ],
               ),
             ),
-          if (activeid == "Timeline")
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: bgColor,
-                    height: size.height * 0.845,
-                    child: Column(
-                      children: [
-                        timelinetitle(_clrslist[0], _boardtitlelist[0]),
-                        timelinetitle(_clrslist[1], _boardtitlelist[1]),
-                        timelinetitle(_clrslist[2], _boardtitlelist[2]),
-                        timelinetitle(_clrslist[3], _boardtitlelist[3]),
-                        timelinetitle(_clrslist[4], _boardtitlelist[4]),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    color: bgColor,
-                    height: size.height * 0.845,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: 30,
-                      itemBuilder: (BuildContext context, index) {
-                        return Container(
-                          padding: EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4.0))),
-                          child: Text(
-                            "$index",
-                            style: TxtStls.fieldstyle,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          // if (activeid == "Timeline")
+          //   Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Expanded(
+          //         flex: 1,
+          //         child: Container(
+          //           color: bgColor,
+          //           height: size.height * 0.845,
+          //           child: Column(
+          //             children: [
+          //               timelinetitle(_clrslist[0], _boardtitlelist[0]),
+          //               timelinetitle(_clrslist[1], _boardtitlelist[1]),
+          //               timelinetitle(_clrslist[2], _boardtitlelist[2]),
+          //               timelinetitle(_clrslist[3], _boardtitlelist[3]),
+          //               timelinetitle(_clrslist[4], _boardtitlelist[4]),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(width: 40),
+          //       Expanded(
+          //         flex: 5,
+          //         child: Container(
+          //           color: bgColor,
+          //           height: size.height * 0.845,
+          //           child: ListView.builder(
+          //             shrinkWrap: true,
+          //             scrollDirection: Axis.horizontal,
+          //             physics: AlwaysScrollableScrollPhysics(),
+          //             itemCount: 30,
+          //             itemBuilder: (BuildContext context, index) {
+          //               return Container(
+          //                 padding: EdgeInsets.all(20.0),
+          //                 decoration: BoxDecoration(
+          //                     borderRadius:
+          //                         BorderRadius.all(Radius.circular(4.0))),
+          //                 child: Text(
+          //                   "$index",
+          //                   style: TxtStls.fieldstyle,
+          //                 ),
+          //               );
+          //             },
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
         ],
       ),
     );
@@ -1130,6 +1113,8 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget listmiddle(cat) {
+    final alluserModellist =
+        Provider.of<AllUSerProvider>(context).alluserModellist;
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.2,
@@ -1138,8 +1123,8 @@ class _TaskPreviewState extends State<TaskPreview>
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.018),
       child: StreamBuilder(
-        stream: covidDataBloc.CovidDataStream,
-        builder: (BuildContext context, AsyncSnapshot<List<CovidModel>> snapshot) {
+        stream: qry(cat),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: SpinKitFadingCube(
@@ -1148,7 +1133,7 @@ class _TaskPreviewState extends State<TaskPreview>
               ),
             );
           }
-          if (snapshot.data!.length == 0) {
+          if (snapshot.data!.docs.length == 0) {
             return Center(
                 child: Text(
               "No Leads Found",
@@ -1159,451 +1144,411 @@ class _TaskPreviewState extends State<TaskPreview>
             physics: AlwaysScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             separatorBuilder: (_, i) => Divider(height: 5.0),
-            itemCount: snapshot.data!.length,
+            itemCount: snapshot.data!.docs.length,
             itemBuilder: (_, index) {
-              var snp = snapshot.data![index];
-              // int s = snp["success"];
-              // int f = snp["fail"];
-              // String id = snp["id"];
-              // String taskname = snp["task"];
-              // String CxID = snp["CxID"].toString();
-              // Timestamp startDate = snp["startDate"];
-              // String endDate = snp["endDate"];
-              // String priority = snp["priority"];
-              // Timestamp lastseen = snp["lastseen"];
-              // String cat = snp["cat"];
-              // String message = snp["message"];
-              // String newsta = snp["status"];
-              // String prosta = snp["status1"];
-              // String insta = snp["status2"];
-              // String wonsta = snp["status4"];
-              // String clsta = snp["status5"];
-              // List assign = snp["Attachments"];
-              // bool val = snp["flag"];
-              // String logo = snp["logo"];
-              // DateTime stamp = snp["time"].toDate();
-              // int t = stamp.difference(DateTime.now()).inSeconds;
-              // String createDate =
-              //     DateFormat("EEE | MMM").format(startDate.toDate());
-              // String careatedate1 =
-              //     DateFormat("dd, yy").format(startDate.toDate());
-              // DateTime dt = DateTime.parse(endDate);
-              // String edf = DateFormat("EEE | MMM").format(dt);
-              //
-              // String edf1 = DateFormat("dd, yy").format(dt);
-              // // ignore: undefined_prefixed_name
-              // ui.platformViewRegistry.registerViewFactory(
-              //   logo,
-              //   (int _) => ImageElement()..src = logo,
-              // );
-              // String contactname = snp["CompanyDetails"][0]["contactperson"];
-              // String cemail = snp["CompanyDetails"][0]["email"];
-              // String cphone = snp["CompanyDetails"][0]["phone"];
-              //List comment = snapshot.data.docs.;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Container(
-                  //   width: size.width * 0.115,
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Row(
-                  //     children: [
-                  //       Checkbox(
-                  //           hoverColor: btnColor.withOpacity(0.0001),
-                  //           value: val,
-                  //           onChanged: (value) {
-                  //             setState(() {
-                  //               GraphValueServices.update(id, value);
-                  //             });
-                  //           },
-                  //           activeColor: btnColor),
-                  //       SizedBox(width: 5),
-                  //       val
-                  //           ? CircleAvatar(
-                  //               maxRadius: 15,
-                  //               child: IconButton(
-                  //                 icon: Icon(
-                  //                   Icons.timer_off_rounded,
-                  //                   size: 12.5,
-                  //                   color: Colors.red,
-                  //                 ),
-                  //                 onPressed: () {
-                  //                   _showMyDialog1(id);
-                  //                 },
-                  //               ),
-                  //               backgroundColor: Colors.red.withOpacity(0.075),
-                  //             )
-                  //           : SizedBox(),
-                  //       SizedBox(width: 2.5),
-                  //       val
-                  //           ? CircleAvatar(
-                  //               maxRadius: 15,
-                  //               child: IconButton(
-                  //                 icon: Icon(
-                  //                   Icons.edit,
-                  //                   size: 12.5,
-                  //                   color: btnColor,
-                  //                 ),
-                  //                 onPressed: () {},
-                  //               ),
-                  //               backgroundColor: btnColor.withOpacity(0.075),
-                  //             )
-                  //           : SizedBox(),
-                  //     ],
-                  //   ),
-                  // ),
-                  InkWell(
-                    onHover: (value) {},
-                    child: JustTheTooltip(
-                      showWhenUnlinked: true,
-                      controller: tooltipController,
-                      showDuration: Duration(seconds: 1),
-                      offset: -40.0,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      preferredDirection: AxisDirection.right,
-                      child: Container(
-                          width: size.width * 0.115,
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              // Container(
-                              //     width: 30,
-                              //     height: 30,
-                              //     decoration: BoxDecoration(
-                              //       borderRadius: BorderRadius.circular(40),
-                              //     ),
-                              //     child: ClipRRect(
-                              //         borderRadius: BorderRadius.circular(40),
-                              //         child: HtmlElementView(
-                              //           viewType: logo,
-                              //         ))),
-                              SizedBox(width: 2),
-                              Flexible(
-                                child: Text(
-                                snapshot.data![index].task.toString(),
-                                  style: ClrStls.tnClr,
-                                ),
-                              ),
-                            ],
-                          )),
-                      content: StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setstate) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10.0),
-                            width: size.width * 0.2,
-                            height: size.height * 0.25,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Row(
-                                //   children: [
-                                //     CircleAvatar(
-                                //       maxRadius: 15,
-                                //       child: Icon(Icons.person,
-                                //           color: btnColor, size: 15),
-                                //       backgroundColor:
-                                //           btnColor.withOpacity(0.1),
-                                //     ),
-                                //     SizedBox(width: 5),
-                                //     Text(contactname,
-                                //         style: TxtStls.fieldstyle),
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     CircleAvatar(
-                                //       maxRadius: 15,
-                                //       child: Icon(Icons.email,
-                                //           color: btnColor, size: 15),
-                                //       backgroundColor:
-                                //           btnColor.withOpacity(0.1),
-                                //     ),
-                                //     SizedBox(width: 5),
-                                //     Text(cemail, style: TxtStls.fieldstyle),
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     CircleAvatar(
-                                //       maxRadius: 15,
-                                //       child: Icon(
-                                //         Icons.phone,
-                                //         color: btnColor,
-                                //         size: 15,
-                                //       ),
-                                //       backgroundColor:
-                                //           btnColor.withOpacity(0.1),
-                                //     ),
-                                //     SizedBox(width: 5),
-                                //     Text(cphone, style: TxtStls.fieldstyle),
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     CircleAvatar(
-                                //       maxRadius: 15,
-                                //       child: Icon(
-                                //         Icons.message_rounded,
-                                //         color: btnColor,
-                                //         size: 15,
-                                //       ),
-                                //       backgroundColor:
-                                //           btnColor.withOpacity(0.1),
-                                //     ),
-                                //     SizedBox(width: 5),
-                                //     // comment.length == 0
-                                //     //     ? Text("No Comments",
-                                //     //         style: TxtStls.fieldstyle)
-                                //     //     : Flexible(
-                                //     //         child: Text(
-                                //     //           comment[comment.length - 1]
-                                //     //               ["Note"],
-                                //     //           style: TxtStls.fieldstyle,
-                                //     //           softWrap: true,
-                                //     //           overflow: TextOverflow.ellipsis,
-                                //     //         ),
-                                //     //       )
-                                //   ],
-                                // ),
-                                // StatefulBuilder(
-                                //   builder: (thisLowerContext, innerSetState) {
-                                //     return MaterialButton(
-                                //       color: btnColor,
-                                //       shape: RoundedRectangleBorder(
-                                //           borderRadius: BorderRadius.all(
-                                //               Radius.circular(10.0))),
-                                //       child: Text("More",
-                                //           style: TxtStls.fieldstyle1),
-                                //       onPressed: () {
-                                //         print("Hey yala......");
-                                //         detailspopBox(
-                                //             context,
-                                //             id,
-                                //             taskname,
-                                //             startDate,
-                                //             endDate,
-                                //             priority,
-                                //             lastseen,
-                                //             cat,
-                                //             message,
-                                //             newsta,
-                                //             prosta,
-                                //             insta,
-                                //             wonsta,
-                                //             clsta,
-                                //             s,
-                                //             f,
-                                //             assign,
-                                //             CxID);
-                                //         setState(() {});
-                                //       },
-                                //     );
-                                //   },
-                                // ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      shadow: Shadow(color: btnColor, blurRadius: 20),
-                    ),
-                    onTap: () {
-                      // detailspopBox(
-                      //     context,
-                      //     id,
-                      //     taskname,
-                      //     startDate,
-                      //     endDate,
-                      //     priority,
-                      //     lastseen,
-                      //     cat,
-                      //     message,
-                      //     newsta,
-                      //     prosta,
-                      //     insta,
-                      //     wonsta,
-                      //     clsta,
-                      //     s,
-                      //     f,
-                      //     assign,
-                      //     CxID);
-                    },
-                  ),
-                  // Container(
-                  //   width: size.width * 0.092,
-                  //   child: Text(
-                  //     CxID,
-                  //     style: TxtStls.fieldstyle,
-                  //   ),
-                  // ),
-                  // Container(
-                  //   width: size.width * 0.111,
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Text(
-                  //     createDate.toString() + " ${careatedate1.toString()}",
-                  //     style: TxtStls.fieldstyle,
-                  //   ),
-                  // ),
-                  // Container(
-                  //     width: size.width * 0.1,
-                  //     alignment: Alignment.centerLeft,
-                  //     child:
-                  //         Text(" ${edf}" + " ${edf1}", style: ClrStls.endClr)),
-                  // Container(
-                  //   width: size.width * 0.1,
-                  //   height: 30,
-                  //   alignment: Alignment.centerLeft,
-                  //   child: ListView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     shrinkWrap: true,
-                  //     children: [
-                  //
-                  //
-                  //           PopupMenuButton(
-                  //             tooltip: "Assignee",
-                  //             icon: Icon(
-                  //               Icons.add_circle,
-                  //               color: btnColor,
-                  //             ),
-                  //             color: bgColor,
-                  //             itemBuilder: (context) => alluserModellist
-                  //                 .map((item) => PopupMenuItem(
-                  //                 onTap: () {
-                  //
-                  //                   img = item.auserimage;
-                  //                   print(img);
-                  //
-                  //                   setState(() {});
-                  //                 },
-                  //                 value: item.uid,
-                  //                 child: Row(
-                  //                   children: [
-                  //                     CircleAvatar(
-                  //                       backgroundImage: NetworkImage(
-                  //                           item.auserimage.toString()),
-                  //                     ),
-                  //                     SizedBox(width: 5),
-                  //                     Text(
-                  //                       item.ausername.toString(),
-                  //                       style: TxtStls.fieldstyle,
-                  //                     ),
-                  //                   ],
-                  //                 )))
-                  //                 .toList(),
-                  //             onSelected: (value) {
-                  //               AssignServices.assign(id, value, img);
-                  //             },
-                  //           ),
-                  //
-                  //       ListView.builder(
-                  //         shrinkWrap: true,
-                  //         scrollDirection: Axis.horizontal,
-                  //         physics: ClampingScrollPhysics(),
-                  //         itemCount: assign.length,
-                  //         itemBuilder: (BuildContext context, index) {
-                  //           return ClipRRect(
-                  //               borderRadius:
-                  //                   BorderRadius.all(Radius.circular(10.0)),
-                  //               child: SizedBox(
-                  //                 width: 30,
-                  //                 height: 500,
-                  //                 child: Image.network(
-                  //                   assign[index]["image"],
-                  //                   fit: BoxFit.cover,
-                  //                   filterQuality: FilterQuality.high,
-                  //                 ),
-                  //               ));
-                  //         },
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container(
-                  //   width: size.width * 0.08,
-                  //   alignment: Alignment.centerLeft,
-                  //   child: dropdowns(
-                  //       id, cat, newsta, prosta, insta, wonsta, clsta),
-                  // ),
-                  // Expanded(
-                  //     child: CountdownTimer(
-                  //   endTime: DateTime.now().millisecondsSinceEpoch + t * 1000,
-                  //   widgetBuilder:
-                  //       (BuildContext context, CurrentRemainingTime? time){
-                  //     if (time == null) {
-                  //
-                  //
-                  //       return Row(
-                  //         mainAxisAlignment: MainAxisAlignment.end,
-                  //         children: [
-                  //           CircleAvatar(
-                  //             child: IconButton(
-                  //               tooltip: "Update",
-                  //               icon: Icon(
-                  //                 Icons.update,
-                  //                 size: 12.5,
-                  //                 color: btnColor,
-                  //               ),
-                  //               onPressed: () {
-                  //                 setState(() {
-                  //                   did = id;
-                  //                   dcat = cat;
-                  //                   dname = taskname;
-                  //                   cxID = CxID;
-                  //                   dendDate = endDate.toString();
-                  //                   lead = "update";
-                  //                   Scaffold.of(context).openEndDrawer();
-                  //                 });
-                  //               },
-                  //             ),
-                  //             backgroundColor: btnColor.withOpacity(0.075),
-                  //           ),
-                  //           CircleAvatar(
-                  //             child: IconButton(
-                  //               tooltip: "Move",
-                  //               icon: Icon(
-                  //                 Icons.fast_forward,
-                  //                 size: 12.5,
-                  //                 color: btnColor,
-                  //               ),
-                  //               onPressed: () {
-                  //                 setState(() {
-                  //                   did = id;
-                  //                   dcat = cat;
-                  //                   dname = taskname;
-                  //                   cxID = CxID;
-                  //                   dendDate = endDate.toString();
-                  //                   lead = "move";
-                  //                   Scaffold.of(context).openEndDrawer();
-                  //                 });
-                  //               },
-                  //             ),
-                  //             backgroundColor: btnColor.withOpacity(0.075),
-                  //           ),
-                  //         ],
-                  //       );
-                  //     }
-                  //     return Row(
-                  //       mainAxisAlignment: MainAxisAlignment.end,
-                  //       children: [
-                  //         LabelText(
-                  //             label: "Hrs",
-                  //             value:
-                  //                 "${time.hours == null ? 0 : time.hours.toString()}"),
-                  //         LabelText(
-                  //             label: "Min",
-                  //             value:
-                  //                 "${time.min == null ? 0 : time.min.toString()}"),
-                  //         LabelText(
-                  //             label: "Sec", value: "${time.sec.toString()}"),
-                  //       ],
-                  //     );
-                  //   },
-                  // ))
-                ],
+              var snp = snapshot.data!.docs[index];
+              int s = snp["success"];
+              int f = snp["fail"];
+              String id = snp["id"];
+              String taskname = snp["task"];
+              String CxID = snp["CxID"].toString();
+              Timestamp startDate = snp["startDate"];
+              String endDate = snp["endDate"];
+              String priority = snp["priority"];
+              Timestamp lastseen = snp["lastseen"];
+              String cat = snp["cat"];
+              String message = snp["message"];
+              String newsta = snp["status"];
+              String prosta = snp["status1"];
+              String insta = snp["status2"];
+              String wonsta = snp["status4"];
+              String clsta = snp["status5"];
+              List assign = snp["Attachments"];
+              bool val = snp["flag"];
+              String logo = snp["logo"];
+              DateTime stamp = snp["time"].toDate();
+              int t = stamp.difference(DateTime.now()).inSeconds;
+              String createDate =
+                  DateFormat("EEE | MMM").format(startDate.toDate());
+              String careatedate1 =
+                  DateFormat("dd, yy").format(startDate.toDate());
+              DateTime dt = DateTime.parse(endDate);
+              String edf = DateFormat("EEE | MMM").format(dt);
+
+              String edf1 = DateFormat("dd, yy").format(dt);
+              // ignore: undefined_prefixed_name
+              ui.platformViewRegistry.registerViewFactory(
+                logo,
+                (int _) => ImageElement()..src = logo,
               );
+              String contactname = snp["CompanyDetails"][0]["contactperson"];
+              String cemail = snp["CompanyDetails"][0]["email"];
+              String cphone = snp["CompanyDetails"][0]["phone"];
+              int j = snapshot.data!.docs.length;
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: size.width * 0.115,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                              hoverColor: btnColor.withOpacity(0.0001),
+                              value: val,
+                              onChanged: (value) {
+                                setState(() {
+                                  GraphValueServices.update(id, value);
+                                });
+                              },
+                              activeColor: btnColor),
+                          SizedBox(width: 5),
+                          val
+                              ? CircleAvatar(
+                            maxRadius: 15,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.timer_off_rounded,
+                                size: 12.5,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                _showMyDialog1(id);
+                              },
+                            ),
+                            backgroundColor: Colors.red.withOpacity(0.075),
+                          )
+                              : SizedBox(),
+                          SizedBox(width: 2.5),
+                          val
+                              ? CircleAvatar(
+                            maxRadius: 15,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.edit,
+                                size: 12.5,
+                                color: btnColor,
+                              ),
+                              onPressed: () {},
+                            ),
+                            backgroundColor: btnColor.withOpacity(0.075),
+                          )
+                              : SizedBox(),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onHover: (value) {},
+                      child: JustTheTooltip(
+                        showWhenUnlinked: true,
+                        controller: tooltipController,
+                        offset: -40.0,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        preferredDirection: AxisDirection.right,
+                        child: Container(
+                            width: size.width * 0.115,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: HtmlElementView(
+                                          viewType: logo==null?"":logo,
+                                        ))),
+                                SizedBox(width: 2),
+                                Flexible(
+                                  child: Text(
+                                    taskname,
+                                    style: ClrStls.tnClr,
+                                  ),
+                                ),
+                              ],
+                            )),
+                        content: StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setstate) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10.0),
+                              width: size.width * 0.2,
+                              height: size.height * 0.25,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 15,
+                                        child: Icon(Icons.person,
+                                            color: btnColor, size: 15),
+                                        backgroundColor:
+                                        btnColor.withOpacity(0.1),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(contactname,
+                                          style: TxtStls.fieldstyle),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 15,
+                                        child: Icon(Icons.email,
+                                            color: btnColor, size: 15),
+                                        backgroundColor:
+                                        btnColor.withOpacity(0.1),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(cemail, style: TxtStls.fieldstyle),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 15,
+                                        child: Icon(
+                                          Icons.phone,
+                                          color: btnColor,
+                                          size: 15,
+                                        ),
+                                        backgroundColor:
+                                        btnColor.withOpacity(0.1),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(cphone, style: TxtStls.fieldstyle),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        maxRadius: 15,
+                                        child: Icon(
+                                          Icons.message_rounded,
+                                          color: btnColor,
+                                          size: 15,
+                                        ),
+                                        backgroundColor:
+                                        btnColor.withOpacity(0.1),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
+                                          message,
+                                          style: TxtStls.fieldstyle,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        shadow: Shadow(color: btnColor, blurRadius: 20),
+                      ),
+                      onTap: () {
+                        detailspopBox(
+                            context,
+                            id,
+                            taskname,
+                            startDate,
+                            endDate,
+                            priority,
+                            lastseen,
+                            cat,
+                            message,
+                            newsta,
+                            prosta,
+                            insta,
+                            wonsta,
+                            clsta,
+                            s,
+                            f,
+                            assign,
+                            CxID);
+                      },
+                    ),
+                    Container(
+                      width: size.width * 0.092,
+                      child: Text(
+                        CxID,
+                        style: TxtStls.fieldstyle,
+                      ),
+                    ),
+                    Container(
+                      width: size.width * 0.111,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        createDate.toString() + " ${careatedate1.toString()}",
+                        style: TxtStls.fieldstyle,
+                      ),
+                    ),
+                    Container(
+                        width: size.width * 0.1,
+                        alignment: Alignment.centerLeft,
+                        child:
+                        Text(" ${edf}" + " ${edf1}", style: ClrStls.endClr)),
+                    Container(
+                      width: size.width * 0.1,
+                      height: 30,
+                      alignment: Alignment.centerLeft,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        children: [
+                          PopupMenuButton(
+                            tooltip: "Assignee",
+                            icon: Icon(
+                              Icons.add_circle,
+                              color: btnColor,
+                            ),
+                            color: bgColor,
+                            itemBuilder: (context) => alluserModellist
+                                .map((item) => PopupMenuItem(
+                                onTap: () {
+
+                                  img = item.auserimage;
+                                  print(img);
+
+                                  setState(() {});
+                                },
+                                value: item.uid,
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          item.auserimage.toString()),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      item.ausername.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ],
+                                )))
+                                .toList(),
+                            onSelected: (value) {
+                              AssignServices.assign(id, value, img);
+                            },
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            physics: ClampingScrollPhysics(),
+                            itemCount: assign.length,
+                            itemBuilder: (BuildContext context, index) {
+                              return ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 500,
+                                    child: Image.network(
+                                      assign[index]["image"],
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                    ),
+                                  ));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: size.width * 0.08,
+                      alignment: Alignment.centerLeft,
+                      child: dropdowns(
+                          id, cat, newsta, prosta, insta, wonsta, clsta),
+                    ),
+                    Expanded(
+                        child: CountdownTimer(
+                          endTime: DateTime.now().millisecondsSinceEpoch + t * 1000,
+                          widgetBuilder:
+                              (BuildContext context, CurrentRemainingTime? time){
+                            if (time == null) {
+
+
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  CircleAvatar(
+                                    child: IconButton(
+                                      tooltip: "Update",
+                                      icon: Icon(
+                                        Icons.update,
+                                        size: 12.5,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          did = id;
+                                          dcat = cat;
+                                          dname = taskname;
+                                          cxID = CxID;
+                                          dendDate = endDate.toString();
+                                          lead = "update";
+                                          Scaffold.of(context).openEndDrawer();
+                                        });
+                                      },
+                                    ),
+                                    backgroundColor: btnColor.withOpacity(0.075),
+                                  ),
+                                  CircleAvatar(
+                                    child: IconButton(
+                                      tooltip: "Move",
+                                      icon: Icon(
+                                        Icons.fast_forward,
+                                        size: 12.5,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          did = id;
+                                          dcat = cat;
+                                          dname = taskname;
+                                          cxID = CxID;
+                                          dendDate = endDate.toString();
+                                          lead = "move";
+                                          Scaffold.of(context).openEndDrawer();
+                                        });
+                                      },
+                                    ),
+                                    backgroundColor: btnColor.withOpacity(0.075),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                LabelText(
+                                    label: "Hrs",
+                                    value:
+                                    "${time.hours == null ? 0 : time.hours.toString()}"),
+                                LabelText(
+                                    label: "Min",
+                                    value:
+                                    "${time.min == null ? 0 : time.min.toString()}"),
+                                LabelText(
+                                    label: "Sec", value: "${time.sec.toString()}"),
+                              ],
+                            );
+                          },
+                        ))
+                  ],
+                );
+
             },
           );
         },
@@ -6953,10 +6898,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[1],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("PROSPECT"),
-              //   visible: _tapslist[1],
-              // ),
+              Visibility(
+                child: listmiddle("PROSPECT"),
+                visible: _tapslist[1],
+              ),
             ],
           ),
         ),
@@ -6981,10 +6926,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[2],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("IN PROGRESS"),
-              //   visible: _tapslist[2],
-              // ),
+              Visibility(
+                child: listmiddle("IN PROGRESS"),
+                visible: _tapslist[2],
+              ),
             ],
           ),
         ),
@@ -7010,10 +6955,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[3],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("WON"),
-              //   visible: _tapslist[3],
-              // ),
+              Visibility(
+                child: listmiddle("WON"),
+                visible: _tapslist[3],
+              ),
             ],
           ),
         ),
@@ -7039,10 +6984,10 @@ class _TaskPreviewState extends State<TaskPreview>
                 visible: _tapslist[4],
               ),
               SizedBox(height: size.height * 0.01),
-              // Visibility(
-              //   child: listmiddle("CLOSE"),
-              //   visible: _tapslist[4],
-              // ),
+              Visibility(
+                child: listmiddle("CLOSE"),
+                visible: _tapslist[4],
+              ),
             ],
           ),
         ),
@@ -7626,7 +7571,6 @@ class CustomSearchDelegate extends SearchDelegate {
       },
     );
   }
-
 
 }
 

@@ -8,9 +8,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
+import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
@@ -20,6 +22,8 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
+import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
+import 'package:test_web_app/UserProvider/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -31,18 +35,20 @@ class _MainScreenState extends State<MainScreen> {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Analytics;
+  Tabs active = Tabs.Invoice;
 
   @override
   void initState() {
     super.initState();
     userdetails();
     Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
@@ -155,44 +161,73 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget DashboardBody(BuildContext context) {
-    if (active == Tabs.DashBoard) {
-      return Column(
-        children: [
-          Header(
-            title: "DashBoard",
-          ),
-          UserDashBoard(),
-        ],
-      );
-    } else if (active == Tabs.TaskPreview) {
-      return Column(
-        children: [
-          Header(title: 'Task Preview'),
-          TaskPreview(),
-        ],
-      );
-    } else if (active == Tabs.Analytics) {
-      return Column(
-        children: [
-          Header(title: "Analytics"),
-          Analytics(),
-        ],
-      );
-    } else if (active == Tabs.Invoice) {
-      return Header(title: "Invoice");
-    } else if (active == Tabs.Calendar) {
-      return Header(title: "Calendar");
-    } else if (active == Tabs.Messages) {
-      return Header(title: "Messages");
-    } else if (active == Tabs.Notification) {
-      return Column(
-        children: [Header(title: "Notification"), Notifications()],
-      );
+  DashboardBody(BuildContext context) {
+    switch (active) {
+      case Tabs.DashBoard:
+        {
+          return Column(
+            children: [
+              Header(
+                title: "DashBoard",
+              ),
+              UserDashBoard(),
+            ],
+          );
+        }
+      case Tabs.TaskPreview:
+        {
+          return Column(
+            children: [
+              Header(title: 'Task Preview'),
+              TaskPreview(),
+            ],
+          );
+        }
+
+      case Tabs.Analytics:
+        {
+          return Column(
+            children: [
+              Header(title: "Analytics"),
+              Analytics(),
+            ],
+          );
+        }
+
+      case Tabs.Invoice:
+        {
+          return Column(
+            children: [
+              Header(title: "Invoice"),
+              InvoiceScreen(),
+            ],
+          );
+        }
+
+      case Tabs.Calendar:
+        {
+          return Header(title: "Calendar");
+        }
+
+      case Tabs.Messages:
+        {
+          return Header(title: "Calendar");
+        }
+
+      case Tabs.Notification:
+        {
+          return Column(
+            children: [Header(title: "Notification"), Notifications()],
+          );
+        }
+
+      default:
+        {
+          return Header(
+            title: "Settings",
+          );
+        }
     }
-    return Header(
-      title: "Settings",
-    );
   }
 
   DrawerListTile(title, image, tab) {

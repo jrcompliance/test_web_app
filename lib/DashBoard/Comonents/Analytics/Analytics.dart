@@ -16,14 +16,6 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero).then((value) {
-      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final alluserModellist =
         Provider.of<AllUSerProvider>(context).alluserModellist;

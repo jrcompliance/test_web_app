@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -57,7 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: btnColor,
                       ),
                     )
-                  : Container(
+                  : ScaleAnimatedWidget.tween(
+                      duration: Duration(seconds: 1),
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -440,8 +442,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             Expanded(
               flex: 2,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 2),
+              child: ScaleAnimatedWidget.tween(
+                duration: Duration(seconds: 1),
                 child: Image.asset(
                   "assets/Logos/SignUp.png",
                   fit: BoxFit.fill,

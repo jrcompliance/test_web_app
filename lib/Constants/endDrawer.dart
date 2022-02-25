@@ -250,14 +250,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
               SizedBox(height: 10),
               Row(
                 children: [
-                  Text(
-                    dname!,
-                    style: TxtStls.fieldtitlestyle11,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    cxID!,
-                    style: TxtStls.fieldtitlestyle11,
+                  Flexible(
+                    child: Text(
+                      dname! + "  (${cxID!})",
+                      style: TxtStls.fieldtitlestyle11,
+                    ),
                   ),
                 ],
               ),
@@ -683,14 +680,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
             SizedBox(height: 20),
             Row(
               children: [
-                Text(
-                  dname!,
-                  style: TxtStls.fieldtitlestyle11,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  cxID!,
-                  style: TxtStls.fieldtitlestyle11,
+                Flexible(
+                  child: Text(
+                    dname! + "  (${cxID!})",
+                    style: TxtStls.fieldtitlestyle11,
+                  ),
                 ),
               ],
             ),

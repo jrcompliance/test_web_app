@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:test_web_app/Auth_Views/Url_launchers.dart';

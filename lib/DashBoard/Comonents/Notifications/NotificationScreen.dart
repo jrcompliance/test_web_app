@@ -13,7 +13,6 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     super.initState();
-    getsharelist();
   }
 
   @override
