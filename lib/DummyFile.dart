@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,11 +24,17 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   void api() async {
-    final url = Uri.parse("http://myproductsapi.herokuapp.com/products");
+    final url = Uri.parse(
+        "https://gst-return-status.p.rapidapi.com/gstininfo/07AALFJ0070E1ZO");
     final response = await http.get(url, headers: {
-      "Accept": "application/json",
-      "Access-Control-Allow-Origin": "Accept"
+      'content-type': 'application/json',
+      'x-rapidapi-host': 'gst-return-status.p.rapidapi.com',
+      'x-rapidapi-key': 'f70aa109f5msh8225f751728f8ecp1821c0jsn102526b91ea6'
     });
-    print(response.body);
+    //print(response.body);
+    var extrcatedData = json.decode(response.body);
+    //print(extrcatedData);
+    var details = extrcatedData["data"]["details"];
+    print(details);
   }
 }

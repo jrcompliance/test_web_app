@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
+import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
 import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
@@ -20,10 +21,7 @@ import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
-import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
-import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
-import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
-import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/UserProvider/GstProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -35,16 +33,16 @@ class _MainScreenState extends State<MainScreen> {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Invoice;
+  Tabs active = Tabs.Calendar;
 
   @override
   void initState() {
     super.initState();
     userdetails();
-    Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
-    Future.delayed(Duration.zero).then((value) {
-      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    });
+    //Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
+    // Future.delayed(Duration.zero).then((value) {
+    //   Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    // });
   }
 
   @override
@@ -96,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
           DrawerListTile(
               "Analytics", "assets/Notations/Chart.png", Tabs.Analytics),
           DrawerListTile(
-              "Invoice", "assets/Notations/Ticket.png", Tabs.Invoice),
+              "Finance", "assets/Notations/Ticket.png", Tabs.Finance),
           DrawerListTile(
               "Calendar", "assets/Notations/Calendar.png", Tabs.Calendar),
           DrawerListTile(
@@ -170,7 +168,7 @@ class _MainScreenState extends State<MainScreen> {
               Header(
                 title: "DashBoard",
               ),
-              UserDashBoard(),
+              //UserDashBoard(),
             ],
           );
         }
@@ -179,7 +177,7 @@ class _MainScreenState extends State<MainScreen> {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              TaskPreview(),
+              //TaskPreview(),
             ],
           );
         }
@@ -189,29 +187,34 @@ class _MainScreenState extends State<MainScreen> {
           return Column(
             children: [
               Header(title: "Analytics"),
-              Analytics(),
+              //Analytics(),
             ],
           );
         }
 
-      case Tabs.Invoice:
+      case Tabs.Finance:
         {
           return Column(
             children: [
-              Header(title: "Invoice"),
-              InvoiceScreen(),
+              Header(title: "Finance"),
+              //InvoiceScreen(),
             ],
           );
         }
 
       case Tabs.Calendar:
         {
-          return Header(title: "Calendar");
+          return Column(
+            children: [
+              Header(title: "Calendar"),
+              Calendar(),
+            ],
+          );
         }
 
       case Tabs.Messages:
         {
-          return Header(title: "Calendar");
+          return Header(title: "Messages");
         }
 
       case Tabs.Notification:
@@ -492,7 +495,7 @@ enum Tabs {
   DashBoard,
   TaskPreview,
   Analytics,
-  Invoice,
+  Finance,
   Calendar,
   Messages,
   Notification,

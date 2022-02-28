@@ -11,6 +11,7 @@ import 'package:test_web_app/Auth_Views/Success_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/DummyFile.dart';
+import 'package:test_web_app/UserProvider/GstProvider.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
 
@@ -21,6 +22,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (ctx) => AllUSerProvider()),
       ChangeNotifierProvider(create: (ctx) => AllLeadsProvider()),
+      ChangeNotifierProvider(create: (ctx) => GstProvider()),
     ],
     child: MyApp(),
   ));
