@@ -15,6 +15,7 @@ import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
 import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
+import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -22,6 +23,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/UserProvider/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -40,9 +42,9 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     userdetails();
     //Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
-    // Future.delayed(Duration.zero).then((value) {
-    //   Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    // });
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    });
   }
 
   @override

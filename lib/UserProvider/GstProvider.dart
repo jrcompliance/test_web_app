@@ -5,17 +5,17 @@ import 'package:http/http.dart' as http;
 import 'package:test_web_app/UserProvider/GstModel.dart';
 
 class GstProvider with ChangeNotifier {
-  String? doc;
+  //String? doc;
   String? pincode;
   String? pan;
-  String? gstinstatusfetched;
+  //String? gstinstatusfetched;
   String? principalplace;
   String? entitytype;
   String? tradename;
   String? registrationtype;
   String? legalname;
   String? dor;
-  String? businessnature;
+  List? businessnature;
   String? gstinstatus;
 
   Future<void> fetchGstData(gst) async {
@@ -29,10 +29,10 @@ class GstProvider with ChangeNotifier {
       });
       var extractedResponse = json.decode(response.body);
       var myData = extractedResponse["data"]["details"];
-      doc = myData["doc"];
+      //doc = myData["doc"];
       pincode = myData["pincode"];
       pan = myData["pan"];
-      gstinstatusfetched = myData["gstinstatusfetched"];
+      //gstinstatusfetched = myData["gstinstatusfetched"];
       principalplace = myData["principalplace"];
       entitytype = myData["entitytype"];
       tradename = myData["tradename"];
