@@ -325,104 +325,200 @@ class _CalendarState extends State<Calendar> {
                         ],
                       ),
                       Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.075),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         height: size.height * 0.3,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "assets/Logos/jrlogo.jpeg",
-                                  filterQuality: FilterQuality.high,
-                                ),
-                                Expanded(child: SizedBox()),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "@",
-                                          style: TxtStls.fieldtitlestyle,
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text:
-                                                    "support@jrcompliance.com",
-                                                style: TxtStls.fieldstyle),
-                                          ]),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    height: size.height * 0.1,
+                                    alignment: Alignment.center,
+                                    child: Image.asset(
+                                      "assets/Logos/jrlogo.png",
+                                      filterQuality: FilterQuality.high,
                                     ),
-                                    Text("+91 9999807976",
-                                        style: TxtStls.fieldstyle),
-                                  ],
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  child:
-                                      Image.asset('assets/Logos/jrlogo.jpeg'),
-                                ),
-                                Container(
-                                  child: Column(
+                                  ),
+                                  Expanded(child: SizedBox()),
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('support@jrcompliance.com'),
-                                      Text('+91 9999807976')
+                                      RichText(
+                                        text: TextSpan(
+                                            text: "@",
+                                            style: ClrStls.tnClr,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                      "support@jrcompliance.com",
+                                                  style: TxtStls.fieldstyle),
+                                            ]),
+                                      ),
+                                      RichText(
+                                        text: TextSpan(
+                                            text: "m",
+                                            style: ClrStls.tnClr,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text: "+91 9999807976",
+                                                  style: TxtStls.fieldstyle),
+                                            ]),
+                                      ),
                                     ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Recipient',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: txtColor,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    'Tax Invoice',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: txtColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  'Recipient',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                                Text(
-                                  'Invoice',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                            Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                        "4-19/1, Tana Bazar,Dondapadu(vi),Chintalapalem(M),Suryapet(Dist),Telangana",
+                                        style: TxtStls.fieldstyle),
+                                  ),
+                                  Expanded(flex: 2, child: SizedBox()),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("INVOICE NO.",
+                                          style: TxtStls.fieldtitlestyle),
+                                      Text("#000001",
+                                          style: TxtStls.fieldstyle),
+                                      Text("INVOICE DATE",
+                                          style: TxtStls.fieldtitlestyle),
+                                      Text("March 03, 2022",
+                                          style: TxtStls.fieldstyle)
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                    Text('data'),
-                                  ],
-                                ),
-                              ],
+                            RichText(
+                              text: TextSpan(
+                                  text: "@",
+                                  style: ClrStls.tnClr,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "yalagalasrinivas@gmail.com",
+                                        style: TxtStls.fieldstyle),
+                                  ]),
                             ),
+                            RichText(
+                              text: TextSpan(
+                                  text: "m",
+                                  style: ClrStls.tnClr,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: "+91 8247467723",
+                                        style: TxtStls.fieldstyle),
+                                  ]),
+                            )
                           ],
                         ),
                       ),
+                      Container(
+                        height: size.height * 0.4,
+                      ),
+                      Divider(color: grClr.withOpacity(0.4)),
+                      Container(
+                        height: size.height * 0.1,
+                        padding: EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("JR Compliance And Testing Labs",
+                                    style: TxtStls.fieldtitlestyle),
+                                Text(
+                                  "PLOT NO. K - 8, SECTOR NO. 3, BAWANA, BAWANA, DELHI, Delhi",
+                                  style: TxtStls.fieldstyle,
+                                )
+                              ],
+                            )),
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                      text: "@",
+                                      style: ClrStls.tnClr,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: "support@jrcompliance.com",
+                                            style: TxtStls.fieldstyle),
+                                      ]),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "m",
+                                      style: ClrStls.tnClr,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: "+91 9999807976",
+                                            style: TxtStls.fieldstyle),
+                                      ]),
+                                ),
+                              ],
+                            )),
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "The company is registered in the Service register under ########",
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ),
+                              ],
+                            )),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),

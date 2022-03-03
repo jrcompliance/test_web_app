@@ -516,17 +516,15 @@ class ComapnyUpdateServices {
 
 class GraphValueServices {
   static update(id, value) async {
-    CollectionReference collectioReference =
-        await _firestore.collection("Tasks");
-    collectioReference.doc(id).update({
+    CollectionReference collectioReference = _firestore.collection("Tasks");
+    await collectioReference.doc(id).update({
       "flag": value,
     });
   }
 
   static success(id) async {
-    CollectionReference collectionReference =
-        await _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
+    CollectionReference collectionReference = _firestore.collection("Tasks");
+    await collectionReference.doc(id).update({
       "success": FieldValue.increment(1),
     });
   }
@@ -586,26 +584,3 @@ class disable {
     collectionReference.doc(id).update({"time": addtime});
   }
 }
-
-//class CatUpdateServices {
-//   static updateCat1(id) async {
-//     CollectionReference collectionReference = _firestore.collection("Tasks");
-//     collectionReference.doc(id).update({
-//       "cat": "IN PROGRESS",
-//     });
-//   }
-//
-//   static updateCat3(id) async {
-//     CollectionReference collectionReference = _firestore.collection("Tasks");
-//     collectionReference.doc(id).update({
-//       "cat": "WON",
-//     });
-//   }
-//
-//   static updateCat4(id) async {
-//     CollectionReference collectionReference = _firestore.collection("Tasks");
-//     collectionReference.doc(id).update({
-//       "cat": "CLOSE",
-//     });
-//   }
-// }
