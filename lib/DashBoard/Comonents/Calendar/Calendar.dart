@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -323,17 +324,41 @@ class _CalendarState extends State<Calendar> {
                               icon: Icon(Icons.print_sharp, color: btnColor)),
                         ],
                       ),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey.withOpacity(0.075),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         height: size.height * 0.3,
                         child: Column(
                           children: [
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "assets/Logos/jrlogo.jpeg",
+                                  filterQuality: FilterQuality.high,
+                                ),
+                                Expanded(child: SizedBox()),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "@",
+                                          style: TxtStls.fieldtitlestyle,
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text:
+                                                    "support@jrcompliance.com",
+                                                style: TxtStls.fieldstyle),
+                                          ]),
+                                    ),
+                                    Text("+91 9999807976",
+                                        style: TxtStls.fieldstyle),
+                                  ],
+                                )
+                              ],
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -397,14 +422,6 @@ class _CalendarState extends State<Calendar> {
                             ),
                           ],
                         ),
-                      ),
-                      Container(
-                        height: size.height * 0.25,
-                        color: Colors.green,
-                      ),
-                      Container(
-                        height: size.height * 0.25,
-                        color: Colors.red,
                       ),
                     ],
                   ),
