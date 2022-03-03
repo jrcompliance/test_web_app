@@ -41,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
     Future.delayed(Duration.zero).then((value) {
       Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     });
+
   }
 
   @override
@@ -139,7 +140,8 @@ class _MainScreenState extends State<MainScreen> {
                         ? Text("")
                         : Text(username!, style: TxtStls.fieldstyle),
                     trailing: IconButton(
-                        onPressed: () async {},
+                        onPressed: () {
+                        },
                         icon: Icon(
                           Icons.settings,
                           color: btnColor,
@@ -484,6 +486,10 @@ class _MainScreenState extends State<MainScreen> {
       print(e.toString());
     }
   }
+
+
+
+
 }
 
 enum Tabs {
@@ -495,10 +501,4 @@ enum Tabs {
   Messages,
   Notification,
   Settings
-}
-var a = '#0001';
-var b =1;
-void increment(){
-  b = b+1;
-
 }
