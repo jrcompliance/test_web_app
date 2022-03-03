@@ -324,8 +324,7 @@ class _CalendarState extends State<Calendar> {
                         ],
                       ),
                       Expanded(
-                        flex: 1,
-                        child: Text(''),
+                        child: SizedBox(),
                       ),
                       Container(
                         decoration: BoxDecoration(
