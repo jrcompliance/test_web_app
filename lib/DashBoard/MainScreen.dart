@@ -11,18 +11,14 @@ import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
-import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
-import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
-import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
-import 'package:test_web_app/UserProvider/GstProvider.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -80,87 +76,85 @@ class _MainScreenState extends State<MainScreen> {
   Widget SideDrawer(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Drawer(
-        elevation: 1,
-        child: Container(
-          height: size.height * 1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DrawerHeader(
-                child: Image.asset(
-                  "assets/Logos/Ologo.png",
-                  filterQuality: FilterQuality.high,
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    DrawerListTile("DashBoard", "assets/Notations/Category.png",
-                        Tabs.DashBoard),
-                    DrawerListTile("TaskPreview",
-                        "assets/Notations/Document.png", Tabs.TaskPreview),
-                    DrawerListTile("Analytics", "assets/Notations/Chart.png",
-                        Tabs.Analytics),
-                    DrawerListTile(
-                        "Finance", "assets/Notations/Ticket.png", Tabs.Finance),
-                    DrawerListTile("Calendar", "assets/Notations/Calendar.png",
-                        Tabs.Calendar),
-                    DrawerListTile("Messages", "assets/Notations/Activity.png",
-                        Tabs.Messages),
-                    DrawerListTile("Notification",
-                        "assets/Notations/Notification.png", Tabs.Notification),
-                    DrawerListTile("Settings", "assets/Notations/Setting.png",
-                        Tabs.Settings),
-                  ],
-                ),
-              ),
-              Container(
-                child: Card(
-                  elevation: 10.0,
-                  child: Builder(
-                    builder: (context) {
-                      return ListTile(
-                        onTap: () {
-                          setState(() {
-                            lead = "Profile";
-                            Scaffold.of(context).openEndDrawer();
-                          });
-                        },
-                        leading: imageUrl == null || imageUrl == ""
-                            ? Icon(
-                                Icons.person,
-                                color: txtColor,
-                                size: 30,
-                              )
-                            : ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                child: SizedBox(
-                                    height: size.height * 0.06,
-                                    width: size.width * 0.025,
-                                    child: Image.network(
-                                      imageUrl!,
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.high,
-                                    ))),
-                        title: username == null
-                            ? Text("")
-                            : Text(username!, style: TxtStls.fieldstyle),
-                        trailing: IconButton(
-                            onPressed: () async {},
-                            icon: Icon(
-                              Icons.settings,
-                              color: btnColor,
-                            )),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+      elevation: 1,
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            height: 130,
+            child: Image.asset("assets/Logos/Ologo.png"),
           ),
-        ));
+          DrawerListTile(
+              "DashBoard", "assets/Notations/Category.png", Tabs.DashBoard),
+          DrawerListTile(
+              "TaskPreview", "assets/Notations/Document.png", Tabs.TaskPreview),
+          DrawerListTile(
+              "Analytics", "assets/Notations/Chart.png", Tabs.Analytics),
+          DrawerListTile(
+              "Finance", "assets/Notations/Ticket.png", Tabs.Finance),
+          DrawerListTile(
+              "Calendar", "assets/Notations/Calendar.png", Tabs.Calendar),
+          DrawerListTile(
+              "Messages", "assets/Notations/Activity.png", Tabs.Messages),
+          DrawerListTile("Notification", "assets/Notations/Notification.png",
+              Tabs.Notification),
+          DrawerListTile(
+              "Settings", "assets/Notations/Setting.png", Tabs.Settings),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SizedBox(
+              height: 260,
+              width: 50,
+              child: Image.asset(
+                "assets/Logos/lamp.png",
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Card(
+            elevation: 10.0,
+            child: Builder(
+              builder: (context) {
+                return ListTile(
+                  onTap: () {
+                    setState(() {
+                      lead = "Profile";
+                      Scaffold.of(context).openEndDrawer();
+                    });
+                  },
+                  leading: imageUrl == null || imageUrl == ""
+                      ? Icon(
+                          Icons.person,
+                          color: txtColor,
+                          size: 30,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          child: SizedBox(
+                              height: size.height * 0.06,
+                              width: size.width * 0.025,
+                              child: Image.network(
+                                imageUrl!,
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high,
+                              ))),
+                  title: username == null
+                      ? Text("")
+                      : Text(username!, style: TxtStls.fieldstyle),
+                  trailing: IconButton(
+                      onPressed: () async {},
+                      icon: Icon(
+                        Icons.settings,
+                        color: btnColor,
+                      )),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   DashboardBody(BuildContext context) {
