@@ -136,9 +136,31 @@ class _CalendarState extends State<Calendar> {
                       Visibility(
                         visible: visible,
                         child: ScaleAnimatedWidget.tween(
-                          duration: Duration(seconds: 2),
+                          duration: Duration(milliseconds: 500),
                           child: Column(
                             children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                      maxRadius: 7,
+                                      backgroundColor: Provider.of<GstProvider>(
+                                          context,
+                                          listen: false)
+                                          .gstinstatus
+                                          .toString() ==
+                                          "Active"
+                                          ? Colors.green
+                                          : clsClr),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    _statusController.text.toString(),
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                  Expanded(child: Text("")),
+                                  Text(bnature, style: TxtStls.fieldstyle)
+                                ],
+                              ),
+                              space(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -210,28 +232,8 @@ class _CalendarState extends State<Calendar> {
                                 ],
                               ),
                               space(),
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                      maxRadius: 7,
-                                      backgroundColor: Provider.of<GstProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .gstinstatus
-                                                  .toString() ==
-                                              "Active"
-                                          ? Colors.green
-                                          : clsClr),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    _statusController.text.toString(),
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                  Expanded(child: Text("")),
-                                  Text(bnature, style: TxtStls.fieldstyle)
-                                ],
-                              ),
-                              space(),
+
+
                               Row(
                                 children: [
                                   Expanded(
