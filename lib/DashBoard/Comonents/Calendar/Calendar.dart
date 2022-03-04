@@ -1,16 +1,14 @@
-import 'dart:html';
-import 'dart:math';
 import 'dart:ui';
-
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/Auth_Views/Url_launchers.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
@@ -295,232 +293,183 @@ class _CalendarState extends State<Calendar> {
                 color: bgColor,
               ),
               height: size.height * 0.92,
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
+              padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.015, vertical: size.width * 0.015),
               child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            "Invoice Preview",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: txtColor,
-                                fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          "Invoice Preview",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: txtColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(child: Text(" ")),
+                        IconButton(
+                            onPressed: (() {
+                              setState(() {});
+                            }),
+                            icon: Icon(Icons.download, color: btnColor)),
+                        IconButton(
+                            onPressed: (() {}),
+                            icon: Icon(Icons.print_sharp, color: btnColor)),
+                      ],
+                    ),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.15,
+                          width: size.width * 0.175,
+                          child: Image.asset(
+                            "assets/Logos/jrlogo.png",
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.cover,
                           ),
-                          Expanded(child: Text(" ")),
-                          IconButton(
-                              onPressed: (() {
-                                setState(() {});
-                              }),
-                              icon: Icon(Icons.download, color: btnColor)),
-                          IconButton(
-                              onPressed: (() {}),
-                              icon: Icon(Icons.print_sharp, color: btnColor)),
-                        ],
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.075),
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                        height: size.height * 0.3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Expanded(child: SizedBox()),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    height: size.height * 0.1,
-                                    alignment: Alignment.center,
-                                    child: Image.asset(
-                                      "assets/Logos/jrlogo.png",
-                                      filterQuality: FilterQuality.high,
-                                    ),
-                                  ),
-                                  Expanded(child: SizedBox()),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "@",
-                                            style: ClrStls.tnClr,
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text:
-                                                      "support@jrcompliance.com",
-                                                  style: TxtStls.fieldstyle),
-                                            ]),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                            text: "m",
-                                            style: ClrStls.tnClr,
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: "+91 9999807976",
-                                                  style: TxtStls.fieldstyle),
-                                            ]),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Recipient',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: txtColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Tax Invoice',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: txtColor,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                        "4-19/1, Tana Bazar,Dondapadu(vi),Chintalapalem(M),Suryapet(Dist),Telangana",
-                                        style: TxtStls.fieldstyle),
-                                  ),
-                                  Expanded(flex: 2, child: SizedBox()),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("INVOICE NO.",
-                                          style: TxtStls.fieldtitlestyle),
-                                      Text("#000001",
-                                          style: TxtStls.fieldstyle),
-                                      Text("INVOICE DATE",
-                                          style: TxtStls.fieldtitlestyle),
-                                      Text("March 03, 2022",
-                                          style: TxtStls.fieldstyle)
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text: "@",
-                                  style: ClrStls.tnClr,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: "yalagalasrinivas@gmail.com",
-                                        style: TxtStls.fieldstyle),
-                                  ]),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text: "m",
-                                  style: ClrStls.tnClr,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: "+91 8247467723",
-                                        style: TxtStls.fieldstyle),
-                                  ]),
-                            )
+                            Text("JR Compliance and Testing Labs",
+                                style: TxtStls.fieldstyle),
+                            Text(
+                                "Regd. Office: 705, 7th Floor,Krishna Apra Tower",
+                                style: TxtStls.fieldstyle),
+                            Text(
+                                "Netaji Subhash Place, Pitampura,New Delhi 110034,India",
+                                style: TxtStls.fieldstyle),
+                            Text("JR Compliance and Testing Labs",
+                                style: TxtStls.fieldstyle),
+                            Text("PAN: AALFJ0070E", style: TxtStls.fieldstyle),
+                            Text("TAN: DELJ10631F", style: TxtStls.fieldstyle),
+                            Text("GST REGN NO: 07AALFJ0070E1ZO",
+                                style: TxtStls.fieldstyle),
                           ],
-                        ),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("To,", style: TxtStls.fieldtitlestyle),
+                        Text(
+                          "Invoice No.",
+                          style: TxtStls.fieldtitlestyle,
+                        )
+                      ],
+                    ),
+                    Text(""),
+                    Text("GST NO- ", style: TxtStls.fieldtitlestyle),
+                    Text("Kind Atten: Mr.", style: TxtStls.fieldtitlestyle),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "Issued On: " +
+                            DateFormat("dd MMM,yyyy").format(DateTime.now()),
+                        style: TxtStls.fieldstyle,
                       ),
-                      Container(
-                        height: size.height * 0.4,
-                      ),
-                      Divider(color: grClr.withOpacity(0.4)),
-                      Container(
-                        height: size.height * 0.1,
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("JR Compliance And Testing Labs",
-                                    style: TxtStls.fieldtitlestyle),
-                                Text(
-                                  "PLOT NO. K - 8, SECTOR NO. 3, BAWANA, BAWANA, DELHI, Delhi",
-                                  style: TxtStls.fieldstyle,
-                                )
-                              ],
-                            )),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                      text: "@",
-                                      style: ClrStls.tnClr,
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: "support@jrcompliance.com",
-                                            style: TxtStls.fieldstyle),
-                                      ]),
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                      text: "m",
-                                      style: ClrStls.tnClr,
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: "+91 9999807976",
-                                            style: TxtStls.fieldstyle),
-                                      ]),
-                                ),
-                              ],
-                            )),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    "The company is registered in the Service register under ########",
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                ),
-                              ],
-                            )),
-                          ],
+                    ),
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("Payment Due: Paid",
+                            style: TxtStls.fieldstyle)),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Text("# Description",
+                                style: TxtStls.fieldstyle)),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("SAC No", style: TxtStls.fieldstyle),
+                              Text("Qty", style: TxtStls.fieldstyle),
+                              Text("Unit Cost", style: TxtStls.fieldstyle),
+                              Text("Amount(Rs)", style: TxtStls.fieldstyle),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
+                      ],
+                    ),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Expanded(child: SizedBox()),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Text("Bank Details:",
+                        style: GoogleFonts.nunito(
+                            textStyle: TextStyle(
+                                fontSize: 13,
+                                color: txtColor,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                            fontSize: 13,
+                            color: txtColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline)),
+                    Text("Company Name: JR Compliance And Testing Labs",
+                        style: TxtStls.fieldtitlestyle),
+                    Text("Bank Name: IDFC FIRST BANK",
+                        style: TxtStls.fieldtitlestyle),
+                    Text("Account Number: 10041186185",
+                        style: TxtStls.fieldtitlestyle),
+                    Text("IFSC Code: IDFB0040101",
+                        style: TxtStls.fieldtitlestyle),
+                    Text("SWIFT Code: IDFBINBBMUM",
+                        style: TxtStls.fieldtitlestyle),
+                    Text("Bank Address: Rohini, New Delhi-110085",
+                        style: TxtStls.fieldtitlestyle),
+                    Divider(
+                      color: grClr,
+                    ),
+                    Text("Terms And Conditions:",
+                        style: TxtStls.fieldtitlestyle),
+                    InkWell(
+                      child: Text(
+                        "https://www.jrcompliance.com/terms-and-conditions",
+                        style: TxtStls.fieldstyle,
+                      ),
+                      onTap: () {
+                        launches.termsofuse();
+                      },
+                    ),
+                    // InkWell(
+                    //   child: Text(
+                    //     "https://www.jrcompliance.com/privacy-policy",
+                    //     style: ClrStls.tnClr,
+                    //   ),
+                    //   onTap: () {
+                    //     launches.privacy();
+                    //   },
+                    // ),
+                    // InkWell(
+                    //   child: Text(
+                    //     "https://www.jrcompliance.com/purchase-and-billing",
+                    //     style: ClrStls.tnClr,
+                    //   ),
+                    //   onTap: () {
+                    //     launches.privacy();
+                    //   },
+                    // )
+                  ],
                 ),
               ),
             ),

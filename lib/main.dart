@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         canvasColor: bgColor.withOpacity(1),
       ),
-      home: NewHome(),
+      home: Newhome(),
     );
   }
 }
