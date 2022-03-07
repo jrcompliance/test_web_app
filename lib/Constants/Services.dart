@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
@@ -299,61 +300,81 @@ class EndDateOperations {
 }
 
 class CrudOperations {
-  static uploadTask(
-      _taskController,
-      _endDateController,
-      _nameController,
-      _emailController,
-      _phoneController,
-      _messageController,
-      uid,
-      image) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    String did = collectionReference.doc().id;
+  // static Future<void> fetchmostrecent() async {
+  //   _firestore
+  //       .collection("Tasks")
+  //       .orderBy("startDate", descending: true)
+  //       .snapshots()
+  //       .listen((event) {
+  //     var obj = event.docs.first.get("CxID");
+  //     var storevalue = obj + 1;
+  //     return storevalue;
+  //   });
+  // }
 
-    collectionReference.doc(did).set({
-      "time": Timestamp.now(),
-      "flag": false,
-      "CxID": 100 + 1,
-      "id": did,
-      "task": _taskController.text.toString(),
-      "startDate": Timestamp.fromDate(DateTime.now()),
-      "qDate": DateTime.now().toString().split(" ")[0],
-      "endDate": _endDateController.text.toString(),
-      "message": _messageController.text.toString(),
-      "priority": "E",
-      "cat": "NEW",
-      "status": "FRESH",
-      "status1": "AVERAGE",
-      "status2": "FOLLOWUP",
-      "status4": "PAYMENT",
-      "status5": "IRRELEVANT",
-      "Attachments": [
-        {"uid": uid, "image": image}
-      ],
-      "Attachments1": [],
-      "companyname": "",
-      "logo": "",
-      "website": "",
-      "fail": 0,
-      "success": 0,
-      "CompanyDetails": [
-        {
-          "contactperson": _nameController.text.toString(),
-          "email": _emailController.text.toString(),
-          "phone": _phoneController.text.toString(),
-        }
-      ],
-      "lastseen": Timestamp.now(),
-      "Certificates": [],
-    }).then((value) {
-      _taskController.clear();
-      _endDateController.clear();
-      _nameController.clear();
-      _emailController.clear();
-      _phoneController.clear();
-      _messageController.clear();
-    });
+  static uploadTask(
+    _taskController,
+    _endDateController,
+    _nameController,
+    _emailController,
+    _phoneController,
+    _messageController,
+    uid,
+    image,
+  ) async {
+    try {
+      print("Hey Yalagala your request is under process please wait");
+      CollectionReference collectionReference =
+          await _firestore.collection("Tasks");
+      String did = collectionReference.doc().id;
+      collectionReference.doc(did).set({
+        "time": Timestamp.now(),
+        "flag": false,
+        "CxID": RecentFetchCXIDProvider.CxID == null
+            ? 100
+            : RecentFetchCXIDProvider.CxID,
+        "id": did,
+        "task": _taskController.text.toString(),
+        "startDate": Timestamp.fromDate(DateTime.now()),
+        "qDate": DateTime.now().toString().split(" ")[0],
+        "endDate": _endDateController.text.toString(),
+        "message": _messageController.text.toString(),
+        "priority": "E",
+        "cat": "NEW",
+        "status": "FRESH",
+        "status1": "AVERAGE",
+        "status2": "FOLLOWUP",
+        "status4": "PAYMENT",
+        "status5": "IRRELEVANT",
+        "Attachments": [
+          {"uid": uid, "image": image}
+        ],
+        "Attachments1": [],
+        "companyname": "",
+        "logo": "",
+        "website": "",
+        "fail": 0,
+        "success": 0,
+        "CompanyDetails": [
+          {
+            "contactperson": _nameController.text.toString(),
+            "email": _emailController.text.toString(),
+            "phone": _phoneController.text.toString(),
+          }
+        ],
+        "lastseen": Timestamp.now(),
+        "Certificates": [],
+      }).then((value) {
+        _taskController.clear();
+        _endDateController.clear();
+        _nameController.clear();
+        _emailController.clear();
+        _phoneController.clear();
+        _messageController.clear();
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 
   static deleteTask(id) async {
@@ -582,5 +603,20 @@ class disable {
   static off(id, addtime) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({"time": addtime});
+  }
+}
+
+class RecentFetchCXIDProvider extends ChangeNotifier {
+  static int? CxID;
+  Future<void> fetchRecent() async {
+    _firestore
+        .collection("Tasks")
+        .orderBy("startDate", descending: true)
+        .get()
+        .then((value) {
+      CxID = value.docs.first.get("CxID") + 1;
+      print(CxID);
+      notifyListeners();
+    });
   }
 }

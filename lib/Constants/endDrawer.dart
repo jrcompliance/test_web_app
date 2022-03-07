@@ -201,6 +201,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 ),
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
+                    Future.delayed(Duration.zero).then((value) {
+                      Provider.of<RecentFetchCXIDProvider>(context,
+                              listen: false)
+                          .fetchRecent();
+                    });
                     CrudOperations.uploadTask(
                       _leadnameController,
                       _endDateController,
