@@ -478,8 +478,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
     showDialog(
-        barrierColor: grClr,
-        barrierDismissible: false,
+        barrierColor: grClr.withOpacity(0.5),
+        barrierDismissible: true,
         context: context,
         builder: (_) {
           return alertDialog;
