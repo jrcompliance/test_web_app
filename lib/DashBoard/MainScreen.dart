@@ -365,8 +365,12 @@ class _MainScreenState extends State<MainScreen> {
     } else {}
   }
 
-  updateProfile() {
+  Widget updateProfile() {
     Future.delayed(Duration(seconds: 10));
+    return updateProfile1();
+  }
+
+  updateProfile1() {
     Size size = MediaQuery.of(context).size;
     if (imageUrl == null || imageUrl == "") {
       return AlertDialog(
@@ -467,7 +471,8 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
     }
-    return Text("");
+
+    return Text(" ");
   }
 
   Future<void> storeUserData() async {
