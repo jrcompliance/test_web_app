@@ -500,10 +500,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "TCPB": _isAgree,
       "add": null,
       "bgroup": null,
-      "doj":null,
-      "econtact":null,
+      "doj": null,
+      "econtact": null,
       "udesignation": null,
-
+      "gender": null,
     }, SetOptions(merge: true)).then((value) => Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => SuccessScreen())));
   }
