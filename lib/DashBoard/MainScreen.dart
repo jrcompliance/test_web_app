@@ -373,6 +373,7 @@ class _MainScreenState extends State<MainScreen> {
   updateProfile1() {
     Size size = MediaQuery.of(context).size;
     if (imageUrl == null || imageUrl == "") {
+
       return AlertDialog(
         contentPadding: EdgeInsets.all(0.0),
         actionsPadding: EdgeInsets.all(0),
@@ -399,13 +400,13 @@ class _MainScreenState extends State<MainScreen> {
                   InkWell(
                     child: logoBase64 == null
                         ? CircleAvatar(
-                            maxRadius: 40.0,
-                            child: Icon(Icons.camera_alt),
-                          )
+                      maxRadius: 40.0,
+                      child: Icon(Icons.camera_alt),
+                    )
                         : CircleAvatar(
-                            maxRadius: 40.0,
-                            backgroundImage: MemoryImage(logoBase64!),
-                          ),
+                      maxRadius: 40.0,
+                      backgroundImage: MemoryImage(logoBase64!),
+                    ),
                     onTap: () {
                       chooseProfile();
                     },
@@ -449,21 +450,21 @@ class _MainScreenState extends State<MainScreen> {
                   logoBase64 == null
                       ? SizedBox()
                       : Align(
-                          alignment: Alignment.centerRight,
-                          child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              elevation: 0.0,
-                              onPressed: () {
-                                storeUserData();
-                              },
-                              child: Text(
-                                "Update",
-                                style: TxtStls.fieldstyle1,
-                              ),
-                              color: btnColor),
-                        )
+                    alignment: Alignment.centerRight,
+                    child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(10))),
+                        elevation: 0.0,
+                        onPressed: () {
+                          storeUserData();
+                        },
+                        child: Text(
+                          "Update",
+                          style: TxtStls.fieldstyle1,
+                        ),
+                        color: btnColor),
+                  )
                 ],
               ),
             );
@@ -473,6 +474,115 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return Text(" ");
+  }
+
+  alertdialog() {
+    Size size = MediaQuery.of(context).size;
+    AlertDialog(
+      contentPadding: EdgeInsets.all(0.0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: bgColor,
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: bgColor),
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            width: size.width * 0.175,
+            height: size.height * 0.35,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  "Update Profile Picture",
+                  style: TxtStls.fieldtitlestyle,
+                ),
+                InkWell(
+                  child: logoBase64 == null
+                      ? CircleAvatar(
+                          maxRadius: 40.0,
+                          child: Icon(Icons.camera_alt),
+                        )
+                      : CircleAvatar(
+                          maxRadius: 40.0,
+                          backgroundImage: MemoryImage(logoBase64!),
+                        ),
+                  onTap: () {
+                    chooseProfile();
+                  },
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Name : ",
+                      style: TxtStls.fieldstyle,
+                    ),
+                    username == null
+                        ? Text("")
+                        : Text(username!, style: TxtStls.fieldstyle)
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Email : ",
+                      style: TxtStls.fieldstyle,
+                    ),
+                    email == null
+                        ? Text("")
+                        : Text(email!, style: TxtStls.fieldstyle)
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Phone : ",
+                      style: TxtStls.fieldstyle,
+                    ),
+                    phone == null
+                        ? Text("")
+                        : Text(phone!, style: TxtStls.fieldstyle)
+                  ],
+                ),
+                logoBase64 == null
+                    ? SizedBox()
+                    : Align(
+                        alignment: Alignment.centerRight,
+                        child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            elevation: 0.0,
+                            onPressed: () {
+                              storeUserData();
+                            },
+                            child: Text(
+                              "Update",
+                              style: TxtStls.fieldstyle1,
+                            ),
+                            color: btnColor),
+                      )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+    // showDialog(
+    //     barrierColor: grClr.withOpacity(0.5),
+    //     barrierDismissible: false,
+    //     useRootNavigator: false,
+    //     context: context,
+    //     builder: (_) {
+    //       return alertDialog;
+    //     });
   }
 
   Future<void> storeUserData() async {
