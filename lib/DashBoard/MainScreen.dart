@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
+import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -41,7 +42,6 @@ class _MainScreenState extends State<MainScreen> {
     Future.delayed(Duration.zero).then((value) {
       Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     });
-
   }
 
   @override
@@ -140,8 +140,7 @@ class _MainScreenState extends State<MainScreen> {
                         ? Text("")
                         : Text(username!, style: TxtStls.fieldstyle),
                     trailing: IconButton(
-                        onPressed: () {
-                        },
+                        onPressed: () {},
                         icon: Icon(
                           Icons.settings,
                           color: btnColor,
@@ -174,7 +173,7 @@ class _MainScreenState extends State<MainScreen> {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              //TaskPreview(),
+              TaskPreview(),
             ],
           );
         }
@@ -486,10 +485,6 @@ class _MainScreenState extends State<MainScreen> {
       print(e.toString());
     }
   }
-
-
-
-
 }
 
 enum Tabs {
