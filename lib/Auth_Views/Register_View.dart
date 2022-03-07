@@ -502,7 +502,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "bgroup": null,
       "doj":null,
       "econtact":null,
-      "gender": null,
       "udesignation": null,
 
     }, SetOptions(merge: true)).then((value) => Navigator.pushReplacement(
