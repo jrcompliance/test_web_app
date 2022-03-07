@@ -373,7 +373,6 @@ class _MainScreenState extends State<MainScreen> {
   updateProfile1() {
     Size size = MediaQuery.of(context).size;
     if (imageUrl == null || imageUrl == "") {
-
       return AlertDialog(
         contentPadding: EdgeInsets.all(0.0),
         actionsPadding: EdgeInsets.all(0),
@@ -400,13 +399,13 @@ class _MainScreenState extends State<MainScreen> {
                   InkWell(
                     child: logoBase64 == null
                         ? CircleAvatar(
-                      maxRadius: 40.0,
-                      child: Icon(Icons.camera_alt),
-                    )
+                            maxRadius: 40.0,
+                            child: Icon(Icons.camera_alt),
+                          )
                         : CircleAvatar(
-                      maxRadius: 40.0,
-                      backgroundImage: MemoryImage(logoBase64!),
-                    ),
+                            maxRadius: 40.0,
+                            backgroundImage: MemoryImage(logoBase64!),
+                          ),
                     onTap: () {
                       chooseProfile();
                     },
@@ -450,21 +449,21 @@ class _MainScreenState extends State<MainScreen> {
                   logoBase64 == null
                       ? SizedBox()
                       : Align(
-                    alignment: Alignment.centerRight,
-                    child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10))),
-                        elevation: 0.0,
-                        onPressed: () {
-                          storeUserData();
-                        },
-                        child: Text(
-                          "Update",
-                          style: TxtStls.fieldstyle1,
-                        ),
-                        color: btnColor),
-                  )
+                          alignment: Alignment.centerRight,
+                          child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              elevation: 0.0,
+                              onPressed: () {
+                                storeUserData();
+                              },
+                              child: Text(
+                                "Update",
+                                style: TxtStls.fieldstyle1,
+                              ),
+                              color: btnColor),
+                        )
                 ],
               ),
             );
