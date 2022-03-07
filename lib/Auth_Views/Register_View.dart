@@ -498,6 +498,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "password": _passwordController.text.toString(),
       "urole": "Employee",
       "TCPB": _isAgree,
+      "add": null,
+      "bgroup": null,
+      "doj":null,
+      "econtact":null,
+      "udesignation": null,
+
     }, SetOptions(merge: true)).then((value) => Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => SuccessScreen())));
   }
