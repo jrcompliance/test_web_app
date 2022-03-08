@@ -23,7 +23,9 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
+import 'package:test_web_app/UserProvider/ActivityProvider.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -605,7 +607,7 @@ class _TaskPreviewState extends State<TaskPreview>
   void initState() {
     super.initState();
     myvalues();
-    Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
+    //Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
     _controller = TabController(
       length: 3,
       vsync: this,
@@ -615,6 +617,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
   @override
   Widget build(BuildContext context) {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Container(
       color: AbgColor.withOpacity(0.0001),
@@ -799,7 +802,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         ];
                       }),
                   SizedBox(width: size.width * 0.01),
-                  role == "Admin"
+                  userdata.role == "Admin"
                       ? Container(
                           decoration: BoxDecoration(
                               borderRadius:
@@ -1358,25 +1361,31 @@ class _TaskPreviewState extends State<TaskPreview>
                         shadow: Shadow(color: btnColor, blurRadius: 20),
                       ),
                       onTap: () {
+                        Provider.of<ActivityProvider>(context,listen: false).getAllActivitys(id);
+                        Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(id,date1,date2);
                         detailspopBox(
-                            context,
-                            id,
-                            taskname,
-                            startDate,
-                            endDate,
-                            priority,
-                            lastseen,
-                            cat,
-                            message,
-                            newsta,
-                            prosta,
-                            insta,
-                            wonsta,
-                            clsta,
-                            s,
-                            f,
-                            assign,
-                            CxID);
+                              context,
+                              id,
+                              taskname,
+                              startDate,
+                              endDate,
+                              priority,
+                              lastseen,
+                              cat,
+                              message,
+                              newsta,
+                              prosta,
+                              insta,
+                              wonsta,
+                              clsta,
+                              s,
+                              f,
+                              assign,
+                              CxID);
+
+
+
+
                       },
                     ),
                     Container(
@@ -1576,6 +1585,7 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Widget boardmiddle(cat) {
+    final userdata = Provider.of<UserDataProvider>(context);
     return Container(
       height: MediaQuery.of(context).size.height * 0.78,
       width: MediaQuery.of(context).size.width * 0.160,
@@ -1585,7 +1595,7 @@ class _TaskPreviewState extends State<TaskPreview>
             .collection("Tasks")
             .where("Attachments", arrayContainsAny: [
               {
-                "image": imageUrl,
+                "image": userdata.imageUrl,
                 "uid": _auth.currentUser!.uid.toString(),
               }
             ])
@@ -2876,6 +2886,8 @@ class _TaskPreviewState extends State<TaskPreview>
       ),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
+          final activitylist  = Provider.of<ActivityProvider>(context).activitymodellist;
+          final activitylist1  = Provider.of<ActivityProvider1>(context).activitymodellist1;
           _mysearchController.addListener(() {
             if (_mysearchController.text.isEmpty) {
               setState(() {
@@ -4935,7 +4947,8 @@ class _TaskPreviewState extends State<TaskPreview>
                                 date1 == null && date2 == null
                                     ? InkWell(
                                         onTap: () {
-                                          dateTimeRangePicker();
+                                          dateTimeRangePicker(id);
+                                          setState((){});
                                         },
                                         child: Tooltip(
                                           message: "Filters",
@@ -4951,7 +4964,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                         ),
                                         onHover: (value) {
                                           _isHover[4] = value;
-                                          setState(() {});
+                                          setState(() {
+
+                                          });
                                         })
                                     : InkWell(
                                         child: Tooltip(
@@ -4963,8 +4978,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   color: btnColor)),
                                         ),
                                         onTap: () {
-                                          date1 = date2 = null;
-                                          setState(() {});
+
+                                          setState(() {
+                                            setState((){
+                                              date1 = date2 = null;
+                                            });
+                                          });
                                         },
                                       ),
                                 Container(
@@ -5098,452 +5117,395 @@ class _TaskPreviewState extends State<TaskPreview>
                           flex: 8,
                           child: _isGraph
                               ? Chart(context, s, f)
-                              : StreamBuilder(
-                                  stream: date1 == null && date2 == null
-                                      ? FirebaseFirestore.instance
-                                          .collection("Tasks")
-                                          .doc(id)
-                                          .collection("Activitys")
-                                          .orderBy("When", descending: true)
-                                          .snapshots()
-                                      : FirebaseFirestore.instance
-                                          .collection("Tasks")
-                                          .doc(id)
-                                          .collection("Activitys")
-                                          .where("queryDate",
-                                              isGreaterThanOrEqualTo: date1)
-                                          .where("queryDate",
-                                              isLessThanOrEqualTo: date2)
-                                          .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Container();
-                                    } else if (snapshot.data!.docs.isEmpty) {
-                                      return Center(
-                                        child: Lottie.asset("assets/Lotties/empty.json",reverse: true)
-                                      );
-                                    }
+                              : ListView.separated(
+                            shrinkWrap: true,
+                            separatorBuilder: (_, i) => Divider(
+                              height: 10,
+                              color: Color(0xFFE0E0E0),
+                            ),
+                            itemCount:date1 == null && date2 == null?activitylist.length : activitylist1.length,
+                            itemBuilder:
+                                (BuildContext context, int index) {
+                              String statecolor = activitylist[index].from;
+                              String statecolor1 =
+                                  activitylist[index].to;
+                              String date =
+                              DateFormat("EEE | MMM dd, yy")
+                                  .format(activitylist[index].when
+                                  .toDate());
+                              String time = DateFormat('hh:mm a')
+                                  .format(activitylist[index].when
+                                  .toDate());
+                              DateTime dt1 = DateTime.parse(activitylist[index].lastdate);
+                              String lastDate =
+                              DateFormat("EEE | MMM dd, yy")
+                                  .format(dt1);
 
-                                    return ListView.separated(
-                                      shrinkWrap: true,
-                                      separatorBuilder: (_, i) => Divider(
-                                        height: 10,
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      color: bgColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceAround,
+                                        children: [
+                                          Container(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceAround,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                    btnColor
+                                                        .withOpacity(
+                                                        0.1),
+                                                    child: Icon(
+                                                        Icons
+                                                            .fast_forward,
+                                                        color: btnColor),
+                                                  ),
+                                                  Text(
+                                                    date,
+                                                    style: TxtStls
+                                                        .fieldstyle,
+                                                  ),
+                                                ],
+                                              )),
+                                          Container(
+                                            color: Color(0xFFE0E0E0),
+                                            height: 40,
+                                            width: 1,
+                                          ),
+                                          Container(
+                                              alignment:
+                                              Alignment.center,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceAround,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                    btnColor
+                                                        .withOpacity(
+                                                        0.1),
+                                                    child: Icon(
+                                                        Icons.timer,
+                                                        color:
+                                                        btnColor),
+                                                  ),
+                                                  Text(time,
+                                                      style: TxtStls
+                                                          .fieldstyle),
+                                                ],
+                                              )),
+                                          Container(
+                                            color: Color(0xFFE0E0E0),
+                                            height: 40,
+                                            width: 1,
+                                          ),
+                                          Container(
+                                              alignment:
+                                              Alignment.center,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceAround,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                    btnColor
+                                                        .withOpacity(
+                                                        0.1),
+                                                    child: Icon(
+                                                        Icons
+                                                            .date_range,
+                                                        color:
+                                                        btnColor),
+                                                  ),
+                                                  Text(lastDate,
+                                                      style: TxtStls
+                                                          .fieldstyle),
+                                                ],
+                                              )),
+                                          Container(
+                                            color: Color(0xFFE0E0E0),
+                                            height: 40,
+                                            width: 1,
+                                          ),
+                                          Container(
+                                            alignment:
+                                            Alignment.center,
+                                            width: 50,
+                                            child: activitylist[index].yes ==
+                                                true
+                                                ? InkWell(
+                                                onTap: () {},
+                                                onHover: (value) {
+                                                  _isHover[7] =
+                                                      value;
+                                                  setState(() {});
+                                                },
+                                                child: CircleAvatar(
+                                                    backgroundColor:
+                                                    btnColor
+                                                        .withOpacity(
+                                                        0.2),
+                                                    child: _isHover[
+                                                    7]
+                                                        ? Lottie.asset(
+                                                        "assets/Lotties/success.json",
+                                                        reverse:
+                                                        true)
+                                                        : Image.asset(
+                                                        "assets/Images/success.png")))
+                                                : InkWell(
+                                                onTap: () {},
+                                                onHover: (value) {
+                                                  _isHover[8] =
+                                                      value;
+                                                  setState(() {});
+                                                },
+                                                child:
+                                                CircleAvatar(
+                                                  backgroundColor:
+                                                  btnColor
+                                                      .withOpacity(
+                                                      0.1),
+                                                  child: _isHover[
+                                                  8]
+                                                      ? Lottie.asset(
+                                                      "assets/Lotties/fail.json",
+                                                      reverse:
+                                                      true)
+                                                      : SizedBox(
+                                                    height:
+                                                    30,
+                                                    width:
+                                                    30,
+                                                    child: Image
+                                                        .network(
+                                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
+                                                      fit: BoxFit
+                                                          .fill,
+                                                    ),
+                                                  ),
+                                                )),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: size.height * 0.001,
                                         color: Color(0xFFE0E0E0),
                                       ),
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        String statecolor =
-                                            snapshot.data!.docs[index]["From"];
-                                        String statecolor1 =
-                                            snapshot.data!.docs[index]["To"];
-                                        String date =
-                                            DateFormat("EEE | MMM dd, yy")
-                                                .format(snapshot
-                                                    .data!.docs[index]["When"]
-                                                    .toDate());
-                                        String time = DateFormat('hh:mm a')
-                                            .format(snapshot
-                                                .data!.docs[index]["When"]
-                                                .toDate());
-                                        DateTime dt1 = DateTime.parse(snapshot
-                                            .data!.docs[index]["LatDate"]);
-                                        String lastDate =
-                                            DateFormat("EEE | MMM dd, yy")
-                                                .format(dt1);
-
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            padding: EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                                color: bgColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0))),
-                                            child: Column(
+                                      SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceAround,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment
+                                                  .spaceEvenly,
                                               children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Container(
-                                                        child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        CircleAvatar(
-                                                          backgroundColor:
-                                                              btnColor
-                                                                  .withOpacity(
-                                                                      0.1),
-                                                          child: Icon(
-                                                              Icons
-                                                                  .fast_forward,
-                                                              color: btnColor),
-                                                        ),
-                                                        Text(
-                                                          date,
-                                                          style: TxtStls
-                                                              .fieldstyle,
-                                                        ),
-                                                      ],
-                                                    )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  btnColor
-                                                                      .withOpacity(
-                                                                          0.1),
-                                                              child: Icon(
-                                                                  Icons.timer,
-                                                                  color:
-                                                                      btnColor),
-                                                            ),
-                                                            Text(time,
-                                                                style: TxtStls
-                                                                    .fieldstyle),
-                                                          ],
-                                                        )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  btnColor
-                                                                      .withOpacity(
-                                                                          0.1),
-                                                              child: Icon(
-                                                                  Icons
-                                                                      .date_range,
-                                                                  color:
-                                                                      btnColor),
-                                                            ),
-                                                            Text(lastDate,
-                                                                style: TxtStls
-                                                                    .fieldstyle),
-                                                          ],
-                                                        )),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 50,
-                                                      child: snapshot.data!
-                                                                      .docs[index]
-                                                                  ["Yes"] ==
-                                                              true
-                                                          ? InkWell(
-                                                              onTap: () {},
-                                                              onHover: (value) {
-                                                                _isHover[7] =
-                                                                    value;
-                                                                setState(() {});
-                                                              },
-                                                              child: CircleAvatar(
-                                                                  backgroundColor:
-                                                                      btnColor
-                                                                          .withOpacity(
-                                                                              0.2),
-                                                                  child: _isHover[
-                                                                          7]
-                                                                      ? Lottie.asset(
-                                                                          "assets/Lotties/success.json",
-                                                                          reverse:
-                                                                              true)
-                                                                      : Image.asset(
-                                                                          "assets/Images/success.png")))
-                                                          : InkWell(
-                                                              onTap: () {},
-                                                              onHover: (value) {
-                                                                _isHover[8] =
-                                                                    value;
-                                                                setState(() {});
-                                                              },
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    btnColor
-                                                                        .withOpacity(
-                                                                            0.1),
-                                                                child: _isHover[
-                                                                        8]
-                                                                    ? Lottie.asset(
-                                                                        "assets/Lotties/fail.json",
-                                                                        reverse:
-                                                                            true)
-                                                                    : SizedBox(
-                                                                        height:
-                                                                            30,
-                                                                        width:
-                                                                            30,
-                                                                        child: Image
-                                                                            .network(
-                                                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        ),
-                                                                      ),
-                                                              )),
-                                                    )
-                                                  ],
-                                                ),
+                                                Text("From",
+                                                    style: TxtStls
+                                                        .fieldstyle),
                                                 Container(
-                                                  height: size.height * 0.001,
-                                                  color: Color(0xFFE0E0E0),
-                                                ),
-                                                SizedBox(height: 5),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Text("From",
-                                                              style: TxtStls
-                                                                  .fieldstyle),
-                                                          Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            width: 120,
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4.0),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                              color: FlagService
-                                                                  .stateClr(
-                                                                      statecolor),
-                                                            ),
-                                                            child: Text(
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["From"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1),
-                                                          ),
-                                                          Text("TO",
-                                                              style: TxtStls
-                                                                  .fieldstyle),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4.0),
-                                                            width: 120,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                              color: FlagService
-                                                                  .stateClr1(
-                                                                      statecolor1),
-                                                            ),
-                                                            child: Text(
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["To"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      color: Color(0xFFE0E0E0),
-                                                      height: 40,
-                                                      width: 1,
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  btnColor
-                                                                      .withOpacity(
-                                                                          0.1),
-                                                              child: Icon(
-                                                                  Icons
-                                                                      .videogame_asset,
-                                                                  color:
-                                                                      btnColor),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(4.0),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: 150,
-                                                              decoration: BoxDecoration(
-                                                                  color: snapshot.data!.docs[index]
-                                                                              [
-                                                                              "Bound"] ==
-                                                                          "InBound"
-                                                                      ? goodClr
-                                                                      : flwClr,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              child: Text(
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["Bound"],
-                                                                style: TxtStls
-                                                                    .fieldstyle1,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(4.0),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: 100,
-                                                              decoration: BoxDecoration(
-                                                                  color: clr(snapshot
-                                                                          .data!
-                                                                          .docs[index]
-                                                                      [
-                                                                      "Action"]),
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              child: Text(
-                                                                  snapshot.data!
-                                                                              .docs[
-                                                                          index]
-                                                                      [
-                                                                      "Action"],
-                                                                  style: TxtStls
-                                                                      .fieldstyle1),
-                                                            ),
-                                                          ]),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text("Notes : ",
-                                                                style: TxtStls
-                                                                    .fieldstyle),
-                                                            Container(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                snapshot.data!
-                                                                        .docs[
-                                                                    index]["Who"],
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                      ),
-                                                      Card(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                        ),
-                                                        elevation: 10,
-                                                        child: Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 10),
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            height: 100,
-                                                            width: size.width *
-                                                                0.35,
-                                                            child: Text(
-                                                                snapshot.data!
-                                                                            .docs[
-                                                                        index]
-                                                                    ["Note"],
-                                                                style: TxtStls
-                                                                    .notestyle)),
-                                                      )
-                                                    ],
+                                                  alignment: Alignment
+                                                      .center,
+                                                  width: 120,
+                                                  padding:
+                                                  EdgeInsets.all(
+                                                      4.0),
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    borderRadius: BorderRadius
+                                                        .all(Radius
+                                                        .circular(
+                                                        10.0)),
+                                                    color: FlagService
+                                                        .stateClr(
+                                                        statecolor),
                                                   ),
+                                                  child: Text(
+                                                      activitylist[index].from,
+                                                      style: TxtStls
+                                                          .fieldstyle1),
                                                 ),
+                                                Text("TO",
+                                                    style: TxtStls
+                                                        .fieldstyle),
+                                                Container(
+                                                  padding:
+                                                  EdgeInsets.all(
+                                                      4.0),
+                                                  width: 120,
+                                                  alignment: Alignment
+                                                      .center,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    borderRadius: BorderRadius
+                                                        .all(Radius
+                                                        .circular(
+                                                        10.0)),
+                                                    color: FlagService
+                                                        .stateClr1(
+                                                        statecolor1),
+                                                  ),
+                                                  child: Text(
+                                                      activitylist[index].to,
+                                                      style: TxtStls
+                                                          .fieldstyle1),
+                                                )
                                               ],
                                             ),
                                           ),
-                                        );
-                                      },
-                                    );
-                                  })),
+                                          Container(
+                                            color: Color(0xFFE0E0E0),
+                                            height: 40,
+                                            width: 1,
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                    btnColor
+                                                        .withOpacity(
+                                                        0.1),
+                                                    child: Icon(
+                                                        Icons
+                                                            .videogame_asset,
+                                                        color:
+                                                        btnColor),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                    EdgeInsets
+                                                        .all(4.0),
+                                                    alignment:
+                                                    Alignment
+                                                        .center,
+                                                    width: 150,
+                                                    decoration: BoxDecoration(
+                                                        color: activitylist[index].bound ==
+                                                            "InBound"
+                                                            ? goodClr
+                                                            : flwClr,
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                    child: Text(
+                                                      activitylist[index].bound,
+                                                      style: TxtStls
+                                                          .fieldstyle1,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                    EdgeInsets
+                                                        .all(4.0),
+                                                    alignment:
+                                                    Alignment
+                                                        .center,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color: clr(activitylist[index].action),
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                    child: Text(
+                                                        activitylist[index].action,
+                                                        style: TxtStls
+                                                            .fieldstyle1),
+                                                  ),
+                                                ]),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(8.0),
+                                        alignment:
+                                        Alignment.centerLeft,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment
+                                              .start,
+                                          children: [
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  Text("Notes : ",
+                                                      style: TxtStls
+                                                          .fieldstyle),
+                                                  Container(
+                                                    alignment: Alignment
+                                                        .centerLeft,
+                                                    child: Text(
+                                                        activitylist[index].who,
+                                                      style: TxtStls
+                                                          .fieldstyle,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              alignment: Alignment
+                                                  .centerLeft,
+                                            ),
+                                            Card(
+                                              shape:
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.all(
+                                                    Radius
+                                                        .circular(
+                                                        10.0)),
+                                              ),
+                                              elevation: 10,
+                                              child: Container(
+                                                  padding:
+                                                  EdgeInsets.only(
+                                                      left: 10),
+                                                  alignment: Alignment
+                                                      .centerLeft,
+                                                  height: 100,
+                                                  width: size.width *
+                                                      0.35,
+                                                  child: Text(
+                                                      activitylist[index].note,
+                                                      style: TxtStls
+                                                          .notestyle)),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                      ),
                     ],
                   ),
                 )
@@ -5817,6 +5779,7 @@ class _TaskPreviewState extends State<TaskPreview>
   // }
 
   Widget serachandfilter() {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     if (date11 != null && date22 != null) {
       return Container(
@@ -6482,7 +6445,7 @@ class _TaskPreviewState extends State<TaskPreview>
                       .collection("Tasks")
                       .where("Attachments", arrayContainsAny: [
                     {
-                      "image": imageUrl,
+                      "image": userdata.imageUrl,
                       "uid": _auth.currentUser!.uid.toString(),
                     }
                   ])
@@ -6996,13 +6959,14 @@ class _TaskPreviewState extends State<TaskPreview>
   }
 
   Future<void> assignvel() async {
+    final userdata = Provider.of<UserDataProvider>(context);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    uid = prefs.getString("uid");
+    var uid = prefs.getString("uid");
     final List<TaskSearchModel> loadeddata = [];
     await FirebaseFirestore.instance
         .collection("Tasks")
         .where("Attachments", arrayContainsAny: [
-          {"image": imageUrl, "uid": uid}
+          {"image": userdata.imageUrl, "uid": uid}
         ])
         .snapshots()
         .listen((event) {
@@ -7037,7 +7001,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
   var date1;
   var date2;
-  dateTimeRangePicker() async {
+  dateTimeRangePicker(id) async {
     DateTimeRange? picked = await showDateRangePicker(
         builder: (BuildContext context, Widget ?child) {
           return Theme(
@@ -7075,10 +7039,11 @@ class _TaskPreviewState extends State<TaskPreview>
         firstDate: DateTime(2022),
         lastDate: DateTime.now(),
        );
-    if (picked != null && picked != null) {
+    if (picked != null) {
       setState(() {
-        date1 = picked.start.toString().split(" ")[0];
-        date2 = picked.end.toString().split(" ")[0];
+          date1 = picked.start.toString().split(" ")[0];
+          date2 = picked.end.toString().split(" ")[0];
+          Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(id,date1,date2);
       });
     }
   }
@@ -7134,12 +7099,13 @@ class _TaskPreviewState extends State<TaskPreview>
   String rangeid = "";
   TextEditingController _myController = TextEditingController();
   Stream<QuerySnapshot<Object?>> qry(cat) {
+    final userdata = Provider.of<UserDataProvider>(context);
     if (newfilter != null) {
       return FirebaseFirestore.instance
           .collection("Tasks")
           .where("Attachments", arrayContainsAny: [
             {
-              "image": imageUrl,
+              "image": userdata.imageUrl,
               "uid": _auth.currentUser!.uid.toString(),
             }
           ])
@@ -7151,7 +7117,7 @@ class _TaskPreviewState extends State<TaskPreview>
         .collection("Tasks")
         .where("Attachments", arrayContainsAny: [
           {
-            "image": imageUrl,
+            "image": userdata.imageUrl,
             "uid": _auth.currentUser!.uid.toString(),
           }
         ])
@@ -7164,413 +7130,413 @@ class _TaskPreviewState extends State<TaskPreview>
 }
 
 
-class CustomSearchDelegate extends SearchDelegate {
-  final searchTerms = [
-    "ETA certificate",
-    "ETA certification",
-    "ETA approval",
-    "Recycler",
-    "scrapper",
-    "dispose off",
-    "waste management services",
-    "LMPC certificate",
-    "LMPC certificate for import",
-    "LMPC certificate online",
-    "LMPC certification",
-    "Bio-medical waste management",
-    "STQC certification",
-    "STQC certificate",
-    "CPCB guidelines for poultry farms",
-    "CPCB guidelines for environmental management of dairy farms and gaushalas",
-    "Delhi Pollution Control Committee (DPCC) & Waste Management Authorization",
-    "Haryana State Pollution Control Board, HPCB",
-    "Uttar Pradesh Pollution Control Board, UPPCB",
-    "Maharashtra State Pollution Control Board, MPCB",
-    "Delhi Forest Department",
-    "LMPC certificate",
-    "LMPC certificate for imports",
-    "LMPC certificate online",
-    "LMPC certification",
-    "Bihar State Pollution Control Board, BPCB",
-    "Gujarat State Pollution Control Board, GPCB",
-    "Maharashtra State Pollution Control Board, MPCBM",
-    "Public limited company",
-    "public limited incorporation",
-    "incorporation of public limited company",
-    "formation of public limited company",
-    "public limited company formation",
-    "Delhi Pollution Control Committee, DPCC",
-    "DPCC registration",
-    "CPCB DPCC",
-    "DPCC approval",
-    "CRA type approval",
-    "Qatar type approval",
-    "CRA Qatar type approval",
-    " communications regulatory authority",
-    "cra qatar",
-    "NTC type approval",
-    "NTC philippines type approval",
-    "Philippines type approval / NTC Thailand type approval",
-    "Thailand type approval",
-    "Philippines radio type approval",
-    "NTC approval",
-    "NTC Philippines",
-    "NTC list",
-    "MTC type approval",
-    "MTC Peru type approval",
-    "Peru type approval",
-    "Peru MTC telecom approval",
-    "MTC certification",
-    "TRA type approval",
-    "TRA Oman type approval",
-    "Oman type approval / TRA type approval",
-    "TRA UAE type approval",
-    "UAE type approval",
-    "oman radio type approval",
-    "TRA certification",
-    "TRa registration",
-    "ANRT type approval",
-    "ANRT Morocco type approval",
-    "Morocco type approval",
-    "ANRT certification",
-    "morocco anrt type",
-    "TRA type approval",
-    "TRA Lebanon type approval",
-    "type approval",
-    "TRA certificate",
-    "TRA regulations",
-    "CITRA type approval",
-    "CITRA Kuwait type approval",
-    "Kuwait type approval",
-    "Kuwait CITRA",
-    "CITRA Kuwait",
-    "CITRA regulations",
-    "TRC Cambodia type approval",
-    "Cambodia type approval",
-    "TRC certification",
-    "DSRT type approval",
-    "Macau type approval",
-    "DSRT Macau type approval",
-    "Sirim type approval",
-    "Malaysia type approval",
-    "Sirim Malaysia type approval",
-    "SIRIM certification",
-    "SIRIM malaysia",
-    "SIRIM QAS",
-    "NTA type approval",
-    "Nepal NTA type approval",
-    "NTA type approval",
-    "NTA Nepal type approval",
-    "NTA imei",
-    "NTA registration",
-    "PTA type approval",
-    "Pakistan PTA type approval",
-    "PTA Pakistan type approval",
-    "PTA mobile registration",
-    "IMDA equipment registration",
-    "Singapore IMDA equipment registration",
-    "IMDA singapore equipment registration",
-    "IMDA Telecom Approval",
-    "imda telecommunication equipment",
-    "IMDA certification",
-    "IMDA standards",
-    "TCRA type approval",
-    "Tanzania TCRA type approval",
-    "Tanzania type approval",
-    "TCRA Tanzania type approval",
-    "TCRA Tanzania",
-    "CONATEL type approval",
-    "CONATEL approval",
-    "CONATEL Venezuela type approval",
-    "Venezuela CONATEL approval",
-    "ICT type approval certificate (TAC)",
-    "Declaration of Conformity (DoC)",
-    "VNTA type approval",
-    "Vietnam type approval",
-    "ICT Vietnam type approval",
-    "VNTA Vietnam type approval",
-    "ICT approval",
-    "ICT Qatar",
-    "MITIT approval",
-    "MITIT Yemen type approval",
-    "MITIT approval",
-    "Yemen MITIT type approval",
-    "Barbados Type Approval For Telecom and Radio Equipment",
-    "Barbados type approval",
-    "Barbados global approvals",
-    "Barbados certification",
-    "NOC Bangladesh ",
-    "Bangladesh NOC",
-    "Bangladesh certification",
-    "Bangladesh global approval",
-    "AITI type approval",
-    "Brunei AITI approval",
-    "Brunei approval",
-    "Brunei global approval",
-    "Brunei certification",
-    "AITI approval",
-    "CRS Homologation",
-    "Colombia CRS homologation",
-    "Colombia homologation",
-    "Colombia global approval",
-    "Colombia certification",
-    "SUTEL Approval",
-    "Costa Rica SUTEL Approval",
-    "Costa Rica approval",
-    "Costa Rica global approval",
-    "Costa Rica certification",
-    "SUTEL certification",
-    "Costa Rica type approval",
-    "INDOTEL Type Approval",
-    "Dominican Republic INDOTEL Type Approval",
-    "Dominican Republic approval",
-    "Dominican Republic global approval",
-    "Dominican Republic certification",
-    "Dominican Republic Type Approval",
-    "ARCOTEL Type Approval",
-    "Ecuador ARCOTEL Type Approval",
-    "Ecuador type approval",
-    "Ecuador global approval",
-    "Ecuador certification",
-    "ARCOTEL approval",
-    "HKCA Telecom Equipment Certification",
-    "HKCA certification",
-    "HKCA registration",
-    "HKCA Hong Kong certification",
-    "Hong Kong HKCA certification",
-    "Hong Kong certification",
-    "Hong Kong approval",
-    "NTRA Type Approval",
-    "Egypt NTRA  Type Approval",
-    "Egypt NTRA Approval",
-    "NTRA Egypt approval",
-    "NTRA Approval",
-    "Egypt global approval",
-    "Egypt certification",
-    "Egypt radio type approval",
-    "NTRA egypt, NTRA certification",
-    "SDPPI Type Approval",
-    "Indonesia SDPPI Type Approval",
-    "Indonesia SDPPI Approval",
-    "SDPPI Indonesia approval",
-    "SDPPI Approval",
-    "Indonesia global approval",
-    "Indonesia certification",
-    "SDPPI certification",
-    "Indonesian standards",
-    "ISRAEL Global Certification",
-    "MoC approval",
-    "MoC type approval",
-    "MoE type approval",
-    "MoE approval",
-    "SII type approval",
-    "SII approval",
-    "Israel global certification",
-    "Israel certification",
-    "MoC certification",
-    "Israel MoC",
-    "TRC type approval",
-    "TRC Jordan type approval",
-    "Jordan type approval / TRC type approval",
-    "TRC Sri Lanka type approval",
-    "Sri Lanka type approval",
-    "Jordan TRC type approval",
-    "TRC approval",
-    "Telepermit Certificate",
-    "New Zealand telepermit certificate",
-    "New Zealand certification",
-    "New Zealand global approval",
-    "TRA approval",
-    "Bahrain TRA approval",
-    "Bahrain approval",
-    "Bahrain global approval",
-    "Bahrain certification",
-    "Oman radio type approval",
-    "UAE TRA",
-    "Bahrain radio type approval",
-    "Ministere des Technologies de la Communication",
-    "Tunisia Type Approval",
-    "Tunisia global approval",
-    "Tunisia certification",
-    "CITC Type Approval",
-    "Saudi Arabia CITC Type Approval",
-    "Saudi Arabia CITC Approval",
-    "CITC Saudi Arabia approval",
-    "CITC Approval",
-    "Saudi Arabia certification",
-    "Saudi Arabia global approval",
-    "Saudi Arabia Radio type Approval",
-    "CITC Certification, CITC Saudi",
-    'SUBTEL approval',
-    "Chile SUBTEL approval",
-    "Chile approval",
-    "Chile global approval",
-    "Chile certification",
-    "chile radio type approval",
-    "SUBTEL approval chile",
-    "SUBTEL certification",
-    "Punjab Pollution Control Board NOC, PPCB",
-    "Karnataka Pollution Control Board NOC, KSPCB",
-    "Madhya Pradesh Pollution Board NOC, MPPCB",
-    "Rajasthan Pollution Board NOC, RPCB",
-    "Tamil Nadu Pollution Board NOC, TNPCB",
-    "Telangana Pollution Board NOC, TSPCB",
-    "Chhattisgarh Pollution Board NOC, CPCB",
-    "Jharkhand Pollution Board NOC, JSPCB",
-    "Uttarakhand Environment Protection and Pollution Board NOC, UEPPCB",
-    "Himachal Pradesh Pollution Board NOC, HPPCB",
-    "West Bengal Pollution Board NOC, WBPCB",
-    "Kerala Pollution Board NOC, KPCB",
-    "Odisha Pollution Board NOC, OSPCB",
-    "Puducherry Pollution Control Committee NOC, PPCC",
-    "Sikkim Pollution Control Board NOC, SPCB-Sikkim",
-    "Tripura State Pollution Control Committee NOC, TSPCB",
-    "Goa State Pollution Control Board NOC, GSPCB",
-    "Jammu & Kashmir Pollution Control Committee, JKPCB",
-    "Meghalaya State Pollution Control Committee, MSPCB",
-    "Andhra Pradesh Pollution Board NOC, APPCB",
-    "One Person Company",
-    "Limited Liability Partnership Registration",
-    "Private Limited Company",
-    "FSSAI",
-    "DSC or Digital Signature Certificate",
-    "IEC code",
-    "Microfinance company registration",
-    "NBFC registration",
-    "Asset reconstruction company registration",
-    "Mutual fund company registration",
-    "BIS Certification",
-    "Foreign Manufacturer Certification Scheme",
-    "Indian Standards Institute Certification",
-    "Compulsory Registration Scheme",
-    "AYUSH Manufacturing License or AYUSH License",
-    "TEC certificate",
-    "WPC certification",
-    "BEE certification",
-    "AERB approval or AERB license",
-    "EPR certificate",
-    "Automotive Research Association of India certification",
-    "ISO Certification",
-    "FCC Certificate",
-    "Federal Communications Commission",
-    "NRTL Approval",
-    "Nationally Recognized Testing Laboratory",
-    "China CCC certification service",
-    "CCC certificate",
-    "CCC automotive certification",
-    "china CCC automotive certification",
-    "China SRRC Certification",
-    "SRRC certificate",
-    "China NAL Certification",
-    "NAL certificate",
-    "China CCIS Certification",
-    "CCIS certificate",
-    "China MIIT Network approval license",
-    "MIIT approval",
-    "Ministry of Information and Information Technology Approval",
-    "China CMIIT Radio Type Approval",
-    "China Ministry of Industry and Information Technology approval",
-    "China CEL Certification",
-    "CEL Certificate",
-    "NOM Certification",
-    "NOM certificate",
-    "IFETEL Certification",
-    "IFETEL Certificate",
-    "Japan PSE Mark Certification",
-    "PSE Certificate",
-    "Japan TELEC Certification service",
-    "TELEC Certificate",
-    "Japan VCCI Certification Service",
-    "VCCI Certificate",
-    "Japan Telecom Certification",
-    "South Korean KC Certification",
-    "KC certificate",
-    "Taiwan BSMI Certification",
-    "BSMI certificate",
-    "NCC Type Approval",
-    "National Communications Commission approval",
-    "Regulatory Compliance Mark",
-    "RCM Approval",
-    "Minimum Energy Performance Standards",
-    "MEPS Approval",
-    "Hygienic certification",
-    "Telecommunications Approval",
-    "EAC approval",
-    "FSB notifications",
-    "GOST-R certification",
-    "Radio import",
-    "ICASA Telecom Equipment Type Approval",
-    "Independent Communication Authority of South Africa approval",
-    "NRCS certification",
-    "National Regulator for Compulsory Specifications certification",
-    "SABS certification",
-    "South African Bureau of Standards certification",
-    "KEBS certification",
-    "NRTA certification",
-    "National Telecommunication Regulatory Authority certification",
-    "CoC certificate, Certificat de controle de qualite certification",
-    "Korea Conformity Assessment System for Broadcasting and Communications Equipment certification",
-    "CE certification, Conformite Europeenne certification",
-    "UKCA mark",
-    "UK Conformity Assessed mark",
-    "IEC/EN 62368-1 implementation",
-    "ANATEL Type Approval",
-    "Agencia Nacional de Telecomunicaciones type approval",
-    "INMETRO certification",
-    "Institute of Metrology",
-    "Standardisation and Industrial Quality certification",
-    "ENACOM approval, Ente Nacional de Comunicaciones approval",
-    "IRAM certification",
-    "Instituto Argentino de Normalizacion y Certificacion",
-    "Industry Canada (IC) Certification",
-  ];
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = "";
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          close(context, null);
-        },
-        icon: Icon(Icons.arrow_back_outlined));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
-      }
-    }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (BuildContext context, index) {
-        return ListTile(
-          title: Text(matchQuery[index].toString()),
-          onTap: () {
-            print(matchQuery[index]);
-          },
-        );
-      },
-    );
-  }
-
-}
+// class CustomSearchDelegate extends SearchDelegate {
+//   final searchTerms = [
+//     "ETA certificate",
+//     "ETA certification",
+//     "ETA approval",
+//     "Recycler",
+//     "scrapper",
+//     "dispose off",
+//     "waste management services",
+//     "LMPC certificate",
+//     "LMPC certificate for import",
+//     "LMPC certificate online",
+//     "LMPC certification",
+//     "Bio-medical waste management",
+//     "STQC certification",
+//     "STQC certificate",
+//     "CPCB guidelines for poultry farms",
+//     "CPCB guidelines for environmental management of dairy farms and gaushalas",
+//     "Delhi Pollution Control Committee (DPCC) & Waste Management Authorization",
+//     "Haryana State Pollution Control Board, HPCB",
+//     "Uttar Pradesh Pollution Control Board, UPPCB",
+//     "Maharashtra State Pollution Control Board, MPCB",
+//     "Delhi Forest Department",
+//     "LMPC certificate",
+//     "LMPC certificate for imports",
+//     "LMPC certificate online",
+//     "LMPC certification",
+//     "Bihar State Pollution Control Board, BPCB",
+//     "Gujarat State Pollution Control Board, GPCB",
+//     "Maharashtra State Pollution Control Board, MPCBM",
+//     "Public limited company",
+//     "public limited incorporation",
+//     "incorporation of public limited company",
+//     "formation of public limited company",
+//     "public limited company formation",
+//     "Delhi Pollution Control Committee, DPCC",
+//     "DPCC registration",
+//     "CPCB DPCC",
+//     "DPCC approval",
+//     "CRA type approval",
+//     "Qatar type approval",
+//     "CRA Qatar type approval",
+//     " communications regulatory authority",
+//     "cra qatar",
+//     "NTC type approval",
+//     "NTC philippines type approval",
+//     "Philippines type approval / NTC Thailand type approval",
+//     "Thailand type approval",
+//     "Philippines radio type approval",
+//     "NTC approval",
+//     "NTC Philippines",
+//     "NTC list",
+//     "MTC type approval",
+//     "MTC Peru type approval",
+//     "Peru type approval",
+//     "Peru MTC telecom approval",
+//     "MTC certification",
+//     "TRA type approval",
+//     "TRA Oman type approval",
+//     "Oman type approval / TRA type approval",
+//     "TRA UAE type approval",
+//     "UAE type approval",
+//     "oman radio type approval",
+//     "TRA certification",
+//     "TRa registration",
+//     "ANRT type approval",
+//     "ANRT Morocco type approval",
+//     "Morocco type approval",
+//     "ANRT certification",
+//     "morocco anrt type",
+//     "TRA type approval",
+//     "TRA Lebanon type approval",
+//     "type approval",
+//     "TRA certificate",
+//     "TRA regulations",
+//     "CITRA type approval",
+//     "CITRA Kuwait type approval",
+//     "Kuwait type approval",
+//     "Kuwait CITRA",
+//     "CITRA Kuwait",
+//     "CITRA regulations",
+//     "TRC Cambodia type approval",
+//     "Cambodia type approval",
+//     "TRC certification",
+//     "DSRT type approval",
+//     "Macau type approval",
+//     "DSRT Macau type approval",
+//     "Sirim type approval",
+//     "Malaysia type approval",
+//     "Sirim Malaysia type approval",
+//     "SIRIM certification",
+//     "SIRIM malaysia",
+//     "SIRIM QAS",
+//     "NTA type approval",
+//     "Nepal NTA type approval",
+//     "NTA type approval",
+//     "NTA Nepal type approval",
+//     "NTA imei",
+//     "NTA registration",
+//     "PTA type approval",
+//     "Pakistan PTA type approval",
+//     "PTA Pakistan type approval",
+//     "PTA mobile registration",
+//     "IMDA equipment registration",
+//     "Singapore IMDA equipment registration",
+//     "IMDA singapore equipment registration",
+//     "IMDA Telecom Approval",
+//     "imda telecommunication equipment",
+//     "IMDA certification",
+//     "IMDA standards",
+//     "TCRA type approval",
+//     "Tanzania TCRA type approval",
+//     "Tanzania type approval",
+//     "TCRA Tanzania type approval",
+//     "TCRA Tanzania",
+//     "CONATEL type approval",
+//     "CONATEL approval",
+//     "CONATEL Venezuela type approval",
+//     "Venezuela CONATEL approval",
+//     "ICT type approval certificate (TAC)",
+//     "Declaration of Conformity (DoC)",
+//     "VNTA type approval",
+//     "Vietnam type approval",
+//     "ICT Vietnam type approval",
+//     "VNTA Vietnam type approval",
+//     "ICT approval",
+//     "ICT Qatar",
+//     "MITIT approval",
+//     "MITIT Yemen type approval",
+//     "MITIT approval",
+//     "Yemen MITIT type approval",
+//     "Barbados Type Approval For Telecom and Radio Equipment",
+//     "Barbados type approval",
+//     "Barbados global approvals",
+//     "Barbados certification",
+//     "NOC Bangladesh ",
+//     "Bangladesh NOC",
+//     "Bangladesh certification",
+//     "Bangladesh global approval",
+//     "AITI type approval",
+//     "Brunei AITI approval",
+//     "Brunei approval",
+//     "Brunei global approval",
+//     "Brunei certification",
+//     "AITI approval",
+//     "CRS Homologation",
+//     "Colombia CRS homologation",
+//     "Colombia homologation",
+//     "Colombia global approval",
+//     "Colombia certification",
+//     "SUTEL Approval",
+//     "Costa Rica SUTEL Approval",
+//     "Costa Rica approval",
+//     "Costa Rica global approval",
+//     "Costa Rica certification",
+//     "SUTEL certification",
+//     "Costa Rica type approval",
+//     "INDOTEL Type Approval",
+//     "Dominican Republic INDOTEL Type Approval",
+//     "Dominican Republic approval",
+//     "Dominican Republic global approval",
+//     "Dominican Republic certification",
+//     "Dominican Republic Type Approval",
+//     "ARCOTEL Type Approval",
+//     "Ecuador ARCOTEL Type Approval",
+//     "Ecuador type approval",
+//     "Ecuador global approval",
+//     "Ecuador certification",
+//     "ARCOTEL approval",
+//     "HKCA Telecom Equipment Certification",
+//     "HKCA certification",
+//     "HKCA registration",
+//     "HKCA Hong Kong certification",
+//     "Hong Kong HKCA certification",
+//     "Hong Kong certification",
+//     "Hong Kong approval",
+//     "NTRA Type Approval",
+//     "Egypt NTRA  Type Approval",
+//     "Egypt NTRA Approval",
+//     "NTRA Egypt approval",
+//     "NTRA Approval",
+//     "Egypt global approval",
+//     "Egypt certification",
+//     "Egypt radio type approval",
+//     "NTRA egypt, NTRA certification",
+//     "SDPPI Type Approval",
+//     "Indonesia SDPPI Type Approval",
+//     "Indonesia SDPPI Approval",
+//     "SDPPI Indonesia approval",
+//     "SDPPI Approval",
+//     "Indonesia global approval",
+//     "Indonesia certification",
+//     "SDPPI certification",
+//     "Indonesian standards",
+//     "ISRAEL Global Certification",
+//     "MoC approval",
+//     "MoC type approval",
+//     "MoE type approval",
+//     "MoE approval",
+//     "SII type approval",
+//     "SII approval",
+//     "Israel global certification",
+//     "Israel certification",
+//     "MoC certification",
+//     "Israel MoC",
+//     "TRC type approval",
+//     "TRC Jordan type approval",
+//     "Jordan type approval / TRC type approval",
+//     "TRC Sri Lanka type approval",
+//     "Sri Lanka type approval",
+//     "Jordan TRC type approval",
+//     "TRC approval",
+//     "Telepermit Certificate",
+//     "New Zealand telepermit certificate",
+//     "New Zealand certification",
+//     "New Zealand global approval",
+//     "TRA approval",
+//     "Bahrain TRA approval",
+//     "Bahrain approval",
+//     "Bahrain global approval",
+//     "Bahrain certification",
+//     "Oman radio type approval",
+//     "UAE TRA",
+//     "Bahrain radio type approval",
+//     "Ministere des Technologies de la Communication",
+//     "Tunisia Type Approval",
+//     "Tunisia global approval",
+//     "Tunisia certification",
+//     "CITC Type Approval",
+//     "Saudi Arabia CITC Type Approval",
+//     "Saudi Arabia CITC Approval",
+//     "CITC Saudi Arabia approval",
+//     "CITC Approval",
+//     "Saudi Arabia certification",
+//     "Saudi Arabia global approval",
+//     "Saudi Arabia Radio type Approval",
+//     "CITC Certification, CITC Saudi",
+//     'SUBTEL approval',
+//     "Chile SUBTEL approval",
+//     "Chile approval",
+//     "Chile global approval",
+//     "Chile certification",
+//     "chile radio type approval",
+//     "SUBTEL approval chile",
+//     "SUBTEL certification",
+//     "Punjab Pollution Control Board NOC, PPCB",
+//     "Karnataka Pollution Control Board NOC, KSPCB",
+//     "Madhya Pradesh Pollution Board NOC, MPPCB",
+//     "Rajasthan Pollution Board NOC, RPCB",
+//     "Tamil Nadu Pollution Board NOC, TNPCB",
+//     "Telangana Pollution Board NOC, TSPCB",
+//     "Chhattisgarh Pollution Board NOC, CPCB",
+//     "Jharkhand Pollution Board NOC, JSPCB",
+//     "Uttarakhand Environment Protection and Pollution Board NOC, UEPPCB",
+//     "Himachal Pradesh Pollution Board NOC, HPPCB",
+//     "West Bengal Pollution Board NOC, WBPCB",
+//     "Kerala Pollution Board NOC, KPCB",
+//     "Odisha Pollution Board NOC, OSPCB",
+//     "Puducherry Pollution Control Committee NOC, PPCC",
+//     "Sikkim Pollution Control Board NOC, SPCB-Sikkim",
+//     "Tripura State Pollution Control Committee NOC, TSPCB",
+//     "Goa State Pollution Control Board NOC, GSPCB",
+//     "Jammu & Kashmir Pollution Control Committee, JKPCB",
+//     "Meghalaya State Pollution Control Committee, MSPCB",
+//     "Andhra Pradesh Pollution Board NOC, APPCB",
+//     "One Person Company",
+//     "Limited Liability Partnership Registration",
+//     "Private Limited Company",
+//     "FSSAI",
+//     "DSC or Digital Signature Certificate",
+//     "IEC code",
+//     "Microfinance company registration",
+//     "NBFC registration",
+//     "Asset reconstruction company registration",
+//     "Mutual fund company registration",
+//     "BIS Certification",
+//     "Foreign Manufacturer Certification Scheme",
+//     "Indian Standards Institute Certification",
+//     "Compulsory Registration Scheme",
+//     "AYUSH Manufacturing License or AYUSH License",
+//     "TEC certificate",
+//     "WPC certification",
+//     "BEE certification",
+//     "AERB approval or AERB license",
+//     "EPR certificate",
+//     "Automotive Research Association of India certification",
+//     "ISO Certification",
+//     "FCC Certificate",
+//     "Federal Communications Commission",
+//     "NRTL Approval",
+//     "Nationally Recognized Testing Laboratory",
+//     "China CCC certification service",
+//     "CCC certificate",
+//     "CCC automotive certification",
+//     "china CCC automotive certification",
+//     "China SRRC Certification",
+//     "SRRC certificate",
+//     "China NAL Certification",
+//     "NAL certificate",
+//     "China CCIS Certification",
+//     "CCIS certificate",
+//     "China MIIT Network approval license",
+//     "MIIT approval",
+//     "Ministry of Information and Information Technology Approval",
+//     "China CMIIT Radio Type Approval",
+//     "China Ministry of Industry and Information Technology approval",
+//     "China CEL Certification",
+//     "CEL Certificate",
+//     "NOM Certification",
+//     "NOM certificate",
+//     "IFETEL Certification",
+//     "IFETEL Certificate",
+//     "Japan PSE Mark Certification",
+//     "PSE Certificate",
+//     "Japan TELEC Certification service",
+//     "TELEC Certificate",
+//     "Japan VCCI Certification Service",
+//     "VCCI Certificate",
+//     "Japan Telecom Certification",
+//     "South Korean KC Certification",
+//     "KC certificate",
+//     "Taiwan BSMI Certification",
+//     "BSMI certificate",
+//     "NCC Type Approval",
+//     "National Communications Commission approval",
+//     "Regulatory Compliance Mark",
+//     "RCM Approval",
+//     "Minimum Energy Performance Standards",
+//     "MEPS Approval",
+//     "Hygienic certification",
+//     "Telecommunications Approval",
+//     "EAC approval",
+//     "FSB notifications",
+//     "GOST-R certification",
+//     "Radio import",
+//     "ICASA Telecom Equipment Type Approval",
+//     "Independent Communication Authority of South Africa approval",
+//     "NRCS certification",
+//     "National Regulator for Compulsory Specifications certification",
+//     "SABS certification",
+//     "South African Bureau of Standards certification",
+//     "KEBS certification",
+//     "NRTA certification",
+//     "National Telecommunication Regulatory Authority certification",
+//     "CoC certificate, Certificat de controle de qualite certification",
+//     "Korea Conformity Assessment System for Broadcasting and Communications Equipment certification",
+//     "CE certification, Conformite Europeenne certification",
+//     "UKCA mark",
+//     "UK Conformity Assessed mark",
+//     "IEC/EN 62368-1 implementation",
+//     "ANATEL Type Approval",
+//     "Agencia Nacional de Telecomunicaciones type approval",
+//     "INMETRO certification",
+//     "Institute of Metrology",
+//     "Standardisation and Industrial Quality certification",
+//     "ENACOM approval, Ente Nacional de Comunicaciones approval",
+//     "IRAM certification",
+//     "Instituto Argentino de Normalizacion y Certificacion",
+//     "Industry Canada (IC) Certification",
+//   ];
+//
+//   @override
+//   List<Widget> buildActions(BuildContext context) {
+//     return [
+//       IconButton(
+//         icon: Icon(Icons.clear),
+//         onPressed: () {
+//           query = "";
+//         },
+//       ),
+//     ];
+//   }
+//
+//   @override
+//   Widget buildLeading(BuildContext context) {
+//     return IconButton(
+//         onPressed: () {
+//           close(context, null);
+//         },
+//         icon: Icon(Icons.arrow_back_outlined));
+//   }
+//
+//   @override
+//   Widget buildResults(BuildContext context) {
+//     return Container();
+//   }
+//
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     List<String> matchQuery = [];
+//     for (var fruit in searchTerms) {
+//       if (fruit.toLowerCase().contains(query.toLowerCase())) {
+//         matchQuery.add(fruit);
+//       }
+//     }
+//     return ListView.builder(
+//       itemCount: matchQuery.length,
+//       itemBuilder: (BuildContext context, index) {
+//         return ListTile(
+//           title: Text(matchQuery[index].toString()),
+//           onTap: () {
+//             print(matchQuery[index]);
+//           },
+//         );
+//       },
+//     );
+//   }
+//
+// }
 

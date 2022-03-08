@@ -14,7 +14,7 @@ class AllUSerProvider with ChangeNotifier {
       FirebaseFirestore _firebase = FirebaseFirestore.instance;
       QuerySnapshot extractedResponse =
           await _firebase.collection("EmployeeData").get();
-      print("Yalagala this is Provider pattern");
+      // print("Yalagala this is Provider pattern");
       List<AllUserModel> loadedData = [];
       return extractedResponse.docs.forEach((extractData) {
         loadedData.add(AllUserModel(

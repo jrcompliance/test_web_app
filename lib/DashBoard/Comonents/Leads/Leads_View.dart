@@ -11,6 +11,8 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'dart:ui' as ui;
 import 'dart:html';
 
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+
 class LeadScreen extends StatefulWidget {
   const LeadScreen({Key? key}) : super(key: key);
   @override
@@ -25,7 +27,7 @@ class _LeadScreenState extends State<LeadScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return role == "Admin"
+    return UserDataProvider().role == "Admin"
         ? Padding(
             padding: Responsive.isSmallScreen(context)
                 ? const EdgeInsets.all(10.0)

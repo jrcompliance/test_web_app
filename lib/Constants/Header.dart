@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class Header extends StatefulWidget {
   final String title;
@@ -76,6 +78,7 @@ class _HeaderState extends State<Header> {
   }
 
   Future<void> _showMyDialog() async {
+    final userdata = Provider.of<UserDataProvider>(context);
     return showDialog<void>(
       barrierColor: Colors.black.withOpacity(0.5),
       context: context,
@@ -84,7 +87,7 @@ class _HeaderState extends State<Header> {
         return AlertDialog(
           backgroundColor: bgColor,
           title: Text(
-            'Are you sure to LogOut / ${username}?',
+            'Are you sure to LogOut / ${userdata.username}?',
             style: TxtStls.fieldtitlestyle,
           ),
           actions: <Widget>[

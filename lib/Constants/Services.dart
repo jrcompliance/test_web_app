@@ -3,40 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];
 
 class ProgressUpdsate {
-  static movetoanotherCategory(
-      id, cat, activeid, noteController, lastDate, radioItem, action) async {
+  static movetoanotherCategory(id, cat, activeid, noteController, lastDate,
+      radioItem, action, context) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "cat": activeid,
-    }).then((value) {
-      CollectionReference collectionReference = _firestore.collection("Tasks");
-      collectionReference.doc(id).collection("Activitys").doc().set({
-        "From": cat,
-        "To": activeid,
-        "Who": username.toString(),
-        "When": Timestamp.now(),
-        "Note": noteController.text.toString(),
-        "LatDate": lastDate,
-        "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-        "Bound": radioItem,
-        "Action": action,
-        "queryDate": DateTime.now().toString().split(" ")[0],
-      }, SetOptions(merge: true));
+    collectionReference.doc(id).collection("Activitys").doc().set({
+      "From": cat,
+      "To": activeid,
+      "Who": Provider.of<UserDataProvider>(context, listen: false).username,
+      "When": Timestamp.now(),
+      "Note": noteController.text.toString(),
+      "LatDate": lastDate,
+      "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+      "Bound": radioItem,
+      "Action": action,
+      "queryDate": DateTime.now().toString().split(" ")[0],
+    }, SetOptions(merge: true)).then((value) {
+      collectionReference.doc(id).update({
+        "cat": activeid,
+      });
     });
   }
 
   static updatesame(
-      id, cat, noteController, lastDate, radioItem, action) async {
+      id, cat, noteController, lastDate, radioItem, action, context) async {
     CollectionReference _collectionReference = _firestore.collection("Tasks");
     _collectionReference.doc(id).collection("Activitys").doc().set({
       "From": cat,
       "To": cat,
-      "Who": username.toString(),
+      "Who": Provider.of<UserDataProvider>(context, listen: false).username,
       "When": Timestamp.now(),
       "Note": noteController.text.toString(),
       "LatDate": lastDate,
@@ -406,95 +406,96 @@ class CrudOperations {
   }
 }
 
-class StateUpdateServices {
-  static prosUpdate(
-      id, String category, note, lastDate, radioItem, action) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Activity": FieldValue.arrayUnion([
-        {
-          "From": category,
-          "To": "PROSPECT",
-          "Who": username.toString(),
-          "When": Timestamp.now(),
-          "Note": note.text.toString(),
-          "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-          "Bound": radioItem,
-          "Action": action,
-        }
-      ])
-    }).then((value) {
-      note.clear();
-    });
-  }
-
-  static InprosUpdate(
-      id, String category, note, lastDate, radioItem, action) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Activity": FieldValue.arrayUnion([
-        {
-          "From": category,
-          "To": "IN PROGRESS",
-          "Who": username.toString(),
-          "When": Timestamp.now(),
-          "Note": note.text.toString(),
-          "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-          "Bound": radioItem,
-          "Action": action,
-        }
-      ])
-    }).then((value) {
-      note.clear();
-    });
-  }
-
-  static wonUpdate(
-      id, String category, note, lastDate, radioItem, action) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Activity": FieldValue.arrayUnion([
-        {
-          "From": category,
-          "To": "WON",
-          "Who": username.toString(),
-          "When": Timestamp.now(),
-          "Note": note.text.toString(),
-          "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-          "Bound": radioItem,
-          "Action": action,
-        }
-      ])
-    }).then((value) {
-      note.clear();
-    });
-  }
-
-  static closeUpdate(
-      id, String category, note, lastDate, radioItem, action) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Activity": FieldValue.arrayUnion([
-        {
-          "From": category,
-          "To": "CLOSE",
-          "Who": username.toString(),
-          "When": Timestamp.now(),
-          "Note": note.text.toString(),
-          "LatDate": lastDate,
-          "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
-          "Bound": radioItem,
-          "Action": action,
-        }
-      ])
-    }).then((value) {
-      note.clear();
-    });
-  }
-}
+// class StateUpdateServices {
+//   static prosUpdate(
+//       id, String category, note, lastDate, radioItem, action, context) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "Activity": FieldValue.arrayUnion([
+//         {
+//           "From": category,
+//           "To": "PROSPECT",
+//           "Who": Provider.of<UserDataProvider>(context, listen: false).username,
+//           "When": Timestamp.now(),
+//           "Note": note.text.toString(),
+//           "LatDate": lastDate,
+//           "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+//           "Bound": radioItem,
+//           "Action": action,
+//         }
+//       ])
+//     }).then((value) {
+//       note.clear();
+//     });
+//   }
+//
+//   static InprosUpdate(
+//       id, String category, note, lastDate, radioItem, action, context) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "Activity": FieldValue.arrayUnion([
+//         {
+//           "From": category,
+//           "To": "IN PROGRESS",
+//           "Who": Provider.of<UserDataProvider>(context, listen: false).username,
+//           "When": Timestamp.now(),
+//           "Note": note.text.toString(),
+//           "LatDate": lastDate,
+//           "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+//           "Bound": radioItem,
+//           "Action": action,
+//         }
+//       ])
+//     }).then((value) {
+//       note.clear();
+//     });
+//   }
+//
+//   static wonUpdate(
+//       id, String category, note, lastDate, radioItem, action, context) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//     collectionReference.doc(id).update({
+//       "Activity": FieldValue.arrayUnion([
+//         {
+//           "From": category,
+//           "To": "WON",
+//           "Who": Provider.of<UserDataProvider>(context, listen: false).username,
+//           "When": Timestamp.now(),
+//           "Note": note.text.toString(),
+//           "LatDate": lastDate,
+//           "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+//           "Bound": radioItem,
+//           "Action": action,
+//         }
+//       ])
+//     }).then((value) {
+//       note.clear();
+//     });
+//   }
+//
+//   static closeUpdate(
+//       id, String category, note, lastDate, radioItem, action, context) async {
+//     CollectionReference collectionReference = _firestore.collection("Tasks");
+//
+//     collectionReference.doc(id).update({
+//       "Activity": FieldValue.arrayUnion([
+//         {
+//           "From": category,
+//           "To": "CLOSE",
+//           "Who": Provider.of<UserDataProvider>(context, listen: false).username,
+//           "When": Timestamp.now(),
+//           "Note": note.text.toString(),
+//           "LatDate": lastDate,
+//           "Yes": ntime.compareTo(lastDate) <= 0 ? true : false,
+//           "Bound": radioItem,
+//           "Action": action,
+//         }
+//       ])
+//     }).then((value) {
+//       note.clear();
+//     });
+//   }
+// }
 
 class ComapnyUpdateServices {
   static updateCompany(id, cl1, cl5) async {

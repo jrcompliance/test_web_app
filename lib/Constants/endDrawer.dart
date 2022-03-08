@@ -14,6 +14,7 @@ import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/Time%20Model.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class MoveDrawer extends StatefulWidget {
   const MoveDrawer({Key? key}) : super(key: key);
@@ -71,6 +72,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
   }
 
   Widget _check() {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     final alluserModellist =
         Provider.of<AllUSerProvider>(context).alluserModellist;
@@ -528,7 +530,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
                             noteController,
                             dendDate,
                             radioItem,
-                            _choosenValue);
+                            _choosenValue,
+                            context);
                         EndDateOperations.updateEdateTask(
                             did, _endDateController);
                         GraphValueServices.graph(dendDate, did);
@@ -554,11 +557,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(imageUrl!),
+                    backgroundImage: NetworkImage(userdata.imageUrl!),
                     maxRadius: 50,
                   ),
                   SizedBox(height: size.height * 0.02),
-                  Text(username!, style: TxtStls.fieldtitlestyle),
+                  Text(userdata.username!, style: TxtStls.fieldtitlestyle),
                   Text("(Flutter Developer)", style: TxtStls.fieldstyle),
                 ],
               ),
@@ -573,7 +576,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 backgroundColor: btnColor.withOpacity(0.1),
               ),
               title: Text("Email", style: TxtStls.fieldtitlestyle),
-              subtitle: Text(email!, style: TxtStls.fieldstyle),
+              subtitle: Text(userdata.email!, style: TxtStls.fieldstyle),
             ),
             Divider(color: Colors.grey.withOpacity(0.2)),
             ListTile(
@@ -586,7 +589,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 backgroundColor: btnColor.withOpacity(0.1),
               ),
               title: Text("Phone Number", style: TxtStls.fieldtitlestyle),
-              subtitle: Text(phone!, style: TxtStls.fieldstyle),
+              subtitle: Text(userdata.phone!, style: TxtStls.fieldstyle),
             ),
             Divider(color: Colors.grey.withOpacity(0.2)),
             ListTile(
@@ -944,7 +947,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         myConter(did, addtime!);
                         Navigator.pop(context);
                         ProgressUpdsate.updatesame(did, dcat, noteController,
-                            dendDate, radioItem, _choosenValue);
+                            dendDate, radioItem, _choosenValue, context);
                         GraphValueServices.graph(dendDate, did);
                         timeendnotification();
                       });

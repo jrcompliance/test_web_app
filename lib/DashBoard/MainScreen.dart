@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
+import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
+import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
@@ -20,7 +22,11 @@ import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
+import 'package:test_web_app/UserProvider/CustomerProvider.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -32,20 +38,26 @@ class _MainScreenState extends State<MainScreen> {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Calendar;
+  Tabs active = Tabs.Finance;
 
   @override
   void initState() {
     super.initState();
-    userdetails();
     //Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
+    // Future.delayed(Duration.zero).then((value) {
+    //   Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    // });
     Future.delayed(Duration.zero).then((value) {
-      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+      Provider.of<UserDataProvider>(context, listen: false).getUserData();
+    });
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<CustmerProvider>(context, listen: false).getCustomers();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final userdata = Provider.of<UserDataProvider>(context);
     return Scaffold(
       endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
@@ -75,6 +87,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget SideDrawer(BuildContext context) {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Drawer(
       elevation: 1,
@@ -119,26 +132,27 @@ class _MainScreenState extends State<MainScreen> {
                         Scaffold.of(context).openEndDrawer();
                       });
                     },
-                    leading: imageUrl == null || imageUrl == ""
-                        ? Icon(
-                            Icons.person,
-                            color: txtColor,
-                            size: 30,
-                          )
-                        : ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            child: SizedBox(
-                                height: size.height * 0.06,
-                                width: size.width * 0.025,
-                                child: Image.network(
-                                  imageUrl!,
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.high,
-                                ))),
-                    title: username == null
+                    leading:
+                        userdata.imageUrl == null || userdata.imageUrl == ""
+                            ? Icon(
+                                Icons.person,
+                                color: txtColor,
+                                size: 30,
+                              )
+                            : ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                child: SizedBox(
+                                    height: size.height * 0.06,
+                                    width: size.width * 0.025,
+                                    child: Image.network(
+                                      userdata.imageUrl!,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high,
+                                    ))),
+                    title: userdata.username == null
                         ? Text("")
-                        : Text(username!, style: TxtStls.fieldstyle),
+                        : Text(userdata.username!, style: TxtStls.fieldstyle),
                     trailing: IconButton(
                         onPressed: () {},
                         icon: Icon(
@@ -193,7 +207,7 @@ class _MainScreenState extends State<MainScreen> {
           return Column(
             children: [
               Header(title: "Finance"),
-              //InvoiceScreen(),
+              FinanceScreen(),
             ],
           );
         }
@@ -247,43 +261,15 @@ class _MainScreenState extends State<MainScreen> {
 
   // functions are from here...
 
-  Future<void> userdetails() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var uid = prefs.getString("uid");
-      FirebaseFirestore.instance
-          .collection("EmployeeData")
-          .where("uid", isEqualTo: uid)
-          .snapshots()
-          .listen((event) {
-        event.docs.forEach((element) {
-          setState(() {
-            String uname = element.data()["uname"].toString();
-            String uemail = element.data()["uemail"].toString();
-            String uphoneNumber = element.data()["uphoneNumber"].toString();
-            String uimage = element.data()["uimage"].toString();
-            String urole = element.data()["urole"].toString();
-            String uuid = element.data()["uid"].toString();
-            username = uname;
-            email = uemail;
-            phone = uphoneNumber;
-            imageUrl = uimage;
-            role = urole;
-            uid = uuid;
-          });
-        });
-      });
-    } catch (e) {}
-  }
-
   Future<void> userTasks() async {
+    final userdata = Provider.of<UserDataProvider>(context);
     try {
       FirebaseFirestore.instance
           .collection("Tasks")
           .where("cat", isEqualTo: "NEW")
           .where("Attachments", arrayContainsAny: [
             {
-              "image": imageUrl,
+              "image": userdata.imageUrl,
               "uid": _auth.currentUser!.uid.toString(),
             }
           ])
@@ -302,7 +288,7 @@ class _MainScreenState extends State<MainScreen> {
           .where("cat", isEqualTo: "PROSPECT")
           .where("Attachments", arrayContainsAny: [
             {
-              "image": imageUrl,
+              "image": userdata.imageUrl,
               "uid": _auth.currentUser!.uid.toString(),
             }
           ])
@@ -319,7 +305,7 @@ class _MainScreenState extends State<MainScreen> {
           .collection("Tasks")
           .where("Attachments", arrayContainsAny: [
             {
-              "image": imageUrl,
+              "image": userdata.imageUrl,
               "uid": _auth.currentUser!.uid.toString(),
             }
           ])
@@ -337,7 +323,7 @@ class _MainScreenState extends State<MainScreen> {
           .collection("Tasks")
           .where("Attachments", arrayContainsAny: [
             {
-              "image": imageUrl,
+              "image": userdata.imageUrl,
               "uid": _auth.currentUser!.uid.toString(),
             }
           ])
@@ -371,8 +357,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   updateProfile1() {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
-    if (imageUrl == null || imageUrl == "") {
+    if (userdata.imageUrl == null || userdata.imageUrl == "") {
       return AlertDialog(
         contentPadding: EdgeInsets.all(0.0),
         actionsPadding: EdgeInsets.all(0),
@@ -419,9 +406,9 @@ class _MainScreenState extends State<MainScreen> {
                         "Name : ",
                         style: TxtStls.fieldstyle,
                       ),
-                      username == null
+                      userdata.username == null
                           ? Text("")
-                          : Text(username!, style: TxtStls.fieldstyle)
+                          : Text(userdata.username!, style: TxtStls.fieldstyle)
                     ],
                   ),
                   Row(
@@ -430,9 +417,9 @@ class _MainScreenState extends State<MainScreen> {
                         "Email : ",
                         style: TxtStls.fieldstyle,
                       ),
-                      email == null
+                      userdata.email == null
                           ? Text("")
-                          : Text(email!, style: TxtStls.fieldstyle)
+                          : Text(userdata.email!, style: TxtStls.fieldstyle)
                     ],
                   ),
                   Row(
@@ -441,9 +428,9 @@ class _MainScreenState extends State<MainScreen> {
                         "Phone : ",
                         style: TxtStls.fieldstyle,
                       ),
-                      phone == null
+                      userdata.phone == null
                           ? Text("")
-                          : Text(phone!, style: TxtStls.fieldstyle)
+                          : Text(userdata.phone!, style: TxtStls.fieldstyle)
                     ],
                   ),
                   logoBase64 == null
@@ -476,6 +463,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   alertdialog() {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
@@ -523,9 +511,9 @@ class _MainScreenState extends State<MainScreen> {
                       "Name : ",
                       style: TxtStls.fieldstyle,
                     ),
-                    username == null
+                    userdata.username == null
                         ? Text("")
-                        : Text(username!, style: TxtStls.fieldstyle)
+                        : Text(userdata.username!, style: TxtStls.fieldstyle)
                   ],
                 ),
                 Row(
@@ -534,9 +522,9 @@ class _MainScreenState extends State<MainScreen> {
                       "Email : ",
                       style: TxtStls.fieldstyle,
                     ),
-                    email == null
+                    userdata.email == null
                         ? Text("")
-                        : Text(email!, style: TxtStls.fieldstyle)
+                        : Text(userdata.email!, style: TxtStls.fieldstyle)
                   ],
                 ),
                 Row(
@@ -545,9 +533,9 @@ class _MainScreenState extends State<MainScreen> {
                       "Phone : ",
                       style: TxtStls.fieldstyle,
                     ),
-                    phone == null
+                    userdata.phone == null
                         ? Text("")
-                        : Text(phone!, style: TxtStls.fieldstyle)
+                        : Text(userdata.phone!, style: TxtStls.fieldstyle)
                   ],
                 ),
                 logoBase64 == null

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
@@ -12,6 +13,7 @@ import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/tasklength.dart';
+import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class UserDashBoard extends StatefulWidget {
   const UserDashBoard({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Container(
       color: AbgColor.withOpacity(0.0001),
@@ -491,7 +494,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                               .where("endDate", isEqualTo: showLead(duelistval))
                               .where("Attachments", arrayContainsAny: [
                             {
-                              "image": imageUrl,
+                              "image": userdata.imageUrl,
                               "uid": _auth.currentUser!.uid.toString(),
                             }
                           ]).snapshots(),
