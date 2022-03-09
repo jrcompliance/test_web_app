@@ -187,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              TaskPreview(),
+              //TaskPreview(),
             ],
           );
         }

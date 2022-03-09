@@ -15,8 +15,6 @@ class CustmerProvider extends ChangeNotifier {
           await _firebasefirestore.collection("Tasks").get();
       List<CustomerModel> lodedData = [];
       extractedResponse.docs.forEach((element) {
-        print(
-            "Yalagala we get the data as per your request one ..............");
         lodedData.add(CustomerModel(
           Customername: element["CompanyDetails"][0]["contactperson"],
           Customeremail: element["CompanyDetails"][0]["email"],
