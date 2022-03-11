@@ -360,10 +360,10 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("assets/Images/invoicebg.jpeg"),
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.high),
+                        // image: DecorationImage(
+                        //     image: AssetImage("assets/Images/invoicebg.jpeg"),
+                        //     fit: BoxFit.cover,
+                        //     filterQuality: FilterQuality.high),
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         color: bgColor,
                       ),
@@ -480,9 +480,11 @@ class _FinanceScreenState extends State<FinanceScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
+                                  flex: 3,
                                     child: Text("# Description",
                                         style: TxtStls.fieldstyle)),
                                 Expanded(
+                                  flex: 7,
                                   child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: invoicelist
@@ -519,6 +521,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                                     list[index]["desc"],
                                                 style: TxtStls.fieldstyle),
                                           ),
+
                                           Expanded(
                                               child: Row(
                                             mainAxisAlignment:
@@ -551,6 +554,15 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                                         .toString(),
                                                     style: TxtStls.fieldstyle),
                                               )),
+                                              Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                    Alignment.centerRight,
+                                                    child: Text(
+                                                        ""
+                                                            .toString(),
+                                                        style: TxtStls.fieldstyle),
+                                                  )),
                                               Expanded(
                                                 child: Align(
                                                   alignment:
@@ -786,9 +798,12 @@ class _FinanceScreenState extends State<FinanceScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.01,
-                                    horizontal: size.width * 0.01),
+                                padding: EdgeInsets.only(
+                                  right: isExpand ?size.width*0.1: size.width * 0.6,
+                                  left: 10,
+                                  top: 10,
+                                  bottom: 10,
+                                    ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: fieldColor,
@@ -1155,7 +1170,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
     });
   }
 
-  List invoicelist = ["SAC No.", "Qty.", "UnitCost.", "Amount"];
+  List invoicelist = ["SAC No.", "Qty.", "UnitCost.","Disc(%)",    "Amount"];
   List list = [];
   void addingInvoiceData() async {
     double qty = double.parse(_qtyController.text.toString());

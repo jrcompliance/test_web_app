@@ -28,6 +28,8 @@ import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
+import 'Comonents/Finance/Finance1.dart';
+
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -212,7 +214,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              //TaskPreview(),
+            //  TaskPreview(),
             ],
           );
         }
@@ -232,7 +234,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              FinanceScreen(),
+              Finance1(),
             ],
           );
         }

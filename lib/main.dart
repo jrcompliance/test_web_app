@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/DummyFile.dart';
 import 'package:test_web_app/UserProvider/ActivityProvider.dart';
