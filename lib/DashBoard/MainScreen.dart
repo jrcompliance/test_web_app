@@ -76,14 +76,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             ),
             // scaleAnimation(
             //   updateProfile(),
-            userdata.imageUrl == null
-                ? ScaleAnimatedWidget.tween(
+
+                ScaleAnimatedWidget.tween(
                     duration: Duration(seconds: 10),
                     scaleDisabled: 1.5,
                     scaleEnabled: 1,
                     child: updateProfile(),
                   )
-                : SizedBox()
+
           ],
         ),
       ),
