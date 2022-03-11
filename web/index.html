@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>flutter_notification_test</title>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+<!--  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>-->
+<!--  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>-->
 </head>
 <head>
   <!--
@@ -36,22 +36,32 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-   const firebaseConfig = {
-  apiKey: "AIzaSyBHfeiGb-qLY4CgkKtrGV9plcWcPj2VBQQ",
-  authDomain: "jrcrm-4f580.firebaseapp.com",
-  projectId: "jrcrm-4f580",
-  storageBucket: "jrcrm-4f580.appspot.com",
-  messagingSenderId: "482749695187",
-  appId: "1:482749695187:web:7a15babbc145e16c36c026",
-  measurementId: "G-1DG924Y1CR"
-};
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+  const firebaseConfig = {
+    apiKey: "AIzaSyBHfeiGb-qLY4CgkKtrGV9plcWcPj2VBQQ",
+    authDomain: "jrcrm-4f580.firebaseapp.com",
+    databaseURL: "https://jrcrm-4f580-default-rtdb.firebaseio.com",
+    projectId: "jrcrm-4f580",
+    storageBucket: "jrcrm-4f580.appspot.com",
+    messagingSenderId: "482749695187",
+    appId: "1:482749695187:web:7a15babbc145e16c36c026",
+    measurementId: "G-1DG924Y1CR"
+  };
 
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
+
 <script src="main.dart.js" type="application/javascript"></script>
 <script>
   if ("serviceWorker" in navigator) {
@@ -70,9 +80,9 @@
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
        https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<!--  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>-->
+<!--  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>-->
+<!--  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>-->
 
 
 
@@ -82,6 +92,4 @@
    pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.min.js";
 </script>
 </body>
-
-
 </html>

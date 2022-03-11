@@ -377,7 +377,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   Widget updateProfile() {
-    Future.delayed(Duration(seconds: 5));
+    // Future.delayed(Duration(seconds: 5));
     return updateProfile1();
   }
 

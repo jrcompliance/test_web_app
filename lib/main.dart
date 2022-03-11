@@ -17,10 +17,11 @@ import 'package:test_web_app/UserProvider/GstProvider.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
 import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (ctx) => AllUSerProvider()),
