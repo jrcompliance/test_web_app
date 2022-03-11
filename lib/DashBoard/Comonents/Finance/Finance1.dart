@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
@@ -35,6 +37,9 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _ucostController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey();
+  bool isadded = false;
+  double gst = 15300;
+  double? tbal;
 
   @override
   Widget build(BuildContext context) {
@@ -125,422 +130,423 @@ class _Finance1State extends State<Finance1> {
                       },
                     ),
                   )),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    // image: DecorationImage(
-                    //     image: AssetImage("assets/Images/invoicebg.jpeg"),
-                    //     fit: BoxFit.cover,
-                    //     filterQuality: FilterQuality.high),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: bgColor,
-                  ),
-                  height: size.height * 0.92,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.015,
-                      vertical: size.width * 0.015),
-                  child: Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              activeid + " Preview",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: txtColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Expanded(child: Text(" ")),
-                            IconButton(
-                                onPressed: (() {
-                                  setState(() {});
-                                }),
-                                icon:
-                                Icon(Icons.download, color: btnColor)),
-                            IconButton(
-                                onPressed: (() {}),
-                                icon: Icon(Icons.print_sharp,
-                                    color: btnColor)),
-                          ],
-                        ),
-                        // divider(),
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: size.height * 0.15,
-                              width: size.width * 0.175,
-                              child: Image.asset(
-                                "assets/Logos/jrlogo.png",
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Expanded(child: SizedBox()),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("JR Compliance and Testing Labs",
-                                    style: TxtStls.fieldstyle),
-                                Text(
-                                    "Regd. Office: 705, 7th Floor,Krishna Apra Tower",
-                                    style: TxtStls.fieldstyle),
-                                Text(
-                                    "Netaji Subhash Place, Pitampura,New Delhi 110034,India",
-                                    style: TxtStls.fieldstyle),
-                                Text("JR Compliance and Testing Labs",
-                                    style: TxtStls.fieldstyle),
-                                Text("PAN: AALFJ0070E",
-                                    style: TxtStls.fieldstyle),
-                                Text("TAN: DELJ10631F",
-                                    style: TxtStls.fieldstyle),
-                                Text("GST REGN NO: 07AALFJ0070E1ZO",
-                                    style: TxtStls.fieldstyle),
-                              ],
-                            )
-                          ],
-                        ),
-                        // divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("To,", style: TxtStls.fieldtitlestyle),
-                                Text(
-                                  _nameController.text.toString(),
-                                  style: TxtStls.fieldstyle,
-                                ),
-                                Text(_addressControoler.text.toString(),
-                                    style: TxtStls.fieldstyle),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Invoice No. " + _invoiceController.text,
-                                  style: TxtStls.fieldtitlestyle,
-                                ),
-                                Text(
-                                  "Issued On: " +
-                                      DateFormat("dd MMM,yyyy")
-                                          .format(DateTime.now()),
-                                  style: TxtStls.fieldstyle,
-                                ),
-                                Text("Payment Due: Paid",
-                                    style: TxtStls.fieldstyle),
-                              ],
-                            )
-                          ],
-                        ),
-                        Text("GST NO- " + _searchController.text,
-                            style: TxtStls.fieldtitlestyle),
-                        Text("Kind Atten: Mr." + _invoiceusername.text,
-                            style: TxtStls.fieldtitlestyle),
-
-                        // divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                flex: 3,
-                                child: Text("# Description",
-                                    style: TxtStls.fieldstyle)),
-                            Expanded(
-                              flex: 7,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: invoicelist
-                                      .map((e) => Expanded(
-                                    child: Align(
-                                      alignment:
-                                      Alignment.centerRight,
-                                      child: Text(e,
-                                          style:
-                                          TxtStls.fieldstyle),
-                                    ),
-                                  ))
-                                      .toList()),
-                            ),
-                          ],
-                        ),
-                        // divider(),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: list.length,
-                                itemBuilder:
-                                    (BuildContext context, int index) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                            "${index + 1}" +
-                                                ". " +
-                                                list[index]["desc"],
-                                            style: TxtStls.fieldstyle),
-                                      ),
-
-                                      Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                            children: [
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                  Alignment.centerRight,
-                                                  child: Text("9983",
-                                                      style:
-                                                      TxtStls.fieldstyle),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                    Alignment.centerRight,
-                                                    child: Text(
-                                                        list[index]["qty"]
-                                                            .toString(),
-                                                        style: TxtStls.fieldstyle),
-                                                  )),
-                                              Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                    Alignment.centerRight,
-                                                    child: Text(
-                                                        list[index]["ucost"]
-                                                            .toString(),
-                                                        style: TxtStls.fieldstyle),
-                                                  )),
-                                              Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                    Alignment.centerRight,
-                                                    child: Text(
-                                                        ""
-                                                            .toString(),
-                                                        style: TxtStls.fieldstyle),
-                                                  )),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                  Alignment.centerRight,
-                                                  child: Text(
-                                                      list[index]["amount"]
-                                                          .toString(),
-                                                      style:
-                                                      TxtStls.fieldstyle),
-                                                ),
-                                              ),
-                                            ],
-                                          ))
-                                    ],
-                                  );
-                                },
-                              ),
-                              list.length > 0
-                                  ? Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "IGST 18%",
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                  Text(
-                                    gst.toString(),
-                                    style: TxtStls.fieldstyle,
-                                  )
-                                ],
-                              )
-                                  : SizedBox(),
-                              list.length > 0
-                                  ? Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Total :",
-                                      style: TxtStls.fieldstyle),
-                                  Text(
-                                      "${tbal == null ? 0 : tbal! + gst}",
-                                      style: TxtStls.fieldstyle),
-                                ],
-                              )
-                                  : SizedBox(),
-                              list.length > 0
-                                  ? Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Amount Paid :",
-                                      style: TxtStls.fieldstyle),
-                                  Text("85,300",
-                                      style: TxtStls.fieldstyle),
-                                ],
-                              )
-                                  : SizedBox(),
-                              isadded
-                                  ? Form(
-                                key: _formkey,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: InvoiceFields(
-                                          _descController,
-                                          "Enter Service Description"),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                        child: InvoiceFields(
-                                            _qtyController,
-                                            "Enter Quantity")),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                        child: InvoiceFields(
-                                            _ucostController,
-                                            "Enter UnitCost")),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    InkWell(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.all(
-                                                Radius.circular(
-                                                    7)),
-                                            color: goodClr),
-                                        child: Icon(
-                                          Icons.done,
-                                          color: bgColor,
-                                          size: 20,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        if (_formkey.currentState!
-                                            .validate()) {
-                                          isadded = !isadded;
-                                          addingInvoiceData();
-                                          _descController.clear();
-                                          _qtyController.clear();
-                                          _ucostController.clear();
-                                          setState(() {});
-                                        } else {
-                                          null;
-                                        }
-                                      },
-                                    )
-                                  ],
-                                ),
-                              )
-                                  : SizedBox(),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: InkWell(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(7)),
-                                        color: btnColor),
-                                    child: isadded
-                                        ? Icon(
-                                      Icons.clear,
-                                      color: bgColor,
-                                      size: 20,
-                                    )
-                                        : Icon(
-                                      Icons.add,
-                                      color: bgColor,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    isadded = !isadded;
-                                    setState(() {});
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        divider(),
-                        Text("Bank Details:",
-                            style: GoogleFonts.nunito(
-                                textStyle: TextStyle(
-                                    fontSize: 13,
-                                    color: txtColor,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline),
-                                fontSize: 13,
-                                color: txtColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline)),
-                        Text("Company Name: JR Compliance And Testing Labs",
-                            style: TxtStls.fieldtitlestyle),
-                        Text("Bank Name: IDFC FIRST BANK",
-                            style: TxtStls.fieldtitlestyle),
-                        Text("Account Number: 10041186185",
-                            style: TxtStls.fieldtitlestyle),
-                        Text("IFSC Code: IDFB0040101",
-                            style: TxtStls.fieldtitlestyle),
-                        Text("SWIFT Code: IDFBINBBMUM",
-                            style: TxtStls.fieldtitlestyle),
-                        Text("Bank Address: Rohini, New Delhi-110085",
-                            style: TxtStls.fieldtitlestyle),
-                        divider(),
-                        Text("Terms And Conditions:",
-                            style: TxtStls.fieldtitlestyle),
-                        InkWell(
-                          child: Text(
-                            "https://www.jrcompliance.com/terms-and-conditions",
-                            style: TxtStls.fieldstyle,
-                          ),
-                          onTap: () {
-                            launches.termsofuse();
-                          },
-                        ),
-                        // InkWell(
-                        //   child: Text(
-                        //     "https://www.jrcompliance.com/privacy-policy",
-                        //     style: ClrStls.tnClr,
-                        //   ),
-                        //   onTap: () {
-                        //     launches.privacy();
-                        //   },
-                        // ),
-                        // InkWell(
-                        //   child: Text(
-                        //     "https://www.jrcompliance.com/purchase-and-billing",
-                        //     style: ClrStls.tnClr,
-                        //   ),
-                        //   onTap: () {
-                        //     launches.privacy();
-                        //   },
-                        // )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   flex: 5,
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       // image: DecorationImage(
+              //       //     image: AssetImage("assets/Images/invoicebg.jpeg"),
+              //       //     fit: BoxFit.cover,
+              //       //     filterQuality: FilterQuality.high),
+              //       borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              //       color: bgColor,
+              //     ),
+              //     height: size.height * 0.92,
+              //     padding: EdgeInsets.symmetric(
+              //         horizontal: size.width * 0.015,
+              //         vertical: size.width * 0.015),
+              //     child: Expanded(
+              //       child: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //             children: [
+              //               Text(
+              //                 activeid + " Preview",
+              //                 style: TextStyle(
+              //                     fontSize: 20,
+              //                     color: txtColor,
+              //                     fontWeight: FontWeight.bold),
+              //               ),
+              //               Expanded(child: Text(" ")),
+              //               IconButton(
+              //                   onPressed: (() {
+              //                     setState(() {});
+              //                   }),
+              //                   icon:
+              //                   Icon(Icons.download, color: btnColor)),
+              //               IconButton(
+              //                   onPressed: (() {}),
+              //                   icon: Icon(Icons.print_sharp,
+              //                       color: btnColor)),
+              //             ],
+              //           ),
+              //           // divider(),
+              //           Row(
+              //             children: [
+              //               SizedBox(
+              //                 height: size.height * 0.15,
+              //                 width: size.width * 0.175,
+              //                 child: Image.asset(
+              //                   "assets/Logos/jrlogo.png",
+              //                   filterQuality: FilterQuality.high,
+              //                   fit: BoxFit.cover,
+              //                 ),
+              //               ),
+              //               Expanded(child: SizedBox()),
+              //               Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.end,
+              //                 children: [
+              //                   Text("JR Compliance and Testing Labs",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text(
+              //                       "Regd. Office: 705, 7th Floor,Krishna Apra Tower",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text(
+              //                       "Netaji Subhash Place, Pitampura,New Delhi 110034,India",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text("JR Compliance and Testing Labs",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text("PAN: AALFJ0070E",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text("TAN: DELJ10631F",
+              //                       style: TxtStls.fieldstyle),
+              //                   Text("GST REGN NO: 07AALFJ0070E1ZO",
+              //                       style: TxtStls.fieldstyle),
+              //                 ],
+              //               )
+              //             ],
+              //           ),
+              //           // divider(),
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //             children: [
+              //               Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Text("To,", style: TxtStls.fieldtitlestyle),
+              //                   Text(
+              //                     _nameController.text.toString(),
+              //                     style: TxtStls.fieldstyle,
+              //                   ),
+              //                   Text(_addressControoler.text.toString(),
+              //                       style: TxtStls.fieldstyle),
+              //                 ],
+              //               ),
+              //               Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.end,
+              //                 children: [
+              //                   Text(
+              //                     "Invoice No. " + _invoiceController.text,
+              //                     style: TxtStls.fieldtitlestyle,
+              //                   ),
+              //                   Text(
+              //                     "Issued On: " +
+              //                         DateFormat("dd MMM,yyyy")
+              //                             .format(DateTime.now()),
+              //                     style: TxtStls.fieldstyle,
+              //                   ),
+              //                   Text("Payment Due: Paid",
+              //                       style: TxtStls.fieldstyle),
+              //                 ],
+              //               )
+              //             ],
+              //           ),
+              //           Text("GST NO- " + _searchController.text,
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("Kind Atten: Mr." + _invoiceusername.text,
+              //               style: TxtStls.fieldtitlestyle),
+              //
+              //           // divider(),
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //             children: [
+              //               Expanded(
+              //                   flex: 3,
+              //                   child: Text("# Description",
+              //                       style: TxtStls.fieldstyle)),
+              //               Expanded(
+              //                 flex: 7,
+              //                 child: Row(
+              //                     mainAxisAlignment: MainAxisAlignment.end,
+              //                     children: invoicelist
+              //                         .map((e) => Expanded(
+              //                       child: Align(
+              //                         alignment:
+              //                         Alignment.centerRight,
+              //                         child: Text(e,
+              //                             style:
+              //                             TxtStls.fieldstyle),
+              //                       ),
+              //                     ))
+              //                         .toList()),
+              //               ),
+              //             ],
+              //           ),
+              //           // divider(),
+              //           Expanded(
+              //             child: Column(
+              //               children: [
+              //                 ListView.builder(
+              //                   shrinkWrap: true,
+              //                   itemCount: list.length,
+              //                   itemBuilder:
+              //                       (BuildContext context, int index) {
+              //                     return Row(
+              //                       mainAxisAlignment:
+              //                       MainAxisAlignment.end,
+              //                       children: [
+              //                         Expanded(
+              //                           child: Text(
+              //                               "${index + 1}" +
+              //                                   ". " +
+              //                                   list[index]["desc"],
+              //                               style: TxtStls.fieldstyle),
+              //                         ),
+              //
+              //                         Expanded(
+              //                             child: Row(
+              //                               mainAxisAlignment:
+              //                               MainAxisAlignment.end,
+              //                               children: [
+              //                                 Expanded(
+              //                                   child: Align(
+              //                                     alignment:
+              //                                     Alignment.centerRight,
+              //                                     child: Text("9983",
+              //                                         style:
+              //                                         TxtStls.fieldstyle),
+              //                                   ),
+              //                                 ),
+              //                                 Expanded(
+              //                                     child: Align(
+              //                                       alignment:
+              //                                       Alignment.centerRight,
+              //                                       child: Text(
+              //                                           list[index]["qty"]
+              //                                               .toString(),
+              //                                           style: TxtStls.fieldstyle),
+              //                                     )),
+              //                                 Expanded(
+              //                                     child: Align(
+              //                                       alignment:
+              //                                       Alignment.centerRight,
+              //                                       child: Text(
+              //                                           list[index]["ucost"]
+              //                                               .toString(),
+              //                                           style: TxtStls.fieldstyle),
+              //                                     )),
+              //                                 Expanded(
+              //                                     child: Align(
+              //                                       alignment:
+              //                                       Alignment.centerRight,
+              //                                       child: Text(
+              //                                           ""
+              //                                               .toString(),
+              //                                           style: TxtStls.fieldstyle),
+              //                                     )),
+              //                                 Expanded(
+              //                                   child: Align(
+              //                                     alignment:
+              //                                     Alignment.centerRight,
+              //                                     child: Text(
+              //                                         list[index]["amount"]
+              //                                             .toString(),
+              //                                         style:
+              //                                         TxtStls.fieldstyle),
+              //                                   ),
+              //                                 ),
+              //                               ],
+              //                             ))
+              //                       ],
+              //                     );
+              //                   },
+              //                 ),
+              //                 list.length > 0
+              //                     ? Row(
+              //                   mainAxisAlignment:
+              //                   MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     Text(
+              //                       "IGST 18%",
+              //                       style: TxtStls.fieldstyle,
+              //                     ),
+              //                     Text(
+              //                       gst.toString(),
+              //                       style: TxtStls.fieldstyle,
+              //                     )
+              //                   ],
+              //                 )
+              //                     : SizedBox(),
+              //                 list.length > 0
+              //                     ? Row(
+              //                   mainAxisAlignment:
+              //                   MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     Text("Total :",
+              //                         style: TxtStls.fieldstyle),
+              //                     Text(
+              //                         "${tbal == null ? 0 : tbal! + gst}",
+              //                         style: TxtStls.fieldstyle),
+              //                   ],
+              //                 )
+              //                     : SizedBox(),
+              //                 list.length > 0
+              //                     ? Row(
+              //                   mainAxisAlignment:
+              //                   MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     Text("Amount Paid :",
+              //                         style: TxtStls.fieldstyle),
+              //                     Text("85,300",
+              //                         style: TxtStls.fieldstyle),
+              //                   ],
+              //                 )
+              //                     : SizedBox(),
+              //                 isadded
+              //                     ? Form(
+              //                   key: _formkey,
+              //                   child: Row(
+              //                     children: [
+              //                       Expanded(
+              //                         child: InvoiceFields(
+              //                             _descController,
+              //                             "Enter Service Description"),
+              //                       ),
+              //                       SizedBox(
+              //                         width: 5,
+              //                       ),
+              //                       Expanded(
+              //                           child: InvoiceFields(
+              //                               _qtyController,
+              //                               "Enter Quantity")),
+              //                       SizedBox(
+              //                         width: 5,
+              //                       ),
+              //                       Expanded(
+              //                           child: InvoiceFields(
+              //                               _ucostController,
+              //                               "Enter UnitCost")),
+              //                       SizedBox(
+              //                         width: 5,
+              //                       ),
+              //                       InkWell(
+              //                         child: Container(
+              //                           decoration: BoxDecoration(
+              //                               borderRadius:
+              //                               BorderRadius.all(
+              //                                   Radius.circular(
+              //                                       7)),
+              //                               color: goodClr),
+              //                           child: Icon(
+              //                             Icons.done,
+              //                             color: bgColor,
+              //                             size: 20,
+              //                           ),
+              //                         ),
+              //                         onTap: () {
+              //                           if (_formkey.currentState!
+              //                               .validate()) {
+              //                             isadded = !isadded;
+              //                             addingInvoiceData();
+              //                             _descController.clear();
+              //                             _qtyController.clear();
+              //                             _ucostController.clear();
+              //                             setState(() {});
+              //                           } else {
+              //                             null;
+              //                           }
+              //                         },
+              //                       )
+              //                     ],
+              //                   ),
+              //                 )
+              //                     : SizedBox(),
+              //                 Align(
+              //                   alignment: Alignment.centerRight,
+              //                   child: InkWell(
+              //                     child: Container(
+              //                       decoration: BoxDecoration(
+              //                           borderRadius: BorderRadius.all(
+              //                               Radius.circular(7)),
+              //                           color: btnColor),
+              //                       child: isadded
+              //                           ? Icon(
+              //                         Icons.clear,
+              //                         color: bgColor,
+              //                         size: 20,
+              //                       )
+              //                           : Icon(
+              //                         Icons.add,
+              //                         color: bgColor,
+              //                         size: 20,
+              //                       ),
+              //                     ),
+              //                     onTap: () {
+              //                       isadded = !isadded;
+              //                       setState(() {});
+              //                     },
+              //                   ),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //           // divider(),
+              //           Text("Bank Details:",
+              //               style: GoogleFonts.nunito(
+              //                   textStyle: TextStyle(
+              //                       fontSize: 13,
+              //                       color: txtColor,
+              //                       fontWeight: FontWeight.bold,
+              //                       decoration: TextDecoration.underline),
+              //                   fontSize: 13,
+              //                   color: txtColor,
+              //                   fontWeight: FontWeight.bold,
+              //                   decoration: TextDecoration.underline)),
+              //           Text("Company Name: JR Compliance And Testing Labs",
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("Bank Name: IDFC FIRST BANK",
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("Account Number: 10041186185",
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("IFSC Code: IDFB0040101",
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("SWIFT Code: IDFBINBBMUM",
+              //               style: TxtStls.fieldtitlestyle),
+              //           Text("Bank Address: Rohini, New Delhi-110085",
+              //               style: TxtStls.fieldtitlestyle),
+              //           // divider(),
+              //           Text("Terms And Conditions:",
+              //               style: TxtStls.fieldtitlestyle),
+              //           InkWell(
+              //             child: Text(
+              //               "https://www.jrcompliance.com/terms-and-conditions",
+              //               style: TxtStls.fieldstyle,
+              //             ),
+              //             onTap: () {
+              //           //    launches.termsofuse();
+              //             },
+              //           ),
+              //           // InkWell(
+              //           //   child: Text(
+              //           //     "https://www.jrcompliance.com/privacy-policy",
+              //           //     style: ClrStls.tnClr,
+              //           //   ),
+              //           //   onTap: () {
+              //           //     launches.privacy();
+              //           //   },
+              //           // ),
+              //           // InkWell(
+              //           //   child: Text(
+              //           //     "https://www.jrcompliance.com/purchase-and-billing",
+              //           //     style: ClrStls.tnClr,
+              //           //   ),
+              //           //   onTap: () {
+              //           //     launches.privacy();
+              //           //   },
+              //           // )
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 flex: 5,
                   child: Container(
                     height: size.height * 0.86,
-                    color: Colors.green,
+                    color: Colors.grey.withOpacity(0.05),
                   )),
               Expanded(
                   flex: 2,
@@ -614,5 +620,33 @@ class _Finance1State extends State<Finance1> {
     print(list);
     tbal = list.map((m) => (m["amount"])).reduce((a, b) => a + b);
     print("Data is set");
+  }
+  Widget InvoiceFields(
+      _controller,
+      title,
+      ) {
+    return Container(
+      decoration: deco,
+      child: Padding(
+        padding: EdgeInsets.only(left: 15, right: 15, top: 2),
+        child: TextFormField(
+          keyboardType: TextInputType.number,
+          controller: _controller,
+          style: TxtStls.fieldstyle,
+          decoration: InputDecoration(
+            hintText: title,
+            hintStyle: TxtStls.fieldstyle,
+            border: InputBorder.none,
+          ),
+          validator: (input) {
+            if (input!.isEmpty) {
+              return "field can not be empty";
+            } else {
+              return null;
+            }
+          },
+        ),
+      ),
+    );
   }
 }
