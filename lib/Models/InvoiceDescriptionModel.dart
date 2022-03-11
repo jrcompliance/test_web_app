@@ -1,18 +1,15 @@
 class InvoiceDescriptionModel {
   final String? desc;
-  final String? qty;
-  final String? ucost;
+  final double? qty;
+  final double? ucost;
+  final double? amount;
 
-  InvoiceDescriptionModel({this.desc, this.qty, this.ucost});
-
-  InvoiceDescriptionModel.fromJson(Map<String, dynamic> jsonData)
-      : desc = jsonData["desc"],
-        qty = jsonData["qty"],
-        ucost = jsonData["ucost"];
+  InvoiceDescriptionModel({this.desc, this.qty, this.ucost, this.amount});
 
   Map<String, dynamic> toJson() => {
         "desc": desc,
         "qty": qty,
         "ucost": ucost,
+        "amount": amount,
       };
 }

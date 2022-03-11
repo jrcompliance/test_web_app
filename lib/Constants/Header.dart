@@ -78,7 +78,6 @@ class _HeaderState extends State<Header> {
   }
 
   Future<void> _showMyDialog() async {
-    final userdata = Provider.of<UserDataProvider>(context);
     return showDialog<void>(
       barrierColor: Colors.black.withOpacity(0.5),
       context: context,
@@ -87,7 +86,7 @@ class _HeaderState extends State<Header> {
         return AlertDialog(
           backgroundColor: bgColor,
           title: Text(
-            'Are you sure to LogOut / ${userdata.username}?',
+            "Are you sure to LogOut ?",
             style: TxtStls.fieldtitlestyle,
           ),
           actions: <Widget>[

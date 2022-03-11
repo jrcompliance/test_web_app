@@ -33,7 +33,7 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final globalKey = GlobalKey<ScaffoldState>();
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -74,16 +74,41 @@ class _MainScreenState extends State<MainScreen> {
                 Expanded(flex: 6, child: DashboardBody(context)),
               ],
             ),
-            ScaleAnimatedWidget.tween(
-              duration: Duration(milliseconds: 450),
-              scaleDisabled: 1.5,
-              scaleEnabled: 1,
-              child: updateProfile(),
-            )
+            // scaleAnimation(
+            //   updateProfile(),
+            userdata.imageUrl == null
+                ? ScaleAnimatedWidget.tween(
+                    duration: Duration(seconds: 10),
+                    scaleDisabled: 1.5,
+                    scaleEnabled: 1,
+                    child: updateProfile(),
+                  )
+                : SizedBox()
           ],
         ),
       ),
     );
+  }
+
+  // Widget scaleAnimation(child) {
+  //   final AnimationController _controller = AnimationController(
+  //     duration: const Duration(seconds: 2),
+  //     vsync: this,
+  //   )..repeat(reverse: true);
+  //   final Animation<double> _animation =
+  //       CurvedAnimation(parent: _controller, curve: Curves.linearToEaseOut);
+  //   return ScaleTransition(
+  //       scale: _animation,
+  //       child: const Padding(
+  //         padding: EdgeInsets.all(8.0),
+  //         child: FlutterLogo(size: 150.0),
+  //       ));
+  // }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget SideDrawer(BuildContext context) {

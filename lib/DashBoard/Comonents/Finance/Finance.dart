@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Auth_Views/Url_launchers.dart';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:animated_widgets/widgets/translation_animated.dart';
@@ -13,7 +12,6 @@ import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/UserProvider/CustomerProvider.dart';
 import 'package:test_web_app/UserProvider/GstProvider.dart';
-import 'dart:convert';
 
 class FinanceScreen extends StatefulWidget {
   const FinanceScreen({Key? key}) : super(key: key);
@@ -42,10 +40,13 @@ class _FinanceScreenState extends State<FinanceScreen> {
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
   final TextEditingController _ucostController = TextEditingController();
+  final GlobalKey<FormState> _formkey = GlobalKey();
 
   bool isExpand = false;
 
   bool isadded = false;
+  double gst = 15300;
+  double? tbal;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -359,6 +360,10 @@ class _FinanceScreenState extends State<FinanceScreen> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/Images/invoicebg.jpeg"),
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high),
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         color: bgColor,
                       ),
@@ -375,7 +380,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                  "Invoice Preview",
+                                  activeid + " Preview",
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: txtColor,
@@ -446,9 +451,22 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                         style: TxtStls.fieldstyle),
                                   ],
                                 ),
-                                Text(
-                                  "Invoice No. " + _invoiceController.text,
-                                  style: TxtStls.fieldtitlestyle,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Invoice No. " + _invoiceController.text,
+                                      style: TxtStls.fieldtitlestyle,
+                                    ),
+                                    Text(
+                                      "Issued On: " +
+                                          DateFormat("dd MMM,yyyy")
+                                              .format(DateTime.now()),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                    Text("Payment Due: Paid",
+                                        style: TxtStls.fieldstyle),
+                                  ],
                                 )
                               ],
                             ),
@@ -456,19 +474,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                 style: TxtStls.fieldtitlestyle),
                             Text("Kind Atten: Mr." + _invoiceusername.text,
                                 style: TxtStls.fieldtitlestyle),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "Issued On: " +
-                                    DateFormat("dd MMM,yyyy")
-                                        .format(DateTime.now()),
-                                style: TxtStls.fieldstyle,
-                              ),
-                            ),
-                            Align(
-                                alignment: Alignment.centerRight,
-                                child: Text("Payment Due: Paid",
-                                    style: TxtStls.fieldstyle)),
+
                             divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -478,116 +484,218 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                         style: TxtStls.fieldstyle)),
                                 Expanded(
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("SAC No", style: TxtStls.fieldstyle),
-                                      Text("Qty", style: TxtStls.fieldstyle),
-                                      Text("Unit Cost",
-                                          style: TxtStls.fieldstyle),
-                                      Text("Amount(Rs)",
-                                          style: TxtStls.fieldstyle),
-                                    ],
-                                  ),
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: invoicelist
+                                          .map((e) => Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(e,
+                                                      style:
+                                                          TxtStls.fieldstyle),
+                                                ),
+                                              ))
+                                          .toList()),
                                 ),
                               ],
                             ),
                             divider(),
-                            Column(
-                              children: [
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: list.length,
-                                  itemBuilder: (_, i) {
-                                    return Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                              list[i]["desc"].toString(),
-                                              style: TxtStls.fieldstyle),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                isadded
-                                    ? Row(
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: list.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Expanded(
-                                            child: InvoiceFields(
-                                                _descController,
-                                                "Enter Product Description"),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Expanded(
-                                              child: InvoiceFields(
-                                                  _qtyController,
-                                                  "Enter Quantity")),
-                                          SizedBox(
-                                            width: 5,
+                                            child: Text(
+                                                "${index + 1}" +
+                                                    ". " +
+                                                    list[index]["desc"],
+                                                style: TxtStls.fieldstyle),
                                           ),
                                           Expanded(
-                                              child: InvoiceFields(
-                                                  _ucostController,
-                                                  "Enter UnitCost")),
-                                          SizedBox(
-                                            width: 5,
+                                              child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text("9983",
+                                                      style:
+                                                          TxtStls.fieldstyle),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                  child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                    list[index]["qty"]
+                                                        .toString(),
+                                                    style: TxtStls.fieldstyle),
+                                              )),
+                                              Expanded(
+                                                  child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                    list[index]["ucost"]
+                                                        .toString(),
+                                                    style: TxtStls.fieldstyle),
+                                              )),
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                      list[index]["amount"]
+                                                          .toString(),
+                                                      style:
+                                                          TxtStls.fieldstyle),
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  list.length > 0
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "IGST 18%",
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                            Text(
+                                              gst.toString(),
+                                              style: TxtStls.fieldstyle,
+                                            )
+                                          ],
+                                        )
+                                      : SizedBox(),
+                                  list.length > 0
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Total :",
+                                                style: TxtStls.fieldstyle),
+                                            Text(
+                                                "${tbal == null ? 0 : tbal! + gst}",
+                                                style: TxtStls.fieldstyle),
+                                          ],
+                                        )
+                                      : SizedBox(),
+                                  list.length > 0
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Amount Paid :",
+                                                style: TxtStls.fieldstyle),
+                                            Text("85,300",
+                                                style: TxtStls.fieldstyle),
+                                          ],
+                                        )
+                                      : SizedBox(),
+                                  isadded
+                                      ? Form(
+                                          key: _formkey,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: InvoiceFields(
+                                                    _descController,
+                                                    "Enter Service Description"),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: InvoiceFields(
+                                                      _qtyController,
+                                                      "Enter Quantity")),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: InvoiceFields(
+                                                      _ucostController,
+                                                      "Enter UnitCost")),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              InkWell(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  7)),
+                                                      color: goodClr),
+                                                  child: Icon(
+                                                    Icons.done,
+                                                    color: bgColor,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  if (_formkey.currentState!
+                                                      .validate()) {
+                                                    isadded = !isadded;
+                                                    addingInvoiceData();
+                                                    _descController.clear();
+                                                    _qtyController.clear();
+                                                    _ucostController.clear();
+                                                    setState(() {});
+                                                  } else {
+                                                    null;
+                                                  }
+                                                },
+                                              )
+                                            ],
                                           ),
-                                          InkWell(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(7)),
-                                                  color: goodClr),
-                                              child: Icon(
-                                                Icons.done,
+                                        )
+                                      : SizedBox(),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(7)),
+                                            color: btnColor),
+                                        child: isadded
+                                            ? Icon(
+                                                Icons.clear,
+                                                color: bgColor,
+                                                size: 20,
+                                              )
+                                            : Icon(
+                                                Icons.add,
                                                 color: bgColor,
                                                 size: 20,
                                               ),
-                                            ),
-                                            onTap: () {
-                                              addingInvoiceData();
-
-                                              Future.delayed(
-                                                      Duration(seconds: 2))
-                                                  .then((value) {
-                                                getInvoiceData();
-                                              });
-                                            },
-                                          )
-                                        ],
-                                      )
-                                    : SizedBox(),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: InkWell(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(7)),
-                                          color: btnColor),
-                                      child: isadded
-                                          ? Icon(
-                                              Icons.clear,
-                                              color: bgColor,
-                                              size: 20,
-                                            )
-                                          : Icon(
-                                              Icons.add,
-                                              color: bgColor,
-                                              size: 20,
-                                            ),
+                                      ),
+                                      onTap: () {
+                                        isadded = !isadded;
+                                        setState(() {});
+                                      },
                                     ),
-                                    onTap: () {
-                                      isadded = !isadded;
-                                      setState(() {});
-                                    },
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                             divider(),
                             Text("Bank Details:",
@@ -968,6 +1076,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
       child: Padding(
         padding: EdgeInsets.only(left: 15, right: 15, top: 2),
         child: TextFormField(
+          keyboardType: TextInputType.number,
           controller: _controller,
           style: TxtStls.fieldstyle,
           decoration: InputDecoration(
@@ -975,11 +1084,9 @@ class _FinanceScreenState extends State<FinanceScreen> {
             hintStyle: TxtStls.fieldstyle,
             border: InputBorder.none,
           ),
-          validator: (fullname) {
-            if (fullname!.isEmpty) {
-              return "Name can not be empty";
-            } else if (fullname.length < 3) {
-              return "Name should be atleast 3 letters";
+          validator: (input) {
+            if (input!.isEmpty) {
+              return "field can not be empty";
             } else {
               return null;
             }
@@ -1048,31 +1155,28 @@ class _FinanceScreenState extends State<FinanceScreen> {
     });
   }
 
+  List invoicelist = ["SAC No.", "Qty.", "UnitCost.", "Amount"];
   List list = [];
   void addingInvoiceData() async {
-    InvoiceDescriptionModel model = InvoiceDescriptionModel(
-        desc: _descController.text,
-        qty: _qtyController.text,
-        ucost: _ucostController.text);
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    String imodel = jsonEncode(model);
-    print(imodel);
-
-    _sharedPreferences.setString("Iddata", imodel);
-
-    list.add(imodel);
+    double qty = double.parse(_qtyController.text.toString());
+    double ucost = double.parse(_ucostController.text.toString());
+    list.add(InvoiceDescriptionModel(
+      desc: _descController.text,
+      qty: qty,
+      ucost: ucost,
+      amount: qty * ucost,
+    ).toJson());
     print(list);
-
+    tbal = list.map((m) => (m["amount"])).reduce((a, b) => a + b);
     print("Data is set");
   }
 
-  void getInvoiceData() async {
-    SharedPreferences _preferences = await SharedPreferences.getInstance();
-    setState(() {
-      print(_preferences.get("desc"));
-      print(_preferences.get("qty"));
-      print(_preferences.get("ucost"));
-    });
-  }
+  // void getInvoiceData() async {
+  //   SharedPreferences _preferences = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     print(_preferences.get("desc"));
+  //     print(_preferences.get("qty"));
+  //     print(_preferences.get("ucost"));
+  //   });
+  // }
 }
