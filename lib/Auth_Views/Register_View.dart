@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -27,6 +28,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  var fcm = null ;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isSecured = true;
@@ -39,6 +42,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey();
   var maxLength = 10;
   var textLength = 0;
+  @override
+  void initState() {
+    print("hy");
+    generateMsgToken();
+
+    super.initState();
+
+
+  }
+  generateMsgToken() async{
+    print("Hey yalagala Plaese wait function is under process");
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    print("Messaging intialized successfully");
+     firebaseMessaging.requestPermission().then((value) => print(value));
+    fcm =  await firebaseMessaging.getToken();
+    print(fcm);
+    print("success");
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -459,7 +480,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> getRegister(_emailController, _passwordController,
       _usernameController, _phonenumberController) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
 
     if (_formkey.currentState!.validate()) {
       setState(() => _isLoading = true);
@@ -470,7 +491,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 password: _passwordController.text.toString())
             .then((cred) {
           if (cred.user != null) {
-            storeUserData();
+            storeUserData(fcm);
+            // FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+            //  firebaseMessaging.requestPermission().then((value) => print(value));
+            // var fcmtoken = firebaseMessaging.getToken().then((value){
+            //   storeUserData(value);
+            // }
+            // );
+
           } else {}
           setState(() => _isLoading = false);
         });
@@ -486,9 +514,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> storeUserData() async {
+  Future<void> storeUserData(fcmtoken) async {
     FirebaseFirestore _fireStore = FirebaseFirestore.instance;
     String uid = _auth.currentUser!.uid.toString();
+    print("Hey yalagala Plaese wait function is under process");
+
+    print("Messaging intialized successfully");
+
+
+
     await _fireStore.collection("EmployeeData").doc(uid).set({
       "uid": uid,
       "uname": _usernameController.text.toString(),
@@ -504,7 +538,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "econtact": null,
       "udesignation": null,
       "gender": null,
+      "FCM Token":fcm
     }, SetOptions(merge: true)).then((value) => Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => SuccessScreen())));
+    print("success");
+
+
   }
+
 }

@@ -23,7 +23,7 @@ class _NewHomeState extends State<NewHome> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // getarrayLength();
+    // getarrayLength();
   }
 
   @override
