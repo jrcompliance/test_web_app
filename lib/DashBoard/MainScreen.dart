@@ -79,13 +79,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             // scaleAnimation(
             //   updateProfile(),
 
-                ScaleAnimatedWidget.tween(
-                    duration: Duration(seconds: 10),
-                    scaleDisabled: 1.5,
-                    scaleEnabled: 1,
-                    child: updateProfile(),
-                  )
-
+            ScaleAnimatedWidget.tween(
+              duration: Duration(seconds: 10),
+              scaleDisabled: 1.5,
+              scaleEnabled: 1,
+              child: updateProfile(),
+            )
           ],
         ),
       ),
@@ -214,7 +213,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-            //  TaskPreview(),
+              //  TaskPreview(),
             ],
           );
         }
@@ -234,7 +233,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              Finance1(),
+              FinanceScreen(),
             ],
           );
         }

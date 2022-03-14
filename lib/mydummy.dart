@@ -23,11 +23,12 @@ class _MyDummyState extends State<MyDummy> {
       ),
     );
   }
-  generateMsgToken()async{
+
+  generateMsgToken() async {
     print("Hey yalagala Plaese wait function is under process");
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     print("Messaging intialized successfully");
-    await firebaseMessaging.requestPermission().then((value) => print(value));
+    //await firebaseMessaging.requestPermission().then((value) => print(value));
     await firebaseMessaging.getToken().then((value) => print(value));
     print("success");
   }

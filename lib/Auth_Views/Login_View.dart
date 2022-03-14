@@ -1,5 +1,6 @@
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -56,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           key: _formKey,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               MyLogo(),
@@ -134,8 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: size.width * 0.075),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Email Address",
                                         style: TxtStls.fieldtitlestyle),
@@ -262,6 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                       onTap: () {
+                                        generateMsgToken();
                                         getLogin(_emailController,
                                             _passwordController);
                                       },
@@ -271,8 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       alignment: Alignment.center,
                                       child: RichText(
                                         text: TextSpan(
-                                            text:
-                                                "Don't have an account yet? ",
+                                            text: "Don't have an account yet? ",
                                             style: TxtStls.fieldtitlestyle,
                                             children: <TextSpan>[
                                               TextSpan(
@@ -286,8 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                               MaterialPageRoute(
                                                                   builder: (_) =>
                                                                       RegisterScreen()),
-                                                              (route) =>
-                                                                  false);
+                                                              (route) => false);
                                                         })
                                             ]),
                                       ),
@@ -322,6 +320,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  generateMsgToken() async {
+    print("Hey yalagala Plaese wait function is under process");
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    print("Messaging intialized successfully");
+    await firebaseMessaging.requestPermission().then((value) => print(value));
+    await firebaseMessaging.getToken().then((value) => print(value));
+    print("success");
   }
 
   Future<void> getLogin(
