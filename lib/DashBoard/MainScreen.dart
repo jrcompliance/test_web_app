@@ -233,7 +233,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              FinanceScreen(),
+              //FinanceScreen(),
             ],
           );
         }
