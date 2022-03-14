@@ -1186,6 +1186,8 @@ class _FinanceScreenState extends State<FinanceScreen> {
     print("Data is set");
   }
 
+
+
   // void getInvoiceData() async {
   //   SharedPreferences _preferences = await SharedPreferences.getInstance();
   //   setState(() {
