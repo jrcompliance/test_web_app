@@ -376,138 +376,144 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       ? Center(
                           child: SpinKitFadingCube(color: btnColor, size: 30),
                         )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              child: logoBase64 == null
-                                  ? CircleAvatar(
-                                      maxRadius: 40.0,
-                                      child: Icon(Icons.camera_alt),
-                                    )
-                                  : CircleAvatar(
-                                      maxRadius: 40.0,
-                                      backgroundImage: MemoryImage(logoBase64!),
+                      : Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                child: logoBase64 == null
+                                    ? CircleAvatar(
+                                        maxRadius: 40.0,
+                                        child: Icon(Icons.camera_alt),
+                                      )
+                                    : CircleAvatar(
+                                        maxRadius: 40.0,
+                                        backgroundImage:
+                                            MemoryImage(logoBase64!),
+                                      ),
+                                onTap: () async {
+                                  FilePickerResult? pickedfile =
+                                      await FilePicker.platform.pickFiles();
+                                  if (pickedfile != null) {
+                                    Uint8List? fileBytes =
+                                        pickedfile.files.first.bytes;
+                                    String fileName =
+                                        pickedfile.files.first.name;
+                                    logoBase64 = fileBytes;
+                                    name = fileName;
+                                    setState(() {});
+                                  } else {}
+                                },
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              _field(_roleController, true, "Enter Your Role"),
+                              _field(_econtactController, true,
+                                  "Enter Emergency Contact"),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: _field(_bgroupController, true,
+                                          "Enter Blood Group")),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                      child: _field(_dojController, true,
+                                          "Select Date of Joining")),
+                                ],
+                              ),
+                              _field(_addressController, true, "Enter address"),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 2.0, horizontal: 3.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0)),
+                                      color: Colors.orangeAccent,
                                     ),
-                              onTap: () async {
-                                FilePickerResult? pickedfile =
-                                    await FilePicker.platform.pickFiles();
-                                if (pickedfile != null) {
-                                  Uint8List? fileBytes =
-                                      pickedfile.files.first.bytes;
-                                  String fileName = pickedfile.files.first.name;
-                                  logoBase64 = fileBytes;
-                                  name = fileName;
-                                  setState(() {});
-                                } else {}
-                              },
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                            ),
-                            _field(_roleController, true, "Enter Your Role"),
-                            _field(_econtactController, true,
-                                "Enter Emergency Contact"),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: _field(_bgroupController, true,
-                                        "Enter Blood Group")),
-                                SizedBox(width: 10),
-                                Expanded(
-                                    child: _field(_dojController, true,
-                                        "Select Date of Joining")),
-                              ],
-                            ),
-                            _field(_addressController, true, "Enter address"),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2.0, horizontal: 3.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    color: Colors.orangeAccent,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Theme(
-                                        data: ThemeData(
-                                            unselectedWidgetColor: bgColor),
-                                        child: Radio(
-                                          activeColor: btnColor,
-                                          value: "Male",
-                                          groupValue: radioItem,
-                                          onChanged: (val) {
-                                            radioItem = val.toString();
-                                            setState(() {});
-                                          },
-                                          toggleable: false,
+                                    child: Row(
+                                      children: [
+                                        Theme(
+                                          data: ThemeData(
+                                              unselectedWidgetColor: bgColor),
+                                          child: Radio(
+                                            activeColor: btnColor,
+                                            value: "Male",
+                                            groupValue: radioItem,
+                                            onChanged: (val) {
+                                              radioItem = val.toString();
+                                              setState(() {});
+                                            },
+                                            toggleable: false,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        "Male",
-                                        style: TxtStls.fieldstyle1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: 120,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2.0, horizontal: 3.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    color: wonClr,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Theme(
-                                        data: ThemeData(
-                                            unselectedWidgetColor: bgColor),
-                                        child: Radio(
-                                          activeColor: btnColor,
-                                          value: "Female",
-                                          groupValue: radioItem,
-                                          onChanged: (val) {
-                                            radioItem = val.toString();
-                                            setState(() {});
-                                          },
-                                          toggleable: false,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Female",
-                                        style: TxtStls.fieldstyle1,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            logoBase64 == null
-                                ? SizedBox()
-                                : Align(
-                                    alignment: Alignment.centerRight,
-                                    child: RaisedButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        elevation: 0.0,
-                                        onPressed: () {
-                                          completeprofile(name, logoBase64);
-                                        },
-                                        child: Text(
-                                          "Update",
+                                        Text(
+                                          "Male",
                                           style: TxtStls.fieldstyle1,
                                         ),
-                                        color: btnColor),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 120,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 2.0, horizontal: 3.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0)),
+                                      color: wonClr,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Theme(
+                                          data: ThemeData(
+                                              unselectedWidgetColor: bgColor),
+                                          child: Radio(
+                                            activeColor: btnColor,
+                                            value: "Female",
+                                            groupValue: radioItem,
+                                            onChanged: (val) {
+                                              radioItem = val.toString();
+                                              setState(() {});
+                                            },
+                                            toggleable: false,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Female",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                      ],
+                                    ),
                                   )
-                          ],
+                                ],
+                              ),
+                              logoBase64 == null
+                                  ? SizedBox()
+                                  : Align(
+                                      alignment: Alignment.centerRight,
+                                      child: RaisedButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          elevation: 0.0,
+                                          onPressed: () {
+                                            completeprofile(name, logoBase64);
+                                          },
+                                          child: Text(
+                                            "Update",
+                                            style: TxtStls.fieldstyle1,
+                                          ),
+                                          color: btnColor),
+                                    )
+                            ],
+                          ),
                         ),
                 );
               },
@@ -521,6 +527,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final TextEditingController _bgroupController = TextEditingController();
   final TextEditingController _econtactController = TextEditingController();
   final TextEditingController _dojController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   Widget _field(_controller, bool enable, hint) {
     Size size = MediaQuery.of(context).size;
@@ -532,8 +539,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         validator: (fullname) {
           if (fullname!.isEmpty) {
             return "field can not be empty";
-          } else if (fullname.length < 3) {
-            return "field should be atleast 3 letters";
           } else {
             return null;
           }
@@ -552,24 +557,27 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   completeprofile(name, logoBase64) {
-    Provider.of<CompleteProfielProvider>(context, listen: false)
-        .completProfile(
-            name,
-            logoBase64,
-            _roleController.text.toString(),
-            _econtactController.text.toString(),
-            _bgroupController.text.toString(),
-            _addressController.text.toString(),
-            radioItem.toString(),
-            _dojController.text.toString())
-        .then((value) {
-      if (Provider.of<CompleteProfielProvider>(context, listen: false).error ==
-          null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => MainScreen()));
-      }
-      ;
-    });
+    if (_formKey.currentState!.validate()) {
+      Provider.of<CompleteProfielProvider>(context, listen: false)
+          .completProfile(
+              name,
+              logoBase64,
+              _roleController.text.toString(),
+              _econtactController.text.toString(),
+              _bgroupController.text.toString(),
+              _addressController.text.toString(),
+              radioItem.toString(),
+              _dojController.text.toString())
+          .then((value) {
+        if (Provider.of<CompleteProfielProvider>(context, listen: false)
+                .error ==
+            null) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => MainScreen()));
+        }
+        ;
+      });
+    }
   }
 }
 
