@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:test_web_app/Auth_Views/Url_launchers.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:animated_widgets/widgets/translation_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -480,7 +480,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  flex: 3,
+                                    flex: 3,
                                     child: Text("# Description",
                                         style: TxtStls.fieldstyle)),
                                 Expanded(
@@ -521,7 +521,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                                     list[index]["desc"],
                                                 style: TxtStls.fieldstyle),
                                           ),
-
                                           Expanded(
                                               child: Row(
                                             mainAxisAlignment:
@@ -556,13 +555,11 @@ class _FinanceScreenState extends State<FinanceScreen> {
                                               )),
                                               Expanded(
                                                   child: Align(
-                                                    alignment:
+                                                alignment:
                                                     Alignment.centerRight,
-                                                    child: Text(
-                                                        ""
-                                                            .toString(),
-                                                        style: TxtStls.fieldstyle),
-                                                  )),
+                                                child: Text("".toString(),
+                                                    style: TxtStls.fieldstyle),
+                                              )),
                                               Expanded(
                                                 child: Align(
                                                   alignment:
@@ -799,11 +796,13 @@ class _FinanceScreenState extends State<FinanceScreen> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(
-                                  right: isExpand ?size.width*0.1: size.width * 0.6,
+                                  right: isExpand
+                                      ? size.width * 0.1
+                                      : size.width * 0.6,
                                   left: 10,
                                   top: 10,
                                   bottom: 10,
-                                    ),
+                                ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: fieldColor,
@@ -1170,7 +1169,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
     });
   }
 
-  List invoicelist = ["SAC No.", "Qty.", "UnitCost.","Disc(%)",    "Amount"];
+  List invoicelist = ["SAC No.", "Qty.", "UnitCost.", "Disc(%)", "Amount"];
   List list = [];
   void addingInvoiceData() async {
     double qty = double.parse(_qtyController.text.toString());
@@ -1185,8 +1184,6 @@ class _FinanceScreenState extends State<FinanceScreen> {
     tbal = list.map((m) => (m["amount"])).reduce((a, b) => a + b);
     print("Data is set");
   }
-
-
 
   // void getInvoiceData() async {
   //   SharedPreferences _preferences = await SharedPreferences.getInstance();

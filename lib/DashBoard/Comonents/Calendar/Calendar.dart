@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/UserProvider/GstProvider.dart';
-import 'package:test_web_app/Auth_Views/Url_launchers.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);

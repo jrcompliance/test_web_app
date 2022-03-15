@@ -1,23 +1,17 @@
-import 'dart:ui';
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_button/constants.dart';
 import 'package:sign_button/create_button.dart';
-import 'package:test_web_app/Auth_Views/Url_launchers.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Auth_Views/MyLogo.dart';
-import 'package:test_web_app/Auth_Views/Success_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/RegisterProvider.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDataProvider.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Success_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -27,34 +21,15 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  @override
-  void initState() {
-    generateMsgToken();
-    super.initState();
-  }
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   bool _isSecured = true;
   bool _isAgree = false;
-  bool _isLoading = false;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phonenumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formkey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   var maxLength = 10;
   var textLength = 0;
-  var fcm;
-  generateMsgToken() async {
-    FirebaseMessaging _firebasemessging = FirebaseMessaging.instance;
-    _firebasemessging.requestPermission();
-    var fcm1 = await _firebasemessging.getToken();
-    print(fcm1);
-    setState(() {
-      fcm = fcm1;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Expanded(
               flex: 1,
-              child: _isLoading
+              child: Provider.of<RegisterProvider>(context).isLoading
                   ? Center(
                       child: SpinKitFadingCube(
                         size: size.height * 0.05,
@@ -87,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               'Sign Up',
                               style: TxtStls.titlestyle,
                             ),
-                            SizedBox(height: size.height * 0.01),
+                            space(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -103,9 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(7.0))),
                                     btnText: 'Google',
-                                    onPressed: () {
-                                      print("Google");
-                                    }),
+                                    onPressed: () {}),
                                 SizedBox(width: 25),
                                 SignInButton(
                                     buttonType: ButtonType.facebookDark,
@@ -119,12 +92,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(7.0))),
                                     btnText: 'Facebook',
-                                    onPressed: () {
-                                      print("facebook");
-                                    }),
+                                    onPressed: () {}),
                               ],
                             ),
-                            SizedBox(height: size.height * 0.01),
+                            space(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.05),
@@ -157,51 +128,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.075),
                               child: Form(
-                                key: _formkey,
+                                key: _formKey,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Full Name",
                                         style: TxtStls.fieldtitlestyle),
-                                    Container(
-                                      decoration: deco,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
-                                        child: TextFormField(
-                                          controller: _usernameController,
-                                          style: TxtStls.fieldstyle,
-                                          decoration: InputDecoration(
-                                            hintText: "Your name",
-                                            hintStyle: TxtStls.fieldstyle,
-                                            border: InputBorder.none,
-                                          ),
-                                          validator: (fullname) {
-                                            if (fullname!.isEmpty) {
-                                              return "Name can not be empty";
-                                            } else if (fullname.length < 3) {
-                                              return "Name should be atleast 3 letters";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                        ),
-                                      ),
+                                    field(
+                                      _usernameController,
+                                      "Enter Your name..",
+                                      (fullname) {
+                                        if (fullname!.isEmpty) {
+                                          return "Name can not be empty";
+                                        } else if (fullname.length < 3) {
+                                          return "Name should be atleast 3 letters";
+                                        } else {
+                                          return null;
+                                        }
+                                      },
                                     ),
-                                    SizedBox(height: 10.0),
+                                    space(),
                                     Text("Phone Number",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
                                       decoration: deco,
                                       child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: size.width * 0.01),
                                         child: TextFormField(
+                                          cursorColor: btnColor,
                                           keyboardType: TextInputType.number,
                                           maxLength: maxLength,
                                           controller: _phonenumberController,
                                           style: TxtStls.fieldstyle,
                                           decoration: InputDecoration(
+                                            suffixStyle: ClrStls.tnClr,
+                                            errorStyle: ClrStls.errorstyle,
                                             suffixText:
                                                 '${textLength.toString()}/${maxLength.toString()}',
                                             counterText: "",
@@ -234,39 +196,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 10.0),
+                                    space(),
                                     Text("Email Address",
                                         style: TxtStls.fieldtitlestyle),
-                                    Container(
-                                      decoration: deco,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
-                                        child: TextFormField(
-                                          controller: _emailController,
-                                          style: TxtStls.fieldstyle,
-                                          decoration: InputDecoration(
-                                            hintText: "Enter email address",
-                                            hintStyle: TxtStls.fieldstyle,
-                                            border: InputBorder.none,
-                                          ),
-                                          validator: (email) {
-                                            String pattern =
-                                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                            RegExp regExp = RegExp(pattern);
-                                            if (email!.isEmpty) {
-                                              return "Email can not be empty";
-                                            } else if (!regExp
-                                                .hasMatch(email)) {
-                                              return "Enter a valid email";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
+                                    field(_emailController, "Enter your email",
+                                        (email) {
+                                      String pattern =
+                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp regExp = RegExp(pattern);
+                                      if (email!.isEmpty) {
+                                        return "Email can not be empty";
+                                      } else if (!regExp.hasMatch(email)) {
+                                        return "Enter a valid email";
+                                      } else {
+                                        return null;
+                                      }
+                                    }),
+                                    space(),
                                     Text("Password",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
@@ -275,17 +221,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         padding: EdgeInsets.only(
                                             left: 15, right: 15, top: 2),
                                         child: TextFormField(
+                                          cursorColor: btnColor,
                                           controller: _passwordController,
                                           style: TxtStls.fieldstyle,
                                           obscureText: _isSecured,
                                           decoration: InputDecoration(
+                                            errorStyle: ClrStls.errorstyle,
                                             hintText: "Password",
                                             hintStyle: TxtStls.fieldstyle,
                                             border: InputBorder.none,
                                             suffixIcon: IconButton(
-                                                icon: Icon(_isSecured
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility),
+                                                icon: Icon(
+                                                  _isSecured
+                                                      ? Icons.visibility_off
+                                                      : Icons.visibility,
+                                                  color: btnColor,
+                                                ),
                                                 onPressed: () {
                                                   setState(() {
                                                     _isSecured = !_isSecured;
@@ -305,7 +256,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 10.0),
+                                    space(),
                                     Row(
                                       children: [
                                         Checkbox(
@@ -383,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         )
                                       ],
                                     ),
-                                    SizedBox(height: 12.0),
+                                    space(),
                                     _isAgree
                                         ? InkWell(
                                             child: Container(
@@ -406,11 +357,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               ),
                                             ),
                                             onTap: () {
-                                              getRegister(
-                                                  _emailController,
-                                                  _passwordController,
-                                                  _usernameController,
-                                                  _phonenumberController);
+                                              getRegister(context);
                                             },
                                           )
                                         : Container(
@@ -425,7 +372,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               style: TextStyle(color: txtColor),
                                             ),
                                           ),
-                                    SizedBox(height: 12.0),
+                                    space(),
                                     Align(
                                       alignment: Alignment.center,
                                       child: RichText(
@@ -474,54 +421,65 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<void> getRegister(_emailController, _passwordController,
-      _usernameController, _phonenumberController) async {
-    if (_formkey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      try {
-        await _auth
-            .createUserWithEmailAndPassword(
-                email: _emailController.text.toString(),
-                password: _passwordController.text.toString())
-            .then((cred) {
-          if (cred.user != null) {
-            storeUserData(fcm);
-          } else {}
-          setState(() => _isLoading = false);
-        });
-      } on FirebaseException catch (e) {
-        print(e.toString());
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          dismissDirection: DismissDirection.startToEnd,
-          content: Text(e.message.toString()),
-          backgroundColor: Colors.red,
-        ));
-      }
-    }
+  // field widget
+  Widget field(_controller, hintText, _validator) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      decoration: deco,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.01,
+        ),
+        child: TextFormField(
+            cursorColor: btnColor,
+            controller: _controller,
+            style: TxtStls.fieldstyle,
+            decoration: InputDecoration(
+              errorStyle: ClrStls.errorstyle,
+              hintText: hintText,
+              hintStyle: TxtStls.fieldstyle,
+              border: InputBorder.none,
+            ),
+            validator: _validator),
+      ),
+    );
   }
 
-  Future<void> storeUserData(fcmtoken) async {
-    FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-    String uid = _auth.currentUser!.uid.toString();
-    await _fireStore.collection("EmployeeData").doc(uid).set({
-      "uid": uid,
-      "uname": _usernameController.text.toString(),
-      "uemail": _emailController.text.toString(),
-      "uphoneNumber": _phonenumberController.text.toString(),
-      "uimage": "",
-      "password": _passwordController.text.toString(),
-      "urole": "Employee",
-      "TCPB": _isAgree,
-      "add": null,
-      "bgroup": null,
-      "doj": null,
-      "econtact": null,
-      "udesignation": null,
-      "gender": null,
-      "FCM Token": fcm
-    }, SetOptions(merge: true)).then((value) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => SuccessScreen())));
-    print("success");
+  Widget space() {
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(height: size.height * 0.01);
+  }
+
+  // register method
+
+  getRegister(BuildContext context) {
+    var provider = Provider.of<RegisterProvider>(context, listen: false);
+    var provider1 = Provider.of<StoreUserDataProvider>(context, listen: false);
+    if (_formKey.currentState!.validate()) {
+      provider
+          .getRegister(_emailController.text.toString(),
+              _passwordController.text.toString())
+          .then((value) {
+        if (provider.success != null) {
+          provider1.storeUserData(
+              _usernameController.text.toString(),
+              _emailController.text.toString(),
+              _passwordController.text.toString(),
+              _phonenumberController.text.toString(),
+              _isAgree);
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => SuccessScreen()),
+              (route) => false);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            dismissDirection: DismissDirection.startToEnd,
+            content: Text(provider.error.toString()),
+            backgroundColor: Colors.red,
+          ));
+        }
+      });
+    }
   }
 }

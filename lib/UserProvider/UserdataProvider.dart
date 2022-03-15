@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 
 class UserDataProvider extends ChangeNotifier {
   String? username;
@@ -22,6 +21,7 @@ class UserDataProvider extends ChangeNotifier {
           .doc(uid)
           .get()
           .then((value) {
+        print(value.data());
         username = value.get("uname");
         email = value.get("uemail");
         phone = value.get("uphoneNumber");

@@ -1,15 +1,14 @@
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_button/constants.dart';
 import 'package:sign_button/create_button.dart';
-import 'package:test_web_app/Auth_Views/MyLogo.dart';
-import 'package:test_web_app/Auth_Views/RecoverPassword_View.dart';
-import 'package:test_web_app/Auth_Views/Register_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LoginProvider.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/RecoverPassword_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Register_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 
@@ -21,11 +20,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   bool _isSecured = true;
   bool _isAgree = false;
-  bool _isLoading = false;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -41,14 +37,14 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Expanded(
               flex: 1,
-              child: _isLoading
+              child: Provider.of<LoginProvider>(context).isLoading
                   ? Center(
                       child: SpinKitFadingCube(
                         size: size.height * 0.05,
                         color: btnColor,
                       ),
                     )
-                  : Container(
+                  : SizedBox(
                       width: size.width,
                       height: size.height,
                       child: ScaleAnimatedWidget.tween(
@@ -80,9 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(7.0))),
                                       btnText: 'Google',
-                                      onPressed: () {
-                                        print('click');
-                                      }),
+                                      onPressed: () {}),
                                   SizedBox(width: 25),
                                   SignInButton(
                                       buttonType: ButtonType.facebookDark,
@@ -96,9 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(7.0))),
                                       btnText: 'Facebook',
-                                      onPressed: () {
-                                        print('click');
-                                      }),
+                                      onPressed: () {}),
                                 ],
                               ),
                               SizedBox(height: size.height * 0.01),
@@ -141,12 +133,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Container(
                                       decoration: deco,
                                       child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: size.width * 0.01),
                                         child: TextFormField(
+                                          cursorColor: btnColor,
                                           controller: _emailController,
                                           style: TxtStls.fieldstyle,
                                           decoration: InputDecoration(
+                                            errorStyle: ClrStls.errorstyle,
                                             hintText: "Enter email address",
                                             hintStyle: TxtStls.fieldstyle,
                                             border: InputBorder.none,
@@ -173,20 +167,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Container(
                                       decoration: deco,
                                       child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: size.width * 0.01),
                                         child: TextFormField(
+                                          cursorColor: btnColor,
                                           controller: _passwordController,
                                           style: TxtStls.fieldstyle,
                                           obscureText: _isSecured,
                                           decoration: InputDecoration(
+                                            errorStyle: ClrStls.errorstyle,
                                             hintText: "Password",
                                             hintStyle: TxtStls.fieldstyle,
                                             border: InputBorder.none,
                                             suffixIcon: IconButton(
-                                                icon: Icon(_isSecured
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility),
+                                                icon: Icon(
+                                                  _isSecured
+                                                      ? Icons.visibility_off
+                                                      : Icons.visibility,
+                                                  color: btnColor,
+                                                ),
                                                 onPressed: () {
                                                   setState(() {
                                                     _isSecured = !_isSecured;
@@ -261,9 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                       onTap: () {
-                                        generateMsgToken();
-                                        getLogin(_emailController,
-                                            _passwordController);
+                                        //generateMsgToken();
+                                        getLogin(context);
                                       },
                                     ),
                                     SizedBox(height: size.height * 0.01),
@@ -322,57 +320,42 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  generateMsgToken() async {
-    print("Hey yalagala Plaese wait function is under process");
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    print("Messaging intialized successfully");
-    await firebaseMessaging.requestPermission().then((value) => print(value));
-    await firebaseMessaging.getToken().then((value) => print(value));
-    print("success");
-  }
+  // generateMsgToken() async {
+  //   print("Hey yalagala Plaese wait function is under process");
+  //   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  //   print("Messaging intialized successfully");
+  //   await firebaseMessaging.requestPermission().then((value) => print(value));
+  //   await firebaseMessaging.getToken().then((value) => print(value));
+  //   print("success");
+  // }
 
-  Future<void> getLogin(
-    _emailController,
-    _passwordController,
-  ) async {
-    Size size = MediaQuery.of(context).size;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
+  getLogin(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      try {
-        await _auth
-            .signInWithEmailAndPassword(
-                email: _emailController.text.toString(),
-                password: _passwordController.text.toString())
-            .then((cred) {
-          if (cred.user != null) {
-            prefs.setString("email", _emailController.text.toString());
-            prefs.setString("password", _passwordController.text.toString());
-            prefs.setString("uid", _auth.currentUser!.uid.toString());
-          } else {}
+      Provider.of<LoginProvider>(context, listen: false)
+          .getLogin(_emailController.text.toString(),
+              _passwordController.text.toString())
+          .then((value) {
+        if (Provider.of<LoginProvider>(context, listen: false).success !=
+            null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             dismissDirection: DismissDirection.startToEnd,
-            content: Expanded(child: Text("Log in Successfully")),
-            padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.4, vertical: size.height * 0.02),
+            content: Text("Login successfully"),
             backgroundColor: Colors.green,
           ));
-          setState(() => _isLoading = false);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => MainScreen()));
-        });
-      } on FirebaseException catch (e) {
-        print(e.toString());
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          dismissDirection: DismissDirection.startToEnd,
-          content: Expanded(child: Text(e.message.toString())),
-          padding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.3, vertical: size.height * 0.02),
-          backgroundColor: Colors.red,
-        ));
-      }
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => MainScreen()),
+              (route) => false);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            dismissDirection: DismissDirection.startToEnd,
+            content: Text(Provider.of<LoginProvider>(context, listen: false)
+                .error
+                .toString()),
+            backgroundColor: Colors.red,
+          ));
+        }
+      });
     }
   }
 }

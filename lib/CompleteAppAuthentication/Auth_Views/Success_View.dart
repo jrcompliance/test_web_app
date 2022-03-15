@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:animated_widgets/widgets/rotation_animated.dart';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:animated_widgets/widgets/size_animated.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Auth_Views/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
+
 import 'package:test_web_app/Constants/reusable.dart';
 
 class SuccessScreen extends StatefulWidget {

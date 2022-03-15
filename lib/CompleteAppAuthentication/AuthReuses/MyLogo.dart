@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:test_web_app/Auth_Views/Url_launchers.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 class MyLogo extends StatelessWidget {

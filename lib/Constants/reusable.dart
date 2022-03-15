@@ -80,6 +80,12 @@ class ClrStls {
       fontSize: 12, color: btnColor, fontWeight: FontWeight.bold);
   static TextStyle endClr = GoogleFonts.nunito(
       fontSize: 12, color: neClr, fontWeight: FontWeight.bold);
+  static TextStyle errorstyle = GoogleFonts.nunito(
+      textStyle:
+          TextStyle(fontSize: 12, color: clsClr, fontWeight: FontWeight.bold),
+      fontSize: 12,
+      color: clsClr,
+      fontWeight: FontWeight.bold);
 }
 
 const primaryColor = Color(0xFF2697FF);

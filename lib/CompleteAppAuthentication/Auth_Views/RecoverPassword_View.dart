@@ -1,9 +1,10 @@
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Auth_Views/MyLogo.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/ResetPasswordProvider.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+
 import 'package:test_web_app/Constants/reusable.dart';
 
 class Recoverpassword extends StatefulWidget {
@@ -15,11 +16,10 @@ class Recoverpassword extends StatefulWidget {
 
 class _RecoverpasswordState extends State<Recoverpassword> {
   final TextEditingController _emailController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formkey = GlobalKey();
-  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: ScaleAnimatedWidget.tween(
         duration: Duration(seconds: 1),
@@ -38,11 +38,12 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     MyLogo(),
-                    SizedBox(height: 10.0),
+                    SizedBox(height: size.height * 0.01),
                     Text("Password Recover", style: TxtStls.titlestyle),
-                    SizedBox(height: 15.0),
+                    SizedBox(height: size.height * 0.01),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 120.0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.06),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,12 +52,14 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                           Container(
                             decoration: deco,
                             child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 15, right: 15, top: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.01),
                               child: TextFormField(
+                                cursorColor: btnColor,
                                 controller: _emailController,
                                 style: TxtStls.fieldstyle,
                                 decoration: InputDecoration(
+                                  errorStyle: ClrStls.errorstyle,
                                   hintText: "Enter email address",
                                   hintStyle: TxtStls.fieldstyle,
                                   border: InputBorder.none,
@@ -76,24 +79,31 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20.0),
-                          InkWell(
-                            child: Container(
-                              padding: EdgeInsets.all(12.0),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: btnColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              child: Text(
-                                "Reset Your Password",
-                                style: TextStyle(color: bgColor),
-                              ),
-                            ),
-                            onTap: () {
-                              forgotPassword(_emailController);
-                            },
-                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Provider.of<PasswordResetProvider>(context).isLoading
+                              ? Center(
+                                  child: SpinKitFadingCube(
+                                    color: btnColor,
+                                    size: 20,
+                                  ),
+                                )
+                              : InkWell(
+                                  child: Container(
+                                    padding: EdgeInsets.all(12.0),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: btnColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    child: Text(
+                                      "Reset Your Password",
+                                      style: TextStyle(color: bgColor),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    getPassword(context);
+                                  },
+                                ),
                           SizedBox(height: 40.0),
                         ],
                       ),
@@ -108,39 +118,31 @@ class _RecoverpasswordState extends State<Recoverpassword> {
     );
   }
 
-  Future<void> forgotPassword(_emailController) async {
-    try {
-      if (_formkey.currentState!.validate()) {
-        setState(() {
-          _isLoading = true;
-        });
-
-        await _auth
-            .sendPasswordResetEmail(email: _emailController.text.toString())
-            .then((value) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-              (route) => false);
+  getPassword(BuildContext context) {
+    if (_formkey.currentState!.validate()) {
+      Provider.of<PasswordResetProvider>(context, listen: false)
+          .getPassword(_emailController.text.toString())
+          .then((value) {
+        print(Provider.of<PasswordResetProvider>(context, listen: false).error);
+        if (Provider.of<PasswordResetProvider>(context, listen: false).error ==
+            null) {
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            dismissDirection: DismissDirection.startToEnd,
-            content: Text(
-                "Password Reset Link sent to your registered email Successfully"),
-            backgroundColor: Colors.green,
-            padding: EdgeInsets.symmetric(horizontal: 600, vertical: 15),
-          ));
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      }
-    } on FirebaseException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        dismissDirection: DismissDirection.startToEnd,
-        content: Text(e.message.toString()),
-        backgroundColor: Colors.red,
-        padding: EdgeInsets.symmetric(horizontal: 600, vertical: 15),
-      ));
+              dismissDirection: DismissDirection.startToEnd,
+              content: Text(
+                  "Password Reset Link sent to your registered email Successfully"),
+              backgroundColor: Colors.green));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              dismissDirection: DismissDirection.startToEnd,
+              content: Text(
+                Provider.of<PasswordResetProvider>(context, listen: false)
+                    .error
+                    .toString(),
+              ),
+              backgroundColor: Colors.red));
+        }
+      });
     }
   }
 }

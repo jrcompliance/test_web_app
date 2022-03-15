@@ -1,21 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Auth_Views/Login_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LogOutProvider.dart';
+
+import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Constants/Services.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
 
 class Header extends StatefulWidget {
   final String title;
-  Header({Key? key, required this.title}) : super(key: key);
+  const Header({Key? key, required this.title}) : super(key: key);
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -23,8 +18,6 @@ class Header extends StatefulWidget {
 
 class _HeaderState extends State<Header> {
   @override
-  FirebaseFirestore fireStore = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -59,7 +52,7 @@ class _HeaderState extends State<Header> {
                 color: Colors.grey),
             IconButton(
                 onPressed: () {
-                  _showMyDialog();
+                  _showMyDialog(context);
                 },
                 icon: Icon(Icons.exit_to_app),
                 iconSize: 20,
@@ -68,51 +61,74 @@ class _HeaderState extends State<Header> {
         ));
   }
 
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await FirebaseAuth.instance.signOut().then((value) {
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
-      prefs.clear();
+  logout(BuildContext context) async {
+    Provider.of<LogOutProvider>(context, listen: false)
+        .getLogout()
+        .then((value) {
+      if (Provider.of<LogOutProvider>(context, listen: false).error == null) {
+        Future.delayed(Duration(seconds: 4)).then((value) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => LoginScreen()),
+              (route) => false);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            dismissDirection: DismissDirection.startToEnd,
+            content: Text("LogOut Successfully"),
+            backgroundColor: Colors.green,
+          ));
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          dismissDirection: DismissDirection.startToEnd,
+          content: Text(Provider.of<LogOutProvider>(context, listen: false)
+              .error
+              .toString()),
+          backgroundColor: Colors.red,
+        ));
+      }
     });
   }
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showMyDialog(BuildContext context) async {
     return showDialog<void>(
       barrierColor: Colors.black.withOpacity(0.5),
       context: context,
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          title: Text(
-            "Are you sure to LogOut ?",
-            style: TxtStls.fieldtitlestyle,
-          ),
-          actions: <Widget>[
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: grClr,
-              child: Text(
-                'Cancel',
-                style: TxtStls.fieldstyle1,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              color: clsClr,
-              child: Text('Ok', style: TxtStls.fieldstyle1),
-              onPressed: () {
-                logout();
-              },
-            ),
-          ],
-        );
+        return Provider.of<LogOutProvider>(context).isLoading
+            ? Center(
+                child: SpinKitFadingCube(color: btnColor, size: 30),
+              )
+            : AlertDialog(
+                backgroundColor: bgColor,
+                title: Text(
+                  "Are you sure to LogOut ?",
+                  style: TxtStls.fieldtitlestyle,
+                ),
+                actions: <Widget>[
+                  MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    color: grClr,
+                    child: Text(
+                      'Cancel',
+                      style: TxtStls.fieldstyle1,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    color: clsClr,
+                    child: Text('Ok', style: TxtStls.fieldstyle1),
+                    onPressed: () {
+                      logout(context);
+                    },
+                  ),
+                ],
+              );
       },
     );
   }
