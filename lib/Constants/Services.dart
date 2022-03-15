@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];

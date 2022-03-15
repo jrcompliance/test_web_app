@@ -8,27 +8,18 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
-import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
-import 'package:test_web_app/DashBoard/Comonents/Invoices/Invoice.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
-import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
-import 'package:test_web_app/UserProvider/CustomerProvider.dart';
-import 'package:test_web_app/UserProvider/UserProvider.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
-
-import 'Comonents/Finance/Finance1.dart';
+import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
+import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -41,50 +32,35 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   Tabs active = Tabs.Finance;
+  var radioItem;
 
   @override
   void initState() {
     super.initState();
-    //Future.delayed(Duration(seconds: 3)).then((value) => userTasks());
-    // Future.delayed(Duration.zero).then((value) {
-    //   Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    // });
-    Future.delayed(Duration.zero).then((value) {
+    Future.delayed(Duration(seconds: 1)).then((value) {
       Provider.of<UserDataProvider>(context, listen: false).getUserData();
     });
-    Future.delayed(Duration.zero).then((value) {
-      Provider.of<CustmerProvider>(context, listen: false).getCustomers();
+    Future.delayed(Duration(seconds: 3), () {
+      Provider.of<UserDataProvider>(context, listen: false).imageUrl == null
+          ? completeProfile()
+          : null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final userdata = Provider.of<UserDataProvider>(context);
     return Scaffold(
       endDrawerEnableOpenDragGesture: false,
       drawerEnableOpenDragGesture: false,
       drawer: SideDrawer(context),
       endDrawer: MoveDrawer(),
       body: SafeArea(
-        child: Stack(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!Responsive.isSmallScreen(context))
-                  Expanded(child: SideDrawer(context)),
-                Expanded(flex: 6, child: DashboardBody(context)),
-              ],
-            ),
-            // scaleAnimation(
-            //   updateProfile(),
-
-            ScaleAnimatedWidget.tween(
-              duration: Duration(seconds: 10),
-              scaleDisabled: 1.5,
-              scaleEnabled: 1,
-              child: updateProfile(),
-            )
+            if (!Responsive.isSmallScreen(context))
+              Expanded(child: SideDrawer(context)),
+            Expanded(flex: 6, child: DashboardBody(context)),
           ],
         ),
       ),
@@ -158,33 +134,31 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         Scaffold.of(context).openEndDrawer();
                       });
                     },
-                    leading:
-                        userdata.imageUrl == null || userdata.imageUrl == ""
-                            ? Icon(
-                                Icons.person,
-                                color: txtColor,
-                                size: 30,
-                              )
-                            : ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                child: SizedBox(
-                                    height: size.height * 0.06,
-                                    width: size.width * 0.025,
-                                    child: Image.network(
-                                      userdata.imageUrl!,
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.high,
-                                    ))),
-                    title: userdata.username == null
-                        ? Text("")
-                        : Text(userdata.username!, style: TxtStls.fieldstyle),
-                    trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.settings,
-                          color: btnColor,
-                        )),
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        child: SizedBox(
+                            height: size.height * 0.06,
+                            width: size.width * 0.025,
+                            child: userdata.imageUrl == null
+                                ? Icon(
+                                    Icons.person,
+                                    color: txtColor,
+                                    size: 30,
+                                  )
+                                : Image.network(
+                                    userdata.imageUrl!,
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.high,
+                                  ))),
+                    title: Text(
+                        userdata.username == null
+                            ? ""
+                            : userdata.username.toString(),
+                        style: TxtStls.fieldstyle),
+                    trailing: Icon(
+                      Icons.settings,
+                      color: btnColor,
+                    ),
                   );
                 },
               ),
@@ -364,254 +338,238 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-  Uint8List? logoBase64;
-  String? name;
-  chooseProfile() async {
-    FilePickerResult? pickedfile = await FilePicker.platform.pickFiles();
-    if (pickedfile != null) {
-      Uint8List? fileBytes = pickedfile.files.first.bytes;
-      String fileName = pickedfile.files.first.name;
-      logoBase64 = fileBytes;
-      name = fileName;
-      setState(() {});
-    } else {}
-  }
-
-  Widget updateProfile() {
-    // Future.delayed(Duration(seconds: 5));
-    return updateProfile1();
-  }
-
-  updateProfile1() {
-    final userdata = Provider.of<UserDataProvider>(context);
+  void completeProfile() {
     Size size = MediaQuery.of(context).size;
-    if (userdata.imageUrl == null || userdata.imageUrl == "") {
-      return AlertDialog(
-        contentPadding: EdgeInsets.all(0.0),
-        actionsPadding: EdgeInsets.all(0),
-        titlePadding: EdgeInsets.all(0),
-        insetPadding: EdgeInsets.all(0),
-        buttonPadding: EdgeInsets.all(0),
-        backgroundColor: bgColor,
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  color: bgColor),
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              width: size.width * 0.175,
-              height: size.height * 0.35,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Update Profile Picture",
-                    style: TxtStls.fieldtitlestyle,
-                  ),
-                  InkWell(
-                    child: logoBase64 == null
-                        ? CircleAvatar(
-                            maxRadius: 40.0,
-                            child: Icon(Icons.camera_alt),
-                          )
-                        : CircleAvatar(
-                            maxRadius: 40.0,
-                            backgroundImage: MemoryImage(logoBase64!),
-                          ),
-                    onTap: () {
-                      chooseProfile();
-                    },
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Name : ",
-                        style: TxtStls.fieldstyle,
-                      ),
-                      userdata.username == null
-                          ? Text("")
-                          : Text(userdata.username!, style: TxtStls.fieldstyle)
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Email : ",
-                        style: TxtStls.fieldstyle,
-                      ),
-                      userdata.email == null
-                          ? Text("")
-                          : Text(userdata.email!, style: TxtStls.fieldstyle)
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Phone : ",
-                        style: TxtStls.fieldstyle,
-                      ),
-                      userdata.phone == null
-                          ? Text("")
-                          : Text(userdata.phone!, style: TxtStls.fieldstyle)
-                    ],
-                  ),
-                  logoBase64 == null
-                      ? SizedBox()
-                      : Align(
-                          alignment: Alignment.centerRight,
-                          child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              elevation: 0.0,
-                              onPressed: () {
-                                storeUserData();
-                              },
-                              child: Text(
-                                "Update",
-                                style: TxtStls.fieldstyle1,
-                              ),
-                              color: btnColor),
-                        )
-                ],
-              ),
-            );
-          },
-        ),
-      );
-    }
-
-    return Text(" ");
-  }
-
-  alertdialog() {
-    final userdata = Provider.of<UserDataProvider>(context);
-    Size size = MediaQuery.of(context).size;
-    AlertDialog(
-      contentPadding: EdgeInsets.all(0.0),
-      actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
-      insetPadding: EdgeInsets.all(0),
-      buttonPadding: EdgeInsets.all(0),
-      backgroundColor: bgColor,
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                color: bgColor),
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            width: size.width * 0.175,
-            height: size.height * 0.35,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  "Update Profile Picture",
+    Uint8List? logoBase64;
+    String? name;
+    showDialog<AlertDialog>(
+        barrierDismissible: false,
+        barrierColor: txtColor.withOpacity(0.75),
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Center(
+                child: Text(
+                  "Complete Your Profile",
                   style: TxtStls.fieldtitlestyle,
                 ),
-                InkWell(
-                  child: logoBase64 == null
-                      ? CircleAvatar(
-                          maxRadius: 40.0,
-                          child: Icon(Icons.camera_alt),
+              ),
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+            actionsPadding: EdgeInsets.all(0),
+            titlePadding: EdgeInsets.all(0),
+            insetPadding: EdgeInsets.all(0),
+            buttonPadding: EdgeInsets.all(0),
+            backgroundColor: bgColor,
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: bgColor),
+                  padding: EdgeInsets.all(10),
+                  width: size.width * 0.22,
+                  height: size.height * 0.5,
+                  child: Provider.of<CompleteProfielProvider>(context).isLoading
+                      ? Center(
+                          child: SpinKitFadingCube(color: btnColor, size: 30),
                         )
-                      : CircleAvatar(
-                          maxRadius: 40.0,
-                          backgroundImage: MemoryImage(logoBase64!),
-                        ),
-                  onTap: () {
-                    chooseProfile();
-                  },
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Name : ",
-                      style: TxtStls.fieldstyle,
-                    ),
-                    userdata.username == null
-                        ? Text("")
-                        : Text(userdata.username!, style: TxtStls.fieldstyle)
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Email : ",
-                      style: TxtStls.fieldstyle,
-                    ),
-                    userdata.email == null
-                        ? Text("")
-                        : Text(userdata.email!, style: TxtStls.fieldstyle)
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Phone : ",
-                      style: TxtStls.fieldstyle,
-                    ),
-                    userdata.phone == null
-                        ? Text("")
-                        : Text(userdata.phone!, style: TxtStls.fieldstyle)
-                  ],
-                ),
-                logoBase64 == null
-                    ? SizedBox()
-                    : Align(
-                        alignment: Alignment.centerRight,
-                        child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            elevation: 0.0,
-                            onPressed: () {
-                              storeUserData();
-                            },
-                            child: Text(
-                              "Update",
-                              style: TxtStls.fieldstyle1,
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              child: logoBase64 == null
+                                  ? CircleAvatar(
+                                      maxRadius: 40.0,
+                                      child: Icon(Icons.camera_alt),
+                                    )
+                                  : CircleAvatar(
+                                      maxRadius: 40.0,
+                                      backgroundImage: MemoryImage(logoBase64!),
+                                    ),
+                              onTap: () async {
+                                FilePickerResult? pickedfile =
+                                    await FilePicker.platform.pickFiles();
+                                if (pickedfile != null) {
+                                  Uint8List? fileBytes =
+                                      pickedfile.files.first.bytes;
+                                  String fileName = pickedfile.files.first.name;
+                                  logoBase64 = fileBytes;
+                                  name = fileName;
+                                  setState(() {});
+                                } else {}
+                              },
                             ),
-                            color: btnColor),
-                      )
-              ],
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            _field(_roleController, true, "Enter Your Role"),
+                            _field(_econtactController, true,
+                                "Enter Emergency Contact"),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: _field(_bgroupController, true,
+                                        "Enter Blood Group")),
+                                SizedBox(width: 10),
+                                Expanded(
+                                    child: _field(_dojController, true,
+                                        "Select Date of Joining")),
+                              ],
+                            ),
+                            _field(_addressController, true, "Enter address"),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 2.0, horizontal: 3.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    color: Colors.orangeAccent,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Theme(
+                                        data: ThemeData(
+                                            unselectedWidgetColor: bgColor),
+                                        child: Radio(
+                                          activeColor: btnColor,
+                                          value: "Male",
+                                          groupValue: radioItem,
+                                          onChanged: (val) {
+                                            radioItem = val.toString();
+                                            setState(() {});
+                                          },
+                                          toggleable: false,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Male",
+                                        style: TxtStls.fieldstyle1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 120,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 2.0, horizontal: 3.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    color: wonClr,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Theme(
+                                        data: ThemeData(
+                                            unselectedWidgetColor: bgColor),
+                                        child: Radio(
+                                          activeColor: btnColor,
+                                          value: "Female",
+                                          groupValue: radioItem,
+                                          onChanged: (val) {
+                                            radioItem = val.toString();
+                                            setState(() {});
+                                          },
+                                          toggleable: false,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Female",
+                                        style: TxtStls.fieldstyle1,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            logoBase64 == null
+                                ? SizedBox()
+                                : Align(
+                                    alignment: Alignment.centerRight,
+                                    child: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        elevation: 0.0,
+                                        onPressed: () {
+                                          completeprofile(name, logoBase64);
+                                        },
+                                        child: Text(
+                                          "Update",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                        color: btnColor),
+                                  )
+                          ],
+                        ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
-    // showDialog(
-    //     barrierColor: grClr.withOpacity(0.5),
-    //     barrierDismissible: false,
-    //     useRootNavigator: false,
-    //     context: context,
-    //     builder: (_) {
-    //       return alertDialog;
-    //     });
+        });
   }
 
-  Future<void> storeUserData() async {
-    try {
-      FirebaseStorage storage = FirebaseStorage.instance;
-      TaskSnapshot upload =
-          await storage.ref('profiles/$name').putData(logoBase64!);
-      String myUrl = await upload.ref.getDownloadURL();
-      String uid = _auth.currentUser!.uid.toString();
-      await fireStore.collection("EmployeeData").doc(uid).update({
-        "uimage": myUrl,
-      }).then((value) => Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => MainScreen()), (route) => false));
-    } on Exception catch (e) {
-      print(e.toString());
-    }
+  final TextEditingController _roleController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _bgroupController = TextEditingController();
+  final TextEditingController _econtactController = TextEditingController();
+  final TextEditingController _dojController = TextEditingController();
+
+  Widget _field(_controller, bool enable, hint) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+      decoration: deco,
+      child: TextFormField(
+        cursorColor: btnColor,
+        validator: (fullname) {
+          if (fullname!.isEmpty) {
+            return "field can not be empty";
+          } else if (fullname.length < 3) {
+            return "field should be atleast 3 letters";
+          } else {
+            return null;
+          }
+        },
+        controller: _controller,
+        enabled: enable,
+        style: TxtStls.fieldstyle,
+        decoration: InputDecoration(
+          errorStyle: ClrStls.errorstyle,
+          hintText: hint,
+          hintStyle: ClrStls.tnClr,
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  completeprofile(name, logoBase64) {
+    Provider.of<CompleteProfielProvider>(context, listen: false)
+        .completProfile(
+            name,
+            logoBase64,
+            _roleController.text.toString(),
+            _econtactController.text.toString(),
+            _bgroupController.text.toString(),
+            _addressController.text.toString(),
+            radioItem.toString(),
+            _dojController.text.toString())
+        .then((value) {
+      if (Provider.of<CompleteProfielProvider>(context, listen: false).error ==
+          null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => MainScreen()));
+      }
+      ;
+    });
   }
 }
 

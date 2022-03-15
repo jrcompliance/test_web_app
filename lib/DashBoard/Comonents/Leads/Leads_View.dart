@@ -11,7 +11,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'dart:ui' as ui;
 import 'dart:html';
 
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
 
 class LeadScreen extends StatefulWidget {
   const LeadScreen({Key? key}) : super(key: key);

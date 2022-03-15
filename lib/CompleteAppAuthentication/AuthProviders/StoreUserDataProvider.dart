@@ -23,7 +23,7 @@ class StoreUserDataProvider with ChangeNotifier {
     _registerModel.uid = _auth.currentUser!.uid.toString();
     _registerModel.uimage = null;
     _registerModel.uname = _username;
-    _registerModel.uphoneNumber = null;
+    _registerModel.uphoneNumber = _phonenumber;
     _registerModel.urole = "Employee";
     String uid = _auth.currentUser!.uid.toString();
     try {

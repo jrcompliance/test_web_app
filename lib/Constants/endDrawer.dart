@@ -14,7 +14,7 @@ import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/Time%20Model.dart';
 import 'package:test_web_app/UserProvider/UserProvider.dart';
-import 'package:test_web_app/UserProvider/UserdataProvider.dart';
+import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
 
 class MoveDrawer extends StatefulWidget {
   const MoveDrawer({Key? key}) : super(key: key);
@@ -557,28 +557,31 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(userdata.imageUrl!),
+                    backgroundImage: NetworkImage(userdata.imageUrl.toString()),
                     maxRadius: 50,
                   ),
                   SizedBox(height: size.height * 0.02),
-                  Text(userdata.username!, style: TxtStls.fieldtitlestyle),
-                  Text("(Flutter Developer)", style: TxtStls.fieldstyle),
+                  Text(userdata.username.toString(),
+                      style: TxtStls.fieldtitlestyle),
+                  Text("(${userdata.udesignation.toString()})",
+                      style: TxtStls.fieldstyle),
                 ],
               ),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
-            SizedBox(height: size.height * 0.01),
+            divider(),
+            space(),
             Text("Contact Info", style: TxtStls.fieldtitlestyle),
-            SizedBox(height: size.height * 0.01),
+            space(),
             ListTile(
               leading: CircleAvatar(
                 child: Icon(Icons.email, color: btnColor, size: 15),
                 backgroundColor: btnColor.withOpacity(0.1),
               ),
               title: Text("Email", style: TxtStls.fieldtitlestyle),
-              subtitle: Text(userdata.email!, style: TxtStls.fieldstyle),
+              subtitle:
+                  Text(userdata.email.toString(), style: TxtStls.fieldstyle),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
+            divider(),
             ListTile(
               leading: CircleAvatar(
                 child: Icon(
@@ -589,9 +592,10 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 backgroundColor: btnColor.withOpacity(0.1),
               ),
               title: Text("Phone Number", style: TxtStls.fieldtitlestyle),
-              subtitle: Text(userdata.phone!, style: TxtStls.fieldstyle),
+              subtitle:
+                  Text(userdata.phone.toString(), style: TxtStls.fieldstyle),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
+            divider(),
             ListTile(
               title: Text("Address", style: TxtStls.fieldtitlestyle),
               leading: CircleAvatar(
@@ -602,11 +606,10 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   size: 15,
                 ),
               ),
-              subtitle: Text(
-                  "4-19/1, Tana Bazar Dondapadu,Mellachervu,Suryapet,TS",
-                  style: TxtStls.fieldstyle),
+              subtitle:
+                  Text(userdata.add.toString(), style: TxtStls.fieldstyle),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
+            divider(),
             ListTile(
               leading: CircleAvatar(
                 backgroundColor: btnColor.withOpacity(0.1),
@@ -618,11 +621,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
               ),
               title: Text("Date of Joining", style: TxtStls.fieldtitlestyle),
               subtitle: Text(
-                "Wed | 12 jan 2021",
+                userdata.doj.toString(),
                 style: TxtStls.fieldstyle,
               ),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
+            divider(),
             ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.red.withOpacity(0.1),
@@ -634,11 +637,11 @@ class _MoveDrawerState extends State<MoveDrawer> {
               ),
               title: Text("Blood Group", style: TxtStls.fieldtitlestyle),
               subtitle: Text(
-                "B+",
+                userdata.bgroup.toString(),
                 style: TxtStls.fieldstyle,
               ),
             ),
-            Divider(color: Colors.grey.withOpacity(0.2)),
+            divider(),
             ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.red.withOpacity(0.1),
@@ -650,7 +653,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
               ),
               title: Text("Emergency Contact", style: TxtStls.fieldtitlestyle),
               subtitle: Text(
-                "8978511783",
+                userdata.econtact.toString(),
                 style: TxtStls.fieldstyle,
               ),
             ),
@@ -960,6 +963,15 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ),
       ),
     );
+  }
+
+  Widget divider() {
+    return Divider(color: Colors.grey.withOpacity(0.2));
+  }
+
+  Widget space() {
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(height: size.height * 0.01);
   }
 
   Widget actions() {

@@ -4,12 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDataProvider extends ChangeNotifier {
+  String? fcmtoken;
+  String? add;
+  String? bgroup;
+  String? doj;
+  String? econtact;
+  String? gender;
+  String? udesignation;
   String? username;
   String? email;
   String? phone;
   String? imageUrl;
   String? role;
   String? uid;
+
   Future<void> getUserData() async {
     try {
       FirebaseFirestore _firebasefirestore = FirebaseFirestore.instance;
@@ -21,7 +29,14 @@ class UserDataProvider extends ChangeNotifier {
           .doc(uid)
           .get()
           .then((value) {
-        print(value.data());
+        //print(value.data());
+        fcmtoken = value.get("fcmtoken");
+        add = value.get("add");
+        bgroup = value.get("bgroup");
+        doj = value.get("doj");
+        econtact = value.get("econtact");
+        udesignation = value.get("udesignation");
+        gender = value.get("gender");
         username = value.get("uname");
         email = value.get("uemail");
         phone = value.get("uphoneNumber");
