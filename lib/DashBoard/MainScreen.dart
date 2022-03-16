@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
+import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
@@ -207,7 +208,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              //FinanceScreen(),
+              Finance1(),
             ],
           );
         }
