@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/UserProvider/CustomerProvider.dart';
-import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/Providers/CustomerProvider.dart';
+import 'package:test_web_app/Providers/GstProvider.dart';
 
 class FinanceScreen extends StatefulWidget {
   const FinanceScreen({Key? key}) : super(key: key);

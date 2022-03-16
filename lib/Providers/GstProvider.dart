@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_web_app/UserProvider/GstModel.dart';
+import 'package:test_web_app/Models/GstModel.dart';
 
 class GstProvider with ChangeNotifier {
   //String? doc;

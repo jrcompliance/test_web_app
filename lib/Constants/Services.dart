@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_web_app/Models/UserModels.dart';
+
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var ntime = DateTime.now().toString().split(" ")[0];
@@ -330,9 +330,9 @@ class CrudOperations {
       collectionReference.doc(did).set({
         "time": Timestamp.now(),
         "flag": false,
-        "CxID": RecentFetchCXIDProvider.CxID == null
-            ? 100
-            : RecentFetchCXIDProvider.CxID,
+        // "CxID": RecentFetchCXIDProvider.CxID == null
+        //     ? 100
+        //     : RecentFetchCXIDProvider.CxID,
         "id": did,
         "task": _taskController.text.toString(),
         "startDate": Timestamp.fromDate(DateTime.now()),
@@ -604,20 +604,5 @@ class disable {
   static off(id, addtime) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({"time": addtime});
-  }
-}
-
-class RecentFetchCXIDProvider extends ChangeNotifier {
-  static int? CxID;
-  Future<void> fetchRecent() async {
-    _firestore
-        .collection("Tasks")
-        .orderBy("startDate", descending: true)
-        .get()
-        .then((value) {
-      CxID = value.docs.first.get("CxID") + 1;
-      print(CxID);
-      notifyListeners();
-    });
   }
 }

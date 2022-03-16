@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/Providers/GstProvider.dart';
 
-import '../../../UserProvider/CustomerProvider.dart';
+import '../../../Providers/CustomerProvider.dart';
 
 class Finance1 extends StatefulWidget {
   const Finance1({Key? key}) : super(key: key);
@@ -40,7 +40,6 @@ class _Finance1State extends State<Finance1> {
   final GlobalKey<FormState> _formkey = GlobalKey();
   final TextEditingController _rateController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     final customerlist = Provider.of<CustmerProvider>(context).customerlist;
@@ -48,8 +47,8 @@ class _Finance1State extends State<Finance1> {
     return SafeArea(
       child: Container(
         height: size.height,
-        
-       // padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
+
+        // padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
         child: Column(
           children: [
             Row(
@@ -126,8 +125,8 @@ class _Finance1State extends State<Finance1> {
                                 ),
                                 onTap: () {},
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0))),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
                               ),
                             ),
                           );
@@ -137,7 +136,9 @@ class _Finance1State extends State<Finance1> {
                         },
                       ),
                     )),
-                SizedBox(width: 5,),
+                SizedBox(
+                  width: 5,
+                ),
                 Expanded(
                     flex: 7,
                     child: Container(
@@ -152,7 +153,8 @@ class _Finance1State extends State<Finance1> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0,left: 20.0),
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, left: 20.0),
                                     child: Text(
                                       "Create New " + activeid,
                                       style: TextStyle(
@@ -172,10 +174,10 @@ class _Finance1State extends State<Finance1> {
                                   //       color: btnColor,
                                   //     ))
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 16,right: 16),
+                                    padding: const EdgeInsets.only(
+                                        top: 16, right: 16),
                                     child: Container(
-                                      width: size.width*0.25,
+                                      width: size.width * 0.25,
                                       decoration: BoxDecoration(
                                           // color: fieldColor,
                                           color: Colors.white,
@@ -277,7 +279,8 @@ class _Finance1State extends State<Finance1> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 10.0,left: 20,right: 250),
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, left: 20, right: 250),
                                 child: Container(
                                   height: size.height * 0.05,
                                   decoration: BoxDecoration(
@@ -295,7 +298,8 @@ class _Finance1State extends State<Finance1> {
                               ),
                               SizedBox(height: size.height * 0.01),
                               Padding(
-                                padding: const EdgeInsets.only(top: 10.0,left: 20,right: 20),
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, left: 20, right: 20),
                                 child: Container(
                                   padding: const EdgeInsets.only(
                                       left: 10.0, right: 10.0),
@@ -318,7 +322,6 @@ class _Finance1State extends State<Finance1> {
                                       ),
                                       Expanded(
                                         child: Text(
-
                                           "Rate",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(color: Colors.white),
@@ -362,7 +365,8 @@ class _Finance1State extends State<Finance1> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 10.0,left: 20.0,right: 20),
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, left: 20.0, right: 20),
                                 child: Row(
                                   // mainAxisAlignment:
                                   //     MainAxisAlignment.spaceBetween,
@@ -371,23 +375,26 @@ class _Finance1State extends State<Finance1> {
                                     Column(
                                       children: [
                                         Container(
-                                          height: size.height*0.04,
-                                          width: size.width*0.075,
+                                          height: size.height * 0.04,
+                                          width: size.width * 0.075,
                                           decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey.withOpacity(0.5)
-                                            ),
-                                              borderRadius: BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5)),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               color: Colors.white),
                                           child: TextFormField(
-
                                             textAlign: TextAlign.center,
-                                           textAlignVertical: TextAlignVertical.center,
-
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
                                             maxLines: 1,
                                             decoration: InputDecoration(
-                                             contentPadding: EdgeInsets.only(bottom: 15,left: 5),
-                                              hintText: "Select Item",hintStyle: TextStyle(fontSize: 10),
+                                              contentPadding: EdgeInsets.only(
+                                                  bottom: 15, left: 5),
+                                              hintText: "Select Item",
+                                              hintStyle:
+                                                  TextStyle(fontSize: 10),
                                               focusedBorder: InputBorder.none,
                                               enabledBorder: InputBorder.none,
                                               errorBorder: InputBorder.none,
@@ -397,24 +404,30 @@ class _Finance1State extends State<Finance1> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            height: size.height*0.04,
-                                            width: size.width*0.075,
+                                            height: size.height * 0.04,
+                                            width: size.width * 0.075,
                                             decoration: BoxDecoration(
                                                 border: Border.all(
-                                                    color: Colors.grey.withOpacity(0.5)
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5)),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                                 color: Colors.white),
                                             child: Center(
                                               child: TextFormField(
-
                                                 textAlign: TextAlign.center,
                                                 maxLines: 3,
                                                 decoration: InputDecoration(
-                                                  contentPadding: EdgeInsets.only(bottom: 15,left: 5),
-                                                  hintText: "Item Description",hintStyle: TextStyle(fontSize: 10),
-                                                  focusedBorder: InputBorder.none,
-                                                  enabledBorder: InputBorder.none,
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          bottom: 15, left: 5),
+                                                  hintText: "Item Description",
+                                                  hintStyle:
+                                                      TextStyle(fontSize: 10),
+                                                  focusedBorder:
+                                                      InputBorder.none,
+                                                  enabledBorder:
+                                                      InputBorder.none,
                                                   errorBorder: InputBorder.none,
                                                 ),
                                               ),
@@ -423,22 +436,20 @@ class _Finance1State extends State<Finance1> {
                                         ),
                                       ],
                                     ),
-
-
                                     Divider(
                                       height: 10,
                                       thickness: 2,
-                                       color: Colors.red,
-
+                                      color: Colors.red,
                                     ),
                                     Container(
-                                      height: size.height*0.04,
-                                      width: size.width*0.04,
+                                      height: size.height * 0.04,
+                                      width: size.width * 0.04,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey.withOpacity(0.5)
-                                          ),
-                                          borderRadius: BorderRadius.circular(8),
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           color: Colors.white),
                                       child: TextFormField(
                                         keyboardType: TextInputType.number,
@@ -447,21 +458,22 @@ class _Finance1State extends State<Finance1> {
                                         controller: _rateController,
                                         maxLines: 1,
                                         decoration: InputDecoration(
-
                                           hintText: "₹ 0",
-                                        //  errorText: _rateController.text.isNotEmpty?"Numeric values only":"",
-                                          contentPadding: EdgeInsets.only(left: 5,bottom: 10),
+                                          //  errorText: _rateController.text.isNotEmpty?"Numeric values only":"",
+                                          contentPadding: EdgeInsets.only(
+                                              left: 5, bottom: 10),
                                           focusedBorder: InputBorder.none,
                                           enabledBorder: InputBorder.none,
                                           errorBorder: InputBorder.none,
                                         ),
-                                        onSaved: (val){
+                                        onSaved: (val) {
                                           setState(() {
-                                            _rateController.text = val.toString();
+                                            _rateController.text =
+                                                val.toString();
                                           });
                                         },
-                                        validator: (val)=>rateValidator(_rateController.text.toString()),
-
+                                        validator: (val) => rateValidator(
+                                            _rateController.text.toString()),
                                       ),
                                     ),
                                     VerticalDivider(
@@ -469,24 +481,25 @@ class _Finance1State extends State<Finance1> {
                                       // color: Colors.grey,
                                     ),
                                     Container(
-                                      height: size.height*0.04,
-                                      width: size.width*0.04,
-
+                                      height: size.height * 0.04,
+                                      width: size.width * 0.04,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey.withOpacity(0.5)
-                                          ),
-                                          borderRadius: BorderRadius.circular(8),
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           color: Colors.white),
                                       child: Center(
                                         child: TextFormField(
                                           maxLines: 1,
                                           decoration: InputDecoration(
                                             hintText: "1",
-                                            contentPadding: EdgeInsets.only(left: 20,bottom: 10),
-                                             focusedBorder: InputBorder.none,
+                                            contentPadding: EdgeInsets.only(
+                                                left: 20, bottom: 10),
+                                            focusedBorder: InputBorder.none,
                                             enabledBorder: InputBorder.none,
-                                             errorBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
                                           ),
                                         ),
                                       ),
@@ -496,20 +509,22 @@ class _Finance1State extends State<Finance1> {
                                       // color: Colors.grey,
                                     ),
                                     Container(
-                                      height: size.height*0.04,
-                                      width: size.width*0.04,
+                                      height: size.height * 0.04,
+                                      width: size.width * 0.04,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey.withOpacity(0.5)
-                                          ),
-                                          borderRadius: BorderRadius.circular(8),
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           color: Colors.white),
                                       child: Center(
                                         child: TextFormField(
                                           maxLines: 1,
                                           decoration: InputDecoration(
                                             hintText: "0 %",
-                                            contentPadding: EdgeInsets.only(left: 15,bottom: 10),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 15, bottom: 10),
                                             focusedBorder: InputBorder.none,
                                             enabledBorder: InputBorder.none,
                                             errorBorder: InputBorder.none,
@@ -522,31 +537,31 @@ class _Finance1State extends State<Finance1> {
                                       // color: Colors.grey,
                                     ),
                                     Container(
-                                    //  padding: EdgeInsets.all(8),
-                                      height: size.height*0.04,
-                                      width: size.width*0.05,
+                                      //  padding: EdgeInsets.all(8),
+                                      height: size.height * 0.04,
+                                      width: size.width * 0.05,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey.withOpacity(0.5)
-                                          ),
-                                          borderRadius: BorderRadius.circular(8),
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           color: Colors.white),
                                       child: Center(
                                         child: TextFormField(
-                                      key: _formkey,
+                                          key: _formkey,
                                           maxLines: 1,
                                           decoration: InputDecoration(
                                             hintText: "₹ 0.00",
-                                            contentPadding: EdgeInsets.only(left: 15,bottom: 10),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 15, bottom: 10),
                                             focusedBorder: InputBorder.none,
                                             enabledBorder: InputBorder.none,
                                             errorBorder: InputBorder.none,
                                           ),
                                         ),
                                       ),
-
                                     ),
-
                                   ],
                                 ),
                               ),
@@ -556,64 +571,75 @@ class _Finance1State extends State<Finance1> {
                                     height: 50,
                                     width: 50,
                                     child: InkWell(
-                                      child: Text('+ Add Item',style: TextStyle(
-                                          fontSize: 10.0,fontWeight: FontWeight.bold,color: Colors.purple
-
-                                      ),
-
-                                      ),
-                                      onTap: () {
-                                      }
-                                    )),
+                                        child: Text(
+                                          '+ Add Item',
+                                          style: TextStyle(
+                                              fontSize: 10.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.purple),
+                                        ),
+                                        onTap: () {})),
                               ),
-
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: Container(
                                       padding: EdgeInsets.all(10),
-                                      height:60,width: 250,
+                                      height: 60,
+                                      width: 250,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                                        borderRadius: BorderRadius.circular(8)
-                                      ),child: Text("Internal Notes"),
-
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: Text("Internal Notes"),
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: Container(
-                                      width: size.width*0.1,
+                                      width: size.width * 0.1,
                                       child: Column(
                                         children: [
                                           RichText(
-                                            text: TextSpan(
-                                                text: 'Sub Total ',
-                                                style: DefaultTextStyle.of(context).style,
-                                                children: const <TextSpan>[
-                                                  TextSpan(text: ":"),
-                                                  TextSpan(text: "  "),
-
-                                                TextSpan(text: '54454555', style: TextStyle(fontWeight: FontWeight.bold)),
-                                          ])),
+                                              text: TextSpan(
+                                                  text: 'Sub Total ',
+                                                  style: DefaultTextStyle.of(
+                                                          context)
+                                                      .style,
+                                                  children: const <TextSpan>[
+                                                TextSpan(text: ":"),
+                                                TextSpan(text: "  "),
+                                                TextSpan(
+                                                    text: '54454555',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ])),
                                           Divider(
                                             thickness: 0.5,
-
                                             color: Colors.grey.withOpacity(0.5),
                                           ),
-                                    RichText(
-                                        text: TextSpan(
-                                            text: 'Total ',
-                                            style: DefaultTextStyle.of(context).style,
-                                            children: const <TextSpan>[
-                                              TextSpan(text: ":"),
-                                              TextSpan(text: "  "),
-
-                                              TextSpan(text: '54454444', style: TextStyle(fontWeight: FontWeight.bold)),
-                                            ])),
+                                          RichText(
+                                              text: TextSpan(
+                                                  text: 'Total ',
+                                                  style: DefaultTextStyle.of(
+                                                          context)
+                                                      .style,
+                                                  children: const <TextSpan>[
+                                                TextSpan(text: ":"),
+                                                TextSpan(text: "  "),
+                                                TextSpan(
+                                                    text: '54454444',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ])),
                                         ],
                                       ),
                                     ),
@@ -629,21 +655,26 @@ class _Finance1State extends State<Finance1> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Container(
                                         height: 30,
-                                        width: size.width*0.1,
-
+                                        width: size.width * 0.1,
                                         decoration: BoxDecoration(
                                           color: Colors.purple,
-                                          borderRadius: BorderRadius.circular(8.0),
-
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
                                         child: Center(
-                                          child:Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Text("Save & Send",style: TextStyle(
-                                                  color: Colors.white
-                                              ),),
-                                              Icon(Icons.telegram_rounded,color: Colors.white,)
+                                              Text(
+                                                "Save & Send",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Icon(
+                                                Icons.telegram_rounded,
+                                                color: Colors.white,
+                                              )
                                             ],
                                           ),
                                         ),
@@ -653,36 +684,38 @@ class _Finance1State extends State<Finance1> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Container(
                                         height: 30,
-                                        width: size.width*0.1,
-
-
+                                        width: size.width * 0.1,
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.purple),
+                                          border:
+                                              Border.all(color: Colors.purple),
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(8.0),
-
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
                                         child: Center(
-                                          child:Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               InkWell(
-                                                child: Text("Save  ",style: TextStyle(
-                                                    color: Colors.purple
-                                                ),),
-                                                onTap: (){},
+                                                child: Text(
+                                                  "Save  ",
+                                                  style: TextStyle(
+                                                      color: Colors.purple),
+                                                ),
+                                                onTap: () {},
                                               ),
                                               VerticalDivider(
                                                 thickness: 0.5,
                                                 color: Colors.purple,
-
                                               ),
-
                                               InkWell(
-                                                child: Text("Cancel",style: TextStyle(
-                                                    color: Colors.purple
-                                                ),),
-                                                onTap: (){},
+                                                child: Text(
+                                                  "Cancel",
+                                                  style: TextStyle(
+                                                      color: Colors.purple),
+                                                ),
+                                                onTap: () {},
                                               ),
                                             ],
                                           ),
@@ -693,21 +726,30 @@ class _Finance1State extends State<Finance1> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Container(
                                         height: 30,
-                                        width: size.width*0.1,
+                                        width: size.width * 0.1,
                                         child: Center(
-                                          child:InkWell(
+                                          child: InkWell(
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                Icon(Icons.copy_all,size: 15,color: Colors.purple,),
-                                                SizedBox(width: 2,),
-                                                Text("Preview  ",style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.purple
-                                                ),),
+                                                Icon(
+                                                  Icons.copy_all,
+                                                  size: 15,
+                                                  color: Colors.purple,
+                                                ),
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                Text(
+                                                  "Preview  ",
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.purple),
+                                                ),
                                               ],
                                             ),
-                                            onTap: (){},
+                                            onTap: () {},
                                           ),
                                         ),
                                       ),
@@ -721,7 +763,6 @@ class _Finance1State extends State<Finance1> {
                                     ),
                                   ],
                                 ),
-
                               )
                             ]))),
               ],
@@ -789,16 +830,17 @@ class _Finance1State extends State<Finance1> {
     tbal = list.map((m) => (m["amount"])).reduce((a, b) => a + b);
     print("Data is set");
   }
-   rateValidator(String value){
-    Pattern _pattern =  r'^([0-9])$';
+
+  rateValidator(String value) {
+    Pattern _pattern = r'^([0-9])$';
     RegExp regex = new RegExp(_pattern.toString());
 
-    if(!regex.hasMatch(value) && value.isNotEmpty){
+    if (!regex.hasMatch(value) && value.isNotEmpty) {
       print("${value} is not validated");
-      return  "Please Enter Numeric only";
-
-    }else{
-       null;
-    };
+      return "Please Enter Numeric only";
+    } else {
+      null;
+    }
+    ;
   }
 }

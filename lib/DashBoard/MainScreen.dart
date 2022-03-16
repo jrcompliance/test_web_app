@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -12,15 +10,16 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
-import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
+import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
-import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -32,7 +31,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Finance;
+  Tabs active = Tabs.TaskPreview;
   var radioItem;
 
   @override
@@ -41,10 +40,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     Future.delayed(Duration(seconds: 1)).then((value) {
       Provider.of<UserDataProvider>(context, listen: false).getUserData();
     });
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 10), () {
       Provider.of<UserDataProvider>(context, listen: false).imageUrl == null
           ? completeProfile()
           : null;
+    });
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     });
   }
 
@@ -131,7 +133,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   return ListTile(
                     onTap: () {
                       setState(() {
-                        lead = "Profile";
+                        enddrawerkey = "Profile";
                         Scaffold.of(context).openEndDrawer();
                       });
                     },
@@ -188,7 +190,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              //  TaskPreview(),
+              TaskPreview(),
             ],
           );
         }
@@ -208,7 +210,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              Finance1(),
+              //Finance1(),
             ],
           );
         }

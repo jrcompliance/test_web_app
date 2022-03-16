@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:test_web_app/UserProvider/AllUserModel.dart';
+import 'package:test_web_app/Models/AllUserModel.dart';
 
 class AllUSerProvider with ChangeNotifier {
   List<AllUserModel> _alluserModellist = [];

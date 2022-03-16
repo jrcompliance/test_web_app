@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 
 class Calendar extends StatefulWidget {

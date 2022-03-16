@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/alluserModel.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/Providers/UserProvider.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({Key? key}) : super(key: key);

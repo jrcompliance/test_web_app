@@ -10,16 +10,17 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/RegisterPro
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/ResetPasswordProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDataProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
-import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
+import 'package:test_web_app/Providers/CreateLeadProvider.dart';
+import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/UserProvider/ActivityProvider.dart';
-import 'package:test_web_app/UserProvider/CustomerProvider.dart';
-import 'package:test_web_app/UserProvider/GstProvider.dart';
+import 'package:test_web_app/Providers/CustomerProvider.dart';
+import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
-import 'package:test_web_app/UserProvider/UserProvider.dart';
-import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/UserProvider.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/firebase_options.dart';
 
 void main() async {
@@ -34,6 +35,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => LogOutProvider()),
       ChangeNotifierProvider(create: (ctx) => CompleteProfielProvider()),
       ChangeNotifierProvider(create: (ctx) => AllUSerProvider()),
+      ChangeNotifierProvider(create: (ctx) => CreateLeadProvider()),
       ChangeNotifierProvider(create: (ctx) => AllLeadsProvider()),
       ChangeNotifierProvider(create: (ctx) => GstProvider()),
       ChangeNotifierProvider(create: (ctx) => RecentFetchCXIDProvider()),

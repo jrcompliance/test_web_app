@@ -24,8 +24,8 @@ import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
 import 'package:test_web_app/UserProvider/ActivityProvider.dart';
-import 'package:test_web_app/UserProvider/CurrentUserdataProvider.dart';
-import 'package:test_web_app/UserProvider/UserProvider.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/UserProvider.dart';
 
 class TaskPreview extends StatefulWidget {
   const TaskPreview({Key? key}) : super(key: key);
@@ -819,7 +819,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
 
                               setState(() {
-                                lead = "Lead";
+                                enddrawerkey = "Lead";
                                 Scaffold.of(context).openEndDrawer();
                               });
 
@@ -844,54 +844,54 @@ class _TaskPreviewState extends State<TaskPreview>
           SizedBox(height: size.height * 0.01),
           if (activeid == "List")
             SizedBox(height: size.height * 0.845, child: serachandfilter()),
-          if (activeid == "Board")
-            Container(
-              height: size.height * 0.845,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          boardtitle(_clrslist[0], _boardtitlelist[0]),
-                          SizedBox(height: size.height * 0.01),
-                          boardmiddle("NEW")
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          boardtitle(_clrslist[1], _boardtitlelist[1]),
-                          SizedBox(height: size.height * 0.01),
-                          boardmiddle("PROSPECT")
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          boardtitle(_clrslist[2], _boardtitlelist[2]),
-                          SizedBox(height: size.height * 0.01),
-                          boardmiddle("INPROGRESS")
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          boardtitle(_clrslist[3], _boardtitlelist[3]),
-                          SizedBox(height: size.height * 0.01),
-                          boardmiddle("WON")
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          boardtitle(_clrslist[4], _boardtitlelist[4]),
-                          SizedBox(height: size.height * 0.01),
-                          boardmiddle("CLOSE")
-                        ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+          // if (activeid == "Board")
+          //   Container(
+          //     height: size.height * 0.845,
+          //     child: Column(
+          //       children: [
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //           children: [
+          //             Column(
+          //               children: [
+          //                 boardtitle(_clrslist[0], _boardtitlelist[0]),
+          //                 SizedBox(height: size.height * 0.01),
+          //                 boardmiddle("NEW")
+          //               ],
+          //             ),
+          //             Column(
+          //               children: [
+          //                 boardtitle(_clrslist[1], _boardtitlelist[1]),
+          //                 SizedBox(height: size.height * 0.01),
+          //                 boardmiddle("PROSPECT")
+          //               ],
+          //             ),
+          //             Column(
+          //               children: [
+          //                 boardtitle(_clrslist[2], _boardtitlelist[2]),
+          //                 SizedBox(height: size.height * 0.01),
+          //                 boardmiddle("INPROGRESS")
+          //               ],
+          //             ),
+          //             Column(
+          //               children: [
+          //                 boardtitle(_clrslist[3], _boardtitlelist[3]),
+          //                 SizedBox(height: size.height * 0.01),
+          //                 boardmiddle("WON")
+          //               ],
+          //             ),
+          //             Column(
+          //               children: [
+          //                 boardtitle(_clrslist[4], _boardtitlelist[4]),
+          //                 SizedBox(height: size.height * 0.01),
+          //                 boardmiddle("CLOSE")
+          //               ],
+          //             ),
+          //           ],
+          //         )
+          //       ],
+          //     ),
+          //   ),
           // if (activeid == "Timeline")
           //   Row(
           //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1117,7 +1117,7 @@ class _TaskPreviewState extends State<TaskPreview>
 
   Widget listmiddle(cat) {
     final alluserModellist =
-        Provider.of<AllUSerProvider>(context).alluserModellist;
+        Provider.of<AllUSerProvider>(context,listen: false).alluserModellist;
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.2,
@@ -1161,11 +1161,7 @@ class _TaskPreviewState extends State<TaskPreview>
               Timestamp lastseen = snp["lastseen"];
               String cat = snp["cat"];
               String message = snp["message"];
-              String newsta = snp["status"];
-              String prosta = snp["status1"];
-              String insta = snp["status2"];
-              String wonsta = snp["status4"];
-              String clsta = snp["status5"];
+              String status = snp["status"];
               List assign = snp["Attachments"];
               bool val = snp["flag"];
               String logo = snp["logo"];
@@ -1373,11 +1369,7 @@ class _TaskPreviewState extends State<TaskPreview>
                               lastseen,
                               cat,
                               message,
-                              newsta,
-                              prosta,
-                              insta,
-                              wonsta,
-                              clsta,
+                              status,
                               s,
                               f,
                               assign,
@@ -1477,8 +1469,94 @@ class _TaskPreviewState extends State<TaskPreview>
                     Container(
                       width: size.width * 0.08,
                       alignment: Alignment.centerLeft,
-                      child: dropdowns(
-                          id, cat, newsta, prosta, insta, wonsta, clsta),
+                      child:  Container(
+                            alignment: Alignment.center,
+                            width: size.width * 0.1,
+                            decoration: BoxDecoration(
+                                color: StatusUpdateServices.statcolorget(status),
+                                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                            child: PopupMenuButton(
+                              tooltip: "UpDate Status",
+                              padding: EdgeInsets.zero,
+                              shape: TooltipShape(),
+                              offset: Offset(0, size.height * 0.035),
+                              onSelected: (value) {
+                                StatusUpdateServices.updateStatus(id, value.toString());
+                                setState(() {});
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      StatusUpdateServices.statusget(status),
+                                      style: TxtStls.fieldstyle1,
+                                    ),
+                                    Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                      color: bgColor,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: "FRESH",
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        color: wonClr,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          "FRESH",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "ASSIGNED",
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        color: flwClr,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          "ASSIGNED",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "CONTACTED",
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        color: conClr,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          "CONTACTED",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ];
+                              },
+                            ),
+                          ),
                     ),
                     Expanded(
                         child: CountdownTimer(
@@ -1506,7 +1584,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                           dname = taskname;
                                           cxID = CxID;
                                           dendDate = endDate.toString();
-                                          lead = "update";
+                                          enddrawerkey = "update";
                                           Scaffold.of(context).openEndDrawer();
                                         });
                                       },
@@ -1528,7 +1606,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                           dname = taskname;
                                           cxID = CxID;
                                           dendDate = endDate.toString();
-                                          lead = "move";
+                                          enddrawerkey = "move";
                                           Scaffold.of(context).openEndDrawer();
                                         });
                                       },
@@ -1754,8 +1832,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                     },
                                   ),
                                 ),
-                                dropdowns(id, cat, newsta, prosta, insta,
-                                    wonsta, clsta)
+
                               ],
                             ),
                           ),
@@ -1811,7 +1888,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                             dname = taskname;
                                             cxID = CxID;
                                             dendDate = endDate.toString();
-                                            lead = "update";
+                                            enddrawerkey = "update";
                                             Scaffold.of(context)
                                                 .openEndDrawer();
                                           });
@@ -1850,7 +1927,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                             dname = taskname;
                                             cxID = CxID;
                                             dendDate = endDate.toString();
-                                            lead = "move";
+                                            enddrawerkey = "move";
                                             Scaffold.of(context)
                                                 .openEndDrawer();
                                           });
@@ -1910,10 +1987,6 @@ class _TaskPreviewState extends State<TaskPreview>
                         cat,
                         message,
                         newsta,
-                        prosta,
-                        insta,
-                        wonsta,
-                        clsta,
                         s,
                         f,
                         assign,
@@ -1958,522 +2031,522 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  Widget dropdowns(id, cat, newsta, prosta, insta, wonsta, clsta) {
-    Size size = MediaQuery.of(context).size;
-    if (cat == "NEW") {
-      return Container(
-        alignment: Alignment.center,
-        width: size.width * 0.1,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget(newsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: PopupMenuButton(
-          tooltip: "UpDate Status",
-          padding: EdgeInsets.zero,
-          shape: TooltipShape(),
-          offset: Offset(0, size.height * 0.035),
-          onSelected: (value) {
-            StatusUpdateServices.updateStatus(id, value.toString());
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  StatusUpdateServices.statusget(newsta),
-                  style: TxtStls.fieldstyle1,
-                ),
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  color: bgColor,
-                )
-              ],
-            ),
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: "FRESH",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: wonClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "FRESH",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "ASSIGNED",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: flwClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "ASSIGNED",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "CONTACTED",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: conClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "CONTACTED",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-            ];
-          },
-        ),
-      );
-    } else if (cat == "PROSPECT") {
-      return Container(
-        alignment: Alignment.center,
-        width: size.width * 0.1,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget1(prosta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: PopupMenuButton(
-          tooltip: "UpDate Status",
-          padding: EdgeInsets.zero,
-          shape: TooltipShape(),
-          offset: Offset(0, size.height * 0.035),
-          onSelected: (value) {
-            StatusUpdateServices.updateStatus1(id, value.toString());
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  StatusUpdateServices.statusget1(prosta),
-                  style: TxtStls.fieldstyle1,
-                ),
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  color: bgColor,
-                )
-              ],
-            ),
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: "AVERAGE",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: avgClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "   AVERAGE   ",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "GOOD",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: goodClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "   GOOD   ",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-            ];
-          },
-        ),
-      );
-    } else if (cat == "IN PROGRESS") {
-      return Container(
-        alignment: Alignment.center,
-        width: size.width * 0.1,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget2(insta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: PopupMenuButton(
-          tooltip: "UpDate Status",
-          padding: EdgeInsets.zero,
-          shape: TooltipShape(),
-          offset: Offset(0, size.height * 0.035),
-          onSelected: (value) {
-            StatusUpdateServices.updateStatus2(id, value.toString());
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  StatusUpdateServices.statusget2(insta),
-                  style: TxtStls.fieldstyle1,
-                ),
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  color: bgColor,
-                )
-              ],
-            ),
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: "FOLLOWUP",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: flwClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "FOLLOWUP",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "SPECIFICATION",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: spClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "SPECIFICATION",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "QUOTATION",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: qtoClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "QUOTATION",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-            ];
-          },
-        ),
-      );
-    } else if (cat == "WON") {
-      return Container(
-        alignment: Alignment.center,
-        width: size.width * 0.1,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget4(wonsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: PopupMenuButton(
-          tooltip: "UpDate Status",
-          padding: EdgeInsets.zero,
-          shape: TooltipShape(),
-          offset: Offset(0, size.height * 0.035),
-          onSelected: (value) {
-            StatusUpdateServices.updateStatus4(id, value.toString());
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  StatusUpdateServices.statusget4(wonsta),
-                  style: TxtStls.fieldstyle1,
-                ),
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  color: bgColor,
-                )
-              ],
-            ),
-          ),
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: "PAYMENT",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: wonClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "PAYMENT",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "DOCUMENTS",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: flwClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "DOCUMENTS",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: "SAMPLES",
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                    color: goodClr,
-                  ),
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      "SAMPLES",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              ),
-            ];
-          },
-        ),
-      );
-    }
-    return Container(
-      alignment: Alignment.center,
-      width: size.width * 0.1,
-      decoration: BoxDecoration(
-          color: StatusUpdateServices.statcolorget5(clsta),
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      child: PopupMenuButton(
-        tooltip: "UpDate Status",
-        padding: EdgeInsets.zero,
-        shape: TooltipShape(),
-        offset: Offset(0, size.height * 0.035),
-        onSelected: (value) {
-          StatusUpdateServices.updateStatus5(id, value.toString());
-          setState(() {});
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                StatusUpdateServices.statusget5(clsta),
-                style: TxtStls.fieldstyle11,
-              ),
-              Icon(
-                Icons.arrow_drop_down_outlined,
-                color: bgColor,
-              )
-            ],
-          ),
-        ),
-        itemBuilder: (context) {
-          return [
-            PopupMenuItem(
-              value: "IRRELEVANT",
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  color: irrClr,
-                ),
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    "IRRELEVANT",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: "BUDGET ISSUE",
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  color: clsClr,
-                ),
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    "BUDGET ISSUE",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: "INFORMATIVE",
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  color: flwClr,
-                ),
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    "INFORMATIVE",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                ),
-              ),
-            ),
-            PopupMenuItem(
-              value: "NO ANSWER",
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  color: conClr,
-                ),
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    "NO ANSWER",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                ),
-              ),
-            )
-          ];
-        },
-      ),
-    );
-  }
+  // Widget dropdowns(id, cat, newsta, prosta, insta, wonsta, clsta) {
+  //   Size size = MediaQuery.of(context).size;
+  //   if (cat == "NEW") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: size.width * 0.1,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget(newsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: PopupMenuButton(
+  //         tooltip: "UpDate Status",
+  //         padding: EdgeInsets.zero,
+  //         shape: TooltipShape(),
+  //         offset: Offset(0, size.height * 0.035),
+  //         onSelected: (value) {
+  //           StatusUpdateServices.updateStatus(id, value.toString());
+  //           setState(() {});
+  //         },
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               Text(
+  //                 StatusUpdateServices.statusget(newsta),
+  //                 style: TxtStls.fieldstyle1,
+  //               ),
+  //               Icon(
+  //                 Icons.arrow_drop_down_outlined,
+  //                 color: bgColor,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         itemBuilder: (context) {
+  //           return [
+  //             PopupMenuItem(
+  //               value: "FRESH",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: wonClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "FRESH",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "ASSIGNED",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: flwClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "ASSIGNED",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "CONTACTED",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: conClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "CONTACTED",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ];
+  //         },
+  //       ),
+  //     );
+  //   } else if (cat == "PROSPECT") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: size.width * 0.1,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget1(prosta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: PopupMenuButton(
+  //         tooltip: "UpDate Status",
+  //         padding: EdgeInsets.zero,
+  //         shape: TooltipShape(),
+  //         offset: Offset(0, size.height * 0.035),
+  //         onSelected: (value) {
+  //           StatusUpdateServices.updateStatus1(id, value.toString());
+  //           setState(() {});
+  //         },
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               Text(
+  //                 StatusUpdateServices.statusget1(prosta),
+  //                 style: TxtStls.fieldstyle1,
+  //               ),
+  //               Icon(
+  //                 Icons.arrow_drop_down_outlined,
+  //                 color: bgColor,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         itemBuilder: (context) {
+  //           return [
+  //             PopupMenuItem(
+  //               value: "AVERAGE",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: avgClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "   AVERAGE   ",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "GOOD",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: goodClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "   GOOD   ",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ];
+  //         },
+  //       ),
+  //     );
+  //   } else if (cat == "IN PROGRESS") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: size.width * 0.1,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget2(insta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: PopupMenuButton(
+  //         tooltip: "UpDate Status",
+  //         padding: EdgeInsets.zero,
+  //         shape: TooltipShape(),
+  //         offset: Offset(0, size.height * 0.035),
+  //         onSelected: (value) {
+  //           StatusUpdateServices.updateStatus2(id, value.toString());
+  //           setState(() {});
+  //         },
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               Text(
+  //                 StatusUpdateServices.statusget2(insta),
+  //                 style: TxtStls.fieldstyle1,
+  //               ),
+  //               Icon(
+  //                 Icons.arrow_drop_down_outlined,
+  //                 color: bgColor,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         itemBuilder: (context) {
+  //           return [
+  //             PopupMenuItem(
+  //               value: "FOLLOWUP",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: flwClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "FOLLOWUP",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "SPECIFICATION",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: spClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "SPECIFICATION",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "QUOTATION",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: qtoClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "QUOTATION",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ];
+  //         },
+  //       ),
+  //     );
+  //   } else if (cat == "WON") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: size.width * 0.1,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget4(wonsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: PopupMenuButton(
+  //         tooltip: "UpDate Status",
+  //         padding: EdgeInsets.zero,
+  //         shape: TooltipShape(),
+  //         offset: Offset(0, size.height * 0.035),
+  //         onSelected: (value) {
+  //           StatusUpdateServices.updateStatus4(id, value.toString());
+  //           setState(() {});
+  //         },
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               Text(
+  //                 StatusUpdateServices.statusget4(wonsta),
+  //                 style: TxtStls.fieldstyle1,
+  //               ),
+  //               Icon(
+  //                 Icons.arrow_drop_down_outlined,
+  //                 color: bgColor,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         itemBuilder: (context) {
+  //           return [
+  //             PopupMenuItem(
+  //               value: "PAYMENT",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: wonClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "PAYMENT",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "DOCUMENTS",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: flwClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "DOCUMENTS",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             PopupMenuItem(
+  //               value: "SAMPLES",
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                   color: goodClr,
+  //                 ),
+  //                 alignment: Alignment.center,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(4.0),
+  //                   child: Text(
+  //                     "SAMPLES",
+  //                     style: TxtStls.fieldstyle1,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ];
+  //         },
+  //       ),
+  //     );
+  //   }
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     width: size.width * 0.1,
+  //     decoration: BoxDecoration(
+  //         color: StatusUpdateServices.statcolorget5(clsta),
+  //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //     child: PopupMenuButton(
+  //       tooltip: "UpDate Status",
+  //       padding: EdgeInsets.zero,
+  //       shape: TooltipShape(),
+  //       offset: Offset(0, size.height * 0.035),
+  //       onSelected: (value) {
+  //         StatusUpdateServices.updateStatus5(id, value.toString());
+  //         setState(() {});
+  //       },
+  //       child: Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           children: [
+  //             Text(
+  //               StatusUpdateServices.statusget5(clsta),
+  //               style: TxtStls.fieldstyle11,
+  //             ),
+  //             Icon(
+  //               Icons.arrow_drop_down_outlined,
+  //               color: bgColor,
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //       itemBuilder: (context) {
+  //         return [
+  //           PopupMenuItem(
+  //             value: "IRRELEVANT",
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                 color: irrClr,
+  //               ),
+  //               alignment: Alignment.center,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(4.0),
+  //                 child: Text(
+  //                   "IRRELEVANT",
+  //                   style: TxtStls.fieldstyle1,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           PopupMenuItem(
+  //             value: "BUDGET ISSUE",
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                 color: clsClr,
+  //               ),
+  //               alignment: Alignment.center,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(4.0),
+  //                 child: Text(
+  //                   "BUDGET ISSUE",
+  //                   style: TxtStls.fieldstyle1,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           PopupMenuItem(
+  //             value: "INFORMATIVE",
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                 color: flwClr,
+  //               ),
+  //               alignment: Alignment.center,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(4.0),
+  //                 child: Text(
+  //                   "INFORMATIVE",
+  //                   style: TxtStls.fieldstyle1,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           PopupMenuItem(
+  //             value: "NO ANSWER",
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
+  //                 color: conClr,
+  //               ),
+  //               alignment: Alignment.center,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(4.0),
+  //                 child: Text(
+  //                   "NO ANSWER",
+  //                   style: TxtStls.fieldstyle1,
+  //                 ),
+  //               ),
+  //             ),
+  //           )
+  //         ];
+  //       },
+  //     ),
+  //   );
+  // }
 
-  Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
-    if (cat == "NEW") {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        alignment: Alignment.center,
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget(newsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget(newsta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "PROSPECT") {
-      return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget1(prosta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget1(prosta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "IN PROGRESS") {
-      return Container(
-        alignment: Alignment.center,
-        width: 150,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget2(insta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget2(insta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "WON") {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        alignment: Alignment.center,
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget4(wonsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget4(wonsta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    }
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-      width: 130,
-      decoration: BoxDecoration(
-          color: StatusUpdateServices.statcolorget5(clsta),
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      child: Text(
-        StatusUpdateServices.statusget5(clsta),
-        style: TxtStls.fieldstyle11,
-      ),
-    );
-  }
+  // Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
+  //   if (cat == "NEW") {
+  //     return Container(
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget(newsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget(newsta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "PROSPECT") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget1(prosta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget1(prosta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "IN PROGRESS") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget2(insta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget2(insta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "WON") {
+  //     return Container(
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget4(wonsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget4(wonsta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   }
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //     width: 130,
+  //     decoration: BoxDecoration(
+  //         color: StatusUpdateServices.statcolorget5(clsta),
+  //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //     child: Text(
+  //       StatusUpdateServices.statusget5(clsta),
+  //       style: TxtStls.fieldstyle11,
+  //     ),
+  //   );
+  // }
 
   Widget filters(cat) {
     Size size = MediaQuery.of(context).size;
@@ -2831,7 +2904,7 @@ class _TaskPreviewState extends State<TaskPreview>
   var last;
 
   detailspopBox(context, id, taskname, startDate, endDate, priority, lastseen,
-      cat, message, newsta, prosta, insta, wonsta, clsta, s, f, assign, cxid) {
+      cat, message, newsta, s, f, assign, cxid) {
     bool isSelected = false;
     Size size = MediaQuery.of(context).size;
     String createDate =
@@ -5039,8 +5112,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                         style: TxtStls.fieldstyle1,
                                       ),
                                     ),
-                                    dropdowns1(id, cat, newsta, prosta, insta,
-                                        wonsta, clsta),
+
                                   ],
                                 ),
                                 Container(
@@ -5952,10 +6024,6 @@ class _TaskPreviewState extends State<TaskPreview>
                                     cat,
                                     message,
                                     newsta,
-                                    prosta,
-                                    insta,
-                                    wonsta,
-                                    clsta,
                                     s,
                                     f,
                                     assign,
@@ -6060,12 +6128,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                 ],
                               ),
                             ),
-                            Container(
-                              width: size.width * 0.07,
-                              alignment: Alignment.centerLeft,
-                              child: dropdowns(id, cat, newsta, prosta, insta,
-                                  wonsta, clsta),
-                            ),
+                            // Container(
+                            //   width: size.width * 0.07,
+                            //   alignment: Alignment.centerLeft,
+                            //   child: dropdowns(id, cat, newsta, prosta, insta,
+                            //       wonsta, clsta),
+                            // ),
                             Expanded(
                                 child: CountdownTimer(
                               endTime: DateTime.now().millisecondsSinceEpoch +
@@ -6091,7 +6159,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                               dname = taskname;
                                               cxID = CxID;
                                               dendDate = endDate.toString();
-                                              lead = "update";
+                                              enddrawerkey = "update";
                                               Scaffold.of(context)
                                                   .openEndDrawer();
                                             });
@@ -6115,7 +6183,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                               dname = taskname;
                                               cxID = CxID;
                                               dendDate = endDate.toString();
-                                              lead = "move";
+                                              enddrawerkey = "move";
                                               Scaffold.of(context)
                                                   .openEndDrawer();
                                             });
@@ -6354,12 +6422,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                             .toList(),
                                       ),
                                     ),
-                                    Container(
-                                      width: 200,
-                                      alignment: Alignment.centerLeft,
-                                      child: dropdowns(id, cat, newsta, prosta,
-                                          insta, wonsta, clsta),
-                                    ),
+                                    // Container(
+                                    //   width: 200,
+                                    //   alignment: Alignment.centerLeft,
+                                    //   child: dropdowns(id, cat, newsta, prosta,
+                                    //       insta, wonsta, clsta),
+                                    // ),
                                     Expanded(
                                       child: Row(
                                         mainAxisAlignment:
@@ -6379,7 +6447,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   dname = taskname;
                                                   cxID = CxID.toString();
                                                   dendDate = endDate.toString();
-                                                  lead = "update";
+                                                  enddrawerkey = "update";
                                                   Scaffold.of(context)
                                                       .openEndDrawer();
                                                 });
@@ -6402,7 +6470,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   dname = taskname;
                                                   cxID = CxID.toString();
                                                   dendDate = endDate.toString();
-                                                  lead = "move";
+                                                  enddrawerkey = "move";
                                                   Scaffold.of(context)
                                                       .openEndDrawer();
                                                 });
@@ -6603,10 +6671,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                     cat,
                                     message,
                                     newsta,
-                                    prosta,
-                                    insta,
-                                    wonsta,
-                                    clsta,
+
                                     s,
                                     f,
                                     assign,
@@ -6711,12 +6776,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                 ],
                               ),
                             ),
-                            Container(
-                              width: size.width * 0.07,
-                              alignment: Alignment.centerLeft,
-                              child: dropdowns(id, cat, newsta, prosta, insta,
-                                  wonsta, clsta),
-                            ),
+                            // Container(
+                            //   width: size.width * 0.07,
+                            //   alignment: Alignment.centerLeft,
+                            //   child: dropdowns(id, cat, newsta, prosta, insta,
+                            //       wonsta, clsta),
+                            // ),
                             Expanded(
                                 child: CountdownTimer(
                                   endTime: DateTime.now().millisecondsSinceEpoch +
@@ -6742,7 +6807,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   dname = taskname;
                                                   cxID = CxID;
                                                   dendDate = endDate.toString();
-                                                  lead = "update";
+                                                  enddrawerkey = "update";
                                                   Scaffold.of(context)
                                                       .openEndDrawer();
                                                 });
@@ -6766,7 +6831,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   dname = taskname;
                                                   cxID = CxID;
                                                   dendDate = endDate.toString();
-                                                  lead = "move";
+                                                  enddrawerkey = "move";
                                                   Scaffold.of(context)
                                                       .openEndDrawer();
                                                 });
