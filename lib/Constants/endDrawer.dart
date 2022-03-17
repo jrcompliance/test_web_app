@@ -10,6 +10,8 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/Time%20Model.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
+import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
+import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 
@@ -226,18 +228,22 @@ class _MoveDrawerState extends State<MoveDrawer> {
       setState(() {
         print(_customtimeController.text);
       });
+    } else {
+      setState(() {
+        addtime = DateTime.now();
+      });
     }
   }
 
-  timeendnotification() async {
-    print("delhi");
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
-    List<String> timerslist = [];
-    timerslist.add('your schedule time has been ended');
-    _sharedPreferences.setStringList("timer", timerslist);
-    print(" to khammam  .......");
-  }
+  // timeendnotification() async {
+  //   print("delhi");
+  //   SharedPreferences _sharedPreferences =
+  //       await SharedPreferences.getInstance();
+  //   List<String> timerslist = [];
+  //   timerslist.add('your schedule time has been ended');
+  //   _sharedPreferences.setStringList("timer", timerslist);
+  //   print(" to khammam  .......");
+  // }
 
   /// drawerwidgets are here...
   Widget Profile() {
@@ -648,23 +654,39 @@ class _MoveDrawerState extends State<MoveDrawer> {
                         radioItem != null &&
                         _choosenValue != null &&
                         activeid != null) {
-                      dcat == "NEW"
-                          ? ComapnyUpdateServices.updateCompany(
-                              did, _companyController, _websiteController)
-                          : null;
-                      ProgressUpdsate.movetoanotherCategory(
-                          did,
-                          dcat,
-                          activeid,
-                          noteController,
-                          dendDate,
-                          radioItem,
-                          _choosenValue,
-                          context);
-                      EndDateOperations.updateEdateTask(
-                          did, _endDateController);
-                      GraphValueServices.graph(dendDate, did);
-                      Navigator.pop(context);
+                      val();
+                      var uenddate = _endDateController.text.toString() == ""
+                          ? dendDate.toString()
+                          : _endDateController.text.toString();
+                      var who =
+                          Provider.of<UserDataProvider>(context, listen: false)
+                              .username;
+                      Provider.of<LeadUpdateProvider>(context, listen: false)
+                          .updateLead(
+                              dcat,
+                              who,
+                              noteController.text.toString(),
+                              dendDate,
+                              radioItem,
+                              _choosenValue,
+                              did,
+                              enddrawerkey,
+                              activeid,
+                              uenddate,
+                              addtime!)
+                          .then((value) {
+                        dcat == "NEW"
+                            ? Provider.of<UpdateCompanyDeatailsProvider>(
+                                    context,
+                                    listen: false)
+                                .updateCompanyDetails(
+                                    did,
+                                    _companyController.text.toString(),
+                                    _websiteController.text.toString())
+                            : null;
+                        GraphValueServices.graph(dendDate, did);
+                        Navigator.pop(context);
+                      });
                     }
                   },
                 ),
@@ -1126,15 +1148,33 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     if (_formKey.currentState!.validate() &&
                         radioItem != null &&
                         _choosenValue != null) {
-                      setState(() {
-                        val();
-                        myConter(did, addtime!);
+                      var who =
+                          Provider.of<UserDataProvider>(context, listen: false)
+                              .username;
+                      val();
+                      var uenddate = _endDateController.text.toString() == ""
+                          ? dendDate.toString()
+                          : _endDateController.text.toString();
+                      Provider.of<LeadUpdateProvider>(context, listen: false)
+                          .updateLead(
+                              dcat,
+                              who,
+                              noteController.text.toString(),
+                              dendDate,
+                              radioItem,
+                              _choosenValue,
+                              did,
+                              enddrawerkey,
+                              activeid,
+                              uenddate,
+                              addtime!)
+                          .then((value) {
                         Navigator.pop(context);
-                        ProgressUpdsate.updatesame(did, dcat, noteController,
-                            dendDate, radioItem, _choosenValue, context);
-                        GraphValueServices.graph(dendDate, did);
-                        timeendnotification();
                       });
+
+                      //GraphValueServices.graph(dendDate, did);
+                      //timeendnotification();
+
                     }
                   },
                 ),

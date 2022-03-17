@@ -15,6 +15,9 @@ import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
+import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
+import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
+import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/UserProvider/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
@@ -36,6 +39,9 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => CompleteProfielProvider()),
       ChangeNotifierProvider(create: (ctx) => AllUSerProvider()),
       ChangeNotifierProvider(create: (ctx) => CreateLeadProvider()),
+      ChangeNotifierProvider(create: (ctx) => LeadUpdateProvider()),
+      ChangeNotifierProvider(create: (ctx) => UpdateCompanyDeatailsProvider()),
+      ChangeNotifierProvider(create: (ctx) => UpdateStatusProvider()),
       ChangeNotifierProvider(create: (ctx) => AllLeadsProvider()),
       ChangeNotifierProvider(create: (ctx) => GstProvider()),
       ChangeNotifierProvider(create: (ctx) => RecentFetchCXIDProvider()),

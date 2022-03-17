@@ -23,6 +23,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
+import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/UserProvider/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
@@ -1172,9 +1173,8 @@ class _TaskPreviewState extends State<TaskPreview>
               String careatedate1 =
                   DateFormat("dd, yy").format(startDate.toDate());
               DateTime dt = DateTime.parse(endDate);
-              String edf = DateFormat("EEE | MMM").format(dt);
+              String edf = DateFormat("EEE | MMM dd,  yy").format(dt);
 
-              String edf1 = DateFormat("dd, yy").format(dt);
               // ignore: undefined_prefixed_name
               ui.platformViewRegistry.registerViewFactory(
                 logo,
@@ -1399,7 +1399,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         width: size.width * 0.1,
                         alignment: Alignment.centerLeft,
                         child:
-                        Text(" ${edf}" + " ${edf1}", style: ClrStls.endClr)),
+                        Text(edf, style: ClrStls.endClr)),
                     Container(
                       width: size.width * 0.1,
                       height: 30,
@@ -1469,94 +1469,7 @@ class _TaskPreviewState extends State<TaskPreview>
                     Container(
                       width: size.width * 0.08,
                       alignment: Alignment.centerLeft,
-                      child:  Container(
-                            alignment: Alignment.center,
-                            width: size.width * 0.1,
-                            decoration: BoxDecoration(
-                                color: StatusUpdateServices.statcolorget(status),
-                                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                            child: PopupMenuButton(
-                              tooltip: "UpDate Status",
-                              padding: EdgeInsets.zero,
-                              shape: TooltipShape(),
-                              offset: Offset(0, size.height * 0.035),
-                              onSelected: (value) {
-                                StatusUpdateServices.updateStatus(id, value.toString());
-                                setState(() {});
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(
-                                      StatusUpdateServices.statusget(status),
-                                      style: TxtStls.fieldstyle1,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_drop_down_outlined,
-                                      color: bgColor,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: "FRESH",
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        color: wonClr,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          "FRESH",
-                                          style: TxtStls.fieldstyle1,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: "ASSIGNED",
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        color: flwClr,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          "ASSIGNED",
-                                          style: TxtStls.fieldstyle1,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: "CONTACTED",
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        color: conClr,
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          "CONTACTED",
-                                          style: TxtStls.fieldstyle1,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ];
-                              },
-                            ),
-                          ),
+                      child:  dropdowns(cat,status,id),
                     ),
                     Expanded(
                         child: CountdownTimer(
@@ -2031,522 +1944,520 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  // Widget dropdowns(id, cat, newsta, prosta, insta, wonsta, clsta) {
-  //   Size size = MediaQuery.of(context).size;
-  //   if (cat == "NEW") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: size.width * 0.1,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget(newsta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: PopupMenuButton(
-  //         tooltip: "UpDate Status",
-  //         padding: EdgeInsets.zero,
-  //         shape: TooltipShape(),
-  //         offset: Offset(0, size.height * 0.035),
-  //         onSelected: (value) {
-  //           StatusUpdateServices.updateStatus(id, value.toString());
-  //           setState(() {});
-  //         },
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             children: [
-  //               Text(
-  //                 StatusUpdateServices.statusget(newsta),
-  //                 style: TxtStls.fieldstyle1,
-  //               ),
-  //               Icon(
-  //                 Icons.arrow_drop_down_outlined,
-  //                 color: bgColor,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         itemBuilder: (context) {
-  //           return [
-  //             PopupMenuItem(
-  //               value: "FRESH",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: wonClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "FRESH",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "ASSIGNED",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: flwClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "ASSIGNED",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "CONTACTED",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: conClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "CONTACTED",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ];
-  //         },
-  //       ),
-  //     );
-  //   } else if (cat == "PROSPECT") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: size.width * 0.1,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget1(prosta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: PopupMenuButton(
-  //         tooltip: "UpDate Status",
-  //         padding: EdgeInsets.zero,
-  //         shape: TooltipShape(),
-  //         offset: Offset(0, size.height * 0.035),
-  //         onSelected: (value) {
-  //           StatusUpdateServices.updateStatus1(id, value.toString());
-  //           setState(() {});
-  //         },
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             children: [
-  //               Text(
-  //                 StatusUpdateServices.statusget1(prosta),
-  //                 style: TxtStls.fieldstyle1,
-  //               ),
-  //               Icon(
-  //                 Icons.arrow_drop_down_outlined,
-  //                 color: bgColor,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         itemBuilder: (context) {
-  //           return [
-  //             PopupMenuItem(
-  //               value: "AVERAGE",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: avgClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "   AVERAGE   ",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "GOOD",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: goodClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "   GOOD   ",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ];
-  //         },
-  //       ),
-  //     );
-  //   } else if (cat == "IN PROGRESS") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: size.width * 0.1,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget2(insta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: PopupMenuButton(
-  //         tooltip: "UpDate Status",
-  //         padding: EdgeInsets.zero,
-  //         shape: TooltipShape(),
-  //         offset: Offset(0, size.height * 0.035),
-  //         onSelected: (value) {
-  //           StatusUpdateServices.updateStatus2(id, value.toString());
-  //           setState(() {});
-  //         },
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             children: [
-  //               Text(
-  //                 StatusUpdateServices.statusget2(insta),
-  //                 style: TxtStls.fieldstyle1,
-  //               ),
-  //               Icon(
-  //                 Icons.arrow_drop_down_outlined,
-  //                 color: bgColor,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         itemBuilder: (context) {
-  //           return [
-  //             PopupMenuItem(
-  //               value: "FOLLOWUP",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: flwClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "FOLLOWUP",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "SPECIFICATION",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: spClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "SPECIFICATION",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "QUOTATION",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: qtoClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "QUOTATION",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ];
-  //         },
-  //       ),
-  //     );
-  //   } else if (cat == "WON") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: size.width * 0.1,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget4(wonsta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: PopupMenuButton(
-  //         tooltip: "UpDate Status",
-  //         padding: EdgeInsets.zero,
-  //         shape: TooltipShape(),
-  //         offset: Offset(0, size.height * 0.035),
-  //         onSelected: (value) {
-  //           StatusUpdateServices.updateStatus4(id, value.toString());
-  //           setState(() {});
-  //         },
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //             children: [
-  //               Text(
-  //                 StatusUpdateServices.statusget4(wonsta),
-  //                 style: TxtStls.fieldstyle1,
-  //               ),
-  //               Icon(
-  //                 Icons.arrow_drop_down_outlined,
-  //                 color: bgColor,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         itemBuilder: (context) {
-  //           return [
-  //             PopupMenuItem(
-  //               value: "PAYMENT",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: wonClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "PAYMENT",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "DOCUMENTS",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: flwClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "DOCUMENTS",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             PopupMenuItem(
-  //               value: "SAMPLES",
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                   color: goodClr,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(4.0),
-  //                   child: Text(
-  //                     "SAMPLES",
-  //                     style: TxtStls.fieldstyle1,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ];
-  //         },
-  //       ),
-  //     );
-  //   }
-  //   return Container(
-  //     alignment: Alignment.center,
-  //     width: size.width * 0.1,
-  //     decoration: BoxDecoration(
-  //         color: StatusUpdateServices.statcolorget5(clsta),
-  //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //     child: PopupMenuButton(
-  //       tooltip: "UpDate Status",
-  //       padding: EdgeInsets.zero,
-  //       shape: TooltipShape(),
-  //       offset: Offset(0, size.height * 0.035),
-  //       onSelected: (value) {
-  //         StatusUpdateServices.updateStatus5(id, value.toString());
-  //         setState(() {});
-  //       },
-  //       child: Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //           children: [
-  //             Text(
-  //               StatusUpdateServices.statusget5(clsta),
-  //               style: TxtStls.fieldstyle11,
-  //             ),
-  //             Icon(
-  //               Icons.arrow_drop_down_outlined,
-  //               color: bgColor,
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //       itemBuilder: (context) {
-  //         return [
-  //           PopupMenuItem(
-  //             value: "IRRELEVANT",
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                 color: irrClr,
-  //               ),
-  //               alignment: Alignment.center,
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(4.0),
-  //                 child: Text(
-  //                   "IRRELEVANT",
-  //                   style: TxtStls.fieldstyle1,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           PopupMenuItem(
-  //             value: "BUDGET ISSUE",
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                 color: clsClr,
-  //               ),
-  //               alignment: Alignment.center,
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(4.0),
-  //                 child: Text(
-  //                   "BUDGET ISSUE",
-  //                   style: TxtStls.fieldstyle1,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           PopupMenuItem(
-  //             value: "INFORMATIVE",
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                 color: flwClr,
-  //               ),
-  //               alignment: Alignment.center,
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(4.0),
-  //                 child: Text(
-  //                   "INFORMATIVE",
-  //                   style: TxtStls.fieldstyle1,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           PopupMenuItem(
-  //             value: "NO ANSWER",
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  //                 color: conClr,
-  //               ),
-  //               alignment: Alignment.center,
-  //               child: Padding(
-  //                 padding: const EdgeInsets.all(4.0),
-  //                 child: Text(
-  //                   "NO ANSWER",
-  //                   style: TxtStls.fieldstyle1,
-  //                 ),
-  //               ),
-  //             ),
-  //           )
-  //         ];
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget dropdowns(cat,newsta,id) {
+    Size size = MediaQuery.of(context).size;
+    if (cat == "NEW") {
+      return Container(
+        alignment: Alignment.center,
+        width: size.width * 0.1,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          tooltip: "UpDate Status",
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, size.height * 0.035),
+          onSelected: (value) {
+            Provider.of<UpdateStatusProvider>(context,listen: false).updatestatus(id, value);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget(newsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "FRESH",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: wonClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "FRESH",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "ASSIGNED",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "ASSIGNED",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "CONTACTED",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: conClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "CONTACTED",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "PROSPECT") {
+      return Container(
+        alignment: Alignment.center,
+        width: size.width * 0.1,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget1(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          tooltip: "UpDate Status",
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, size.height * 0.035),
+          onSelected: (value) {
+            Provider.of<UpdateStatusProvider>(context,listen: false).updatestatus(id, value);
 
-  // Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
-  //   if (cat == "NEW") {
-  //     return Container(
-  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-  //       alignment: Alignment.center,
-  //       width: 150,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget(newsta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: Text(
-  //         StatusUpdateServices.statusget(newsta),
-  //         style: TxtStls.fieldstyle1,
-  //       ),
-  //     );
-  //   } else if (cat == "PROSPECT") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-  //       width: 150,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget1(prosta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: Text(
-  //         StatusUpdateServices.statusget1(prosta),
-  //         style: TxtStls.fieldstyle1,
-  //       ),
-  //     );
-  //   } else if (cat == "IN PROGRESS") {
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: 150,
-  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget2(insta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: Text(
-  //         StatusUpdateServices.statusget2(insta),
-  //         style: TxtStls.fieldstyle1,
-  //       ),
-  //     );
-  //   } else if (cat == "WON") {
-  //     return Container(
-  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-  //       alignment: Alignment.center,
-  //       width: 150,
-  //       decoration: BoxDecoration(
-  //           color: StatusUpdateServices.statcolorget4(wonsta),
-  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //       child: Text(
-  //         StatusUpdateServices.statusget4(wonsta),
-  //         style: TxtStls.fieldstyle1,
-  //       ),
-  //     );
-  //   }
-  //   return Container(
-  //     alignment: Alignment.center,
-  //     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-  //     width: 130,
-  //     decoration: BoxDecoration(
-  //         color: StatusUpdateServices.statcolorget5(clsta),
-  //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
-  //     child: Text(
-  //       StatusUpdateServices.statusget5(clsta),
-  //       style: TxtStls.fieldstyle11,
-  //     ),
-  //   );
-  // }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget1(newsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "AVERAGE",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: avgClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "   AVERAGE   ",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "GOOD",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: goodClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "   GOOD   ",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "IN PROGRESS") {
+      return Container(
+        alignment: Alignment.center,
+        width: size.width * 0.1,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget2(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          tooltip: "UpDate Status",
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, size.height * 0.035),
+          onSelected: (value) {
+            Provider.of<UpdateStatusProvider>(context,listen: false).updatestatus(id, value);
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget2(newsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "FOLLOWUP",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "FOLLOWUP",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "SPECIFICATION",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: spClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "SPECIFICATION",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "QUOTATION",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: qtoClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "QUOTATION",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    } else if (cat == "WON") {
+      return Container(
+        alignment: Alignment.center,
+        width: size.width * 0.1,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget4(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: PopupMenuButton(
+          tooltip: "UpDate Status",
+          padding: EdgeInsets.zero,
+          shape: TooltipShape(),
+          offset: Offset(0, size.height * 0.035),
+          onSelected: (value) {
+            Provider.of<UpdateStatusProvider>(context,listen: false).updatestatus(id, value);
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  StatusUpdateServices.statusget4(newsta),
+                  style: TxtStls.fieldstyle1,
+                ),
+                Icon(
+                  Icons.arrow_drop_down_outlined,
+                  color: bgColor,
+                )
+              ],
+            ),
+          ),
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: "PAYMENT",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: wonClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "PAYMENT",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "DOCUMENTS",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: flwClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "DOCUMENTS",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "SAMPLES",
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: goodClr,
+                  ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      "SAMPLES",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              ),
+            ];
+          },
+        ),
+      );
+    }
+    return Container(
+      alignment: Alignment.center,
+      width: size.width * 0.1,
+      decoration: BoxDecoration(
+          color: StatusUpdateServices.statcolorget5(newsta),
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      child: PopupMenuButton(
+        tooltip: "UpDate Status",
+        padding: EdgeInsets.zero,
+        shape: TooltipShape(),
+        offset: Offset(0, size.height * 0.035),
+        onSelected: (value) {
+          Provider.of<UpdateStatusProvider>(context,listen: false).updatestatus(id, value);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                StatusUpdateServices.statusget5(newsta),
+                style: TxtStls.fieldstyle11,
+              ),
+              Icon(
+                Icons.arrow_drop_down_outlined,
+                color: bgColor,
+              )
+            ],
+          ),
+        ),
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(
+              value: "IRRELEVANT",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: irrClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "IRRELEVANT",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "BUDGET ISSUE",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: clsClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "BUDGET ISSUE",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "INFORMATIVE",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: flwClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "INFORMATIVE",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            ),
+            PopupMenuItem(
+              value: "NO ANSWER",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  color: conClr,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "NO ANSWER",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                ),
+              ),
+            )
+          ];
+        },
+      ),
+    );
+  }
+
+  Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
+    if (cat == "NEW") {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        alignment: Alignment.center,
+        width: 150,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget(newsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Text(
+          StatusUpdateServices.statusget(newsta),
+          style: TxtStls.fieldstyle1,
+        ),
+      );
+    } else if (cat == "PROSPECT") {
+      return Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        width: 150,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget1(prosta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Text(
+          StatusUpdateServices.statusget1(prosta),
+          style: TxtStls.fieldstyle1,
+        ),
+      );
+    } else if (cat == "IN PROGRESS") {
+      return Container(
+        alignment: Alignment.center,
+        width: 150,
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget2(insta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Text(
+          StatusUpdateServices.statusget2(insta),
+          style: TxtStls.fieldstyle1,
+        ),
+      );
+    } else if (cat == "WON") {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        alignment: Alignment.center,
+        width: 150,
+        decoration: BoxDecoration(
+            color: StatusUpdateServices.statcolorget4(wonsta),
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        child: Text(
+          StatusUpdateServices.statusget4(wonsta),
+          style: TxtStls.fieldstyle1,
+        ),
+      );
+    }
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      width: 130,
+      decoration: BoxDecoration(
+          color: StatusUpdateServices.statcolorget5(clsta),
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      child: Text(
+        StatusUpdateServices.statusget5(clsta),
+        style: TxtStls.fieldstyle11,
+      ),
+    );
+  }
 
   Widget filters(cat) {
     Size size = MediaQuery.of(context).size;

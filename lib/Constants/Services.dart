@@ -199,7 +199,7 @@ class StatusUpdateServices {
   static updateStatus5(id, stat5) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     collectionReference.doc(id).update({
-      "status5": stat5.toString(),
+      "status": stat5.toString(),
     });
   }
 
