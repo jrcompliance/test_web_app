@@ -3459,14 +3459,15 @@ class _TaskPreviewState extends State<TaskPreview>
                                       Expanded(
                                         child: Container(
                                           width: size.width * 0.20,
-                                          child: StreamBuilder(
+                                          child:
+                                          StreamBuilder(
                                               stream: FirebaseFirestore.instance
                                                   .collection("Tasks")
                                                   .where("id", isEqualTo: id)
                                                   .snapshots(),
                                               builder: (BuildContext context,
                                                   AsyncSnapshot<QuerySnapshot>
-                                                      snapshot) {
+                                                  snapshot) {
                                                 if (!snapshot.hasData) {
                                                   return Container(
                                                       width: 100,
@@ -3480,22 +3481,21 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   shrinkWrap: true,
                                                   scrollDirection: Axis.vertical,
                                                   physics:
-                                                      AlwaysScrollableScrollPhysics(),
-                                                  itemCount:
-                                                      snapshot.data!.docs.length,
+                                                  AlwaysScrollableScrollPhysics(),
+                                                  itemCount:snapshot.data!.docs.length,
                                                   itemBuilder:
                                                       (BuildContext context,
-                                                          int index) {
+                                                      int index) {
                                                     List attachments1 =
-                                                        snapshot.data!.docs[index]
-                                                            ["Attachments1"];
+                                                    snapshot.data!.docs[index]
+                                                    ["Attachments1"];
                                                     return ListView.separated(
                                                       shrinkWrap: true,
                                                       itemCount:
-                                                          attachments1.length,
+                                                      attachments1.length,
                                                       itemBuilder:
                                                           (BuildContext context,
-                                                              i) {
+                                                          i) {
                                                         return ListTile(
                                                           leading: SizedBox(
                                                             height: size.height *
@@ -3503,14 +3503,14 @@ class _TaskPreviewState extends State<TaskPreview>
                                                             child: Image.asset(
                                                                 "assets/Images/pdf.png",
                                                                 filterQuality:
-                                                                    FilterQuality
-                                                                        .high,
+                                                                FilterQuality
+                                                                    .high,
                                                                 fit:
-                                                                    BoxFit.cover),
+                                                                BoxFit.cover),
                                                           ),
                                                           title: Text(
                                                             attachments1[i]
-                                                                ['name'],
+                                                            ['name'],
                                                             style: TxtStls
                                                                 .fieldstyle,
                                                           ),
@@ -3518,9 +3518,9 @@ class _TaskPreviewState extends State<TaskPreview>
                                                             fileview1(
                                                                 context,
                                                                 attachments1[i]
-                                                                    ["name"],
+                                                                ["name"],
                                                                 attachments1[i]
-                                                                    ["url"]);
+                                                                ["url"]);
                                                           },
                                                         );
                                                       }, separatorBuilder: (BuildContext context, int index)=>Divider(color: grClr),
@@ -3528,6 +3528,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                   },
                                                 );
                                               }),
+
                                         ),
                                       ),
                                       Container(
