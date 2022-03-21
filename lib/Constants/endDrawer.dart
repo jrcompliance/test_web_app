@@ -673,7 +673,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
                               enddrawerkey,
                               activeid,
                               uenddate,
-                              addtime!)
+                              addtime!,
+                              dstatus)
                           .then((value) {
                         dcat == "NEW"
                             ? Provider.of<UpdateCompanyDeatailsProvider>(
@@ -1167,7 +1168,8 @@ class _MoveDrawerState extends State<MoveDrawer> {
                               enddrawerkey,
                               activeid,
                               uenddate,
-                              addtime!)
+                              addtime!,
+                              dstatus)
                           .then((value) {
                         Navigator.pop(context);
                       });

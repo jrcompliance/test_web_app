@@ -18,13 +18,15 @@ import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
+import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
+import 'package:test_web_app/Providers/AddServicesProvider.dart';
+import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
-import 'package:test_web_app/UserProvider/ActivityProvider.dart';
+import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
@@ -1374,10 +1376,6 @@ class _TaskPreviewState extends State<TaskPreview>
                               f,
                               assign,
                               CxID);
-
-
-
-
                       },
                     ),
                     Container(
@@ -1477,8 +1475,6 @@ class _TaskPreviewState extends State<TaskPreview>
                           widgetBuilder:
                               (BuildContext context, CurrentRemainingTime? time){
                             if (time == null) {
-
-
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -1520,6 +1516,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                           cxID = CxID;
                                           dendDate = endDate.toString();
                                           enddrawerkey = "move";
+                                          dstatus = status;
                                           Scaffold.of(context).openEndDrawer();
                                         });
                                       },
@@ -1944,14 +1941,14 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  Widget dropdowns(cat,newsta,id) {
+  Widget dropdowns(cat,status,id) {
     Size size = MediaQuery.of(context).size;
     if (cat == "NEW") {
       return Container(
         alignment: Alignment.center,
         width: size.width * 0.1,
         decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget(newsta),
+            color: StatusUpdateServices.subcatColor(status),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
           tooltip: "UpDate Status",
@@ -1967,7 +1964,7 @@ class _TaskPreviewState extends State<TaskPreview>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  StatusUpdateServices.statusget(newsta),
+                  StatusUpdateServices.statusget(status),
                   style: TxtStls.fieldstyle1,
                 ),
                 Icon(
@@ -2039,7 +2036,7 @@ class _TaskPreviewState extends State<TaskPreview>
         alignment: Alignment.center,
         width: size.width * 0.1,
         decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget1(newsta),
+            color: StatusUpdateServices.statcolorget1(status),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
           tooltip: "UpDate Status",
@@ -2056,7 +2053,7 @@ class _TaskPreviewState extends State<TaskPreview>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  StatusUpdateServices.statusget1(newsta),
+                  StatusUpdateServices.statusget1(status),
                   style: TxtStls.fieldstyle1,
                 ),
                 Icon(
@@ -2111,7 +2108,7 @@ class _TaskPreviewState extends State<TaskPreview>
         alignment: Alignment.center,
         width: size.width * 0.1,
         decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget2(newsta),
+            color: StatusUpdateServices.statcolorget2(status),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
           tooltip: "UpDate Status",
@@ -2128,7 +2125,7 @@ class _TaskPreviewState extends State<TaskPreview>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  StatusUpdateServices.statusget2(newsta),
+                  StatusUpdateServices.statusget2(status),
                   style: TxtStls.fieldstyle1,
                 ),
                 Icon(
@@ -2200,7 +2197,7 @@ class _TaskPreviewState extends State<TaskPreview>
         alignment: Alignment.center,
         width: size.width * 0.1,
         decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget4(newsta),
+            color: StatusUpdateServices.statcolorget4(status),
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         child: PopupMenuButton(
           tooltip: "UpDate Status",
@@ -2217,7 +2214,7 @@ class _TaskPreviewState extends State<TaskPreview>
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  StatusUpdateServices.statusget4(newsta),
+                  StatusUpdateServices.statusget4(status),
                   style: TxtStls.fieldstyle1,
                 ),
                 Icon(
@@ -2289,7 +2286,7 @@ class _TaskPreviewState extends State<TaskPreview>
       alignment: Alignment.center,
       width: size.width * 0.1,
       decoration: BoxDecoration(
-          color: StatusUpdateServices.statcolorget5(newsta),
+          color: StatusUpdateServices.statcolorget5(status),
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       child: PopupMenuButton(
         tooltip: "UpDate Status",
@@ -2305,7 +2302,7 @@ class _TaskPreviewState extends State<TaskPreview>
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                StatusUpdateServices.statusget5(newsta),
+                StatusUpdateServices.statusget5(status),
                 style: TxtStls.fieldstyle11,
               ),
               Icon(
@@ -2391,73 +2388,73 @@ class _TaskPreviewState extends State<TaskPreview>
     );
   }
 
-  Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
-    if (cat == "NEW") {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        alignment: Alignment.center,
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget(newsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget(newsta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "PROSPECT") {
-      return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget1(prosta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget1(prosta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "IN PROGRESS") {
-      return Container(
-        alignment: Alignment.center,
-        width: 150,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget2(insta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget2(insta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    } else if (cat == "WON") {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        alignment: Alignment.center,
-        width: 150,
-        decoration: BoxDecoration(
-            color: StatusUpdateServices.statcolorget4(wonsta),
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        child: Text(
-          StatusUpdateServices.statusget4(wonsta),
-          style: TxtStls.fieldstyle1,
-        ),
-      );
-    }
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-      width: 130,
-      decoration: BoxDecoration(
-          color: StatusUpdateServices.statcolorget5(clsta),
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      child: Text(
-        StatusUpdateServices.statusget5(clsta),
-        style: TxtStls.fieldstyle11,
-      ),
-    );
-  }
+  // Widget dropdowns1(id, cat, newsta, prosta, insta, wonsta, clsta) {
+  //   if (cat == "NEW") {
+  //     return Container(
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget(newsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget(newsta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "PROSPECT") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget1(prosta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget1(prosta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "IN PROGRESS") {
+  //     return Container(
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget2(insta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget2(insta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   } else if (cat == "WON") {
+  //     return Container(
+  //       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //       alignment: Alignment.center,
+  //       width: 150,
+  //       decoration: BoxDecoration(
+  //           color: StatusUpdateServices.statcolorget4(wonsta),
+  //           borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //       child: Text(
+  //         StatusUpdateServices.statusget4(wonsta),
+  //         style: TxtStls.fieldstyle1,
+  //       ),
+  //     );
+  //   }
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+  //     width: 130,
+  //     decoration: BoxDecoration(
+  //         color: StatusUpdateServices.statcolorget5(clsta),
+  //         borderRadius: BorderRadius.all(Radius.circular(20.0))),
+  //     child: Text(
+  //       StatusUpdateServices.statusget5(clsta),
+  //       style: TxtStls.fieldstyle11,
+  //     ),
+  //   );
+  // }
 
   Widget filters(cat) {
     Size size = MediaQuery.of(context).size;
@@ -2815,7 +2812,7 @@ class _TaskPreviewState extends State<TaskPreview>
   var last;
 
   detailspopBox(context, id, taskname, startDate, endDate, priority, lastseen,
-      cat, message, newsta, s, f, assign, cxid) {
+      cat, message, status, s, f, assign, cxid) {
     bool isSelected = false;
     Size size = MediaQuery.of(context).size;
     String createDate =
@@ -3454,83 +3451,84 @@ class _TaskPreviewState extends State<TaskPreview>
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text("Attachments :",
                                           style: TxtStls.fieldtitlestyle),
-                                      Container(
-                                        width: size.width * 0.20,
-                                        height: size.height * 0.12,
-                                        child: StreamBuilder(
-                                            stream: FirebaseFirestore.instance
-                                                .collection("Tasks")
-                                                .where("id", isEqualTo: id)
-                                                .snapshots(),
-                                            builder: (BuildContext context,
-                                                AsyncSnapshot<QuerySnapshot>
-                                                    snapshot) {
-                                              if (!snapshot.hasData) {
-                                                return Container(
-                                                    width: 100,
-                                                    height: 100,
-                                                    child: Image.asset(
-                                                        "assets/Images/pdf.png"));
-                                              }
-                                              return ListView.separated(
-                                                separatorBuilder: (_, index) =>
-                                                    SizedBox(height: 1),
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                physics:
-                                                    AlwaysScrollableScrollPhysics(),
-                                                itemCount:
-                                                    snapshot.data!.docs.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  List attachments1 =
-                                                      snapshot.data!.docs[index]
-                                                          ["Attachments1"];
-                                                  return ListView.builder(
-                                                    shrinkWrap: true,
-                                                    itemCount:
-                                                        attachments1.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            i) {
-                                                      return ListTile(
-                                                        leading: SizedBox(
-                                                          height: size.height *
-                                                              0.05,
-                                                          child: Image.asset(
-                                                              "assets/Images/pdf.png",
-                                                              filterQuality:
-                                                                  FilterQuality
-                                                                      .high,
-                                                              fit:
-                                                                  BoxFit.cover),
-                                                        ),
-                                                        title: Text(
-                                                          attachments1[i]
-                                                              ['name'],
-                                                          style: TxtStls
-                                                              .fieldstyle,
-                                                        ),
-                                                        onTap: () {
-                                                          fileview1(
-                                                              context,
-                                                              attachments1[i]
-                                                                  ["name"],
-                                                              attachments1[i]
-                                                                  ["url"]);
-                                                        },
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              );
-                                            }),
+                                      Expanded(
+                                        child: Container(
+                                          width: size.width * 0.20,
+                                          child: StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection("Tasks")
+                                                  .where("id", isEqualTo: id)
+                                                  .snapshots(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<QuerySnapshot>
+                                                      snapshot) {
+                                                if (!snapshot.hasData) {
+                                                  return Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      child: Image.asset(
+                                                          "assets/Images/pdf.png"));
+                                                }
+                                                return ListView.separated(
+                                                  separatorBuilder: (_, index) =>
+                                                      SizedBox(height: 1),
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.vertical,
+                                                  physics:
+                                                      AlwaysScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      snapshot.data!.docs.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    List attachments1 =
+                                                        snapshot.data!.docs[index]
+                                                            ["Attachments1"];
+                                                    return ListView.separated(
+                                                      shrinkWrap: true,
+                                                      itemCount:
+                                                          attachments1.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              i) {
+                                                        return ListTile(
+                                                          leading: SizedBox(
+                                                            height: size.height *
+                                                                0.025,
+                                                            child: Image.asset(
+                                                                "assets/Images/pdf.png",
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit:
+                                                                    BoxFit.cover),
+                                                          ),
+                                                          title: Text(
+                                                            attachments1[i]
+                                                                ['name'],
+                                                            style: TxtStls
+                                                                .fieldstyle,
+                                                          ),
+                                                          onTap: () {
+                                                            fileview1(
+                                                                context,
+                                                                attachments1[i]
+                                                                    ["name"],
+                                                                attachments1[i]
+                                                                    ["url"]);
+                                                          },
+                                                        );
+                                                      }, separatorBuilder: (BuildContext context, int index)=>Divider(color: grClr),
+                                                    );
+                                                  },
+                                                );
+                                              }),
+                                        ),
                                       ),
                                       Container(
                                         margin: EdgeInsets.symmetric(
@@ -3551,7 +3549,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                           child: Text("Upload",
                                               style: TxtStls.fieldstyle1),
                                           onPressed: () {
-                                            FileServices.choosefile(id);
+                                            Provider.of<AddDocumentsProvider>(context,listen: false).addDocument(id);
                                           },
                                         ),
                                       )
@@ -3628,13 +3626,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                       borderRadius:BorderRadius.all(Radius.circular(10.0))
                                                   ),
                                                   onTap: (){
-                                                    CrudOperations.certificateUpdate(
-                                                      id,
-                                                      mysearchresult[index],
-                                                    );
-                                                    _mysearchController.clear();
-
-
+                                                    Provider.of<AddServiceProvider>(context,listen: false).addService(id, mysearchresult[index]).then((value) => _mysearchController.clear());
                                                   },
 
                                                 );
@@ -3678,9 +3670,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                                     }),
                                               );
                                         }
-                                      ),
-         
-                                      
+                                      )
                                     ],
                                   ),
                                 ),
@@ -5023,6 +5013,20 @@ class _TaskPreviewState extends State<TaskPreview>
                                         style: TxtStls.fieldstyle1,
                                       ),
                                     ),
+                                    Container(
+                                      width: 150,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 3),
+                                      decoration: BoxDecoration(
+                                          color: StatusUpdateServices.subcatColor(status),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        status,
+                                        style: TxtStls.fieldstyle1,
+                                      ),
+                                    ),
 
                                   ],
                                 ),
@@ -5500,6 +5504,7 @@ class _TaskPreviewState extends State<TaskPreview>
     );
     showDialog(
         barrierDismissible: false,
+        barrierColor: txtColor.withOpacity(0.75),
         context: context,
         builder: (_) {
           return alertDialog;
@@ -5543,7 +5548,7 @@ class _TaskPreviewState extends State<TaskPreview>
                 size: 15,
               ),
               onPressed: () {
-                CrudOperations.deleteCertifcate(id, e);
+                Provider.of<RemoveServiceProvider>(context,listen: false).removeService(id, e);
               },
             )
           ],
@@ -7100,8 +7105,6 @@ class _TaskPreviewState extends State<TaskPreview>
         .where("cat", isEqualTo: cat)
         .snapshots();
   }
-
-
 
 }
 

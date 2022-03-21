@@ -58,6 +58,74 @@ class UpdateServices {
 }
 
 class StatusUpdateServices {
+  static Color subcatColor(status) {
+    switch (status) {
+      case "FRESH":
+        {
+          return wonClr;
+        }
+      case "ASSIGNED":
+        {
+          return flwClr;
+        }
+      case "CONTACTED":
+        {
+          return conClr;
+        }
+
+      case "AVERAGE":
+        {
+          return avgClr;
+        }
+      case "GOOD":
+        {
+          return goodClr;
+        }
+
+      case "QUOTATION":
+        {
+          return qtoClr;
+        }
+      case "SPECIFICATION":
+        {
+          return spClr;
+        }
+      case "FOLLOWUP":
+        {
+          return flwClr;
+        }
+
+      case "SAMPLES":
+        {
+          return goodClr;
+        }
+      case "DOCUMENTS":
+        {
+          return flwClr;
+        }
+      case "PAYMENT":
+        {
+          return wonClr;
+        }
+      case "NO ANSWER":
+        {
+          return conClr;
+        }
+      case "INFORMATIVE":
+        {
+          return flwClr;
+        }
+      case "BUDGET ISSUE":
+        {
+          return clsClr;
+        }
+      default:
+        {
+          return irrClr;
+        }
+    }
+  }
+
   Color clr(action) {
     if (action == "CALL") {
       return wonClr;
@@ -71,26 +139,31 @@ class StatusUpdateServices {
   }
 
   static Color CatColor(cat) {
-    if (cat == "PROSPECT") {
-      return prosClr;
-    } else if (cat == "IN PROGRESS") {
-      return ipClr;
-    } else if (cat == "WON") {
-      return wonClr;
-    } else if (cat == "CLOSE") {
-      return clsClr;
-    } else {
-      return neClr;
+    switch (cat) {
+      case "PROSPECT":
+        {
+          return prosClr;
+        }
+      case "IN PROGRESS":
+        {
+          return ipClr;
+        }
+      case "WON":
+        {
+          return wonClr;
+        }
+      case "CLOSE":
+        {
+          return clsClr;
+        }
+      default:
+        {
+          return neClr;
+        }
     }
   }
 
   // new status update here...
-  static updateStatus(id, stat1) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "status": stat1.toString(),
-    });
-  }
 
   static statusget(String newsta) {
     if (newsta == "CONTACTED") {
@@ -114,12 +187,6 @@ class StatusUpdateServices {
   }
 
   //Status updated here... 2
-  static updateStatus1(id, stat2) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "status1": stat2.toString(),
-    });
-  }
 
   static statusget1(String prosta) {
     if (prosta == "AVERAGE") {
@@ -138,12 +205,6 @@ class StatusUpdateServices {
   }
 
   //Status updated here... 3
-  static updateStatus2(id, stat3) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "status2": stat3.toString(),
-    });
-  }
 
   static statusget2(String insta) {
     if (insta == "QUOTATION") {
@@ -167,12 +228,6 @@ class StatusUpdateServices {
   }
 
   //Status updated here...5
-  static updateStatus4(id, stat4) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "status4": stat4.toString(),
-    });
-  }
 
   static statusget4(String wonsta) {
     if (wonsta == "SAMPLES") {
@@ -196,12 +251,6 @@ class StatusUpdateServices {
   }
 
   //Status updated here...6
-  static updateStatus5(id, stat5) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "status": stat5.toString(),
-    });
-  }
 
   static statusget5(String clsta) {
     if (clsta == "NO ANSWER") {
@@ -389,21 +438,21 @@ class CrudOperations {
     });
   }
 
-  static certificateUpdate(id, certifi) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Certificates": FieldValue.arrayUnion([certifi.toString()])
-    }).then((value) {
-      certifi.clear();
-    });
-  }
+  // static certificateUpdate(id, certifi) async {
+  //   CollectionReference collectionReference = _firestore.collection("Tasks");
+  //   collectionReference.doc(id).update({
+  //     "Certificates": FieldValue.arrayUnion([certifi.toString()])
+  //   }).then((value) {
+  //     certifi.clear();
+  //   });
+  // }
 
-  static deleteCertifcate(id, String element) async {
-    CollectionReference collectionReference = _firestore.collection("Tasks");
-    collectionReference.doc(id).update({
-      "Certificates": FieldValue.arrayRemove([element])
-    });
-  }
+  // static deleteCertifcate(id, String element) async {
+  //   CollectionReference collectionReference = _firestore.collection("Tasks");
+  //   collectionReference.doc(id).update({
+  //     "Certificates": FieldValue.arrayRemove([element])
+  //   });
+  // }
 }
 
 // class StateUpdateServices {

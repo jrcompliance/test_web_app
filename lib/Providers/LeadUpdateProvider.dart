@@ -7,7 +7,7 @@ class LeadUpdateProvider with ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var ntime = DateTime.now().toString().split(" ")[0];
   Future<void> updateLead(cat, who, noteController, lastDate, radioItem, action,
-      id, key, activeid, uenddate, timer) async {
+      id, key, activeid, uenddate, timer, status) async {
     try {
       LeadUpdateModel leadUpdateModel = LeadUpdateModel();
       leadUpdateModel.From = cat;
@@ -31,11 +31,37 @@ class LeadUpdateProvider with ChangeNotifier {
           "cat": key == "move" ? activeid : cat,
           "endDate": uenddate,
           "time": timer,
+          "status": key == "move" ? valupdate(activeid) : status,
         });
       });
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
+    }
+  }
+
+  valupdate(activeid) {
+    switch (activeid) {
+      case "PROSPECT":
+        {
+          return "GOOD";
+        }
+      case "IN PROGRESS":
+        {
+          return "FOLLOWUP";
+        }
+      case "WON":
+        {
+          return "PAYMENT";
+        }
+      case "CLOSE":
+        {
+          return "IRRELEVENT";
+        }
+      default:
+        {
+          return "FRESH";
+        }
     }
   }
 }

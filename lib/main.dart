@@ -12,13 +12,16 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDa
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
+import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
+import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
+import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
 import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
-import 'package:test_web_app/UserProvider/ActivityProvider.dart';
+import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
@@ -49,6 +52,9 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => CustmerProvider()),
       ChangeNotifierProvider(create: (ctx) => ActivityProvider()),
       ChangeNotifierProvider(create: (ctx) => ActivityProvider1()),
+      ChangeNotifierProvider(create: (ctx) => AddServiceProvider()),
+      ChangeNotifierProvider(create: (ctx) => RemoveServiceProvider()),
+      ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider()),
     ],
     child: MyApp(),
   ));
