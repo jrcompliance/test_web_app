@@ -14,6 +14,7 @@ class RegisterModel {
   String? uname;
   String? uphoneNumber;
   String? urole;
+  int? eid;
 
   RegisterModel(
       {this.fcmtoken,
@@ -30,7 +31,8 @@ class RegisterModel {
       this.uimage,
       this.uname,
       this.uphoneNumber,
-      this.urole});
+      this.urole,
+      this.eid});
 
   toMap() {
     return {
@@ -48,7 +50,8 @@ class RegisterModel {
       "uimage": uimage,
       "uname": uname,
       "uphoneNumber": uphoneNumber,
-      "urole": urole
+      "urole": urole,
+      "eid": eid,
     };
   }
 }

@@ -264,8 +264,15 @@ class _MoveDrawerState extends State<MoveDrawer> {
                   maxRadius: 50,
                 ),
                 SizedBox(height: size.height * 0.02),
-                Text(userdata.username.toString(),
-                    style: TxtStls.fieldtitlestyle),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(userdata.username.toString(),
+                        style: TxtStls.fieldtitlestyle),
+                    Text("(JR-0${userdata.eid.toString()})",
+                        style: TxtStls.fieldtitlestyle),
+                  ],
+                ),
                 Text("(${userdata.udesignation.toString()})",
                     style: TxtStls.fieldstyle),
               ],

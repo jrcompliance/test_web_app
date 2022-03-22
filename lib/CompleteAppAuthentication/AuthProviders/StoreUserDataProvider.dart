@@ -9,7 +9,8 @@ class StoreUserDataProvider with ChangeNotifier {
   String? error;
 
   Future<void> storeUserData(
-      _username, _email, _password, _phonenumber, _isAgree) async {
+      _username, _email, _password, _phonenumber, _isAgree, eid) async {
+    _firestore.collection("GenerateId's").doc("EmployeeId").get();
     RegisterModel _registerModel = RegisterModel();
     _registerModel.fcmtoken = null;
     _registerModel.TCPB = _isAgree;
@@ -25,6 +26,7 @@ class StoreUserDataProvider with ChangeNotifier {
     _registerModel.uname = _username;
     _registerModel.uphoneNumber = _phonenumber;
     _registerModel.urole = "Employee";
+    _registerModel.eid = eid;
     String uid = _auth.currentUser!.uid.toString();
     try {
       await _firestore

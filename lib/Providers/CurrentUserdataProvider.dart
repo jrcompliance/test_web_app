@@ -17,6 +17,7 @@ class UserDataProvider extends ChangeNotifier {
   String? imageUrl;
   String? role;
   String? uid;
+  int? eid;
 
   Future<void> getUserData() async {
     try {
@@ -42,6 +43,7 @@ class UserDataProvider extends ChangeNotifier {
         phone = value.get("uphoneNumber");
         imageUrl = value.get("uimage");
         role = value.get("urole");
+        eid = value.get("eid");
         notifyListeners();
       });
     } on Exception catch (e) {

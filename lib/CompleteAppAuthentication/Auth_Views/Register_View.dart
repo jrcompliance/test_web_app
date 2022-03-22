@@ -12,6 +12,7 @@ import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dar
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Success_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
+import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -455,30 +456,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
   getRegister(BuildContext context) {
     var provider = Provider.of<RegisterProvider>(context, listen: false);
     var provider1 = Provider.of<StoreUserDataProvider>(context, listen: false);
+    var provider3 =
+        Provider.of<RecentFetchCXIDProvider>(context, listen: false);
     if (_formKey.currentState!.validate()) {
-      provider
-          .getRegister(_emailController.text.toString(),
-              _passwordController.text.toString())
-          .then((value) {
-        if (provider.success != null) {
-          provider1.storeUserData(
-              _usernameController.text.toString(),
-              _emailController.text.toString(),
-              _passwordController.text.toString(),
-              _phonenumberController.text.toString(),
-              _isAgree);
+      provider3.fetchRecentemployeeid().then((value) {
+        provider
+            .getRegister(_emailController.text.toString(),
+                _passwordController.text.toString())
+            .then((value) {
+          if (provider.success != null) {
+            provider1.storeUserData(
+                _usernameController.text.toString(),
+                _emailController.text.toString(),
+                _passwordController.text.toString(),
+                _phonenumberController.text.toString(),
+                _isAgree,
+                provider3.eid);
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => SuccessScreen()),
-              (route) => false);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            dismissDirection: DismissDirection.startToEnd,
-            content: Text(provider.error.toString()),
-            backgroundColor: Colors.red,
-          ));
-        }
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => SuccessScreen()),
+                (route) => false);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              dismissDirection: DismissDirection.startToEnd,
+              content: Text(provider.error.toString()),
+              backgroundColor: Colors.red,
+            ));
+          }
+        });
       });
     }
   }
