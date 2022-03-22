@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
+import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
@@ -31,7 +32,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.TaskPreview;
+  Tabs active = Tabs.Finance;
   var radioItem;
 
   @override
@@ -210,7 +211,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              //Finance1(),
+              Finance1(),
             ],
           );
         }

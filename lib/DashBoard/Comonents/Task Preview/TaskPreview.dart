@@ -620,8 +620,9 @@ class _TaskPreviewState extends State<TaskPreview>
 
   @override
   Widget build(BuildContext context) {
-    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
+    final userdata = Provider.of<UserDataProvider>(context);
+
     return Container(
       color: AbgColor.withOpacity(0.0001),
       width: size.width,
