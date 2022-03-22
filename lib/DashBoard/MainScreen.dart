@@ -191,7 +191,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              TaskPreview(),
+              Flexible(child: TaskPreview()),
             ],
           );
         }
