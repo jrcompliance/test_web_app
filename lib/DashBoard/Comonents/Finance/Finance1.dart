@@ -1,13 +1,17 @@
-import 'dart:typed_data';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:test_web_app/Constants/Calenders.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -16,7 +20,6 @@ import 'package:test_web_app/Pdf/Models/InvoiceModel.dart';
 import 'package:test_web_app/Pdf/Models/SupplierModel.dart';
 import 'package:test_web_app/Pdf/PdfApi.dart';
 import 'package:test_web_app/Pdf/PdfInvoiceApi.dart';
-import 'package:test_web_app/PdfPage.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import '../../../Providers/CustomerProvider.dart';
 
@@ -44,18 +47,21 @@ class _Finance1State extends State<Finance1> {
   String bnature = "Active";
   bool visible = false;
   bool isAdded = false;
+
+  final TextEditingController _gstController = TextEditingController();
+  final TextEditingController _tradenameController = TextEditingController();
+  final TextEditingController _addressControoler = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _panController = TextEditingController();
+
   final TextEditingController _searchController1 = TextEditingController();
   final TextEditingController _invoiceController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _invoiceusername = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressControoler = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _customersearchController =
       TextEditingController();
-  final TextEditingController _pincodeController = TextEditingController();
-  final TextEditingController _panController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
@@ -69,9 +75,6 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
   List cust = [];
-  String? contactname;
-  String? cemail;
-  String? cphone;
 
   @override
   Widget build(BuildContext context) {
@@ -143,10 +146,6 @@ class _Finance1State extends State<Finance1> {
                             itemBuilder: (BuildContext context, int i) {
                               var snp = Provider.of<CustmerProvider>(context)
                                   .customerlist[i];
-                              contactname = snp.Customername;
-                              cemail = snp.Customeremail;
-                              cphone = snp.Customerphone;
-
                               return Material(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
@@ -164,21 +163,19 @@ class _Finance1State extends State<Finance1> {
                                         color: btnColor,
                                       )),
                                   title: Text(
-                                    contactname.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12.5),
+                                    snp.Customername.toString(),
+                                    style: TxtStls.fieldtitlestyle,
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        cemail.toString(),
+                                        snp.Customeremail.toString(),
                                         style: TxtStls.fieldstyle,
                                       ),
                                       Text(
-                                        cphone.toString(),
+                                        snp.Customerphone.toString(),
                                         style: TxtStls.fieldstyle,
                                       ),
                                     ],
@@ -193,7 +190,11 @@ class _Finance1State extends State<Finance1> {
                                         )),
                                   ),
                                   onTap: () {
-                                    print(i);
+                                    setState(() {
+                                      cusname = snp.Customername;
+                                      cusphone = snp.Customerphone;
+                                      cusemail = snp.Customeremail;
+                                    });
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -224,30 +225,51 @@ class _Finance1State extends State<Finance1> {
                       ? show1(context)
                       : Column(
                           children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: FlatButton.icon(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  color: btnColor,
-                                  onPressed: () {
-                                    setState(() {
-                                      _dateController.text = DateTime.now()
-                                          .toString()
-                                          .split(" ")[0];
-                                      _isLoad = true;
-                                    });
-                                  },
-                                  icon: Icon(Icons.add, color: bgColor),
-                                  label: Text(
-                                    "Create New $activeid",
-                                    style: TxtStls.fieldstyle1,
-                                  )),
-                            ),
+                            cusname == null
+                                ? SizedBox()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          cusname.toString() +
+                                              "\n(${cusemail.toString()})",
+                                          style: TxtStls.fieldtitlestyle),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: FlatButton.icon(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            color: btnColor,
+                                            onPressed: () {
+                                              setState(() {
+                                                _dateController.text =
+                                                    DateTime.now()
+                                                        .toString()
+                                                        .split(" ")[0];
+                                                _isLoad = true;
+                                              });
+                                            },
+                                            icon:
+                                                Icon(Icons.add, color: bgColor),
+                                            label: Text(
+                                              "Create New $activeid",
+                                              style: TxtStls.fieldstyle1,
+                                            )),
+                                      ),
+                                    ],
+                                  ),
                             SizedBox(height: size.height * 0.2),
                             Lottie.asset("assets/Lotties/empty.json",
-                                animate: true, reverse: true)
+                                animate: true, reverse: true),
+                            SizedBox(height: size.height * 0.2),
+                            cusname == null
+                                ? Text(
+                                    "Select any Customer to Proceed",
+                                    style: TxtStls.fieldtitlestyle,
+                                  )
+                                : SizedBox()
                           ],
                         ),
                 ),
@@ -335,6 +357,7 @@ class _Finance1State extends State<Finance1> {
                 color: bgColor,
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -369,7 +392,7 @@ class _Finance1State extends State<Finance1> {
                               padding:
                                   EdgeInsets.only(left: 15, right: 0, top: 2),
                               child: TextField(
-                                controller: _searchController,
+                                controller: _gstController,
                                 style: TxtStls.fieldstyle,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -378,13 +401,38 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                           ),
-                          Container(
-                            width: size.width * 0.025,
-                            padding: EdgeInsets.symmetric(vertical: 12.5),
-                            color: btnColor,
-                            child: Icon(
-                              Icons.search,
-                              color: bgColor,
+                          InkWell(
+                            onTap: () {
+                              var provider = Provider.of<GstProvider>(context,
+                                  listen: false);
+                              provider
+                                  .fetchGstData(_gstController.text.toString())
+                                  .whenComplete(() {
+                                Future.delayed(Duration(seconds: 2))
+                                    .then((value) {
+                                  setState(() {
+                                    tradename = provider.tradename.toString();
+                                    address =
+                                        provider.principalplace.toString();
+                                    pan = provider.pan.toString();
+                                    pincode = provider.pincode.toString();
+                                  });
+                                });
+                              });
+                            },
+                            child: Container(
+                              width: size.width * 0.025,
+                              padding: EdgeInsets.symmetric(vertical: 12.5),
+                              color: btnColor,
+                              child: Provider.of<GstProvider>(context).isLoading
+                                  ? SpinKitFadingCube(
+                                      color: bgColor,
+                                      size: 23,
+                                    )
+                                  : Icon(
+                                      Icons.search,
+                                      color: bgColor,
+                                    ),
                             ),
                           ),
                         ],
@@ -404,6 +452,30 @@ class _Finance1State extends State<Finance1> {
                         style: ClrStls.tnClr,
                       )),
                 ),
+                Container(
+                    color: grClr.withOpacity(0.25),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    child: Text(
+                      "ReferenceID : ${addtwoNumber(8).toString()}",
+                      style: TxtStls.fieldtitlestyle,
+                    )),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: tradename == null
+                      ? SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              tradename.toString(),
+                              style: TxtStls.fieldstyle,
+                            ),
+                            Text(address.toString(), style: TxtStls.fieldstyle),
+                            Text(pincode.toString(), style: TxtStls.fieldstyle),
+                            Text(pan.toString(), style: TxtStls.fieldstyle),
+                          ],
+                        ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -413,90 +485,17 @@ class _Finance1State extends State<Finance1> {
                           duration: Duration(milliseconds: 500),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                      maxRadius: 7,
-                                      backgroundColor: Provider.of<GstProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .gstinstatus
-                                                  .toString() ==
-                                              "Active"
-                                          ? Colors.green
-                                          : clsClr),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    _statusController.text.toString(),
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                  Expanded(child: Text("")),
-                                  Text(bnature, style: TxtStls.fieldstyle)
-                                ],
-                              ),
-                              space(),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                        padding: EdgeInsets.only(right: 20),
-                                        child: formfield(
-                                            "Invoice Id",
-                                            _invoiceController,
-                                            icnData(),
-                                            true)),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        MyCalenders.pickEndDate(
-                                            context, _dateController);
-                                      },
-                                      child: Padding(
-                                          padding: EdgeInsets.only(left: 20),
-                                          child: formfield(
-                                              "Date",
-                                              _dateController,
-                                              Icon(Icons.calendar_today,
-                                                  color: btnColor),
-                                              false)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              space(),
-                              formfield("TradeName", _nameController, icnData(),
-                                  true),
+                              formfield("TradeName", _tradenameController,
+                                  icnData(), true),
                               space(),
                               formfield(
-                                  "Name", _invoiceusername, icnData(), true),
-                              space(),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 20),
-                                      child: formfield("Email",
-                                          _emailController, icnData(), true),
-                                    ),
+                                  "Address",
+                                  _addressControoler,
+                                  Icon(
+                                    Icons.location_on_rounded,
+                                    color: btnColor,
                                   ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 20),
-                                      child: formfield(
-                                          "Address",
-                                          _addressControoler,
-                                          Icon(
-                                            Icons.location_on_rounded,
-                                            color: btnColor,
-                                          ),
-                                          true),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                  true),
                               space(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,46 +517,29 @@ class _Finance1State extends State<Finance1> {
                                 ],
                               ),
                               space(),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: InkWell(
-                                      child: Container(
-                                        padding: EdgeInsets.all(12.0),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: bgColor,
-                                            border: Border.all(color: btnColor),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        child: Text(
-                                          "Send Invoice",
-                                          style: TxtStls.btnstyle,
-                                        ),
-                                      ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: CircleAvatar(
+                                  backgroundColor: btnColor,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: bgColor,
                                     ),
+                                    onPressed: () async {
+                                      print("Hey Yalagala Srinivas");
+                                      tradename =
+                                          _tradenameController.text.toString();
+                                      pan = _panController.text.toString();
+                                      pincode =
+                                          _pincodeController.text.toString();
+                                      address =
+                                          _addressControoler.text.toString();
+                                      isgst = false;
+                                      setState(() {});
+                                    },
                                   ),
-                                  Expanded(flex: 1, child: Text("")),
-                                  Expanded(
-                                    flex: 4,
-                                    child: InkWell(
-                                      child: Container(
-                                        padding: EdgeInsets.all(12.0),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: btnColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        child: Text(
-                                          "Create Invoice",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                      onTap: () {},
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ],
                           ),
@@ -636,7 +618,7 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            isAdded == true
+                            list1.length > 0
                                 ? ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
@@ -650,12 +632,24 @@ class _Finance1State extends State<Finance1> {
                                             Expanded(
                                               flex: 4,
                                               child: Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    list1[index]["item"]
-                                                        .toString(),
-                                                    style: TxtStls
-                                                        .fieldtitlestyle2,
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text("${index + 1}. ",
+                                                          style: TxtStls
+                                                              .fieldtitlestyle),
+                                                      Flexible(
+                                                        child: Text(
+                                                          "${list1[index]["item"].toString()}\n",
+                                                          style: TxtStls
+                                                              .fieldtitlestyle,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   )),
                                             ),
                                             VerticalDivider(
@@ -669,8 +663,8 @@ class _Finance1State extends State<Finance1> {
                                                   child: Text(
                                                     list1[index]["rate"]
                                                         .toString(),
-                                                    style: TxtStls
-                                                        .fieldtitlestyle2,
+                                                    style:
+                                                        TxtStls.fieldtitlestyle,
                                                   )),
                                             ),
                                             VerticalDivider(
@@ -685,7 +679,7 @@ class _Finance1State extends State<Finance1> {
                                                         list1[index]["qty"]
                                                             .toString(),
                                                         style: TxtStls
-                                                            .fieldtitlestyle2))),
+                                                            .fieldtitlestyle))),
                                             VerticalDivider(
                                               thickness: 2,
                                               color: bgColor,
@@ -698,7 +692,7 @@ class _Finance1State extends State<Finance1> {
                                                       list1[index]["disc"]
                                                           .toString(),
                                                       style: TxtStls
-                                                          .fieldtitlestyle2)),
+                                                          .fieldtitlestyle)),
                                             ),
                                             VerticalDivider(
                                               thickness: 2,
@@ -712,7 +706,7 @@ class _Finance1State extends State<Finance1> {
                                                         list1[index]["price"]
                                                             .toString(),
                                                         style: TxtStls
-                                                            .fieldtitlestyle2))),
+                                                            .fieldtitlestyle))),
                                           ],
                                         ),
                                       );
@@ -735,8 +729,8 @@ class _Finance1State extends State<Finance1> {
                                               color: Colors.grey
                                                   .withOpacity(0.5))),
                                       alignment: Alignment.center,
-                                      child: textField(
-                                          _selectController, "Select Item"),
+                                      child: textField(_selectController,
+                                          "Item Description"),
 
                                       //   InvoiceFields(_selectController,"Select Item"),
                                     ),
@@ -802,14 +796,48 @@ class _Finance1State extends State<Finance1> {
                                     thickness: 2,
                                     color: bgColor,
                                   ),
-                                  Expanded(flex: 2, child: SizedBox()),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: InkWell(
+                                            autofocus: false,
+                                            onTap: () {
+                                              setState(() {
+                                                var _customer = Provider.of<
+                                                        CustmerProvider>(
+                                                    context,
+                                                    listen: false);
+                                                cust.forEach(
+                                                    (element) => _customer);
+                                              });
+
+                                              print('custom cust' +
+                                                  cust.toString());
+                                              addingData();
+                                              Future.delayed(
+                                                      Duration(seconds: 1))
+                                                  .then((value) {
+                                                _rateController.clear();
+                                                _qtyController2.clear();
+                                                _priceController.clear();
+                                                _discController.clear();
+                                                _selectController.clear();
+                                                _descripController.clear();
+                                              });
+                                            },
+                                            child: Text(
+                                              "+ADD ITEM",
+                                              style: TxtStls.btnstyle,
+                                            )),
+                                      )),
                                 ],
                               ),
                             ),
                             SizedBox(
                               height: 5,
                             ),
-                            isAdded == true ? SizedBox() : SizedBox(),
+                            SizedBox(),
                             Padding(
                               padding:
                                   EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -901,36 +929,6 @@ class _Finance1State extends State<Finance1> {
                             ),
                             SizedBox(
                               height: 20,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 75,
-                              ),
-                              child: InkWell(
-                                  autofocus: false,
-                                  onTap: () {
-                                    setState(() {
-                                      isAdded = true;
-                                      var _customer =
-                                          Provider.of<CustmerProvider>(context,
-                                              listen: false);
-                                      cust.forEach((element) => _customer);
-                                    });
-
-                                    print('custom cust' + cust.toString());
-
-                                    addingData();
-                                    _rateController.clear();
-                                    _qtyController2.clear();
-                                    _priceController.clear();
-                                    _discController.clear();
-                                    _selectController.clear();
-                                    _descripController.clear();
-                                  },
-                                  child: Text(
-                                    "+ADD ITEM",
-                                    style: TxtStls.btnstyle,
-                                  )),
                             ),
                             SizedBox(
                               height: 20,
@@ -1098,8 +1096,8 @@ class _Finance1State extends State<Finance1> {
                               // Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfPage()));
                               final date = DateTime.now();
                               final dueDate = date.add(Duration(days: 7));
-                              print('name' + contactname.toString());
-                              print('email' + cemail.toString());
+                              print('name' + cusphone.toString());
+                              print('email' + cusphone.toString());
 
                               final invoice = Invoice(
                                 supplier: Supplier(
@@ -1240,4 +1238,11 @@ class _Finance1State extends State<Finance1> {
       color: fieldColor,
     );
   }
+
+  var addtwoNumber = (int length) {
+    const ch = "456789ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    Random r = Random();
+    return String.fromCharCodes(
+        Iterable.generate(length, (_) => ch.codeUnitAt(r.nextInt(ch.length))));
+  };
 }
