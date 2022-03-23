@@ -6,6 +6,7 @@ import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,6 +34,8 @@ class Finance1 extends StatefulWidget {
 class _Finance1State extends State<Finance1> {
   bool _isLoad = false;
   bool isgst = false;
+
+  bool isPreview = false;
 
   @override
   void initState() {
@@ -80,29 +83,28 @@ class _Finance1State extends State<Finance1> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: btnColor.withOpacity(0.0001),
-      width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                child: Row(
-                  children: _list.map((e) => newMethod(e, () {})).toList(),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: size.height * 0.025,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  flex: 3,
-                  child: Container(
+        color: btnColor.withOpacity(0.0001),
+        width: size.width,
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: Row(
+                          children:
+                              _list.map((e) => newMethod(e, () {})).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.025),
+                  Container(
                       padding: EdgeInsets.all(8),
                       height: size.height * 0.845,
                       decoration: BoxDecoration(
@@ -208,77 +210,78 @@ class _Finance1State extends State<Finance1> {
                             },
                           ),
                         ],
-                      ))),
-              SizedBox(
-                width: 7.5,
+                      ))
+                ],
               ),
-              Expanded(
+            ),
+            SizedBox(width: 10),
+            Expanded(
                 flex: 7,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  height: size.height * 0.845,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: bgColor,
-                  ),
-                  child: _isLoad
-                      ? show1(context)
-                      : Column(
-                          children: [
-                            cusname == null
-                                ? SizedBox()
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                          cusname.toString() +
-                                              "\n(${cusemail.toString()})",
-                                          style: TxtStls.fieldtitlestyle),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: FlatButton.icon(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0))),
-                                            color: btnColor,
-                                            onPressed: () {
-                                              setState(() {
-                                                _dateController.text =
-                                                    DateTime.now()
-                                                        .toString()
-                                                        .split(" ")[0];
-                                                _isLoad = true;
-                                              });
-                                            },
-                                            icon:
-                                                Icon(Icons.add, color: bgColor),
-                                            label: Text(
-                                              "Create New $activeid",
-                                              style: TxtStls.fieldstyle1,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                            SizedBox(height: size.height * 0.2),
-                            Lottie.asset("assets/Lotties/empty.json",
-                                animate: true, reverse: true),
-                            SizedBox(height: size.height * 0.2),
-                            cusname == null
-                                ? Text(
-                                    "Select any Customer to Proceed",
-                                    style: TxtStls.fieldtitlestyle,
-                                  )
-                                : SizedBox()
-                          ],
+                child: isPreview
+                    ? PreviewInvoice(context)
+                    : Container(
+                        padding: EdgeInsets.all(10),
+                        height: size.height * 0.93,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          color: bgColor,
                         ),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
+                        child: _isLoad
+                            ? show1(context)
+                            : Column(
+                                children: [
+                                  cusname == null
+                                      ? SizedBox()
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                cusname.toString() +
+                                                    "\n(${cusemail.toString()})",
+                                                style: TxtStls.fieldtitlestyle),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: FlatButton.icon(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
+                                                  color: btnColor,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _dateController.text =
+                                                          DateTime.now()
+                                                              .toString()
+                                                              .split(" ")[0];
+                                                      _isLoad = true;
+                                                    });
+                                                  },
+                                                  icon: Icon(Icons.add,
+                                                      color: bgColor),
+                                                  label: Text(
+                                                    "Create New $activeid",
+                                                    style: TxtStls.fieldstyle1,
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                  SizedBox(height: size.height * 0.2),
+                                  Lottie.asset("assets/Lotties/empty.json",
+                                      animate: true, reverse: true),
+                                  SizedBox(height: size.height * 0.2),
+                                  cusname == null
+                                      ? Text(
+                                          "Select any Customer to Proceed",
+                                          style: TxtStls.fieldtitlestyle,
+                                        )
+                                      : SizedBox()
+                                ],
+                              ),
+                      )),
+          ],
+        ));
   }
 
   Widget newMethod(e, callack) {
@@ -312,8 +315,7 @@ class _Finance1State extends State<Finance1> {
         controller: _controller,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-              fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black),
+          hintStyle: TxtStls.fieldstyle,
           focusedErrorBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -459,6 +461,7 @@ class _Finance1State extends State<Finance1> {
                       "ReferenceID : ${addtwoNumber(8).toString()}",
                       style: TxtStls.fieldtitlestyle,
                     )),
+                SizedBox(height: size.height * 0.025),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: tradename == null
@@ -476,9 +479,7 @@ class _Finance1State extends State<Finance1> {
                           ],
                         ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: size.height * 0.025),
                 isgst
                     ? Expanded(
                         child: ScaleAnimatedWidget.tween(
@@ -835,102 +836,6 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(
-                              height: 5,
-                            ),
-                            SizedBox(),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(left: 20, right: 20, top: 10),
-                              child: Container(
-                                height: size.height * 0.05,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 30, right: 30),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5))),
-                                          alignment: Alignment.center,
-                                          child: textField(_descripController,
-                                              "Item Description"),
-
-                                          //   InvoiceFields(_selectController,"Select Item"),
-                                        ),
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      thickness: 2,
-                                      color: bgColor,
-                                    ),
-                                    Expanded(
-                                      flex: 4,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 20, right: 20),
-                                            ),
-                                          ),
-                                          //      hintText: "₹ 0",
-                                          VerticalDivider(
-                                            thickness: 2,
-                                            color: bgColor,
-                                          ),
-                                          Expanded(
-                                              child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 35, right: 35),
-                                          ))
-                                        ],
-                                      ),
-                                    ),
-                                    VerticalDivider(
-                                      thickness: 2,
-                                      color: bgColor,
-                                    ),
-                                    Expanded(
-                                      flex: 4,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 35, right: 35),
-                                            ),
-                                          ),
-                                          VerticalDivider(
-                                            thickness: 2,
-                                            color: bgColor,
-                                          ),
-                                          Expanded(
-                                              child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 20, right: 20),
-                                          )),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
                               height: 20,
                             ),
                             Row(
@@ -1002,188 +907,16 @@ class _Finance1State extends State<Finance1> {
                         ),
                       ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        height: 30,
-                        width: size.width * 0.1,
-                        decoration: BoxDecoration(
-                          color: Colors.purple,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Save & Send",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Icon(
-                                Icons.telegram_rounded,
-                                color: Colors.white,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        height: 30,
-                        width: size.width * 0.1,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.purple),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InkWell(
-                                child: Text(
-                                  "Save  ",
-                                  style: TextStyle(color: Colors.purple),
-                                ),
-                                onTap: () {},
-                              ),
-                              VerticalDivider(
-                                thickness: 0.5,
-                                color: Colors.purple,
-                              ),
-                              InkWell(
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(color: Colors.purple),
-                                ),
-                                onTap: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        height: 30,
-                        width: size.width * 0.1,
-                        child: Center(
-                          child: InkWell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.copy_all,
-                                  size: 15,
-                                  color: Colors.purple,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  "Preview  ",
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.purple),
-                                ),
-                              ],
-                            ),
-                            onTap: () async {
-                              // Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfPage()));
-                              final date = DateTime.now();
-                              final dueDate = date.add(Duration(days: 7));
-                              print('name' + cusphone.toString());
-                              print('email' + cusphone.toString());
-
-                              final invoice = Invoice(
-                                supplier: Supplier(
-                                  name: "JR Compliance and Testing Labs",
-                                  address:
-                                      "Regd. Office: 705, 7th Floor,Krishna Apra Tower,Netaji Subhash Place, Pitampura,New Delhi 110034,India",
-                                  paymentInfo: 'https://paypal.me/sarahfieldzz',
-                                  pan: "PAN: AALFJ0070E",
-                                  tan: "TAN: DELJ10631F",
-                                  gst: "GST REGN NO: 07AALFJ0070E1ZO",
-                                ),
-                                customer: Customer(
-                                  name: "Srinivas",
-                                  address: "yalagala@jrcompliance.com",
-                                ),
-                                info: InvoiceInfo(
-                                  date: date,
-                                  dueDate: dueDate,
-                                  description: 'My description...',
-                                  number: '${DateTime.now().year}-9999',
-                                ),
-                                items: [
-                                  InvoiceItem(
-                                    description: 'Coffee',
-                                    date: DateTime.now(),
-                                    quantity: list1[0]["qty"],
-                                    vat: 0.18,
-                                    unitPrice: list1[0]["rate"],
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Water',
-                                    date: DateTime.now(),
-                                    quantity: 8,
-                                    vat: 0.19,
-                                    unitPrice: 0.99,
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Orange',
-                                    date: DateTime.now(),
-                                    quantity: 3,
-                                    vat: 0.19,
-                                    unitPrice: 2.99,
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Apple',
-                                    date: DateTime.now(),
-                                    quantity: 8,
-                                    vat: 0.19,
-                                    unitPrice: 3.99,
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Mango',
-                                    date: DateTime.now(),
-                                    quantity: 1,
-                                    vat: 0.19,
-                                    unitPrice: 1.59,
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Blue Berries',
-                                    date: DateTime.now(),
-                                    quantity: 5,
-                                    vat: 0.19,
-                                    unitPrice: 0.99,
-                                  ),
-                                  InvoiceItem(
-                                    description: 'Lemon',
-                                    date: DateTime.now(),
-                                    quantity: 4,
-                                    vat: 0.19,
-                                    unitPrice: 1.29,
-                                  ),
-                                ],
-                              );
-                              //  final Uint8List fontData = File();
-                              //  final ttf = pw.Font.ttf(fontData.buffer.asByteData());
-                              //  var data = fontData.buffer.asByteData();
-
-                              final pdfFile =
-                                  await PdfInvoiceApi.generate(invoice);
-
-                              PdfApi.openFile(pdfFile);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
+                    TextButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            isPreview = true;
+                          });
+                        },
+                        icon: Icon(Icons.copy),
+                        label: Text("Preview"))
                   ],
                 ),
               ],
@@ -1245,4 +978,478 @@ class _Finance1State extends State<Finance1> {
     return String.fromCharCodes(
         Iterable.generate(length, (_) => ch.codeUnitAt(r.nextInt(ch.length))));
   };
+
+  Widget PreviewInvoice(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height * 0.93,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        color: bgColor,
+      ),
+      padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.015, vertical: size.height * 0.015),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Invoice Preview",
+                style: TextStyle(
+                    fontSize: 15, color: txtColor, fontWeight: FontWeight.bold),
+              ),
+              Expanded(child: SizedBox()),
+              IconButton(
+                  onPressed: (() {
+                    setState(() {});
+                  }),
+                  icon: Icon(Icons.download, color: btnColor)),
+              IconButton(
+                  onPressed: (() {}),
+                  icon: Icon(Icons.print_sharp, color: btnColor)),
+            ],
+          ),
+          Divider(
+            color: grClr,
+          ),
+          Row(
+            children: [
+              SizedBox(
+                height: size.height * 0.15,
+                width: size.width * 0.175,
+                child: Image.asset(
+                  "assets/Logos/jrlogo.png",
+                  filterQuality: FilterQuality.high,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(child: SizedBox()),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text("JR Compliance and Testing Labs",
+                      style: TxtStls.fieldstyle),
+                  Text("Regd. Office: 705, 7th Floor,Krishna Apra Tower",
+                      style: TxtStls.fieldstyle),
+                  Text("Netaji Subhash Place, Pitampura,New Delhi 110034,India",
+                      style: TxtStls.fieldstyle),
+                  Text("JR Compliance and Testing Labs",
+                      style: TxtStls.fieldstyle),
+                  Text("PAN: AALFJ0070E", style: TxtStls.fieldstyle),
+                  Text("TAN: DELJ10631F", style: TxtStls.fieldstyle),
+                  Text("GST REGN NO: 07AALFJ0070E1ZO",
+                      style: TxtStls.fieldstyle),
+                ],
+              )
+            ],
+          ),
+          Divider(
+            color: grClr,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("To,", style: TxtStls.fieldtitlestyle),
+              Text(
+                "Invoice No.",
+                style: TxtStls.fieldtitlestyle,
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "$address",
+                    style: TxtStls.fieldstyle,
+                  ),
+                  Text(
+                      "GST NO- ${_gstController.text == null ? "" : _gstController.text.toString()}",
+                      style: TxtStls.fieldtitlestyle),
+                  Text("Kind Atten: Mr.$cusname",
+                      style: TxtStls.fieldtitlestyle),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "Issued On: " +
+                          DateFormat("dd MMM,yyyy").format(DateTime.now()),
+                      style: TxtStls.fieldstyle,
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child:
+                          Text("Payment Due: Paid", style: TxtStls.fieldstyle)),
+                ],
+              ),
+            ],
+          ),
+          Divider(
+            color: grClr,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: Text("# Description", style: TxtStls.fieldstyle)),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text("SAC No", style: TxtStls.fieldstyle))),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child:
+                                Text("Unit Cost", style: TxtStls.fieldstyle))),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text("Qty", style: TxtStls.fieldstyle))),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text("Disc(%)", style: TxtStls.fieldstyle))),
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child:
+                                Text("Amount(Rs)", style: TxtStls.fieldstyle))),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: grClr,
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: list1.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${index + 1}. ",
+                                  style: TxtStls.fieldtitlestyle),
+                              Flexible(
+                                child: Text(
+                                  "${list1[index]["item"].toString()}\n",
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text("9983", style: TxtStls.fieldstyle),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(list1[index]["rate"].toString(),
+                                  style: TxtStls.fieldstyle),
+                            )),
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(list1[index]["qty"].toString(),
+                                  style: TxtStls.fieldstyle),
+                            )),
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(list1[index]["disc"].toString() + "%",
+                                  style: TxtStls.fieldstyle),
+                            )),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(list1[index]["price"].toString(),
+                                style: TxtStls.fieldstyle),
+                          ),
+                        ),
+                      ],
+                    ))
+                  ],
+                );
+              },
+            ),
+          ),
+          Divider(
+            color: grClr,
+          ),
+          Text("Bank Details:",
+              style: GoogleFonts.nunito(
+                  textStyle: TextStyle(
+                      fontSize: 13,
+                      color: txtColor,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline),
+                  fontSize: 13,
+                  color: txtColor,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline)),
+          Text("Company Name: JR Compliance And Testing Labs",
+              style: TxtStls.fieldtitlestyle),
+          Text("Bank Name: IDFC FIRST BANK", style: TxtStls.fieldtitlestyle),
+          Text("Account Number: 10041186185", style: TxtStls.fieldtitlestyle),
+          Text("IFSC Code: IDFB0040101", style: TxtStls.fieldtitlestyle),
+          Text("SWIFT Code: IDFBINBBMUM", style: TxtStls.fieldtitlestyle),
+          Text("Bank Address: Rohini, New Delhi-110085",
+              style: TxtStls.fieldtitlestyle),
+          Divider(
+            color: grClr,
+          ),
+          Text("Terms And Conditions:", style: TxtStls.fieldtitlestyle),
+          InkWell(
+            child: Text(
+              "https://www.jrcompliance.com/terms-and-conditions",
+              style: TxtStls.fieldstyle,
+            ),
+            onTap: () {
+              //launches.termsofuse();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget wid() {
+    Size size = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              child: Row(
+                children: _list.map((e) => newMethod(e, () {})).toList(),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: size.height * 0.025,
+        ),
+        Row(
+          children: [
+            Expanded(
+                flex: isPreview ? 4 : 3,
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    height: size.height * 0.845,
+                    decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: fieldColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(left: 15, right: 15, top: 2),
+                            child: TextField(
+                              controller: _customersearchController,
+                              style: TxtStls.fieldstyle,
+                              decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: btnColor,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                  border: InputBorder.none,
+                                  hintText: "Enter Customer name",
+                                  hintStyle: TxtStls.fieldstyle),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: Provider.of<CustmerProvider>(context)
+                              .customerlist
+                              .length,
+                          itemBuilder: (BuildContext context, int i) {
+                            var snp = Provider.of<CustmerProvider>(context)
+                                .customerlist[i];
+                            return Material(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: bgColor,
+                              child: ListTile(
+                                tileColor: grClr.withOpacity(0.1),
+                                hoverColor: btnColor.withOpacity(0.2),
+                                selectedColor: btnColor.withOpacity(0.2),
+                                selectedTileColor: btnColor.withOpacity(0.2),
+                                leading: CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.1),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: btnColor,
+                                    )),
+                                title: Text(
+                                  snp.Customername.toString(),
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snp.Customeremail.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                    Text(
+                                      snp.Customerphone.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ],
+                                ),
+                                trailing: CircleAvatar(
+                                  backgroundColor: btnColor.withOpacity(0.1),
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.more_horiz,
+                                        color: btnColor,
+                                      )),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    cusname = snp.Customername;
+                                    cusphone = snp.Customerphone;
+                                    cusemail = snp.Customeremail;
+                                  });
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Divider(color: grClr.withOpacity(0.5));
+                          },
+                        ),
+                      ],
+                    ))),
+            SizedBox(
+              width: 7.5,
+            ),
+            isPreview
+                ? PreviewInvoice(context)
+                : Expanded(
+                    flex: 7,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      height: size.height * 0.845,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: bgColor,
+                      ),
+                      child: _isLoad
+                          ? show1(context)
+                          : Column(
+                              children: [
+                                cusname == null
+                                    ? SizedBox()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              cusname.toString() +
+                                                  "\n(${cusemail.toString()})",
+                                              style: TxtStls.fieldtitlestyle),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: FlatButton.icon(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                color: btnColor,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _dateController.text =
+                                                        DateTime.now()
+                                                            .toString()
+                                                            .split(" ")[0];
+                                                    _isLoad = true;
+                                                  });
+                                                },
+                                                icon: Icon(Icons.add,
+                                                    color: bgColor),
+                                                label: Text(
+                                                  "Create New $activeid",
+                                                  style: TxtStls.fieldstyle1,
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                SizedBox(height: size.height * 0.2),
+                                Lottie.asset("assets/Lotties/empty.json",
+                                    animate: true, reverse: true),
+                                SizedBox(height: size.height * 0.2),
+                                cusname == null
+                                    ? Text(
+                                        "Select any Customer to Proceed",
+                                        style: TxtStls.fieldtitlestyle,
+                                      )
+                                    : SizedBox()
+                              ],
+                            ),
+                    ),
+                  )
+          ],
+        ),
+      ],
+    );
+  }
 }
