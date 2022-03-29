@@ -19,6 +19,7 @@ class CustmerProvider extends ChangeNotifier {
           Customername: element["CompanyDetails"][0]["contactperson"],
           Customeremail: element["CompanyDetails"][0]["email"],
           Customerphone: element["CompanyDetails"][0]["phone"],
+          Idocid: element["id"],
         ));
         _customerlist = lodedData;
         notifyListeners();

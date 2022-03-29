@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/CheckScreen.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -21,6 +22,7 @@ import 'package:test_web_app/Pdf/Models/InvoiceModel.dart';
 import 'package:test_web_app/Pdf/Models/SupplierModel.dart';
 import 'package:test_web_app/Pdf/PdfApi.dart';
 import 'package:test_web_app/Pdf/PdfInvoiceApi.dart';
+import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import '../../../Providers/CustomerProvider.dart';
 
@@ -196,6 +198,7 @@ class _Finance1State extends State<Finance1> {
                                       cusname = snp.Customername;
                                       cusphone = snp.Customerphone;
                                       cusemail = snp.Customeremail;
+                                      Idocid = snp.Idocid;
                                     });
                                   },
                                   shape: RoundedRectangleBorder(
@@ -328,22 +331,22 @@ class _Finance1State extends State<Finance1> {
         });
   }
 
-  List list1 = [];
+  List servicelist = [];
   void addingData() async {
     double _rate = double.parse(_rateController.text);
     int _qty = int.parse(_qtyController2.text);
     double _disc = double.parse(_discController.text);
     double price = (_rate * _qty) - (((_rate * _qty) / 100) * _disc);
-    list1.add(InvoiceDescriptionModel2(
+    servicelist.add(InvoiceDescriptionModel2(
       item: _selectController.text,
       qty: _qty,
       rate: _rate,
       disc: _disc,
       price: price,
     ).toJson());
-    print('@@@' + list1.toString());
+    print('@@@' + servicelist.toString());
 
-    tbal = list1.map((m) => (m["price"])).reduce((a, b) => a + b);
+    tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
     print("Data added ");
   }
 
@@ -619,11 +622,11 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            list1.length > 0
+                            servicelist.length > 0
                                 ? ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
-                                    itemCount: list1.length,
+                                    itemCount: servicelist.length,
                                     itemBuilder: (context, index) {
                                       return Expanded(
                                         child: Row(
@@ -645,7 +648,7 @@ class _Finance1State extends State<Finance1> {
                                                               .fieldtitlestyle),
                                                       Flexible(
                                                         child: Text(
-                                                          "${list1[index]["item"].toString()}\n",
+                                                          "${servicelist[index]["item"].toString()}\n",
                                                           style: TxtStls
                                                               .fieldtitlestyle,
                                                         ),
@@ -662,7 +665,7 @@ class _Finance1State extends State<Finance1> {
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    list1[index]["rate"]
+                                                    servicelist[index]["rate"]
                                                         .toString(),
                                                     style:
                                                         TxtStls.fieldtitlestyle,
@@ -677,7 +680,8 @@ class _Finance1State extends State<Finance1> {
                                                 child: Container(
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                        list1[index]["qty"]
+                                                        servicelist[index]
+                                                                ["qty"]
                                                             .toString(),
                                                         style: TxtStls
                                                             .fieldtitlestyle))),
@@ -690,7 +694,7 @@ class _Finance1State extends State<Finance1> {
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                      list1[index]["disc"]
+                                                      servicelist[index]["disc"]
                                                           .toString(),
                                                       style: TxtStls
                                                           .fieldtitlestyle)),
@@ -704,7 +708,8 @@ class _Finance1State extends State<Finance1> {
                                                 child: Container(
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                        list1[index]["price"]
+                                                        servicelist[index]
+                                                                ["price"]
                                                             .toString(),
                                                         style: TxtStls
                                                             .fieldtitlestyle))),
@@ -906,19 +911,18 @@ class _Finance1State extends State<Finance1> {
                           ],
                         ),
                       ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            isPreview = true;
-                          });
-                        },
-                        icon: Icon(Icons.copy),
-                        label: Text("Preview"))
-                  ],
-                ),
+                TextButton.icon(
+                    onPressed: () {
+                      if (servicelist.length > 0) {
+                        isPreview = true;
+                        setState(() {});
+                        Provider.of<RecentFetchCXIDProvider>(context,
+                                listen: false)
+                            .fetchRecentInvoiceid();
+                      }
+                    },
+                    icon: Icon(Icons.copy),
+                    label: Text("Preview")),
               ],
             ),
           ),
@@ -1004,7 +1008,17 @@ class _Finance1State extends State<Finance1> {
               Expanded(child: SizedBox()),
               IconButton(
                   onPressed: (() {
-                    setState(() {});
+                    var id = Provider.of<RecentFetchCXIDProvider>(context,
+                            listen: false)
+                        .actualinid
+                        .toString();
+                    var gstno = _gstController.text == null
+                        ? ""
+                        : _gstController.text.toString();
+                    setState(() {
+                      PdfProvider.generatePdf(
+                          servicelist, cusname, tbal, id, gstno, Idocid);
+                    });
                   }),
                   icon: Icon(Icons.download, color: btnColor)),
               IconButton(
@@ -1054,7 +1068,8 @@ class _Finance1State extends State<Finance1> {
             children: [
               Text("To,", style: TxtStls.fieldtitlestyle),
               Text(
-                "Invoice No.",
+                "Invoice No. : " +
+                    "${Provider.of<RecentFetchCXIDProvider>(context).actualinid == null ? "" : Provider.of<RecentFetchCXIDProvider>(context).actualinid.toString()}",
                 style: TxtStls.fieldtitlestyle,
               )
             ],
@@ -1066,7 +1081,7 @@ class _Finance1State extends State<Finance1> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$address",
+                    "$address\n$pincode",
                     style: TxtStls.fieldstyle,
                   ),
                   Text(
@@ -1144,7 +1159,7 @@ class _Finance1State extends State<Finance1> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: list1.length,
+              itemCount: servicelist.length,
               itemBuilder: (BuildContext context, int index) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1159,7 +1174,7 @@ class _Finance1State extends State<Finance1> {
                                   style: TxtStls.fieldtitlestyle),
                               Flexible(
                                 child: Text(
-                                  "${list1[index]["item"].toString()}\n",
+                                  "${servicelist[index]["item"].toString()}\n",
                                   style: TxtStls.fieldtitlestyle,
                                 ),
                               ),
@@ -1181,28 +1196,29 @@ class _Finance1State extends State<Finance1> {
                             flex: 1,
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: Text(list1[index]["rate"].toString(),
+                              child: Text(servicelist[index]["rate"].toString(),
                                   style: TxtStls.fieldstyle),
                             )),
                         Expanded(
                             flex: 1,
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: Text(list1[index]["qty"].toString(),
+                              child: Text(servicelist[index]["qty"].toString(),
                                   style: TxtStls.fieldstyle),
                             )),
                         Expanded(
                             flex: 1,
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: Text(list1[index]["disc"].toString() + "%",
+                              child: Text(
+                                  servicelist[index]["disc"].toString() + "%",
                                   style: TxtStls.fieldstyle),
                             )),
                         Expanded(
                           flex: 1,
                           child: Container(
                             alignment: Alignment.centerRight,
-                            child: Text(list1[index]["price"].toString(),
+                            child: Text(servicelist[index]["price"].toString(),
                                 style: TxtStls.fieldstyle),
                           ),
                         ),
@@ -1361,6 +1377,7 @@ class _Finance1State extends State<Finance1> {
                                 ),
                                 onTap: () {
                                   setState(() {
+                                    Idocid = snp.Idocid;
                                     cusname = snp.Customername;
                                     cusphone = snp.Customerphone;
                                     cusemail = snp.Customeremail;
@@ -1381,7 +1398,7 @@ class _Finance1State extends State<Finance1> {
             SizedBox(
               width: 7.5,
             ),
-            isPreview
+            isPreview == true
                 ? PreviewInvoice(context)
                 : Expanded(
                     flex: 7,
@@ -1433,6 +1450,14 @@ class _Finance1State extends State<Finance1> {
                                           ),
                                         ],
                                       ),
+                                // Expanded(
+                                //   flex: 1,
+                                //   child: Container(
+                                //     child: Column(
+                                //       chil
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(height: size.height * 0.2),
                                 Lottie.asset("assets/Lotties/empty.json",
                                     animate: true, reverse: true),
@@ -1451,5 +1476,13 @@ class _Finance1State extends State<Finance1> {
         ),
       ],
     );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> errorbox(e) {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      dismissDirection: DismissDirection.startToEnd,
+      content: Text(e),
+      backgroundColor: Colors.red,
+    ));
   }
 }
