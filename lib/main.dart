@@ -18,6 +18,7 @@ import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
+import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
@@ -60,6 +61,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => AddServiceProvider()),
       ChangeNotifierProvider(create: (ctx) => RemoveServiceProvider()),
       ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider()),
+      ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
     ],
     child: MyApp(),
   ));

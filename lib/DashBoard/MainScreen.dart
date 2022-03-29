@@ -21,6 +21,7 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -49,6 +50,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     });
     Future.delayed(Duration.zero).then((value) {
       Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    });
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<GetInvoiceListProvider>(context, listen: false)
+          .getInvoiceList("gbWy7oYI0GIjN7KSjQCO");
     });
   }
 

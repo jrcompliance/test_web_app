@@ -23,6 +23,7 @@ import 'package:test_web_app/Pdf/Models/SupplierModel.dart';
 import 'package:test_web_app/Pdf/PdfApi.dart';
 import 'package:test_web_app/Pdf/PdfInvoiceApi.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
+import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import '../../../Providers/CustomerProvider.dart';
 
@@ -194,6 +195,9 @@ class _Finance1State extends State<Finance1> {
                                         )),
                                   ),
                                   onTap: () {
+                                    Provider.of<GetInvoiceListProvider>(context,
+                                            listen: false)
+                                        .getInvoiceList(snp.Idocid);
                                     setState(() {
                                       cusname = snp.Customername;
                                       cusphone = snp.Customerphone;
@@ -271,8 +275,23 @@ class _Finance1State extends State<Finance1> {
                                           ],
                                         ),
                                   SizedBox(height: size.height * 0.2),
-                                  Lottie.asset("assets/Lotties/empty.json",
-                                      animate: true, reverse: true),
+                                  Expanded(
+                                      child: ListView.builder(
+                                          itemCount: Provider.of<
+                                                      GetInvoiceListProvider>(
+                                                  context)
+                                              .invoicemodellist
+                                              .length,
+                                          itemBuilder: (_, i) {
+                                            var data = Provider.of<
+                                                        GetInvoiceListProvider>(
+                                                    context)
+                                                .invoicemodellist[i];
+                                            return ListTile(
+                                              title:
+                                                  Text(data.status.toString()),
+                                            );
+                                          })),
                                   SizedBox(height: size.height * 0.2),
                                   cusname == null
                                       ? Text(
