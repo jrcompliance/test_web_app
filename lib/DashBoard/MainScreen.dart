@@ -51,10 +51,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     Future.delayed(Duration.zero).then((value) {
       Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     });
-    Future.delayed(Duration.zero).then((value) {
-      Provider.of<GetInvoiceListProvider>(context, listen: false)
-          .getInvoiceList("gbWy7oYI0GIjN7KSjQCO");
-    });
   }
 
   @override

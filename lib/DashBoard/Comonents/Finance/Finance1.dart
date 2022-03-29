@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,20 +15,17 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/CheckScreen.dart';
+import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/Pdf/Models/CustomerModel.dart';
-import 'package:test_web_app/Pdf/Models/InvoiceModel.dart';
-import 'package:test_web_app/Pdf/Models/SupplierModel.dart';
-import 'package:test_web_app/Pdf/PdfApi.dart';
-import 'package:test_web_app/Pdf/PdfInvoiceApi.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../Providers/CustomerProvider.dart';
+import 'package:http/http.dart' as http;
 
 class Finance1 extends StatefulWidget {
   Finance1({Key? key}) : super(key: key);
@@ -227,7 +227,7 @@ class _Finance1State extends State<Finance1> {
                 child: isPreview
                     ? PreviewInvoice(context)
                     : Container(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(20),
                         height: size.height * 0.93,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -274,7 +274,7 @@ class _Finance1State extends State<Finance1> {
                                             ),
                                           ],
                                         ),
-                                  SizedBox(height: size.height * 0.2),
+                                  SizedBox(height: size.height * 0.1),
                                   Expanded(
                                       child: ListView.builder(
                                           itemCount: Provider.of<
@@ -287,9 +287,84 @@ class _Finance1State extends State<Finance1> {
                                                         GetInvoiceListProvider>(
                                                     context)
                                                 .invoicemodellist[i];
-                                            return ListTile(
-                                              title:
-                                                  Text(data.status.toString()),
+                                            var createdate =
+                                                data.timestamp!.toDate();
+                                            return InkWell(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    color:
+                                                        grClr.withOpacity(0.1)),
+                                                height: size.height * 0.06,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 3,
+                                                        child: Container(
+                                                            child: Row(
+                                                          children: [
+                                                            Icon(
+                                                                Icons
+                                                                    .picture_as_pdf_rounded,
+                                                                color: clsClr),
+                                                            Text(
+                                                              "JR03212201",
+                                                              style: TxtStls
+                                                                  .fieldtitlestyle,
+                                                            ),
+                                                          ],
+                                                        ))),
+                                                    Expanded(
+                                                        flex: 3,
+                                                        child: Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                  Icons
+                                                                      .calendar_today_outlined,
+                                                                  color:
+                                                                      btnColor),
+                                                              SizedBox(
+                                                                  width: 10),
+                                                              Text(
+                                                                DateFormat(
+                                                                        "dd MMMM,yyyy")
+                                                                    .format(
+                                                                        createdate),
+                                                                style: TxtStls
+                                                                    .fieldtitlestyle,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )),
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Container(
+                                                        child: Text(
+                                                          data.status == true
+                                                              ? "Sent"
+                                                              : "Pending",
+                                                          style: TxtStls
+                                                              .fieldtitlestyle,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          child: Icon(
+                                                              Icons.more_horiz),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                detailspopBox(
+                                                    context, data.url);
+                                              },
                                             );
                                           })),
                                   SizedBox(height: size.height * 0.2),
@@ -1504,4 +1579,131 @@ class _Finance1State extends State<Finance1> {
       backgroundColor: Colors.red,
     ));
   }
+
+  // 1.preview of invoice
+  detailspopBox(context, url) {
+    Size size = MediaQuery.of(context).size;
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: Colors.white.withOpacity(0.9),
+      content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return Container(
+          color: bgColor,
+          padding: EdgeInsets.all(10.0),
+          height: size.height * 0.15,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "JR03212201",
+                    style: TxtStls.fieldtitlestyle,
+                  ),
+                  CircleAvatar(
+                    backgroundColor: neClr.withOpacity(0.1),
+                    child: IconButton(
+                      hoverColor: Colors.transparent,
+                      tooltip: "Close Window",
+                      icon: Icon(Icons.close),
+                      color: neClr,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FlatButton.icon(
+                      color: btnColor,
+                      onPressed: () {
+                        downloadInvoice(url);
+                      },
+                      icon: Icon(Icons.download_rounded, color: bgColor),
+                      label: Text(
+                        "Download",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      )),
+                  VerticalDivider(),
+                  FlatButton.icon(
+                      color: btnColor,
+                      onPressed: () {},
+                      icon: Icon(Icons.print_rounded, color: bgColor),
+                      label: Text(
+                        "Print",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      )),
+                  VerticalDivider(),
+                  FlatButton.icon(
+                      color: btnColor,
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.share,
+                        color: bgColor,
+                      ),
+                      label: Text(
+                        "Forward",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      )),
+                  VerticalDivider(),
+                  FlatButton.icon(
+                      color: btnColor,
+                      onPressed: () {
+                        fileview1(context, "JR03212201", url);
+                      },
+                      icon: Icon(Icons.copy, color: bgColor),
+                      label: Text(
+                        "Preview",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+    showDialog(
+        barrierDismissible: false,
+        barrierColor: txtColor.withOpacity(0.75),
+        context: context,
+        builder: (_) {
+          return alertDialog;
+        });
+  }
+
+  // 2.Download the Invoice
+
+  downloadInvoice(_url) async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
+  }
+
+  // 3.Print the Invoice on A4
+
+  printInoice() async {}
+
+  // 4. Forward Invoice to email
+
+  forwardtoemail() async {}
 }
