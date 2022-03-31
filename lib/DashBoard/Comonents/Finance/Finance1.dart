@@ -12,7 +12,6 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_web_app/CheckScreen.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
@@ -55,7 +54,7 @@ class _Finance1State extends State<Finance1> {
   final _list = ["Quotation", "Performer Invoice", "Invoice"];
   var activeid = "Quotation";
   bool qto = false;
-  double? tbal;
+  double tbal = 0.00;
   String bnature = "Active";
   bool visible = false;
   bool isAdded = false;
@@ -65,20 +64,9 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _addressControoler = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _panController = TextEditingController();
-
-  final TextEditingController _searchController1 = TextEditingController();
-  final TextEditingController _invoiceController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _invoiceusername = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
   final TextEditingController _customersearchController =
       TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
-  final TextEditingController _descController = TextEditingController();
-  final TextEditingController _qtyController = TextEditingController();
-  final TextEditingController _ucostController = TextEditingController();
-  final GlobalKey<FormState> _formkey = GlobalKey();
   final TextEditingController _rateController = TextEditingController();
   final TextEditingController _selectController = TextEditingController();
   final TextEditingController _qtyController2 = TextEditingController();
@@ -463,7 +451,7 @@ class _Finance1State extends State<Finance1> {
     print('@@@' + servicelist.toString());
 
     tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
-    _gstamount = tbal! * 0.18;
+    _gstamount = tbal * 0.18;
     print("Data added ");
   }
 
@@ -1050,7 +1038,7 @@ class _Finance1State extends State<Finance1> {
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
-                                            "${tbal == null ? "0.00" : tbal! + _gstamount}",
+                                            "${tbal + getval()}",
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1909,6 +1897,14 @@ class _Finance1State extends State<Finance1> {
         {
           return "₹";
         }
+    }
+  }
+
+  double getval() {
+    if (selectedValue == "INR") {
+      return _gstamount;
+    } else {
+      return 0;
     }
   }
 }
