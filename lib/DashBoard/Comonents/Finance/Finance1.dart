@@ -444,26 +444,6 @@ class _Finance1State extends State<Finance1> {
     );
   }
 
-  Widget textField(_controller, String hintText) {
-    return TextFormField(
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        controller: _controller,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TxtStls.fieldstyle,
-          focusedErrorBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-        ),
-        validator: (value) {
-          if (value!.isEmpty) {
-            return "value can not be empty";
-          }
-        });
-  }
-
   List servicelist = [];
   void addingData() async {
     double _rate = double.parse(_rateController.text);
@@ -920,27 +900,15 @@ class _Finance1State extends State<Finance1> {
                                     })
                                 : SizedBox(),
                             Container(
-                              height: size.height * 0.05,
+                              height: size.height * 0.06,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     flex: 4,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          border: Border.all(
-                                              color: Colors.grey
-                                                  .withOpacity(0.5))),
-                                      alignment: Alignment.center,
-                                      child: textField(_selectController,
-                                          "Item Description"),
-
-                                      //   InvoiceFields(_selectController,"Select Item"),
-                                    ),
+                                    child: field1(_selectController,
+                                        "Item Description", 1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -948,19 +916,7 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          border: Border.all(
-                                              color: Colors.grey
-                                                  .withOpacity(0.5))),
-                                      alignment: Alignment.center,
-                                      child: textField(_rateController, "₹ 0"),
-
-                                      //  InvoiceFields(_rateController,"₹ 0"),
-                                    ),
+                                    child: field1(_rateController, "₹ 0", 1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -968,36 +924,14 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                       flex: 1,
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5))),
-                                          alignment: Alignment.center,
-                                          child: textField(_qtyController2, "1")
-                                          //InvoiceFields(_qtyController2,"1"),
-                                          )),
+                                      child: field1(_qtyController2, "1", 1)),
                                   VerticalDivider(
                                     thickness: 2,
                                     color: bgColor,
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border: Border.all(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5))),
-                                        alignment: Alignment.center,
-                                        child: textField(_discController, "0 %")
-                                        // InvoiceFields(_discController,"0 %"),
-                                        ),
+                                    child: field1(_discController, "0 %", 1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -1042,69 +976,56 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(
-                              height: 20,
+                              height: size.height * 0.02,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 50),
-                                  child: Container(
-                                    padding: EdgeInsets.all(0),
-                                    height: 50,
-                                    width: 250,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color:
-                                                Colors.grey.withOpacity(0.5)),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: textField(
-                                        _internalController, "Internal Notes"),
-                                  ),
+                                Expanded(
+                                  flex: 4,
+                                  child: field1(
+                                      _internalController, "Internal Notes", 3),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Container(
-                                    width: size.width * 0.15,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Sub Total",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                            Text(
-                                              tbal == null
-                                                  ? "0.00"
-                                                  : tbal.toString(),
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                          ],
-                                        ),
-                                        Divider(
-                                          thickness: 0.5,
-                                          color: Colors.grey.withOpacity(0.5),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Total",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                            Text(
-                                              "0.00",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                Expanded(flex: 2, child: SizedBox()),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Sub Total",
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            tbal == null
+                                                ? "0.00"
+                                                : tbal.toString(),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey.withOpacity(0.5),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Total",
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            "0.00",
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
