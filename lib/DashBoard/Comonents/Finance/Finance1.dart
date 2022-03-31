@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -35,6 +36,10 @@ class _Finance1State extends State<Finance1> {
   bool isgst = false;
 
   bool isPreview = false;
+
+  final List<String> currencieslist = ["INR", "USD", "GBP", "EURO"];
+
+  String selectedValue = "INR";
 
   @override
   void initState() {
@@ -583,13 +588,79 @@ class _Finance1State extends State<Finance1> {
                         style: ClrStls.tnClr,
                       )),
                 ),
-                Container(
-                    color: grClr.withOpacity(0.25),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    child: Text(
-                      "ReferenceID : ${addtwoNumber(8).toString()}",
-                      style: TxtStls.fieldtitlestyle,
-                    )),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: Row(
+                        children: [
+                          Container(
+                              color: grClr.withOpacity(0.25),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              child: Text(
+                                "ReferenceID : ${addtwoNumber(8).toString()}",
+                                style: TxtStls.fieldtitlestyle,
+                              )),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: DropdownButtonFormField2(
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        isExpanded: true,
+                        hint: Text(
+                          'Select Your Gender',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black45,
+                        ),
+                        iconSize: 30,
+                        buttonHeight: 60,
+                        buttonPadding:
+                            const EdgeInsets.only(left: 20, right: 10),
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        items: currencieslist
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select gender.';
+                          }
+                        },
+                        onChanged: (value) {
+                          //Do something when changing the item if you want.
+                        },
+                        onSaved: (value) {
+                          selectedValue = value.toString();
+                        },
+                      ),
+                    )
+                  ],
+                ),
                 SizedBox(height: size.height * 0.025),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -1812,6 +1883,30 @@ class _Finance1State extends State<Finance1> {
               border: InputBorder.none,
             ),
             validator: _validator),
+      ),
+    );
+  }
+
+  Widget field1(_controller, hintText, maxlines) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      decoration: deco,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.01,
+        ),
+        child: TextFormField(
+          cursorColor: btnColor,
+          controller: _controller,
+          style: TxtStls.fieldstyle,
+          decoration: InputDecoration(
+            errorStyle: ClrStls.errorstyle,
+            hintText: hintText,
+            hintStyle: TxtStls.fieldstyle,
+            border: InputBorder.none,
+          ),
+          maxLines: maxlines,
+        ),
       ),
     );
   }
