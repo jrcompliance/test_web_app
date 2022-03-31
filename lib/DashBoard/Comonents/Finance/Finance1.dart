@@ -1013,23 +1013,29 @@ class _Finance1State extends State<Finance1> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "IGST/CGST/SGST(${selectedValue}) : " +
-                                                symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            selectedValue == "INR"
-                                                ? _gstamount.toStringAsFixed(2)
-                                                : "0.00",
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
+                                      selectedValue == "INR"
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "IGST/CGST/SGST(${selectedValue}) : " +
+                                                      symbol(selectedValue),
+                                                  style:
+                                                      TxtStls.fieldtitlestyle,
+                                                ),
+                                                Text(
+                                                  selectedValue == "INR"
+                                                      ? _gstamount
+                                                          .toStringAsFixed(2)
+                                                      : "0.00",
+                                                  style:
+                                                      TxtStls.fieldtitlestyle,
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox(),
                                       Divider(
                                         thickness: 0.5,
                                         color: Colors.grey.withOpacity(0.5),
