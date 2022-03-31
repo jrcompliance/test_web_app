@@ -1,7 +1,7 @@
+import 'dart:html';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +9,10 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:test_web_app/Models/UserModels.dart';
+import 'package:flutter/gestures.dart';
+//import 'package:pdf';
 
 class CheckScreen extends StatefulWidget {
   const CheckScreen({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class CheckScreen extends StatefulWidget {
 }
 
 class _CheckScreenState extends State<CheckScreen> {
+  Color bkcolor = Colors.black;
   List list = [
     "Description",
     "SAC Code",
@@ -50,7 +53,7 @@ class _CheckScreenState extends State<CheckScreen> {
 
 class PdfProvider {
   static generatePdf(
-      List Servicelist, Recievername, tbal, actualinid, _gst, docid) async {
+      List Servicelist, Recievername, tbal, actualinid, _gst, docid,activeid,gstAmount,total) async {
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
     final bgImage = (await rootBundle.load("assets/Images/invoicebg.png"))
@@ -58,6 +61,7 @@ class PdfProvider {
         .asUint8List();
     final pageTheme = pw.PageTheme(
         pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.only(left: 30,right: 30,top: 50,bottom: 20),
         buildBackground: (context) {
           return pw.FullPage(
               ignoreMargins: true, child: pw.Image(pw.MemoryImage(bgImage)));
@@ -66,6 +70,7 @@ class PdfProvider {
     pdf.addPage(pw.Page(
         pageTheme: pageTheme,
         build: (pw.Context context) {
+
           String? gstNumber;
           String? invoice;
           return pw.Column(children: [
@@ -105,7 +110,7 @@ class PdfProvider {
                         pw.Text("To,",
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        pw.Text("$address \n $pincode",
+                        pw.Text("$address\n$pincode",
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                         pw.Text("GSTNumber. : " + _gst.toString(),
@@ -210,7 +215,7 @@ class PdfProvider {
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                          child: pw.Text(Servicelist[i]["rate"].toString(),
+                          child: pw.Text(Servicelist[i]["rate"].toStringAsFixed(2),
                               style:
                                   pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                           alignment: pw.Alignment.centerRight)),
@@ -226,14 +231,14 @@ class PdfProvider {
                       flex: 2,
                       child: pw.Container(
                           alignment: pw.Alignment.center,
-                          child: pw.Text(Servicelist[i]["disc"].toString(),
+                          child: pw.Text(Servicelist[i]["disc"].toStringAsFixed(2),
                               style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold)))),
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
                         alignment: pw.Alignment.centerRight,
-                        child: pw.Text(Servicelist[i]["price"].toString(),
+                        child: pw.Text(Servicelist[i]["price"].toStringAsFixed(2),
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       )),
@@ -242,36 +247,132 @@ class PdfProvider {
             ),
             pw.Expanded(child: pw.SizedBox()),
             pw.Container(
+             child: pw.Row(
+               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Expanded(
+                      flex: 5,
+                      child: pw.Container(
+                        child: pw.Text("IGST/CGST/SGST 18%",
+                            style:
+                            pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        alignment: pw.Alignment.centerLeft,
+                      )),
+                  pw.Expanded(
+                      flex: 5,
+                      child: pw.Container(
+                        child: pw.Text(gstAmount.toStringAsFixed(2),
+                            style:
+                            pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        alignment: pw.Alignment.centerRight,
+                      )),
+                ]
+              )
+            ),
+            pw.SizedBox(height: 10),
+            pw.Container(
               child: pw.Column(
                 mainAxisAlignment: pw.MainAxisAlignment.end,
                 children: [
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text("Sub Total",
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      pw.Text(tbal == null ? "0.00" : tbal.toString(),
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      pw.Expanded(
+                        flex:2,
+                        child: pw.Text(""),
+                      ),
+                      pw.Expanded(
+                        flex:2,
+                        child: pw.Text(""),
+                      ),
+                    pw.Expanded(
+                      flex: 2,
+                      child: pw.Container(
+                        alignment: pw.Alignment.centerLeft,
+                        child:   pw.Text("Total(INR) :",
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      )
+                    ),
+                      pw.Expanded(
+                        flex: 2,
+                        child: pw.Container(
+                          alignment: pw.Alignment.centerRight,
+                          child: pw.Text(total == null ? "0.00" : total.toStringAsFixed(2),
+                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        )
+                      )
                     ],
                   ),
-                  pw.Divider(
-                    thickness: 0.5,
-                    color: PdfColor.fromInt(0xFF616161),
-                    // color: pw.Colors.grey.withOpacity(0.5),
-                  ),
+                 pw.Row(
+                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                     crossAxisAlignment: pw.CrossAxisAlignment.end,
+                   children: [
+                     pw.Expanded(
+                       flex:2,
+                       child: pw.Text(""),
+                     ),
+                     pw.Expanded(
+                       flex:2,
+                       child: pw.Text(""),
+                     ),
+                     pw.Expanded(
+                       flex: 2,
+                      child: pw.Container(
+                        alignment: pw.Alignment.centerLeft,
+                        child: pw.Text("Amount Paid(INR) :",
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      )
+                     ),
+                     pw.Expanded(
+                       flex: 2,
+                       child: pw.Container(
+                         alignment: pw.Alignment.centerRight,
+                         child: pw.Text(tbal == null ? "0.00" : tbal.toStringAsFixed(2),
+                             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                       )
+                     )
+                   ]
+
+                 ),
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text(
-                        "Total",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                      pw.Expanded(
+                        flex:2,
+                        child: pw.Text(""),
                       ),
-                      pw.Text("0.00",
+                      pw.Expanded(
+                        flex:2,
+                        child: pw.Text(""),
+                      ),
+
+                      pw.Expanded(
+                        flex: 2,
+                        child:
+                        pw.Container(
+                            alignment: pw.Alignment.centerLeft,
+                          child: pw.Text("Balance(INR) :",
+                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold,),
+                          )
+                        ),
+                      ),
+                     pw.Expanded(
+                       flex: 2,
+                      child: pw.Container(
+                        alignment: pw.Alignment.centerRight,
+                        child:  pw.Text("0.00",
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      )
+                     )
                     ],
                   ),
                 ],
               ),
+            ),
+            pw.SizedBox(
+              height: 10
             ),
             pw.Container(
                 child: pw.Row(
@@ -396,22 +497,141 @@ class PdfProvider {
                               ]))),
                 ])),
             pw.SizedBox(height: 10),
-            pw.Bullet(
-                text:
-                    "The services provided by JR Compliance are governed by our In case you face difficulty in obtaining ourTerms and conditions from our official website, contact your designated representative immediately to receive a copy of the same."),
-            pw.Bullet(
-                text: "To know the information regarding purchase and billing"),
-            pw.Bullet(
-                text:
-                    "This invoice is due in accordance with the agreed credit terms."),
+       pw.Column(
+         mainAxisAlignment: pw.MainAxisAlignment.start,
+         crossAxisAlignment: pw.CrossAxisAlignment.start,
+         children: [
+           pw.Row(
+             children: [
+               pw.Bullet(
+                   text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,),
+               ),
+
+
+             ]
+
+           ),
+           pw.Container(
+             child: pw.RichText(
+               text: pw.TextSpan(
+                 text: ". ",
+                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                 children:[
+                   pw.TextSpan(text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,) ),
+                   pw.TextSpan(text: "Terms and conditions.", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
+                   pw.TextSpan(text: "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.", style: pw.TextStyle(fontSize: 6),),
+                 ],),),),
+           pw.Container(
+             child: pw.RichText(
+               text: pw.TextSpan(
+                 text: ". ",
+                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                 children:[
+                   pw.TextSpan(text:"To know the information regarding purchase and billing.",style: pw.TextStyle(fontSize: 6,) ),
+                   pw.TextSpan(text: "visit https://www.jrcompliance.com/purchase-and-billing", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
+
+                 ],
+               ),
+             ),
+           ),
+           pw.Container(
+             child: pw.RichText(
+               text: pw.TextSpan(
+                 text: ". ",
+                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                 children:[
+                   pw.TextSpan(text:"This invoice is due in accordance with the agreed credit terms.",style: pw.TextStyle(fontSize: 6,) ),
+
+                 ],
+
+               ),
+
+             ),
+           ),
+         ]
+       ),
+            pw.SizedBox(
+              height: 40
+            ),
+            pw.Footer(
+              trailing:
+              pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                   children: [
+                     // pw.Expanded(
+                     //   child: pw.Text(""),
+                     // ),
+                  //   pw.Container(
+                  //     padding: pw.EdgeInsets.only(right: 20),
+                  //     child: pw.RichText(
+                  //       text: pw.TextSpan(
+                  //         text: ". ",
+                  //         style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                  //         children:[
+                  //           pw.TextSpan(text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,) ),
+                  //           pw.TextSpan(text: "Terms and conditions.", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
+                  //           pw.TextSpan(text: "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.", style: pw.TextStyle(fontSize: 6),),
+                  //         ],),),),
+                    // pw.Container(
+                    //   child: pw.RichText(
+                    //     text: pw.TextSpan(
+                    //       text: ". ",
+                    //       style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                    //       children:[
+                    //         pw.TextSpan(text:"To know the information regarding purchase and billing.",style: pw.TextStyle(fontSize: 6,) ),
+                    //         pw.TextSpan(text: "visit https://www.jrcompliance.com/purchase-and-billing", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
+                    //
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // pw.Container(
+                    //   child: pw.RichText(
+                    //     text: pw.TextSpan(
+                    //       text: ". ",
+                    //       style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                    //       children:[
+                    //         pw.TextSpan(text:"This invoice is due in accordance with the agreed credit terms.",style: pw.TextStyle(fontSize: 6,) ),
+                    //
+                    //       ],
+                    //
+                    //     ),
+                    //
+                    //   ),
+                    // ),
+                    pw.SizedBox(
+                      height: 80
+                    ),
+                 pw.Padding(
+                   padding: pw.EdgeInsets.only(left: 400,top: 20,right: 20),
+                   child:    pw.Column(
+                       mainAxisAlignment: pw.MainAxisAlignment.center,
+                       children: [
+                         pw.Text('JR'+actualinid.toString()+" | Page 1 of 1"),
+                         pw.Text("www.jrcompliance.com"),
+                       ]
+
+                   ),
+                 )
+
+                  ]
+              ),
+
+
+               ),
           ]);
         }));
     Uint8List bytes = await pdf.save();
-    // Uint8List fileBytes = Uint8List.fromList(bytes);
     print(bytes);
+
+    //  Uint8List fileBytes = Uint8List.fromList(bytes);
+    // var file =  File(fileBytes,"output.pdf");
+    //
+    // print('@@@@@'+file.toString());
     FirebaseStorage storage = FirebaseStorage.instance;
     TaskSnapshot upload =
-        await storage.ref('Attachments/yalagala2').putData(bytes);
+        await storage.ref('Attachments/invoice.pdf').putData(bytes);
     String myUrl = await upload.ref.getDownloadURL();
     print(myUrl);
 
@@ -421,7 +641,11 @@ class PdfProvider {
       "InvoiceUrl": myUrl,
       "Timestamp": Timestamp.now(),
       "status": false,
+      "InvoiceId":actualinid,
+      "type":activeid,
     });
     return pdf.save();
+
   }
+
 }
