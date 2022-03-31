@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -290,75 +286,111 @@ class _Finance1State extends State<Finance1> {
                                             var createdate =
                                                 data.timestamp!.toDate();
                                             return InkWell(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0)),
-                                                    color:
-                                                        grClr.withOpacity(0.1)),
-                                                height: size.height * 0.06,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                            child: Row(
-                                                          children: [
-                                                            Icon(
-                                                                Icons
-                                                                    .picture_as_pdf_rounded,
-                                                                color: clsClr),
-                                                            Text(
-                                                              "JR03212201",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle,
-                                                            ),
-                                                          ],
-                                                        ))),
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                          child: Row(
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0)),
+                                                ),
+                                                elevation: 10.0,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                          flex: 3,
+                                                          child: Container(
+                                                              child: Row(
                                                             children: [
                                                               Icon(
                                                                   Icons
-                                                                      .calendar_today_outlined,
+                                                                      .picture_as_pdf_rounded,
                                                                   color:
-                                                                      btnColor),
-                                                              SizedBox(
-                                                                  width: 10),
+                                                                      clsClr),
                                                               Text(
-                                                                DateFormat(
-                                                                        "dd MMMM,yyyy")
-                                                                    .format(
-                                                                        createdate),
+                                                                "  JR" +
+                                                                    data.invoiceid
+                                                                        .toString(),
                                                                 style: TxtStls
                                                                     .fieldtitlestyle,
                                                               ),
                                                             ],
+                                                          ))),
+                                                      Expanded(
+                                                          flex: 2,
+                                                          child: Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                    Icons
+                                                                        .calendar_today_rounded,
+                                                                    color:
+                                                                        btnColor),
+                                                                SizedBox(
+                                                                    width: 10),
+                                                                Text(
+                                                                  DateFormat(
+                                                                          "dd MMMM,yyyy")
+                                                                      .format(
+                                                                          createdate),
+                                                                  style: TxtStls
+                                                                      .fieldtitlestyle,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )),
+                                                      Expanded(
+                                                        flex: 2,
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      50.0),
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                              color: btnColor,
+                                                            ),
+                                                            child: Text(
+                                                              data.status ==
+                                                                      true
+                                                                  ? "Sent"
+                                                                  : "Pending",
+                                                              style: TxtStls
+                                                                  .fieldstyle1,
+                                                            ),
                                                           ),
-                                                        )),
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: Container(
-                                                        child: Text(
-                                                          data.status == true
-                                                              ? "Sent"
-                                                              : "Pending",
-                                                          style: TxtStls
-                                                              .fieldtitlestyle,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Expanded(
+                                                      Expanded(
                                                         flex: 1,
                                                         child: Container(
-                                                          child: Icon(
-                                                              Icons.more_horiz),
-                                                        ))
-                                                  ],
+                                                          child: Text(
+                                                            data.type
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                          flex: 1,
+                                                          child: Container(
+                                                            child: Icon(Icons
+                                                                .more_horiz),
+                                                          ))
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               onTap: () {
@@ -1651,7 +1683,9 @@ class _Finance1State extends State<Finance1> {
                   VerticalDivider(),
                   FlatButton.icon(
                       color: btnColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        forwardtoemail(context);
+                      },
                       icon: Icon(
                         Icons.share,
                         color: bgColor,
@@ -1696,7 +1730,12 @@ class _Finance1State extends State<Finance1> {
   // 2.Download the Invoice
 
   downloadInvoice(_url) async {
-    if (!await launch(_url)) throw 'Could not launch $_url';
+    if (!await launch(
+      _url,
+      forceWebView: true,
+      forceSafariVC: true,
+      enableJavaScript: true,
+    )) throw 'Could not launch $_url';
   }
 
   // 3.Print the Invoice on A4
@@ -1705,5 +1744,75 @@ class _Finance1State extends State<Finance1> {
 
   // 4. Forward Invoice to email
 
-  forwardtoemail() async {}
+  forwardtoemail(BuildContext context) async {
+    print("we are sending data to email please wait");
+    Navigator.pop(context);
+    sendBox(context);
+  }
+
+  sendBox(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    TextEditingController _toemailController = TextEditingController();
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: Colors.white.withOpacity(0.9),
+      content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            field(_toemailController, "To Address", (value) {}),
+            field(_toemailController, "To Address", (value) {}),
+            field(_toemailController, "To Address", (value) {}),
+            FlatButton.icon(
+              color: btnColor,
+              onPressed: () {},
+              icon: Icon(Icons.send),
+              label: Text(
+                "Send",
+                style: TxtStls.fieldstyle1,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            )
+          ],
+        );
+      }),
+    );
+    showDialog(
+        barrierDismissible: false,
+        barrierColor: txtColor.withOpacity(0.75),
+        context: context,
+        builder: (_) {
+          return alertDialog;
+        });
+  }
+
+  // field widget
+  Widget field(_controller, hintText, _validator) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      decoration: deco,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.01,
+        ),
+        child: TextFormField(
+            cursorColor: btnColor,
+            controller: _controller,
+            style: TxtStls.fieldstyle,
+            decoration: InputDecoration(
+              errorStyle: ClrStls.errorstyle,
+              hintText: hintText,
+              hintStyle: TxtStls.fieldstyle,
+              border: InputBorder.none,
+            ),
+            validator: _validator),
+      ),
+    );
+  }
 }

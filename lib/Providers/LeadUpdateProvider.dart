@@ -26,8 +26,8 @@ class LeadUpdateProvider with ChangeNotifier {
           .collection("Activitys")
           .doc()
           .set(leadUpdateModel.toMap())
-          .then((value) {
-        _collectionReference.doc(id).update({
+          .then((value) async {
+        await _collectionReference.doc(id).update({
           "cat": key == "move" ? activeid : cat,
           "endDate": uenddate,
           "time": timer,
@@ -50,17 +50,25 @@ class LeadUpdateProvider with ChangeNotifier {
         {
           return "FOLLOWUP";
         }
+
       case "WON":
         {
           return "PAYMENT";
         }
+
       case "CLOSE":
         {
           return "IRRELEVENT";
         }
-      default:
+
+      case "NEW":
         {
           return "FRESH";
+        }
+
+      default:
+        {
+          return null;
         }
     }
   }

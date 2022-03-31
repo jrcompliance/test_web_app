@@ -89,14 +89,14 @@ class _MoveDrawerState extends State<MoveDrawer> {
         {
           return movetask();
         }
-      case "Profile":
+      case "update":
         {
-          return Profile();
+          return updatetask();
         }
 
       default:
         {
-          return updatetask();
+          return Profile();
         }
     }
   }

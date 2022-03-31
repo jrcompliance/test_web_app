@@ -4,6 +4,9 @@ class GetInvoiceModel {
   String? url;
   Timestamp? timestamp;
   bool? status;
+  String? invoiceid;
+  String? type;
 
-  GetInvoiceModel({this.url, this.timestamp, this.status});
+  GetInvoiceModel(
+      {this.url, this.timestamp, this.status, this.invoiceid, this.type});
 }

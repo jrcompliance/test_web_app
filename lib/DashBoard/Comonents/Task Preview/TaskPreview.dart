@@ -1495,6 +1495,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                           cxID = CxID;
                                           dendDate = endDate.toString();
                                           enddrawerkey = "update";
+                                          dstatus = status;
                                           Scaffold.of(context).openEndDrawer();
                                         });
                                       },

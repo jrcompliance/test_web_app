@@ -19,6 +19,8 @@ class GetInvoiceListProvider extends ChangeNotifier {
       loadedData.add(GetInvoiceModel(
           url: element["InvoiceUrl"],
           timestamp: element["Timestamp"],
+          invoiceid: element["InvoiceId"],
+          type: element["type"],
           status: element["status"]));
     });
     _invoicemodellist = loadedData;
