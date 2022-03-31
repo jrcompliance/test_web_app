@@ -1142,8 +1142,8 @@ class _Finance1State extends State<Finance1> {
                         ? ""
                         : _gstController.text.toString();
                     setState(() {
-                      PdfProvider.generatePdf(
-                          servicelist, cusname, tbal, id, gstno, Idocid);
+                      // PdfProvider.generatePdf(
+                      //     servicelist, cusname, tbal, id, gstno, Idocid);
                     });
                   }),
                   icon: Icon(Icons.download, color: btnColor)),
