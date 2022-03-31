@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:dio/dio.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -40,6 +40,12 @@ class _Finance1State extends State<Finance1> {
 
   bool isPreview = false;
 
+  final List<String> _currencieslist= ["INR","EURO","GBP","USD"];
+
+  String selectedValue = "INR";
+
+  final TextEditingController _refernceController = TextEditingController();
+
   @override
   void initState() {
     Provider.of<CustmerProvider>(context, listen: false).getCustomers();
@@ -53,6 +59,7 @@ class _Finance1State extends State<Finance1> {
   String bnature = "Active";
   bool visible = false;
   bool isAdded = false;
+  double? _gstAmount;
 
   final TextEditingController _gstController = TextEditingController();
   final TextEditingController _tradenameController = TextEditingController();
@@ -80,6 +87,9 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
+  final TextEditingController _externalController = TextEditingController();
+  final TextEditingController _amountpaidController = TextEditingController();
+
   List cust = [];
 
   @override
@@ -441,6 +451,7 @@ class _Finance1State extends State<Finance1> {
     print('@@@' + servicelist.toString());
 
     tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
+    _gstAmount = tbal!*0.18;
     print("Data added ");
   }
 
@@ -551,13 +562,80 @@ class _Finance1State extends State<Finance1> {
                         style: ClrStls.tnClr,
                       )),
                 ),
-                Container(
-                    color: grClr.withOpacity(0.25),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    child: Text(
-                      "ReferenceID : ${addtwoNumber(8).toString()}",
-                      style: TxtStls.fieldtitlestyle,
-                    )),
+                Row(
+                  children: [
+                    Expanded(
+                      flex:8,
+                      child: Row(
+                        children: [
+                          Container(
+                             
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                              decoration: BoxDecoration(
+                                color: grClr.withOpacity(0.25),
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              child: Text(
+                                "ReferenceID :",
+                                style: TxtStls.fieldtitlestyle,
+                              )),
+                          SizedBox(width:7.5),
+                          Expanded(
+                            flex: 2,
+                            child: field(_refernceController, "Enter Refernce ID",1),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(child: SizedBox(),flex: 2),
+                    Expanded(
+                      flex:2,
+                      child: SizedBox(
+                        height: 30,
+                        width: 300,
+                        child: DropdownButtonFormField2(
+                          decoration: InputDecoration(
+                               isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          isExpanded: true,
+                          hint:  Text(
+                            selectedValue,
+                            style:TxtStls.fieldtitlestyle,
+                          ),
+                          icon:  Icon(
+                            Icons.arrow_drop_down,
+                            color: btnColor,
+                          ),
+                          iconSize: 30,
+                          buttonHeight: 60,
+                          buttonPadding:  EdgeInsets.only(left: 20, right: 10,top:5),
+                          dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          items: _currencieslist
+                              .map((item) =>
+                              DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                              ))
+                              .toList(),
+                          onChanged: (value) {
+                           setState(() {
+                             selectedValue = value.toString();
+                           });
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 SizedBox(height: size.height * 0.025),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -813,27 +891,15 @@ class _Finance1State extends State<Finance1> {
                                     })
                                 : SizedBox(),
                             Container(
-                              height: size.height * 0.05,
+                              height: size.height * 0.06,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     flex: 4,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          border: Border.all(
-                                              color: Colors.grey
-                                                  .withOpacity(0.5))),
-                                      alignment: Alignment.center,
-                                      child: textField(_selectController,
-                                          "Item Description"),
-
-                                      //   InvoiceFields(_selectController,"Select Item"),
-                                    ),
+                                    child: field(_selectController,
+                                        "Item Description",1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -841,19 +907,7 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          border: Border.all(
-                                              color: Colors.grey
-                                                  .withOpacity(0.5))),
-                                      alignment: Alignment.center,
-                                      child: textField(_rateController, "₹ 0"),
-
-                                      //  InvoiceFields(_rateController,"₹ 0"),
-                                    ),
+                                    child: field(_rateController, "₹ 0",1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -861,36 +915,14 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                       flex: 1,
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5))),
-                                          alignment: Alignment.center,
-                                          child: textField(_qtyController2, "1")
-                                          //InvoiceFields(_qtyController2,"1"),
-                                          )),
+                                      child: field(_qtyController2, "1",1)),
                                   VerticalDivider(
                                     thickness: 2,
                                     color: bgColor,
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border: Border.all(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5))),
-                                        alignment: Alignment.center,
-                                        child: textField(_discController, "0 %")
-                                        // InvoiceFields(_discController,"0 %"),
-                                        ),
+                                    child: field(_discController, "0 %",1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -935,77 +967,100 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(
-                              height: 20,
+                              height: size.height*0.02,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 50),
-                                  child: Container(
-                                    padding: EdgeInsets.all(0),
-                                    height: 50,
-                                    width: 250,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color:
-                                                Colors.grey.withOpacity(0.5)),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: textField(
-                                        _internalController, "Internal Notes"),
-                                  ),
+                                Expanded(
+                                  flex: 4,
+                                  child: field(_internalController, "Internal Notes", 3),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 20),
-                                  child: Container(
-                                    width: size.width * 0.15,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Sub Total",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                            Text(
-                                              tbal == null
-                                                  ? "0.00"
-                                                  : tbal.toString(),
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                          ],
-                                        ),
-                                        Divider(
-                                          thickness: 0.5,
-                                          color: Colors.grey.withOpacity(0.5),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Total",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                            Text(
-                                              "0.00",
-                                              style: TxtStls.fieldtitlestyle,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                Expanded(flex:4,child:SizedBox()),
+                                Expanded(
+                                  flex:3,
+                                  child:Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Sub Total(${selectedValue}) : "+symbol(selectedValue),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            tbal == null
+                                                ? "0.00"
+                                                : tbal.toString(),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "IGST/CGST/SGST(${selectedValue}) : "+symbol(selectedValue),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            _gstAmount== null?"0.00":_gstAmount.toString(),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 0.5,
+                                        color: Colors.grey.withOpacity(0.5),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Total(${selectedValue}) : "+symbol(selectedValue),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            "${tbal==null?"0.00":tbal!+_gstAmount!}",
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+
+                                ),
+
+                              ],
+                            ),
+                            SizedBox(
+                              height: size.height*0.02,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: field(_amountpaidController, "Amount Paid",1),
+                                ),
+                                Expanded(flex:4,child:SizedBox()),
+                                Expanded(
+                                  flex: 4,
+                                  child: field(_externalController, "Internal Notes", 3),
                                 ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                TextButton.icon(
+                FlatButton.icon(
+                  color: btnColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)
+                  ),
                     onPressed: () {
                       if (servicelist.length > 0) {
                         isPreview = true;
@@ -1015,8 +1070,8 @@ class _Finance1State extends State<Finance1> {
                             .fetchRecentInvoiceid();
                       }
                     },
-                    icon: Icon(Icons.copy),
-                    label: Text("Preview")),
+                    icon: Icon(Icons.copy,color: bgColor,),
+                    label: Text("Preview",style: TxtStls.fieldtitlestyle1,)),
               ],
             ),
           ),
@@ -1102,7 +1157,7 @@ class _Finance1State extends State<Finance1> {
               Expanded(child: SizedBox()),
               IconButton(
                   onPressed: (() {
-                    var id = Provider.of<RecentFetchCXIDProvider>(context,
+                    var iid = Provider.of<RecentFetchCXIDProvider>(context,
                             listen: false)
                         .actualinid
                         .toString();
@@ -1110,8 +1165,8 @@ class _Finance1State extends State<Finance1> {
                         ? ""
                         : _gstController.text.toString();
                     setState(() {
-                      PdfProvider.generatePdf(
-                          servicelist, cusname, tbal, id, gstno, Idocid);
+                      // PdfProvider.generatePdf(
+                      //     servicelist, cusname, tbal, iid, gstno, Idocid,activeid);
                     });
                   }),
                   icon: Icon(Icons.download, color: btnColor)),
@@ -1669,7 +1724,7 @@ class _Finance1State extends State<Finance1> {
                       onPressed: () {
                         fileview1(context, "JR03212201", url);
                       },
-                      icon: Icon(Icons.copy, color: bgColor),
+                      icon: Icon(Icons.copy, color: bgColor,size: 10,),
                       label: Text(
                         "Preview",
                         style: TxtStls.fieldstyle1,
@@ -1706,4 +1761,43 @@ class _Finance1State extends State<Finance1> {
   // 4. Forward Invoice to email
 
   forwardtoemail() async {}
+  Widget field(_controller, hintText,maxlines) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      decoration: deco,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.01,
+        ),
+        child: TextFormField(
+          maxLines: maxlines,
+            cursorColor: btnColor,
+            controller: _controller,
+            style: TxtStls.fieldstyle,
+            decoration: InputDecoration(
+              errorStyle: ClrStls.errorstyle,
+              hintText: hintText,
+              hintStyle: TxtStls.fieldstyle,
+              border: InputBorder.none,
+            ),
+            ),
+      ),
+    );
+  }
+  symbol(selectedcurrency){
+    switch(selectedcurrency){
+      case "GBP":{
+        return "£";
+      }
+      case "USD":{
+        return "\$";
+      }
+      case "EURO":{
+        return "€";
+      }
+      default:{
+        return "₹";
+      }
+    }
+  }
 }
