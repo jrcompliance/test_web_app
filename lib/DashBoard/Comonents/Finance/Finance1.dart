@@ -622,41 +622,45 @@ class _Finance1State extends State<Finance1> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: DropdownButtonFormField2(
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          border: OutlineInputBorder(
+                      child: SizedBox(
+                        height: size.height * 0.05,
+                        width: size.width * 0.05,
+                        child: DropdownButtonFormField2(
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          isExpanded: true,
+                          hint: Text(
+                            selectedValue,
+                            style: TxtStls.fieldtitlestyle,
+                          ),
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: btnColor,
+                          ),
+                          iconSize: 30,
+                          buttonHeight: 60,
+                          buttonPadding: EdgeInsets.only(left: 20, right: 10),
+                          dropdownDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                           ),
+                          items: currencieslist
+                              .map((item) => DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(item,
+                                        style: TxtStls.fieldtitlestyle),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue = value.toString();
+                            });
+                          },
                         ),
-                        isExpanded: true,
-                        hint: Text(
-                          selectedValue,
-                          style: TxtStls.fieldtitlestyle,
-                        ),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: btnColor,
-                        ),
-                        iconSize: 30,
-                        buttonHeight: 60,
-                        buttonPadding: EdgeInsets.only(left: 20, right: 10),
-                        dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        items: currencieslist
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(item,
-                                      style: TxtStls.fieldtitlestyle),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValue = value.toString();
-                          });
-                        },
                       ),
                     )
                   ],
