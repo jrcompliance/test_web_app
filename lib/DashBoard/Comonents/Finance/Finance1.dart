@@ -1038,7 +1038,7 @@ class _Finance1State extends State<Finance1> {
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
-                                            "${tbal + getval()}",
+                                            "${(tbal + getval()).toStringAsFixed(2)}",
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1171,24 +1171,28 @@ class _Finance1State extends State<Finance1> {
                     fontSize: 15, color: txtColor, fontWeight: FontWeight.bold),
               ),
               Expanded(child: SizedBox()),
-              IconButton(
-                  onPressed: (() {
-                    var id = Provider.of<RecentFetchCXIDProvider>(context,
-                            listen: false)
-                        .actualinid
-                        .toString();
-                    var gstno = _gstController.text == null
-                        ? ""
-                        : _gstController.text.toString();
-                    setState(() {
-                      // PdfProvider.generatePdf(
-                      //     servicelist, cusname, tbal, id, gstno, Idocid);
-                    });
-                  }),
-                  icon: Icon(Icons.download, color: btnColor)),
-              IconButton(
-                  onPressed: (() {}),
-                  icon: Icon(Icons.print_sharp, color: btnColor)),
+              Provider.of<RecentFetchCXIDProvider>(context).actualinid == null
+                  ? SizedBox()
+                  : FlatButton.icon(
+                      color: btnColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                      onPressed: () {
+                        var inid = Provider.of<RecentFetchCXIDProvider>(context,
+                                listen: false)
+                            .actualinid
+                            .toString();
+                        var gstno = _gstController.text == null
+                            ? ""
+                            : _gstController.text.toString();
+                        setState(() {
+                          // PdfProvider.generatePdf(
+                          //     servicelist, cusname, tbal, id, gstno, Idocid);
+                        });
+                      },
+                      icon: Icon(Icons.save_alt_rounded,
+                          color: bgColor, size: 12.5),
+                      label: Text("Save", style: TxtStls.fieldstyle1))
             ],
           ),
           Divider(
