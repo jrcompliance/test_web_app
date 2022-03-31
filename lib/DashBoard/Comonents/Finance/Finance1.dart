@@ -44,6 +44,7 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _amountpaidController = TextEditingController();
   final TextEditingController _extrenalController = TextEditingController();
+  double _gstamount = 0.00;
 
   @override
   void initState() {
@@ -462,6 +463,7 @@ class _Finance1State extends State<Finance1> {
     print('@@@' + servicelist.toString());
 
     tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
+    _gstamount = tbal! * 0.18;
     print("Data added ");
   }
 
@@ -1006,7 +1008,7 @@ class _Finance1State extends State<Finance1> {
                                           Text(
                                             tbal == null
                                                 ? "0.00"
-                                                : tbal.toString(),
+                                                : tbal!.toStringAsFixed(2),
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1021,7 +1023,9 @@ class _Finance1State extends State<Finance1> {
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
-                                            "1000",
+                                            selectedValue == "INR"
+                                                ? _gstamount.toStringAsFixed(2)
+                                                : "0.00",
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1040,7 +1044,7 @@ class _Finance1State extends State<Finance1> {
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
-                                            "0.00",
+                                            "${tbal == null ? "0.00" : tbal! + _gstamount}",
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
