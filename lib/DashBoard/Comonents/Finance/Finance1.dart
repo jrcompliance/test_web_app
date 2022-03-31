@@ -42,6 +42,8 @@ class _Finance1State extends State<Finance1> {
   String selectedValue = "INR";
 
   final TextEditingController _referenceController = TextEditingController();
+  final TextEditingController _amountpaidController = TextEditingController();
+  final TextEditingController _extrenalController = TextEditingController();
 
   @override
   void initState() {
@@ -916,7 +918,8 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: field1(_rateController, "₹ 0", 1),
+                                    child: field1(_rateController,
+                                        "${symbol(selectedValue)} 0", 1),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -986,9 +989,9 @@ class _Finance1State extends State<Finance1> {
                                   child: field1(
                                       _internalController, "Internal Notes", 3),
                                 ),
-                                Expanded(flex: 2, child: SizedBox()),
+                                Expanded(flex: 3, child: SizedBox()),
                                 Expanded(
-                                  flex: 2,
+                                  flex: 3,
                                   child: Column(
                                     children: [
                                       Row(
@@ -996,13 +999,29 @@ class _Finance1State extends State<Finance1> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Sub Total",
+                                            "Sub Total (${selectedValue}) : " +
+                                                symbol(selectedValue),
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
                                             tbal == null
                                                 ? "0.00"
                                                 : tbal.toString(),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "IGST/CGST/SGST(${selectedValue}) : " +
+                                                symbol(selectedValue),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            "1000",
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1016,7 +1035,8 @@ class _Finance1State extends State<Finance1> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "Total",
+                                            "Total (${selectedValue}) : " +
+                                                symbol(selectedValue),
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
@@ -1030,10 +1050,32 @@ class _Finance1State extends State<Finance1> {
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: size.height * 0.02,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: field1(_amountpaidController,
+                                      "Enter Paid Amount", 1),
+                                ),
+                                Expanded(flex: 3, child: SizedBox()),
+                                Expanded(
+                                  flex: 4,
+                                  child: field1(
+                                      _extrenalController, "External Notes", 3),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
-                TextButton.icon(
+                FlatButton.icon(
+                    color: btnColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                     onPressed: () {
                       if (servicelist.length > 0) {
                         isPreview = true;
@@ -1043,8 +1085,11 @@ class _Finance1State extends State<Finance1> {
                             .fetchRecentInvoiceid();
                       }
                     },
-                    icon: Icon(Icons.copy),
-                    label: Text("Preview")),
+                    icon: Icon(Icons.copy, size: 10, color: bgColor),
+                    label: Text(
+                      "Preview",
+                      style: TxtStls.fieldstyle1,
+                    )),
               ],
             ),
           ),
@@ -1834,5 +1879,26 @@ class _Finance1State extends State<Finance1> {
         ),
       ),
     );
+  }
+
+  symbol(selectedcurrency) {
+    switch (selectedcurrency) {
+      case "GBP":
+        {
+          return "£";
+        }
+      case "USD":
+        {
+          return "\$";
+        }
+      case "EURO":
+        {
+          return "€";
+        }
+      default:
+        {
+          return "₹";
+        }
+    }
   }
 }
