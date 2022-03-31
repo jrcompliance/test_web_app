@@ -33,7 +33,6 @@ class Finance1 extends StatefulWidget {
 class _Finance1State extends State<Finance1> {
   bool _isLoad = false;
   bool isgst = false;
-  double? _gstAmount;
 
   bool isPreview = false;
 
@@ -63,7 +62,8 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _invoiceusername = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _customersearchController = TextEditingController();
+  final TextEditingController _customersearchController =
+      TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _qtyController = TextEditingController();
@@ -473,7 +473,6 @@ class _Finance1State extends State<Finance1> {
     print('@@@' + servicelist.toString());
 
     tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
-    _gstAmount = tbal!*0.18;
     print("Data added ");
   }
 
@@ -1135,7 +1134,7 @@ class _Finance1State extends State<Finance1> {
               Expanded(child: SizedBox()),
               IconButton(
                   onPressed: (() {
-                    var iid = Provider.of<RecentFetchCXIDProvider>(context,
+                    var id = Provider.of<RecentFetchCXIDProvider>(context,
                             listen: false)
                         .actualinid
                         .toString();
@@ -1143,8 +1142,8 @@ class _Finance1State extends State<Finance1> {
                         ? ""
                         : _gstController.text.toString();
                     setState(() {
-                      PdfProvider.generatePdf(
-                          servicelist, cusname, tbal, iid, gstno, Idocid,activeid,_gstAmount,);
+                      // PdfProvider.generatePdf(
+                      //     servicelist, cusname, tbal, id, gstno, Idocid);
                     });
                   }),
                   icon: Icon(Icons.download, color: btnColor)),

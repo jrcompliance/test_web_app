@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/OurCustomerModel.dart';
 
 class CustmerProvider extends ChangeNotifier {
   List<CustomerModel> _customerlist = [];
