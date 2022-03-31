@@ -9,7 +9,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
+import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
+import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
@@ -193,7 +195,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              Flexible(child: TaskPreview()),
+              //Flexible(child: TaskPreview()),
             ],
           );
         }
@@ -223,7 +225,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Calendar"),
-              Calendar(),
+              //Calendar(),
             ],
           );
         }

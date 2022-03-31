@@ -68,7 +68,6 @@ dependencies:
   flutter_local_notifications:
   pdf: ^3.7.3
   syncfusion_flutter_pdf: ^19.4.56-beta
-  dio: ^4.0.4
 
 
 

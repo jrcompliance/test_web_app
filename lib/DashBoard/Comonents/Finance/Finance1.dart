@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -40,12 +36,6 @@ class _Finance1State extends State<Finance1> {
 
   bool isPreview = false;
 
-  final List<String> _currencieslist= ["INR","EURO","GBP","USD"];
-
-  String selectedValue = "INR";
-
-  final TextEditingController _refernceController = TextEditingController();
-
   @override
   void initState() {
     Provider.of<CustmerProvider>(context, listen: false).getCustomers();
@@ -59,7 +49,6 @@ class _Finance1State extends State<Finance1> {
   String bnature = "Active";
   bool visible = false;
   bool isAdded = false;
-  double? _gstAmount;
 
   final TextEditingController _gstController = TextEditingController();
   final TextEditingController _tradenameController = TextEditingController();
@@ -87,9 +76,6 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
-  final TextEditingController _externalController = TextEditingController();
-  final TextEditingController _amountpaidController = TextEditingController();
-
   List cust = [];
 
   @override
@@ -300,75 +286,111 @@ class _Finance1State extends State<Finance1> {
                                             var createdate =
                                                 data.timestamp!.toDate();
                                             return InkWell(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0)),
-                                                    color:
-                                                        grClr.withOpacity(0.1)),
-                                                height: size.height * 0.06,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                            child: Row(
-                                                          children: [
-                                                            Icon(
-                                                                Icons
-                                                                    .picture_as_pdf_rounded,
-                                                                color: clsClr),
-                                                            Text(
-                                                              "JR03212201",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle,
-                                                            ),
-                                                          ],
-                                                        ))),
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                          child: Row(
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0)),
+                                                ),
+                                                elevation: 10.0,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                          flex: 3,
+                                                          child: Container(
+                                                              child: Row(
                                                             children: [
                                                               Icon(
                                                                   Icons
-                                                                      .calendar_today_outlined,
+                                                                      .picture_as_pdf_rounded,
                                                                   color:
-                                                                      btnColor),
-                                                              SizedBox(
-                                                                  width: 10),
+                                                                      clsClr),
                                                               Text(
-                                                                DateFormat(
-                                                                        "dd MMMM,yyyy")
-                                                                    .format(
-                                                                        createdate),
+                                                                "  JR" +
+                                                                    data.invoiceid
+                                                                        .toString(),
                                                                 style: TxtStls
                                                                     .fieldtitlestyle,
                                                               ),
                                                             ],
+                                                          ))),
+                                                      Expanded(
+                                                          flex: 2,
+                                                          child: Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                    Icons
+                                                                        .calendar_today_rounded,
+                                                                    color:
+                                                                        btnColor),
+                                                                SizedBox(
+                                                                    width: 10),
+                                                                Text(
+                                                                  DateFormat(
+                                                                          "dd MMMM,yyyy")
+                                                                      .format(
+                                                                          createdate),
+                                                                  style: TxtStls
+                                                                      .fieldtitlestyle,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )),
+                                                      Expanded(
+                                                        flex: 2,
+                                                        child: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      50.0),
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                              color: btnColor,
+                                                            ),
+                                                            child: Text(
+                                                              data.status ==
+                                                                      true
+                                                                  ? "Sent"
+                                                                  : "Pending",
+                                                              style: TxtStls
+                                                                  .fieldstyle1,
+                                                            ),
                                                           ),
-                                                        )),
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: Container(
-                                                        child: Text(
-                                                          data.status == true
-                                                              ? "Sent"
-                                                              : "Pending",
-                                                          style: TxtStls
-                                                              .fieldtitlestyle,
                                                         ),
                                                       ),
-                                                    ),
-                                                    Expanded(
+                                                      Expanded(
                                                         flex: 1,
                                                         child: Container(
-                                                          child: Icon(
-                                                              Icons.more_horiz),
-                                                        ))
-                                                  ],
+                                                          child: Text(
+                                                            data.type
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                          flex: 1,
+                                                          child: Container(
+                                                            child: Icon(Icons
+                                                                .more_horiz),
+                                                          ))
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               onTap: () {
@@ -451,7 +473,6 @@ class _Finance1State extends State<Finance1> {
     print('@@@' + servicelist.toString());
 
     tbal = servicelist.map((m) => (m["price"])).reduce((a, b) => a + b);
-    _gstAmount = tbal!*0.18;
     print("Data added ");
   }
 
@@ -562,80 +583,13 @@ class _Finance1State extends State<Finance1> {
                         style: ClrStls.tnClr,
                       )),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex:8,
-                      child: Row(
-                        children: [
-                          Container(
-                             
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-                              decoration: BoxDecoration(
-                                color: grClr.withOpacity(0.25),
-                                borderRadius: BorderRadius.circular(5)
-                              ),
-                              child: Text(
-                                "ReferenceID :",
-                                style: TxtStls.fieldtitlestyle,
-                              )),
-                          SizedBox(width:7.5),
-                          Expanded(
-                            flex: 2,
-                            child: field(_refernceController, "Enter Refernce ID",1),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(child: SizedBox(),flex: 2),
-                    Expanded(
-                      flex:2,
-                      child: SizedBox(
-                        height: 30,
-                        width: 300,
-                        child: DropdownButtonFormField2(
-                          decoration: InputDecoration(
-                               isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          isExpanded: true,
-                          hint:  Text(
-                            selectedValue,
-                            style:TxtStls.fieldtitlestyle,
-                          ),
-                          icon:  Icon(
-                            Icons.arrow_drop_down,
-                            color: btnColor,
-                          ),
-                          iconSize: 30,
-                          buttonHeight: 60,
-                          buttonPadding:  EdgeInsets.only(left: 20, right: 10,top:5),
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          items: _currencieslist
-                              .map((item) =>
-                              DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: TxtStls.fieldtitlestyle,
-                                ),
-                              ))
-                              .toList(),
-                          onChanged: (value) {
-                           setState(() {
-                             selectedValue = value.toString();
-                           });
-                          },
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                Container(
+                    color: grClr.withOpacity(0.25),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    child: Text(
+                      "ReferenceID : ${addtwoNumber(8).toString()}",
+                      style: TxtStls.fieldtitlestyle,
+                    )),
                 SizedBox(height: size.height * 0.025),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -891,15 +845,27 @@ class _Finance1State extends State<Finance1> {
                                     })
                                 : SizedBox(),
                             Container(
-                              height: size.height * 0.06,
+                              height: size.height * 0.05,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     flex: 4,
-                                    child: field(_selectController,
-                                        "Item Description",1),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                              color: Colors.grey
+                                                  .withOpacity(0.5))),
+                                      alignment: Alignment.center,
+                                      child: textField(_selectController,
+                                          "Item Description"),
+
+                                      //   InvoiceFields(_selectController,"Select Item"),
+                                    ),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -907,7 +873,19 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: field(_rateController, "₹ 0",1),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                              color: Colors.grey
+                                                  .withOpacity(0.5))),
+                                      alignment: Alignment.center,
+                                      child: textField(_rateController, "₹ 0"),
+
+                                      //  InvoiceFields(_rateController,"₹ 0"),
+                                    ),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -915,14 +893,36 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                       flex: 1,
-                                      child: field(_qtyController2, "1",1)),
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5))),
+                                          alignment: Alignment.center,
+                                          child: textField(_qtyController2, "1")
+                                          //InvoiceFields(_qtyController2,"1"),
+                                          )),
                                   VerticalDivider(
                                     thickness: 2,
                                     color: bgColor,
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: field(_discController, "0 %",1),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: Colors.grey
+                                                    .withOpacity(0.5))),
+                                        alignment: Alignment.center,
+                                        child: textField(_discController, "0 %")
+                                        // InvoiceFields(_discController,"0 %"),
+                                        ),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -967,100 +967,77 @@ class _Finance1State extends State<Finance1> {
                               ),
                             ),
                             SizedBox(
-                              height: size.height*0.02,
+                              height: 20,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: field(_internalController, "Internal Notes", 3),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 50),
+                                  child: Container(
+                                    padding: EdgeInsets.all(0),
+                                    height: 50,
+                                    width: 250,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color:
+                                                Colors.grey.withOpacity(0.5)),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: textField(
+                                        _internalController, "Internal Notes"),
+                                  ),
                                 ),
-                                Expanded(flex:4,child:SizedBox()),
-                                Expanded(
-                                  flex:3,
-                                  child:Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Sub Total(${selectedValue}) : "+symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            tbal == null
-                                                ? "0.00"
-                                                : tbal.toString(),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "IGST/CGST/SGST(${selectedValue}) : "+symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            _gstAmount== null?"0.00":_gstAmount.toString(),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(
-                                        thickness: 0.5,
-                                        color: Colors.grey.withOpacity(0.5),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Total(${selectedValue}) : "+symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            "${tbal==null?"0.00":tbal!+_gstAmount!}",
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-
-                                ),
-
-                              ],
-                            ),
-                            SizedBox(
-                              height: size.height*0.02,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: field(_amountpaidController, "Amount Paid",1),
-                                ),
-                                Expanded(flex:4,child:SizedBox()),
-                                Expanded(
-                                  flex: 4,
-                                  child: field(_externalController, "Internal Notes", 3),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Container(
+                                    width: size.width * 0.15,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Sub Total",
+                                              style: TxtStls.fieldtitlestyle,
+                                            ),
+                                            Text(
+                                              tbal == null
+                                                  ? "0.00"
+                                                  : tbal.toString(),
+                                              style: TxtStls.fieldtitlestyle,
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(
+                                          thickness: 0.5,
+                                          color: Colors.grey.withOpacity(0.5),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Total",
+                                              style: TxtStls.fieldtitlestyle,
+                                            ),
+                                            Text(
+                                              "0.00",
+                                              style: TxtStls.fieldtitlestyle,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                FlatButton.icon(
-                  color: btnColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)
-                  ),
+                TextButton.icon(
                     onPressed: () {
                       if (servicelist.length > 0) {
                         isPreview = true;
@@ -1070,8 +1047,8 @@ class _Finance1State extends State<Finance1> {
                             .fetchRecentInvoiceid();
                       }
                     },
-                    icon: Icon(Icons.copy,color: bgColor,),
-                    label: Text("Preview",style: TxtStls.fieldtitlestyle1,)),
+                    icon: Icon(Icons.copy),
+                    label: Text("Preview")),
               ],
             ),
           ),
@@ -1157,7 +1134,7 @@ class _Finance1State extends State<Finance1> {
               Expanded(child: SizedBox()),
               IconButton(
                   onPressed: (() {
-                    var iid = Provider.of<RecentFetchCXIDProvider>(context,
+                    var id = Provider.of<RecentFetchCXIDProvider>(context,
                             listen: false)
                         .actualinid
                         .toString();
@@ -1165,8 +1142,8 @@ class _Finance1State extends State<Finance1> {
                         ? ""
                         : _gstController.text.toString();
                     setState(() {
-                      // PdfProvider.generatePdf(
-                      //     servicelist, cusname, tbal, iid, gstno, Idocid,activeid);
+                      PdfProvider.generatePdf(
+                          servicelist, cusname, tbal, id, gstno, Idocid);
                     });
                   }),
                   icon: Icon(Icons.download, color: btnColor)),
@@ -1706,7 +1683,9 @@ class _Finance1State extends State<Finance1> {
                   VerticalDivider(),
                   FlatButton.icon(
                       color: btnColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        forwardtoemail(context);
+                      },
                       icon: Icon(
                         Icons.share,
                         color: bgColor,
@@ -1724,7 +1703,7 @@ class _Finance1State extends State<Finance1> {
                       onPressed: () {
                         fileview1(context, "JR03212201", url);
                       },
-                      icon: Icon(Icons.copy, color: bgColor,size: 10,),
+                      icon: Icon(Icons.copy, color: bgColor),
                       label: Text(
                         "Preview",
                         style: TxtStls.fieldstyle1,
@@ -1751,7 +1730,12 @@ class _Finance1State extends State<Finance1> {
   // 2.Download the Invoice
 
   downloadInvoice(_url) async {
-    if (!await launch(_url)) throw 'Could not launch $_url';
+    if (!await launch(
+      _url,
+      forceWebView: true,
+      forceSafariVC: true,
+      enableJavaScript: true,
+    )) throw 'Could not launch $_url';
   }
 
   // 3.Print the Invoice on A4
@@ -1760,8 +1744,56 @@ class _Finance1State extends State<Finance1> {
 
   // 4. Forward Invoice to email
 
-  forwardtoemail() async {}
-  Widget field(_controller, hintText,maxlines) {
+  forwardtoemail(BuildContext context) async {
+    print("we are sending data to email please wait");
+    Navigator.pop(context);
+    sendBox(context);
+  }
+
+  sendBox(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    TextEditingController _toemailController = TextEditingController();
+    var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(0),
+      actionsPadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.all(0),
+      insetPadding: EdgeInsets.all(0),
+      buttonPadding: EdgeInsets.all(0),
+      backgroundColor: Colors.white.withOpacity(0.9),
+      content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            field(_toemailController, "To Address", (value) {}),
+            field(_toemailController, "To Address", (value) {}),
+            field(_toemailController, "To Address", (value) {}),
+            FlatButton.icon(
+              color: btnColor,
+              onPressed: () {},
+              icon: Icon(Icons.send),
+              label: Text(
+                "Send",
+                style: TxtStls.fieldstyle1,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            )
+          ],
+        );
+      }),
+    );
+    showDialog(
+        barrierDismissible: false,
+        barrierColor: txtColor.withOpacity(0.75),
+        context: context,
+        builder: (_) {
+          return alertDialog;
+        });
+  }
+
+  // field widget
+  Widget field(_controller, hintText, _validator) {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: deco,
@@ -1770,7 +1802,6 @@ class _Finance1State extends State<Finance1> {
           horizontal: size.width * 0.01,
         ),
         child: TextFormField(
-          maxLines: maxlines,
             cursorColor: btnColor,
             controller: _controller,
             style: TxtStls.fieldstyle,
@@ -1780,24 +1811,8 @@ class _Finance1State extends State<Finance1> {
               hintStyle: TxtStls.fieldstyle,
               border: InputBorder.none,
             ),
-            ),
+            validator: _validator),
       ),
     );
-  }
-  symbol(selectedcurrency){
-    switch(selectedcurrency){
-      case "GBP":{
-        return "£";
-      }
-      case "USD":{
-        return "\$";
-      }
-      case "EURO":{
-        return "€";
-      }
-      default:{
-        return "₹";
-      }
-    }
   }
 }
