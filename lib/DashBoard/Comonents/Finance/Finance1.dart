@@ -41,6 +41,8 @@ class _Finance1State extends State<Finance1> {
 
   String selectedValue = "INR";
 
+  final TextEditingController _referenceController = TextEditingController();
+
   @override
   void initState() {
     Provider.of<CustmerProvider>(context, listen: false).getCustomers();
@@ -595,18 +597,27 @@ class _Finance1State extends State<Finance1> {
                       child: Row(
                         children: [
                           Container(
-                              color: grClr.withOpacity(0.25),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
+                                  horizontal: 10, vertical: 13),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: grClr.withOpacity(0.25),
+                              ),
                               child: Text(
-                                "ReferenceID : ${addtwoNumber(8).toString()}",
+                                "ReferenceID :",
                                 style: TxtStls.fieldtitlestyle,
                               )),
+                          SizedBox(width: 7.5),
+                          Expanded(
+                            flex: 2,
+                            child: field1(
+                                _referenceController, "Enter Reference ID", 1),
+                          )
                         ],
                       ),
                     ),
                     Expanded(
-                      flex: 2,
+                      flex: 6,
                       child: SizedBox(),
                     ),
                     Expanded(
@@ -621,41 +632,30 @@ class _Finance1State extends State<Finance1> {
                         ),
                         isExpanded: true,
                         hint: Text(
-                          'Select Your Gender',
-                          style: TextStyle(fontSize: 14),
+                          selectedValue,
+                          style: TxtStls.fieldtitlestyle,
                         ),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_drop_down,
-                          color: Colors.black45,
+                          color: btnColor,
                         ),
                         iconSize: 30,
                         buttonHeight: 60,
-                        buttonPadding:
-                            const EdgeInsets.only(left: 20, right: 10),
+                        buttonPadding: EdgeInsets.only(left: 20, right: 10),
                         dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         items: currencieslist
                             .map((item) => DropdownMenuItem<String>(
                                   value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
+                                  child: Text(item,
+                                      style: TxtStls.fieldtitlestyle),
                                 ))
                             .toList(),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select gender.';
-                          }
-                        },
                         onChanged: (value) {
-                          //Do something when changing the item if you want.
-                        },
-                        onSaved: (value) {
-                          selectedValue = value.toString();
+                          setState(() {
+                            selectedValue = value.toString();
+                          });
                         },
                       ),
                     )
