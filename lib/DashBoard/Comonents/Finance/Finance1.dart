@@ -1005,14 +1005,14 @@ class _Finance1State extends State<Finance1> {
                                     thickness: 2,
                                     color: bgColor,
                                   ),
-                                Expanded(flex: 3, child: SizedBox()),
+                                Expanded(flex: 2, child: SizedBox()),
                                 for (int i = 1; i <= 2; i++)
                                   VerticalDivider(
                                     thickness: 2,
                                     color: bgColor,
                                   ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 4,
                                   child: Column(
                                     children: [
                                       Row(
