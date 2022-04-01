@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
@@ -21,7 +22,6 @@ import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Providers/CustomerProvider.dart';
-import 'package:http/http.dart' as http;
 
 class Finance1 extends StatefulWidget {
   Finance1({Key? key}) : super(key: key);
@@ -37,13 +37,21 @@ class _Finance1State extends State<Finance1> {
   bool isPreview = false;
 
   final List<String> currencieslist = ["INR", "USD", "GBP", "EURO"];
-
   String selectedValue = "INR";
 
+  final List<String> paymentstatus = ["PAID", "PARTIALLY PAID", "CANCEL"];
+  String selectedValue1 = "CANCEL";
+
   final TextEditingController _referenceController = TextEditingController();
-  final TextEditingController _amountpaidController = TextEditingController();
+  final TextEditingController _generatedateController = TextEditingController();
+  final TextEditingController _duedatedateController = TextEditingController();
   final TextEditingController _extrenalController = TextEditingController();
   double _gstamount = 0.00;
+
+  var radioItem;
+
+  bool isSwitched = false;
+  bool isSwitched1 = false;
 
   @override
   void initState() {
@@ -582,8 +590,8 @@ class _Finance1State extends State<Finance1> {
                           SizedBox(width: 7.5),
                           Expanded(
                             flex: 2,
-                            child: field1(
-                                _referenceController, "Enter Reference ID", 1),
+                            child: field(_referenceController,
+                                "Enter Reference ID", 1, true),
                           )
                         ],
                       ),
@@ -662,17 +670,17 @@ class _Finance1State extends State<Finance1> {
                           duration: Duration(milliseconds: 500),
                           child: Column(
                             children: [
-                              formfield("TradeName", _tradenameController,
-                                  icnData(), true),
+                              formfield(
+                                  "TradeName", _tradenameController, true),
                               space(),
                               formfield(
                                   "Address",
                                   _addressControoler,
+                                  true,
                                   Icon(
                                     Icons.location_on_rounded,
                                     color: btnColor,
-                                  ),
-                                  true),
+                                  )),
                               space(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -680,15 +688,15 @@ class _Finance1State extends State<Finance1> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.only(right: 20),
-                                      child: formfield("PanNumber",
-                                          _panController, icnData(), true),
+                                      child: formfield(
+                                          "PanNumber", _panController, true),
                                     ),
                                   ),
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsets.only(left: 20),
-                                      child: formfield("PinCode",
-                                          _pincodeController, icnData(), true),
+                                      child: formfield(
+                                          "PinCode", _pincodeController, true),
                                     ),
                                   ),
                                 ],
@@ -796,100 +804,111 @@ class _Finance1State extends State<Finance1> {
                             ),
                             SizedBox(height: 10),
                             servicelist.length > 0
-                                ? ListView.builder(
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemCount: servicelist.length,
-                                    itemBuilder: (context, index) {
-                                      return Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              flex: 4,
-                                              child: Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text("${index + 1}. ",
-                                                          style: TxtStls
-                                                              .fieldtitlestyle),
-                                                      Flexible(
+                                ? ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxHeight: size.height * 0.22),
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: servicelist.length,
+                                        itemBuilder: (context, index) {
+                                          return Expanded(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  flex: 4,
+                                                  child: Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text("${index + 1}. ",
+                                                              style: TxtStls
+                                                                  .fieldtitlestyle),
+                                                          Flexible(
+                                                            child: Text(
+                                                              "${servicelist[index]["item"].toString()}\n",
+                                                              style: TxtStls
+                                                                  .fieldtitlestyle,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )),
+                                                ),
+                                                VerticalDivider(
+                                                  thickness: 2,
+                                                  color: bgColor,
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        servicelist[index]
+                                                                ["rate"]
+                                                            .toString(),
+                                                        style: TxtStls
+                                                            .fieldtitlestyle,
+                                                      )),
+                                                ),
+                                                VerticalDivider(
+                                                  thickness: 2,
+                                                  color: bgColor,
+                                                ),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: Container(
+                                                        alignment:
+                                                            Alignment.center,
                                                         child: Text(
-                                                          "${servicelist[index]["item"].toString()}\n",
+                                                            servicelist[index]
+                                                                    ["qty"]
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle))),
+                                                VerticalDivider(
+                                                  thickness: 2,
+                                                  color: bgColor,
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                          servicelist[index]
+                                                                  ["disc"]
+                                                              .toString(),
                                                           style: TxtStls
-                                                              .fieldtitlestyle,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )),
+                                                              .fieldtitlestyle)),
+                                                ),
+                                                VerticalDivider(
+                                                  thickness: 2,
+                                                  color: bgColor,
+                                                ),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                            servicelist[index]
+                                                                    ["price"]
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle))),
+                                              ],
                                             ),
-                                            VerticalDivider(
-                                              thickness: 2,
-                                              color: bgColor,
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    servicelist[index]["rate"]
-                                                        .toString(),
-                                                    style:
-                                                        TxtStls.fieldtitlestyle,
-                                                  )),
-                                            ),
-                                            VerticalDivider(
-                                              thickness: 2,
-                                              color: bgColor,
-                                            ),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                        servicelist[index]
-                                                                ["qty"]
-                                                            .toString(),
-                                                        style: TxtStls
-                                                            .fieldtitlestyle))),
-                                            VerticalDivider(
-                                              thickness: 2,
-                                              color: bgColor,
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                      servicelist[index]["disc"]
-                                                          .toString(),
-                                                      style: TxtStls
-                                                          .fieldtitlestyle)),
-                                            ),
-                                            VerticalDivider(
-                                              thickness: 2,
-                                              color: bgColor,
-                                            ),
-                                            Expanded(
-                                                flex: 2,
-                                                child: Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                        servicelist[index]
-                                                                ["price"]
-                                                            .toString(),
-                                                        style: TxtStls
-                                                            .fieldtitlestyle))),
-                                          ],
-                                        ),
-                                      );
-                                    })
+                                          );
+                                        }),
+                                  )
                                 : SizedBox(),
                             Container(
                               height: size.height * 0.06,
@@ -899,8 +918,8 @@ class _Finance1State extends State<Finance1> {
                                 children: [
                                   Expanded(
                                     flex: 4,
-                                    child: field1(_selectController,
-                                        "Item Description", 1),
+                                    child: field(_selectController,
+                                        "Item Description", 1, true),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -908,8 +927,8 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: field1(_rateController,
-                                        "${symbol(selectedValue)} 0", 1),
+                                    child: field(_rateController,
+                                        "${symbol(selectedValue)} 0", 1, true),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -917,14 +936,16 @@ class _Finance1State extends State<Finance1> {
                                   ),
                                   Expanded(
                                       flex: 1,
-                                      child: field1(_qtyController2, "1", 1)),
+                                      child:
+                                          field(_qtyController2, "1", 1, true)),
                                   VerticalDivider(
                                     thickness: 2,
                                     color: bgColor,
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: field1(_discController, "0 %", 1),
+                                    child:
+                                        field(_discController, "0 %", 1, true),
                                   ),
                                   VerticalDivider(
                                     thickness: 2,
@@ -949,8 +970,8 @@ class _Finance1State extends State<Finance1> {
                                               print('custom cust' +
                                                   cust.toString());
                                               addingData();
-                                              Future.delayed(
-                                                      Duration(seconds: 1))
+                                              Future.delayed(Duration(
+                                                      milliseconds: 100))
                                                   .then((value) {
                                                 _rateController.clear();
                                                 _qtyController2.clear();
@@ -961,25 +982,35 @@ class _Finance1State extends State<Finance1> {
                                               });
                                             },
                                             child: Text(
-                                              "+ADD ITEM",
+                                              " ADD ITEM + ",
                                               style: TxtStls.btnstyle,
                                             )),
                                       )),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: size.height * 0.02,
-                            ),
+                            SizedBox(height: size.height * 0.02),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   flex: 4,
-                                  child: field1(
-                                      _internalController, "Internal Notes", 3),
+                                  child: isSwitched
+                                      ? field(_internalController,
+                                          "Internal Notes", 3, true)
+                                      : SizedBox(),
                                 ),
+                                for (int i = 1; i <= 2; i++)
+                                  VerticalDivider(
+                                    thickness: 2,
+                                    color: bgColor,
+                                  ),
                                 Expanded(flex: 3, child: SizedBox()),
+                                for (int i = 1; i <= 2; i++)
+                                  VerticalDivider(
+                                    thickness: 2,
+                                    color: bgColor,
+                                  ),
                                 Expanded(
                                   flex: 3,
                                   child: Column(
@@ -996,7 +1027,7 @@ class _Finance1State extends State<Finance1> {
                                           Text(
                                             tbal == null
                                                 ? "0.00"
-                                                : tbal!.toStringAsFixed(2),
+                                                : tbal.toStringAsFixed(2),
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1048,46 +1079,125 @@ class _Finance1State extends State<Finance1> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: size.height * 0.02,
-                            ),
+                            SizedBox(height: size.height * 0.02),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   flex: 4,
-                                  child: field1(_amountpaidController,
-                                      "Enter Paid Amount", 1),
+                                  child: isSwitched1
+                                      ? field(_extrenalController,
+                                          "External Notes", 3, true)
+                                      : SizedBox(),
                                 ),
+                                for (int i = 1; i <= 2; i++)
+                                  VerticalDivider(
+                                    thickness: 2,
+                                    color: bgColor,
+                                  ),
                                 Expanded(flex: 3, child: SizedBox()),
+                                for (int i = 1; i <= 2; i++)
+                                  VerticalDivider(
+                                    thickness: 2,
+                                    color: bgColor,
+                                  ),
                                 Expanded(
-                                  flex: 4,
-                                  child: field1(
-                                      _extrenalController, "External Notes", 3),
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        child: field(
+                                            _generatedateController,
+                                            "Select Generate Date",
+                                            1,
+                                            false,
+                                            Icon(
+                                              Icons.calendar_today_outlined,
+                                              color: btnColor,
+                                            )),
+                                        onTap: () {
+                                          MyCalenders.pickEndDate(
+                                              context, _generatedateController);
+                                        },
+                                      ),
+                                      SizedBox(height: size.height * 0.005),
+                                      InkWell(
+                                        child: field(
+                                            _duedatedateController,
+                                            "Select Due Date",
+                                            1,
+                                            false,
+                                            Icon(
+                                              Icons.calendar_today_outlined,
+                                              color: btnColor,
+                                            )),
+                                        onTap: () {
+                                          MyCalenders.pickEndDate(
+                                              context, _duedatedateController);
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                FlatButton.icon(
-                    color: btnColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {
-                      if (servicelist.length > 0) {
-                        isPreview = true;
-                        setState(() {});
-                        Provider.of<RecentFetchCXIDProvider>(context,
-                                listen: false)
-                            .fetchRecentInvoiceid();
-                      }
-                    },
-                    icon: Icon(Icons.copy, size: 10, color: bgColor),
-                    label: Text(
-                      "Preview",
-                      style: TxtStls.fieldstyle1,
-                    )),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        Text("Internal Notes", style: TxtStls.fieldtitlestyle),
+                        Switch(
+                          value: isSwitched,
+                          onChanged: (value) {
+                            setState(() {
+                              isSwitched = value;
+                              print(isSwitched);
+                            });
+                          },
+                          activeTrackColor: btnColor.withOpacity(0.2),
+                          activeColor: btnColor,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("External Notes", style: TxtStls.fieldtitlestyle),
+                        Switch(
+                          value: isSwitched1,
+                          onChanged: (value) {
+                            setState(() {
+                              isSwitched1 = value;
+                              print(isSwitched1);
+                            });
+                          },
+                          activeTrackColor: btnColor.withOpacity(0.2),
+                          activeColor: btnColor,
+                        ),
+                      ],
+                    ),
+                    FlatButton.icon(
+                        color: btnColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        onPressed: () {
+                          if (servicelist.length > 0) {
+                            isPreview = true;
+                            setState(() {});
+                            Provider.of<RecentFetchCXIDProvider>(context,
+                                    listen: false)
+                                .fetchRecentInvoiceid();
+                          }
+                        },
+                        icon: Icon(Icons.copy, size: 10, color: bgColor),
+                        label: Text(
+                          "Preview",
+                          style: TxtStls.fieldstyle1,
+                        )),
+                  ],
+                ),
               ],
             ),
           ),
@@ -1099,7 +1209,7 @@ class _Finance1State extends State<Finance1> {
     return SizedBox(height: size.height * 0.025);
   }
 
-  Widget formfield(title, _controller, icn, bool enabled) {
+  Widget formfield(title, _controller, bool enabled, [icn]) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1134,13 +1244,6 @@ class _Finance1State extends State<Finance1> {
     );
   }
 
-  Widget icnData() {
-    return Icon(
-      Icons.horizontal_rule,
-      color: fieldColor,
-    );
-  }
-
   var addtwoNumber = (int length) {
     const ch = "456789ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     Random r = Random();
@@ -1150,6 +1253,8 @@ class _Finance1State extends State<Finance1> {
 
   Widget PreviewInvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    DateTime? duedate = DateTime.parse(_duedatedateController.text);
+    DateTime? generatedate = DateTime.parse(_generatedateController.text);
     return Container(
       height: size.height * 0.93,
       decoration: BoxDecoration(
@@ -1266,15 +1371,17 @@ class _Finance1State extends State<Finance1> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      "Issued On: " +
-                          DateFormat("dd MMM,yyyy").format(DateTime.now()),
+                      "Issued On : " +
+                          DateFormat("dd MMM,yyyy").format(generatedate),
                       style: TxtStls.fieldstyle,
                     ),
                   ),
                   Align(
                       alignment: Alignment.centerRight,
-                      child:
-                          Text("Payment Due: Paid", style: TxtStls.fieldstyle)),
+                      child: Text(
+                          "Due Date : " +
+                              DateFormat("dd MMM,yyyy").format(duedate),
+                          style: TxtStls.fieldstyle)),
                 ],
               ),
             ],
@@ -1808,9 +1915,6 @@ class _Finance1State extends State<Finance1> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            field(_toemailController, "To Address", (value) {}),
-            field(_toemailController, "To Address", (value) {}),
-            field(_toemailController, "To Address", (value) {}),
             FlatButton.icon(
               color: btnColor,
               onPressed: () {},
@@ -1835,8 +1939,7 @@ class _Finance1State extends State<Finance1> {
         });
   }
 
-  // field widget
-  Widget field(_controller, hintText, _validator) {
+  Widget field(_controller, hintText, maxlines, bool isenable, [icn]) {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: deco,
@@ -1845,34 +1948,13 @@ class _Finance1State extends State<Finance1> {
           horizontal: size.width * 0.01,
         ),
         child: TextFormField(
-            cursorColor: btnColor,
-            controller: _controller,
-            style: TxtStls.fieldstyle,
-            decoration: InputDecoration(
-              errorStyle: ClrStls.errorstyle,
-              hintText: hintText,
-              hintStyle: TxtStls.fieldstyle,
-              border: InputBorder.none,
-            ),
-            validator: _validator),
-      ),
-    );
-  }
-
-  Widget field1(_controller, hintText, maxlines) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      decoration: deco,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.01,
-        ),
-        child: TextFormField(
+          enabled: isenable,
           cursorColor: btnColor,
           controller: _controller,
           style: TxtStls.fieldstyle,
           decoration: InputDecoration(
             errorStyle: ClrStls.errorstyle,
+            suffixIcon: icn,
             hintText: hintText,
             hintStyle: TxtStls.fieldstyle,
             border: InputBorder.none,
