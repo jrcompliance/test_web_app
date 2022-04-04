@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_web_app/CheckScreen.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -52,6 +53,8 @@ class _Finance1State extends State<Finance1> {
 
   bool isSwitched = false;
   bool isSwitched1 = false;
+
+  double total = 0;
 
   @override
   void initState() {
@@ -970,6 +973,7 @@ class _Finance1State extends State<Finance1> {
                                               print('custom cust' +
                                                   cust.toString());
                                               addingData();
+                                              total = tbal + getval();
                                               Future.delayed(Duration(
                                                       milliseconds: 100))
                                                   .then((value) {
@@ -1069,7 +1073,7 @@ class _Finance1State extends State<Finance1> {
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                           Text(
-                                            "${(tbal + getval()).toStringAsFixed(2)}",
+                                            total.toStringAsFixed(2),
                                             style: TxtStls.fieldtitlestyle,
                                           ),
                                         ],
@@ -1291,8 +1295,20 @@ class _Finance1State extends State<Finance1> {
                             ? ""
                             : _gstController.text.toString();
                         setState(() {
-                          // PdfProvider.generatePdf(
-                          //     servicelist, cusname, tbal, id, gstno, Idocid);
+                          PdfProvider.generatePdf(
+                            servicelist,
+                            cusname,
+                            tbal,
+                            inid,
+                            gstno,
+                            Idocid,
+                            activeid,
+                            selectedValue == "INR" ? _gstamount : 0.00,
+                            total,
+                            _generatedateController.text.toString(),
+                            _duedatedateController.text.toString(),
+                            selectedValue,
+                          );
                         });
                       },
                       icon: Icon(Icons.save_alt_rounded,

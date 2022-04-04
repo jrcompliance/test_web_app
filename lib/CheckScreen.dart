@@ -53,7 +53,32 @@ class _CheckScreenState extends State<CheckScreen> {
 
 class PdfProvider {
   static generatePdf(
-      List Servicelist, Recievername, tbal, actualinid, _gst, docid,activeid,gstAmount,total) async {
+    List Servicelist,
+    Recievername,
+    tbal,
+    actualinid,
+    _gst,
+    docid,
+    activeid,
+    gstAmount,
+    total,
+    invoicedate,
+    duedate,
+    selectedValue,
+  ) async {
+    DateTime? invoicedate1 = DateTime.parse(invoicedate);
+    DateTime? duedate1 = DateTime.parse(duedate);
+     click(){
+       return pw.FlatButton(
+
+         name: "",
+         child: pw.Text(""),
+           flags: <PdfAnnotFlags>{PdfAnnotFlags.print,}
+
+       );
+
+    }
+
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
     final bgImage = (await rootBundle.load("assets/Images/invoicebg.png"))
@@ -61,7 +86,7 @@ class PdfProvider {
         .asUint8List();
     final pageTheme = pw.PageTheme(
         pageFormat: PdfPageFormat.a4,
-        margin: pw.EdgeInsets.only(left: 30,right: 30,top: 50,bottom: 20),
+        margin: pw.EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 20),
         buildBackground: (context) {
           return pw.FullPage(
               ignoreMargins: true, child: pw.Image(pw.MemoryImage(bgImage)));
@@ -70,7 +95,6 @@ class PdfProvider {
     pdf.addPage(pw.Page(
         pageTheme: pageTheme,
         build: (pw.Context context) {
-
           String? gstNumber;
           String? invoice;
           return pw.Column(children: [
@@ -79,7 +103,7 @@ class PdfProvider {
                   width: 200,
                   height: 100,
                   child: pw.Image(pw.MemoryImage(image), fit: pw.BoxFit.fill)),
-              pw.Expanded(child: pw.SizedBox()),
+              pw.Expanded(flex: 2, child: pw.SizedBox()),
               pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
@@ -99,7 +123,8 @@ class PdfProvider {
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ])
             ]),
-            pw.Divider(),
+            pw.Divider(
+            ),
             pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -113,7 +138,7 @@ class PdfProvider {
                         pw.Text("$address\n$pincode",
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        pw.Text("GSTNumber. : " + _gst.toString(),
+                        pw.Text("GSTNumber : " + _gst.toString(),
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                         pw.Text(""),
@@ -125,7 +150,7 @@ class PdfProvider {
             pw.Text(
                 "Thank You for your consideration!!.\n We admire the opportunity to provide you with the best compliance services, hope we have earned your trust to take this opportunity forward. For more information contact your designated representative or email us at support@jrcompliance.com\nTo enhance your convenience, you can make payment either throw Post or electronic remitances",
                 style: pw.TextStyle(
-                    fontWeight: pw.FontWeight.normal, fontSize: 8)),
+                    fontWeight: pw.FontWeight.normal, fontSize: 7)),
             pw.SizedBox(height: 10),
             pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -135,19 +160,23 @@ class PdfProvider {
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   pw.Column(
                       mainAxisAlignment: pw.MainAxisAlignment.end,
+                      crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text(
-                            "Issued On." +
+                            "Issued On : " +
                                 "" +
-                                DateFormat("dd MMM,yyyy")
-                                    .format(DateTime.now()),
+                                DateFormat("dd MMM,yyyy").format(invoicedate1),
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        pw.Text("Payment Due: Paid",
+                        pw.Text(
+                            "Due Date : " +
+                                "" +
+                                DateFormat("dd MMM,yyyy").format(duedate1),
                             style: pw.TextStyle(fontWeight: pw.FontWeight.bold))
                       ])
                 ]),
             pw.SizedBox(height: 10),
+            click(),
             pw.Row(children: [
               pw.Expanded(
                   flex: 5,
@@ -192,7 +221,9 @@ class PdfProvider {
                   )),
             ]),
             pw.Divider(),
-            pw.ListView.builder(
+            pw.ConstrainedBox(
+            constraints: pw.BoxConstraints.tight(PdfPoint(200,400)),
+            child: pw.ListView.builder(
               itemCount: Servicelist.length,
               itemBuilder: (_, i) {
                 return pw.Row(children: [
@@ -215,7 +246,8 @@ class PdfProvider {
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                          child: pw.Text(Servicelist[i]["rate"].toStringAsFixed(2),
+                          child: pw.Text(
+                              Servicelist[i]["rate"].toStringAsFixed(2),
                               style:
                                   pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                           alignment: pw.Alignment.centerRight)),
@@ -231,44 +263,49 @@ class PdfProvider {
                       flex: 2,
                       child: pw.Container(
                           alignment: pw.Alignment.center,
-                          child: pw.Text(Servicelist[i]["disc"].toStringAsFixed(2),
+                          child: pw.Text(
+                              Servicelist[i]["disc"].toStringAsFixed(2),
                               style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold)))),
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
                         alignment: pw.Alignment.centerRight,
-                        child: pw.Text(Servicelist[i]["price"].toStringAsFixed(2),
+                        child: pw.Text(
+                            Servicelist[i]["price"].toStringAsFixed(2),
                             style:
                                 pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       )),
                 ]);
               },
-            ),
-            pw.Expanded(child: pw.SizedBox()),
+            ),),
+            pw.Expanded(flex: 5, child: pw.SizedBox()),
             pw.Container(
-             child: pw.Row(
-               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
+                child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                  selectedValue == "INR"
+                      ? pw.Expanded(
+                          flex: 5,
+                          child: pw.Container(
+                            child: pw.Text("IGST/CGST/SGST 18%",
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold)),
+                            alignment: pw.Alignment.centerLeft,
+                          ))
+                      : pw.SizedBox(),
                   pw.Expanded(
                       flex: 5,
                       child: pw.Container(
-                        child: pw.Text("IGST/CGST/SGST 18%",
+                        child: pw.Text(
+                            selectedValue == "INR"
+                                ? gstAmount.toStringAsFixed(2)
+                                : "",
                             style:
-                            pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        alignment: pw.Alignment.centerLeft,
-                      )),
-                  pw.Expanded(
-                      flex: 5,
-                      child: pw.Container(
-                        child: pw.Text(gstAmount.toStringAsFixed(2),
-                            style:
-                            pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                         alignment: pw.Alignment.centerRight,
                       )),
-                ]
-              )
-            ),
+                ])),
             pw.SizedBox(height: 10),
             pw.Container(
               child: pw.Column(
@@ -279,101 +316,103 @@ class PdfProvider {
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
                       pw.Expanded(
-                        flex:2,
+                        flex: 2,
                         child: pw.Text(""),
                       ),
-                      pw.Expanded(
-                        flex:2,
-                        child: pw.Text(""),
-                      ),
-                    pw.Expanded(
-                      flex: 2,
-                      child: pw.Container(
-                        alignment: pw.Alignment.centerLeft,
-                        child:   pw.Text("Total(INR) :",
-                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      )
-                    ),
                       pw.Expanded(
                         flex: 2,
-                        child: pw.Container(
-                          alignment: pw.Alignment.centerRight,
-                          child: pw.Text(total == null ? "0.00" : total.toStringAsFixed(2),
-                              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        )
-                      )
+                        child: pw.Text(""),
+                      ),
+                      pw.Expanded(
+                          flex: 2,
+                          child: pw.Container(
+                            alignment: pw.Alignment.centerLeft,
+                            child: pw.Text("Total(${selectedValue}) :",
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold)),
+                          )),
+                      pw.Expanded(
+                          flex: 2,
+                          child: pw.Container(
+                            alignment: pw.Alignment.centerRight,
+                            child: pw.Text(
+                                total == null
+                                    ? "0.00"
+                                    : total.toStringAsFixed(2),
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold)),
+                          ))
                     ],
                   ),
-                 pw.Row(
-                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                     crossAxisAlignment: pw.CrossAxisAlignment.end,
-                   children: [
-                     pw.Expanded(
-                       flex:2,
-                       child: pw.Text(""),
-                     ),
-                     pw.Expanded(
-                       flex:2,
-                       child: pw.Text(""),
-                     ),
-                     pw.Expanded(
-                       flex: 2,
-                      child: pw.Container(
-                        alignment: pw.Alignment.centerLeft,
-                        child: pw.Text("Amount Paid(INR) :",
-                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      )
-                     ),
-                     pw.Expanded(
-                       flex: 2,
-                       child: pw.Container(
-                         alignment: pw.Alignment.centerRight,
-                         child: pw.Text(tbal == null ? "0.00" : tbal.toStringAsFixed(2),
-                             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                       )
-                     )
-                   ]
-
-                 ),
+                  pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: pw.CrossAxisAlignment.end,
+                      children: [
+                        pw.Expanded(
+                          flex: 2,
+                          child: pw.Text(""),
+                        ),
+                        pw.Expanded(
+                          flex: 2,
+                          child: pw.Text(""),
+                        ),
+                        pw.Expanded(
+                            flex: 2,
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text("Amount Paid(${selectedValue}) :",
+                                  style: pw.TextStyle(
+                                      fontWeight: pw.FontWeight.bold)),
+                            )),
+                        pw.Expanded(
+                            flex: 2,
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerRight,
+                              child: pw.Text(
+                                  tbal == null
+                                      ? "0.00"
+                                      : tbal.toStringAsFixed(2),
+                                  style: pw.TextStyle(
+                                      fontWeight: pw.FontWeight.bold)),
+                            ))
+                      ]),
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
                       pw.Expanded(
-                        flex:2,
+                        flex: 2,
                         child: pw.Text(""),
                       ),
-                      pw.Expanded(
-                        flex:2,
-                        child: pw.Text(""),
-                      ),
-
                       pw.Expanded(
                         flex: 2,
-                        child:
-                        pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                          child: pw.Text("Balance(INR) :",
-                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold,),
-                          )
-                        ),
+                        child: pw.Text(""),
                       ),
-                     pw.Expanded(
-                       flex: 2,
-                      child: pw.Container(
-                        alignment: pw.Alignment.centerRight,
-                        child:  pw.Text("0.00",
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      )
-                     )
+                      pw.Expanded(
+                        flex: 2,
+                        child: pw.Container(
+                            alignment: pw.Alignment.centerLeft,
+                            child: pw.Text(
+                              "Balance(${selectedValue}) :",
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            )),
+                      ),
+                      pw.Expanded(
+                          flex: 2,
+                          child: pw.Container(
+                            alignment: pw.Alignment.centerRight,
+                            child: pw.Text("0.00",
+                                style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold)),
+                          ))
                     ],
                   ),
                 ],
               ),
             ),
-            pw.SizedBox(
-              height: 10
-            ),
+            pw.SizedBox(height: 10),
             pw.Container(
                 child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
@@ -497,82 +536,164 @@ class PdfProvider {
                               ]))),
                 ])),
             pw.SizedBox(height: 10),
-       pw.Column(
-         mainAxisAlignment: pw.MainAxisAlignment.start,
-         crossAxisAlignment: pw.CrossAxisAlignment.start,
-         children: [
-           pw.Row(
-             children: [
-               pw.Bullet(
-                   text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,),
-               ),
+            pw.Column(
+                mainAxisAlignment: pw.MainAxisAlignment.start,
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // pw.Flexible(
+                  //   flex: 1,
+                  //   child: pw.Row(
+                  //       mainAxisAlignment: pw.MainAxisAlignment.start,
+                  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  //       children: [
+                  //         pw.Bullet(
+                  //           text:
+                  //               "The services provided by JR Compliance are governed by our",
+                  //           style: pw.TextStyle(
+                  //             fontSize: 6,
+                  //           ),
+                  //         ),
+                  //         pw.Text(
+                  //           "Terms and conditions.",
+                  //           style: pw.TextStyle(
+                  //             fontSize: 6,
+                  //             decoration: pw.TextDecoration.underline,
+                  //             color: PdfColors.blue,
+                  //           ),
+                  //         ),
+                  //         pw.Text(
+                  //           "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.",
+                  //           style: pw.TextStyle(
+                  //             fontSize: 6,
+                  //           ),
+                  //         )
+                  //       ]),
+                  // ),
+                  // pw.Flexible(
+                  //   flex: 1,
+                  //   child: pw.Row(
+                  //       mainAxisAlignment: pw.MainAxisAlignment.start,
+                  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  //       children: [
+                  //         pw.Bullet(
+                  //           text:
+                  //               "To know the information regarding purchase and billing.",
+                  //           style: pw.TextStyle(
+                  //             fontSize: 6,
+                  //           ),
+                  //         ),
+                  //         pw.Text(
+                  //           "visit https://www.jrcompliance.com/purchase-and-billing",
+                  //           style: pw.TextStyle(
+                  //               fontSize: 6,
+                  //               decoration: pw.TextDecoration.underline,
+                  //               color: PdfColors.blue),
+                  //         ),
+                  //       ]),
+                  // ),
 
-
-             ]
-
-           ),
-           pw.Container(
-             child: pw.RichText(
-               text: pw.TextSpan(
-                 text: ". ",
-                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
-                 children:[
-                   pw.TextSpan(text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,) ),
-                   pw.TextSpan(text: "Terms and conditions.", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
-                   pw.TextSpan(text: "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.", style: pw.TextStyle(fontSize: 6),),
-                 ],),),),
-           pw.Container(
-             child: pw.RichText(
-               text: pw.TextSpan(
-                 text: ". ",
-                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
-                 children:[
-                   pw.TextSpan(text:"To know the information regarding purchase and billing.",style: pw.TextStyle(fontSize: 6,) ),
-                   pw.TextSpan(text: "visit https://www.jrcompliance.com/purchase-and-billing", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
-
-                 ],
-               ),
-             ),
-           ),
-           pw.Container(
-             child: pw.RichText(
-               text: pw.TextSpan(
-                 text: ". ",
-                 style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
-                 children:[
-                   pw.TextSpan(text:"This invoice is due in accordance with the agreed credit terms.",style: pw.TextStyle(fontSize: 6,) ),
-
-                 ],
-
-               ),
-
-             ),
-           ),
-         ]
-       ),
-            pw.SizedBox(
-              height: 40
-            ),
+                  // pw.Flexible(
+                  //   flex: 1,
+                  //   child: pw.Text(
+                  //     "This invoice is due in accordance with the agreed credit terms.",
+                  //     style: pw.TextStyle(
+                  //       fontSize: 6,
+                  //     ),
+                  //   ),
+                  // )
+                  pw.Container(
+                    child: pw.RichText(
+                      text: pw.TextSpan(
+                        text: ". ",
+                        style: pw.TextStyle(
+                            fontSize: 10, fontWeight: pw.FontWeight.bold),
+                        children: [
+                          pw.TextSpan(
+                              text:
+                                  "The services provided by JR Compliance are governed by our",
+                              style: pw.TextStyle(
+                                fontSize: 7,
+                              )),
+                          pw.TextSpan(
+                              text: "Terms and conditions.",
+                              style: pw.TextStyle(
+                                decoration: pw.TextDecoration.underline,
+                                color: PdfColors.blue,
+                                fontSize:
+                                    7, /*color:PdfColor.fromHex(Colors.blue)*/
+                              )),
+                          pw.TextSpan(
+                            text:
+                                "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.",
+                            style: pw.TextStyle(fontSize: 7),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  pw.Container(
+                    child: pw.RichText(
+                      text: pw.TextSpan(
+                        text: ". ",
+                        style: pw.TextStyle(
+                            fontSize: 10, fontWeight: pw.FontWeight.bold),
+                        children: [
+                          pw.TextSpan(
+                              text:
+                                  "To know the information regarding purchase and billing.",
+                              style: pw.TextStyle(
+                                fontSize: 7,
+                              )),
+                          pw.TextSpan(
+                              text:
+                                  "visit https://www.jrcompliance.com/purchase-and-billing",
+                              style: pw.TextStyle(
+                                decoration: pw.TextDecoration.underline,
+                                color: PdfColors.blue,
+                                fontSize:
+                                    7, /*color:PdfColor.fromHex(Colors.blue)*/
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                  pw.Container(
+                    child: pw.RichText(
+                      text: pw.TextSpan(
+                        text: ". ",
+                        style: pw.TextStyle(
+                            fontSize: 10, fontWeight: pw.FontWeight.bold),
+                        children: [
+                          pw.TextSpan(
+                              text:
+                                  "This invoice is due in accordance with the agreed credit terms.",
+                              style: pw.TextStyle(
+                                fontSize: 7,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
             pw.Footer(
-              trailing:
-              pw.Column(
+              trailing: pw.Column(
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
-                   children: [
-                     // pw.Expanded(
-                     //   child: pw.Text(""),
-                     // ),
-                  //   pw.Container(
-                  //     padding: pw.EdgeInsets.only(right: 20),
-                  //     child: pw.RichText(
-                  //       text: pw.TextSpan(
-                  //         text: ". ",
-                  //         style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
-                  //         children:[
-                  //           pw.TextSpan(text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,) ),
-                  //           pw.TextSpan(text: "Terms and conditions.", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
-                  //           pw.TextSpan(text: "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.", style: pw.TextStyle(fontSize: 6),),
-                  //         ],),),),
+                  children: [
+                    // pw.Expanded(
+                    //   child: pw.Text(""),
+                    // ),
+                    //   pw.Container(
+                    //     padding: pw.EdgeInsets.only(right: 20),
+                    //     child: pw.RichText(
+                    //       text: pw.TextSpan(
+                    //         text: ". ",
+                    //         style:pw.TextStyle(fontSize: 6,fontWeight: pw.FontWeight.bold),
+                    //         children:[
+                    //           pw.TextSpan(text:"The services provided by JR Compliance are governed by our",style: pw.TextStyle(fontSize: 6,) ),
+                    //           pw.TextSpan(text: "Terms and conditions.", style: pw.TextStyle(decoration: pw.TextDecoration.underline,fontSize: 6,/*color:PdfColor.fromHex(Colors.blue)*/)),
+                    //           pw.TextSpan(text: "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.", style: pw.TextStyle(fontSize: 6),),
+                    //         ],),),),
                     // pw.Container(
                     //   child: pw.RichText(
                     //     text: pw.TextSpan(
@@ -600,26 +721,21 @@ class PdfProvider {
                     //
                     //   ),
                     // ),
-                    pw.SizedBox(
-                      height: 80
-                    ),
-                 pw.Padding(
-                   padding: pw.EdgeInsets.only(left: 400,top: 20,right: 20),
-                   child:    pw.Column(
-                       mainAxisAlignment: pw.MainAxisAlignment.center,
-                       children: [
-                         pw.Text('JR'+actualinid.toString()+" | Page 1 of 1"),
-                         pw.Text("www.jrcompliance.com"),
-                       ]
-
-                   ),
-                 )
-
-                  ]
-              ),
-
-
-               ),
+                    pw.SizedBox(height: 80),
+                    pw.Padding(
+                      padding:
+                          pw.EdgeInsets.only(left: 400, top: 20, right: 20),
+                      child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Text('JR' +
+                                actualinid.toString() +
+                                " | Page 1 of 1"),
+                            pw.Text("www.jrcompliance.com"),
+                          ]),
+                    )
+                  ]),
+            ),
           ]);
         }));
     Uint8List bytes = await pdf.save();
@@ -641,11 +757,9 @@ class PdfProvider {
       "InvoiceUrl": myUrl,
       "Timestamp": Timestamp.now(),
       "status": false,
-      "InvoiceId":actualinid,
-      "type":activeid,
+      "InvoiceId": actualinid,
+      "type": activeid,
     });
     return pdf.save();
-
   }
-
 }
