@@ -10,29 +10,33 @@ class ActivityProvider extends ChangeNotifier {
   }
 
   Future<void> getAllActivitys(did) async {
-    FirebaseFirestore _firebase = FirebaseFirestore.instance;
-    QuerySnapshot extractedResponse = await _firebase
-        .collection("Tasks")
-        .doc(did)
-        .collection("Activitys")
-        .orderBy("When", descending: true)
-        .get();
-    List<ActivityModel> loadedData = [];
-    return extractedResponse.docs.forEach((element) {
-      loadedData.add(ActivityModel(
-          action: element['Action'],
-          bound: element['Bound'],
-          from: element["From"],
-          to: element["To"],
-          who: element["Who"],
-          lastdate: element["LatDate"],
-          yes: element["Yes"],
-          qdate: element["queryDate"],
-          when: element["When"],
-          note: element["Note"]));
-      _activitymodellist = loadedData;
-      notifyListeners();
-    });
+    try {
+      FirebaseFirestore _firebase = FirebaseFirestore.instance;
+      QuerySnapshot extractedResponse = await _firebase
+          .collection("Tasks")
+          .doc(did)
+          .collection("Activitys")
+          .orderBy("When", descending: true)
+          .get();
+      List<ActivityModel> loadedData = [];
+      return extractedResponse.docs.forEach((element) {
+        loadedData.add(ActivityModel(
+            action: element['Action'],
+            bound: element['Bound'],
+            from: element["From"],
+            to: element["To"],
+            who: element["Who"],
+            lastdate: element["LatDate"],
+            yes: element["Yes"],
+            qdate: element["queryDate"],
+            when: element["When"],
+            note: element["Note"]));
+        _activitymodellist = loadedData;
+        notifyListeners();
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }
 
@@ -44,31 +48,35 @@ class ActivityProvider1 extends ChangeNotifier {
   }
 
   Future<void> getAllActivitys1(did, date1, date2) async {
-    FirebaseFirestore _firebase = FirebaseFirestore.instance;
-    QuerySnapshot extractedResponse = await _firebase
-        .collection("Tasks")
-        .doc(did)
-        .collection("Activitys")
-        .where("queryDate", isGreaterThanOrEqualTo: date1)
-        .where("queryDate", isLessThanOrEqualTo: date2)
-        .get();
+    try {
+      FirebaseFirestore _firebase = FirebaseFirestore.instance;
+      QuerySnapshot extractedResponse = await _firebase
+          .collection("Tasks")
+          .doc(did)
+          .collection("Activitys")
+          .where("queryDate", isGreaterThanOrEqualTo: date1)
+          .where("queryDate", isLessThanOrEqualTo: date2)
+          .get();
 
-    List<ActivityModel> loadedData = [];
-    return extractedResponse.docs.forEach((element) {
-      //print(element.data());
-      loadedData.add(ActivityModel(
-          action: element['Action'],
-          bound: element['Bound'],
-          from: element["From"],
-          to: element["To"],
-          who: element["Who"],
-          lastdate: element["LatDate"],
-          yes: element["Yes"],
-          qdate: element["queryDate"],
-          when: element["When"],
-          note: element["Note"]));
-      _activitymodellist1 = loadedData;
-      notifyListeners();
-    });
+      List<ActivityModel> loadedData = [];
+      return extractedResponse.docs.forEach((element) {
+        //print(element.data());
+        loadedData.add(ActivityModel(
+            action: element['Action'],
+            bound: element['Bound'],
+            from: element["From"],
+            to: element["To"],
+            who: element["Who"],
+            lastdate: element["LatDate"],
+            yes: element["Yes"],
+            qdate: element["queryDate"],
+            when: element["When"],
+            note: element["Note"]));
+        _activitymodellist1 = loadedData;
+        notifyListeners();
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -12,6 +12,7 @@ const txtColor = Colors.black;
 const fieldColor = Color(0x8AEEEEEE);
 const btnColor = Color(0xFF5551F1);
 const bt = Colors.indigoAccent;
+const ibgclr = Color(0xFFB71C1C);
 
 const deco = BoxDecoration(
   color: fieldColor,
@@ -32,6 +33,13 @@ class TxtStls {
       fontSize: 13,
       color: bgColor,
       fontWeight: FontWeight.bold);
+  static TextStyle titlestyle14 = GoogleFonts.nunito(
+      textStyle:
+          TextStyle(fontSize: 13, color: btnColor, fontWeight: FontWeight.bold),
+      fontSize: 13,
+      color: btnColor,
+      fontWeight: FontWeight.bold);
+
   static TextStyle fieldtitlestyle11 = GoogleFonts.nunito(
       textStyle:
           TextStyle(fontSize: 21, color: txtColor, fontWeight: FontWeight.bold),
