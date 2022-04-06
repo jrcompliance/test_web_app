@@ -400,7 +400,7 @@ class _Finance1State extends State<Finance1> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                buildPopUpDialog(context);
+                                                buildPopUpDialog();
                                                 print("Hey Yalagala");
                                               },
                                             );
@@ -2083,9 +2083,32 @@ class _Finance1State extends State<Finance1> {
   final TextEditingController _externalController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  buildPopUpDialog(BuildContext context) {
+  Future ShowDialog(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.3, vertical: size.height * 0.1),
+            child: Container(
+              height: size.height * 0.8,
+              width: size.width * 0.4,
+              decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: Stack(
+                children: [],
+              ),
+            ),
+          );
+        });
+  }
+
+  buildPopUpDialog() {
     Size size = MediaQuery.of(context).size;
     var alertdialog = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       backgroundColor: ibgclr.withOpacity(0.1),
       titlePadding: EdgeInsets.all(0),
       actionsPadding: EdgeInsets.all(0),
@@ -2127,7 +2150,7 @@ class _Finance1State extends State<Finance1> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: size.height * 0.17,
+              vertical: size.height * 0.14,
               horizontal: size.width * 0.01,
             ),
             child: Container(
