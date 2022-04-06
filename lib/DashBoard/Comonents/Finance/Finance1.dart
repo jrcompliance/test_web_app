@@ -2516,10 +2516,10 @@ class _Finance1State extends State<Finance1> {
               width: size.width * 0.3,
             ),
             Positioned(
-              top: 150,
-              left: 20,
-              right: 20,
-              bottom: 100,
+              top: size.height * 0.2,
+              left: size.width * 0.01,
+              right: size.width * 0.01,
+              bottom: size.height * 0.1,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
@@ -2531,9 +2531,9 @@ class _Finance1State extends State<Finance1> {
               ),
             ),
             Positioned(
-              bottom: 50,
-              right: 200,
-              left: 200,
+              top: size.height * 0.725,
+              left: size.width * 0.1,
+              right: size.width * 0.1,
               child: FlatButton(
                 child: Text("Save", style: TxtStls.fieldstyle1),
                 onPressed: () {},
