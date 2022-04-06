@@ -400,7 +400,8 @@ class _Finance1State extends State<Finance1> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                buildPopUpDialog();
+                                                //  buildPopUpDialog();
+                                                myBox();
                                                 print("Hey Yalagala");
                                               },
                                             );
@@ -2487,5 +2488,68 @@ class _Finance1State extends State<Finance1> {
         ],
       ),
     );
+  }
+
+  myBox() {
+    Size size = MediaQuery.of(context).size;
+    var AlertDialog1 = AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      titlePadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.all(0),
+      content: Container(
+        height: size.height * 0.8,
+        width: size.width * 0.3,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(1000),
+                    bottomRight: Radius.circular(1000)),
+                color: Colors.red,
+                shape: BoxShape.rectangle,
+              ),
+              height: size.height * 0.35,
+              width: size.width * 0.3,
+            ),
+            Positioned(
+              top: 150,
+              left: 20,
+              right: 20,
+              bottom: 100,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.pink,
+                  shape: BoxShape.rectangle,
+                ),
+                height: size.height * 0.2,
+                width: size.width * 0.3,
+              ),
+            ),
+            Positioned(
+              bottom: 50,
+              right: 200,
+              left: 200,
+              child: FlatButton(
+                child: Text("Save", style: TxtStls.fieldstyle1),
+                onPressed: () {},
+                color: btnColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog1;
+        });
   }
 }
