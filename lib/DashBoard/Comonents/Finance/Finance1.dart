@@ -2500,20 +2500,22 @@ class _Finance1State extends State<Finance1> {
       contentPadding: EdgeInsets.all(0),
       content: Container(
         height: size.height * 0.8,
-        width: size.width * 0.3,
+        width: size.width * 0.4,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
         child: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(1000),
-                    bottomRight: Radius.circular(1000)),
-                color: Colors.red,
-                shape: BoxShape.rectangle,
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(1000),
+                  bottomRight: Radius.circular(1000)),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.rectangle,
+                ),
+                height: size.height * 0.35,
+                width: size.width * 0.4,
               ),
-              height: size.height * 0.35,
-              width: size.width * 0.3,
             ),
             Positioned(
               top: size.height * 0.2,
@@ -2532,8 +2534,8 @@ class _Finance1State extends State<Finance1> {
             ),
             Positioned(
               top: size.height * 0.725,
-              left: size.width * 0.1,
-              right: size.width * 0.1,
+              left: size.width * 0.15,
+              right: size.width * 0.15,
               child: FlatButton(
                 child: Text("Save", style: TxtStls.fieldstyle1),
                 onPressed: () {},
