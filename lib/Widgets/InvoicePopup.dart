@@ -9,6 +9,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Constants/Fileview.dart';
+import 'package:http/http.dart' as http;
 
 class AdvanceCustomAlert extends StatefulWidget {
   String invoiceid;
@@ -468,16 +469,15 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
   }
 
   Future<void> _printPdf() async {
-    print('Print ...');
     try {
-      final bool result = await Printing.layoutPdf(
-          onLayout: (PdfPageFormat format) async =>
-              (await generateDocument(format)).save());
+      var data = await http.get(Uri.parse(widget.url));
+      await Printing.layoutPdf(onLayout: (PdfPageFormat) => data.bodyBytes);
+      print('Print ...');
+      // final bool result = await Printing.layoutPdf(
+      //     onLayout: (PdfPageFormat format) async =>
+      //         (await generateDocument(format)).save());
     } catch (e) {
-      final ScaffoldState scaffold = Scaffold.of(context);
-      scaffold.showSnackBar(SnackBar(
-        content: Text('Error: ${e.toString()}'),
-      ));
+      print(e.toString());
     }
   }
 
