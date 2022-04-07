@@ -400,8 +400,13 @@ class _Finance1State extends State<Finance1> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                //  buildPopUpDialog();
-                                                myBox();
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AdvanceCustomAlert();
+                                                    });
+
                                                 print("Hey Yalagala");
                                               },
                                             );
@@ -2521,7 +2526,7 @@ class _Finance1State extends State<Finance1> {
               ),
             ),
             Positioned(
-              top: size.height * 0.2,
+              top: size.height * 0.18,
               left: size.width * 0.01,
               right: size.width * 0.01,
               // bottom: size.height * 0.1,
