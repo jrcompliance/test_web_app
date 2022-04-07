@@ -2501,7 +2501,10 @@ class _Finance1State extends State<Finance1> {
       content: Container(
         height: size.height * 0.8,
         width: size.width * 0.4,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: grClr.withOpacity(0.1),
+        ),
         child: Stack(
           children: [
             ClipRRect(
@@ -2521,19 +2524,264 @@ class _Finance1State extends State<Finance1> {
               top: size.height * 0.2,
               left: size.width * 0.01,
               right: size.width * 0.01,
-              bottom: size.height * 0.1,
+              // bottom: size.height * 0.1,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.pink,
+                  color: bgColor,
                   shape: BoxShape.rectangle,
                 ),
-                height: size.height * 0.2,
+                height: size.height * 0.55,
                 width: size.width * 0.3,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: size.height * 0.01,
+                    horizontal: size.width * 0.01,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Trade name",
+                        style: TxtStls.fieldtitlestyle,
+                      ),
+                      ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image(
+                            image: NetworkImage(
+                                "https://image.shutterstock.com/image-vector/man-icon-vector-260nw-1040084344.jpg"),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        title: Text(
+                          "Customer name",
+                          style: TxtStls.fieldtitlestyle,
+                        ),
+                        subtitle: Text(
+                          "Customer Email Address",
+                          style: TxtStls.fieldtitlestyle,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              flex: 5,
+                              child: Text(
+                                "Invoice :" + "----",
+                                style: TxtStls.fieldtitlestyle,
+                              )),
+                          Expanded(
+                              flex: 2,
+                              child: FlatButton(
+                                color: btnColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child:
+                                    Text("Preview", style: TxtStls.fieldstyle1),
+                                onPressed: () {},
+                              )),
+                          Expanded(
+                              flex: 1,
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.save_alt,
+                                    color: btnColor,
+                                  ))),
+                          Expanded(
+                              flex: 1,
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.print, color: btnColor))),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                "Internal Notes",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                              flex: 6,
+                              child: SizedBox(
+                                  height: size.height * 0.05,
+                                  child:
+                                      field(_internalController, "", 1, true))),
+                          Expanded(flex: 2, child: popupMenu())
+                        ],
+                      ),
+                      spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                "External Notes",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                              flex: 6,
+                              child: SizedBox(
+                                  height: size.height * 0.05,
+                                  child:
+                                      field(_externalController, "", 1, true))),
+                          Expanded(flex: 2, child: popupMenu())
+                        ],
+                      ),
+                      spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                "Reference ID",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                              flex: 6,
+                              child: SizedBox(
+                                  height: size.height * 0.05,
+                                  child: field(
+                                      _referenceController, "", 1, true))),
+                          Expanded(flex: 2, child: popupMenu())
+                        ],
+                      ),
+                      spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                "Email",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                              flex: 6,
+                              child: SizedBox(
+                                  height: size.height * 0.05,
+                                  child: field(_emailController, "", 1, true))),
+                          Expanded(flex: 2, child: popupMenu())
+                        ],
+                      ),
+                      spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Payment Status",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                            flex: 4,
+                            child: Card(
+                              elevation: 20,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: DropdownButtonFormField2(
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                ),
+                                isExpanded: true,
+                                hint: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.wysiwyg_sharp,
+                                      color: AbgColor,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Select",
+                                      style: TextStyle(
+                                          color: AbgColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AbgColor,
+                                ),
+                                iconSize: 30,
+                                buttonHeight: 50,
+                                buttonPadding:
+                                    EdgeInsets.only(left: 20, right: 10),
+                                dropdownDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                items: paymentstatus
+                                    .map((item) => DropdownMenuItem<String>(
+                                          value: item,
+                                          child: Text(item,
+                                              style: TxtStls.fieldtitlestyle),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedValue1 = value.toString();
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(flex: 3, child: SizedBox())
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 3,
+                              child: Text(
+                                "Cancelled On",
+                                style: TxtStls.titlestyle14,
+                              )),
+                          Expanded(
+                            flex: 4,
+                            child: InkWell(
+                              child: Card(
+                                elevation: 20,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: SizedBox(
+                                  height: size.height * 0.05,
+                                  child: field(
+                                      _dateController,
+                                      "Calender",
+                                      1,
+                                      false,
+                                      Icon(Icons.calendar_today_outlined)),
+                                ),
+                              ),
+                              onTap: () {
+                                MyCalenders.pickEndDate(
+                                    context, _dateController);
+                              },
+                            ),
+                          ),
+                          Expanded(flex: 3, child: SizedBox())
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             Positioned(
-              top: size.height * 0.725,
+              top: size.height * 0.76,
               left: size.width * 0.15,
               right: size.width * 0.15,
               child: FlatButton(
