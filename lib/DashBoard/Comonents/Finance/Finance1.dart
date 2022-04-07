@@ -400,7 +400,18 @@ class _Finance1State extends State<Finance1> {
                                                     context: context,
                                                     builder:
                                                         (BuildContext context) {
-                                                      return AdvanceCustomAlert();
+                                                      return AdvanceCustomAlert(
+                                                        invoiceid: data
+                                                            .invoiceid
+                                                            .toString(),
+                                                        url:
+                                                            data.url.toString(),
+                                                        date: createdate,
+                                                        name:
+                                                            cusname.toString(),
+                                                        email:
+                                                            cusemail.toString(),
+                                                      );
                                                     });
 
                                                 print("Hey Yalagala");

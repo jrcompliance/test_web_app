@@ -1,11 +1,28 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../Constants/Fileview.dart';
 
 class AdvanceCustomAlert extends StatefulWidget {
+  String invoiceid;
+  String url;
+  DateTime date;
+  String email;
+  String name;
+  AdvanceCustomAlert(
+      {required this.invoiceid,
+      required this.url,
+      required this.date,
+      required this.email,
+      required this.name});
+
   @override
   State<AdvanceCustomAlert> createState() => _AdvanceCustomAlertState();
 }
@@ -27,7 +44,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Invoice Generated On:\n04 April,2022",
+              "Invoice Generated On:\n${DateFormat("dd MMM,yyyy").format(widget.date)}",
               style: TxtStls.fieldtitlestyle,
             ),
             Text("Invoice Cancelled On:\n04 April,2022",
@@ -61,33 +78,25 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                             "Trade name",
                             style: TxtStls.fieldtitlestyle,
                           ),
-                          ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image(
-                                image: NetworkImage(
-                                    "https://image.shutterstock.com/image-vector/man-icon-vector-260nw-1040084344.jpg"),
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            title: Text(
-                              "Customer name",
-                              style: TxtStls.fieldtitlestyle,
-                            ),
-                            subtitle: Text(
-                              "Customer Email Address",
-                              style: TxtStls.fieldtitlestyle,
-                            ),
-                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    "Invoice :" + "----",
+                                flex: 6,
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.2),
+                                    child: Icon(Icons.person, color: btnColor),
+                                  ),
+                                  title: Text(
+                                    widget.name,
                                     style: TxtStls.fieldtitlestyle,
-                                  )),
+                                  ),
+                                  subtitle: Text(
+                                    widget.email,
+                                    style: TxtStls.fieldtitlestyle,
+                                  ),
+                                ),
+                              ),
                               Expanded(
                                   flex: 2,
                                   child: FlatButton(
@@ -97,12 +106,18 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                             BorderRadius.circular(10.0)),
                                     child: Text("Preview",
                                         style: TxtStls.fieldstyle1),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      fileview1(context, widget.invoiceid,
+                                          widget.url);
+                                    },
                                   )),
                               Expanded(
                                   flex: 1,
                                   child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        downloadInvoice(widget.url);
+                                      },
                                       icon: Icon(
                                         Icons.save_alt,
                                         color: btnColor,
@@ -110,14 +125,19 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                               Expanded(
                                   flex: 1,
                                   child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _printPdf();
+                                      },
                                       icon:
                                           Icon(Icons.print, color: btnColor))),
                             ],
                           ),
-                          SizedBox(
-                            height: 5,
+                          SizedBox(height: 5),
+                          Text(
+                            "Invoice : JR" + widget.invoiceid,
+                            style: TxtStls.fieldtitlestyle,
                           ),
+                          SizedBox(height: 5),
                           Row(
                             children: [
                               Expanded(
@@ -368,14 +388,14 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
     );
   }
 
-  final List _clrslist = [ipClr, neClr, Clrs.high];
+  final List _clrslist = [btnColor, neClr, flwClr];
   var dropSelected;
   Widget dropdecor(IconData icon, String text, Color clr) {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: clr.withOpacity(0.1),
+        color: clr.withOpacity(0.05),
       ),
       child: Row(
         children: [
@@ -404,6 +424,8 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
     Size size = MediaQuery.of(context).size;
     return Container(
       child: PopupMenuButton(
+        shape: TooltipShape(),
+        offset: Offset(-40, 30),
         icon: Icon(
           Icons.more_horiz,
           color: btnColor,
@@ -428,10 +450,36 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
             PopupMenuItem(
                 value: "ADD",
                 onTap: () {},
-                child: dropdecor(Icons.add_circle, "ADD", _clrslist[2])),
+                child: dropdecor(
+                    Icons.add_circle_outline_outlined, "ADD", _clrslist[2])),
           ];
         },
       ),
     );
   }
+
+  downloadInvoice(_url) async {
+    if (!await launch(
+      _url,
+      forceWebView: true,
+      forceSafariVC: true,
+      enableJavaScript: true,
+    )) throw 'Could not launch $_url';
+  }
+
+  Future<void> _printPdf() async {
+    print('Print ...');
+    try {
+      final bool result = await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async =>
+              (await generateDocument(format)).save());
+    } catch (e) {
+      final ScaffoldState scaffold = Scaffold.of(context);
+      scaffold.showSnackBar(SnackBar(
+        content: Text('Error: ${e.toString()}'),
+      ));
+    }
+  }
+
+  generateDocument(PdfPageFormat format) {}
 }
