@@ -39,7 +39,7 @@ fileview1(BuildContext context, name, url) {
       builder: (BuildContext context, StateSetter setState) {
         return Container(
           width: width * 0.4,
-          height: height * 0.6,
+          height: height * 0.75,
           color: txtColor,
           child: SfPdfViewer.network(
             url,

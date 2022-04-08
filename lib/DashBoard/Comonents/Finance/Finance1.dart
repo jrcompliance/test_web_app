@@ -1306,19 +1306,19 @@ class _Finance1State extends State<Finance1> {
                             : _gstController.text.toString();
                         setState(() {
                           PdfProvider.generatePdf(
-                            servicelist,
-                            cusname,
-                            tbal,
-                            inid,
-                            gstno,
-                            Idocid,
-                            activeid,
-                            selectedValue == "INR" ? _gstamount : 0.00,
-                            total,
-                            _generatedateController.text.toString(),
-                            _duedatedateController.text.toString(),
-                            selectedValue,
-                          );
+                              servicelist,
+                              cusname,
+                              tbal,
+                              inid,
+                              gstno,
+                              Idocid,
+                              activeid,
+                              selectedValue == "INR" ? _gstamount : 0.00,
+                              total,
+                              _generatedateController.text.toString(),
+                              _duedatedateController.text.toString(),
+                              selectedValue,
+                              "101");
                         });
                       },
                       icon: Icon(Icons.save_alt_rounded,
