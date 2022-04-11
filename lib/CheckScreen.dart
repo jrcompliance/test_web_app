@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 
 class PdfProvider {
@@ -25,21 +26,30 @@ class PdfProvider {
       duedate,
       selectedValue,
       cxID) async {
+    var text = "ahsybgfhjdf";
+    var text1 = "uchahui";
+    var finaltext = text + text1;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
-    //  click(){
-    //    return pw.FlatButton(
-    //
-    //      name: "",
-    //      child: pw.Text(""),
-    //        flags: <PdfAnnotFlags>{PdfAnnotFlags.print,}
-    //
-    //    );
-    //
-    // }
-
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
+    final signImage =
+        (await rootBundle.load("assets/Images/Authorized_Sign.png"))
+            .buffer
+            .asUint8List();
+    // final fontlight = await PdfGoogleFonts.openSansLight();
+    final fontBold = await PdfGoogleFonts.openSansBold();
+    final textStl10 = pw.TextStyle(
+      font: fontBold,
+      fontSize: 10,
+    );
+    final textStl12 = pw.TextStyle(
+      font: fontBold,
+      fontSize: 12,
+    );
+    final textStl12Line = pw.TextStyle(
+        font: fontBold, fontSize: 12, decoration: pw.TextDecoration.underline);
+
     String? myUrl;
     final bgImage = (await rootBundle.load("assets/Images/invoicebg.png"))
         .buffer
@@ -67,20 +77,17 @@ class PdfProvider {
               pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
-                    pw.Text("JR Compliance and Testing Labs",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    pw.Text("JR Compliance and Testing Labs", style: textStl10
+                        // style: pw.TextStyle(fontWeight: pw.FontWeight.bold)
+                        ),
                     pw.Text("Office: 705, 7th Floor,Krishna Apra Tower",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        style: textStl10),
                     pw.Text("Netaji Subhash Place, Pitampura",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                    pw.Text("New Delhi 110034,India",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                    pw.Text("PAN: AALFJ0070E",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                    pw.Text("TAN: DELJ10631F",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                    pw.Text("GST REGN NO: 07AALFJ0070E1ZO",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        style: textStl10),
+                    pw.Text("New Delhi 110034,India", style: textStl12),
+                    pw.Text("PAN: AALFJ0070E", style: textStl10),
+                    pw.Text("TAN: DELJ10631F", style: textStl10),
+                    pw.Text("GST REGN NO: 07AALFJ0070E1ZO", style: textStl10),
                   ])
             ]),
             pw.Divider(),
@@ -91,32 +98,26 @@ class PdfProvider {
                       mainAxisAlignment: pw.MainAxisAlignment.start,
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text("To,",
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        pw.Text("$address\n$pincode",
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        pw.Text("To,", style: textStl12),
+                        pw.Text("$address\n$pincode", style: textStl10),
                         pw.Text("GSTNumber : " + _gst.toString(),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                         pw.Text(""),
                       ]),
-                  pw.Text("Invoice No. JR" + actualinid,
-                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold))
+                  pw.Text("Invoice No. JR" + actualinid, style: textStl12)
                 ]),
             pw.SizedBox(height: 10),
             pw.Text(
                 "Thank You for your consideration!!.\n\r\n\r\nWe admire the opportunity to provide you with the best compliance services, hope we have earned your trust to take this opportunity forward. For more information contact your designated representative or email us at support@jrcompliance.com\n\r\n\r\nTo enhance your convenience, you can make payment either throw Post or electronic remitances",
-                style:
-                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                style: textStl10),
+            pw.Divider(color: PdfColors.black, thickness: 0.5),
             pw.SizedBox(height: 10),
             pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Text("Kind Atten. Mr/Mr's" + " " + Recievername.toString(),
-                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      style: textStl12),
                   pw.Column(
                       mainAxisAlignment: pw.MainAxisAlignment.end,
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -125,13 +126,12 @@ class PdfProvider {
                             "Issued On : " +
                                 "" +
                                 DateFormat("dd MMM,yyyy").format(invoicedate1),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                         pw.Text(
                             "Due Date : " +
                                 "" +
                                 DateFormat("dd MMM,yyyy").format(duedate1),
-                            style: pw.TextStyle(fontWeight: pw.FontWeight.bold))
+                            style: textStl10)
                       ])
                 ]),
             pw.SizedBox(height: 10),
@@ -140,43 +140,36 @@ class PdfProvider {
               pw.Expanded(
                   flex: 5,
                   child: pw.Container(
-                    child: pw.Text("#Description",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text("#Description", style: textStl12),
                     alignment: pw.Alignment.centerLeft,
                   )),
               pw.Expanded(
                   flex: 2,
                   child: pw.Container(
-                    child: pw.Text("SAC Code",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text("SAC Code", style: textStl12),
                     alignment: pw.Alignment.center,
                   )),
               pw.Expanded(
                   flex: 2,
                   child: pw.Container(
-                      child: pw.Text("Unit Cost",
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text("Unit Cost", style: textStl12),
                       alignment: pw.Alignment.centerRight)),
               pw.Expanded(
                   flex: 2,
                   child: pw.Container(
                     alignment: pw.Alignment.center,
-                    child: pw.Text("Qty",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text("Qty", style: textStl12),
                   )),
               pw.Expanded(
                   flex: 2,
                   child: pw.Container(
                       alignment: pw.Alignment.center,
-                      child: pw.Text("Disc(%)",
-                          style:
-                              pw.TextStyle(fontWeight: pw.FontWeight.bold)))),
+                      child: pw.Text("Disc(%)", style: textStl12))),
               pw.Expanded(
                   flex: 2,
                   child: pw.Container(
                     alignment: pw.Alignment.centerRight,
-                    child: pw.Text("Amount",
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text("Amount", style: textStl12),
                   )),
             ]),
             pw.Divider(),
@@ -191,16 +184,13 @@ class PdfProvider {
                       flex: 5,
                       child: pw.Container(
                         child: pw.Text(Servicelist[i]["item"].toString(),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                         alignment: pw.Alignment.centerLeft,
                       )),
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        child: pw.Text("9983",
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text("9983", style: textStl10),
                         alignment: pw.Alignment.center,
                       )),
                   pw.Expanded(
@@ -208,16 +198,14 @@ class PdfProvider {
                       child: pw.Container(
                           child: pw.Text(
                               Servicelist[i]["rate"].toStringAsFixed(2),
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                              style: textStl10),
                           alignment: pw.Alignment.centerRight)),
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
                         alignment: pw.Alignment.center,
                         child: pw.Text(Servicelist[i]["qty"].toString(),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                       )),
                   pw.Expanded(
                       flex: 2,
@@ -225,16 +213,14 @@ class PdfProvider {
                           alignment: pw.Alignment.center,
                           child: pw.Text(
                               Servicelist[i]["disc"].toStringAsFixed(2),
-                              style: pw.TextStyle(
-                                  fontWeight: pw.FontWeight.bold)))),
+                              style: textStl10))),
                   pw.Expanded(
                       flex: 2,
                       child: pw.Container(
                         alignment: pw.Alignment.centerRight,
                         child: pw.Text(
                             Servicelist[i]["price"].toStringAsFixed(2),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                       )),
                 ]);
               },
@@ -248,9 +234,8 @@ class PdfProvider {
                       ? pw.Expanded(
                           flex: 5,
                           child: pw.Container(
-                            child: pw.Text("IGST/CGST/SGST 18%",
-                                style: pw.TextStyle(
-                                    fontWeight: pw.FontWeight.bold)),
+                            child:
+                                pw.Text("IGST/CGST/SGST 18%", style: textStl10),
                             alignment: pw.Alignment.centerLeft,
                           ))
                       : pw.SizedBox(),
@@ -261,8 +246,7 @@ class PdfProvider {
                             selectedValue == "INR"
                                 ? gstAmount.toStringAsFixed(2)
                                 : "",
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                            style: textStl10),
                         alignment: pw.Alignment.centerRight,
                       )),
                 ])),
@@ -288,8 +272,7 @@ class PdfProvider {
                           child: pw.Container(
                             alignment: pw.Alignment.centerLeft,
                             child: pw.Text("Total(${selectedValue}) :",
-                                style: pw.TextStyle(
-                                    fontWeight: pw.FontWeight.bold)),
+                                style: textStl10),
                           )),
                       pw.Expanded(
                           flex: 2,
@@ -299,8 +282,7 @@ class PdfProvider {
                                 total == null
                                     ? "0.00"
                                     : total.toStringAsFixed(2),
-                                style: pw.TextStyle(
-                                    fontWeight: pw.FontWeight.bold)),
+                                style: textStl10),
                           ))
                     ],
                   ),
@@ -321,8 +303,7 @@ class PdfProvider {
                             child: pw.Container(
                               alignment: pw.Alignment.centerLeft,
                               child: pw.Text("Amount Paid(${selectedValue}) :",
-                                  style: pw.TextStyle(
-                                      fontWeight: pw.FontWeight.bold)),
+                                  style: textStl10),
                             )),
                         pw.Expanded(
                             flex: 2,
@@ -332,8 +313,7 @@ class PdfProvider {
                                   tbal == null
                                       ? "0.00"
                                       : tbal.toStringAsFixed(2),
-                                  style: pw.TextStyle(
-                                      fontWeight: pw.FontWeight.bold)),
+                                  style: textStl10),
                             ))
                       ]),
                   pw.Row(
@@ -352,26 +332,21 @@ class PdfProvider {
                         flex: 2,
                         child: pw.Container(
                             alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              "Balance(${selectedValue}) :",
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            )),
+                            child: pw.Text("Balance(${selectedValue}) :",
+                                style: textStl10)),
                       ),
                       pw.Expanded(
                           flex: 2,
                           child: pw.Container(
                             alignment: pw.Alignment.centerRight,
-                            child: pw.Text("0.00",
-                                style: pw.TextStyle(
-                                    fontWeight: pw.FontWeight.bold)),
+                            child: pw.Text("0.00", style: textStl10),
                           ))
                     ],
                   ),
                 ],
               ),
             ),
+            pw.Divider(color: PdfColors.black, thickness: 0.5),
             pw.SizedBox(height: 10),
             pw.Container(
                 child: pw.Row(
@@ -387,17 +362,19 @@ class PdfProvider {
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
                               pw.Container(
-                                  child: pw.Text(
-                                      "For JR Compliance and Testing Labs",
-                                      style: pw.TextStyle(
-                                          fontWeight: pw.FontWeight.bold,
-                                          decoration:
-                                              pw.TextDecoration.underline)),
-                                  padding: pw.EdgeInsets.only(left: 5),
-                                  margin: pw.EdgeInsets.only(bottom: 60)),
+                                child: pw.Text(
+                                    "For JR Compliance and Testing Labs",
+                                    style: textStl12Line),
+                                padding: pw.EdgeInsets.only(left: 5),
+                              ),
+                              pw.SizedBox(
+                                  height: 50,
+                                  width: 100,
+                                  child: pw.Image(pw.MemoryImage(signImage),
+                                      fit: pw.BoxFit.fill)),
                               pw.Container(
                                   child: pw.Text("  Authorized Signatory",
-                                      style: pw.TextStyle(fontSize: 8)),
+                                      style: textStl10),
                                   padding:
                                       pw.EdgeInsets.only(left: 5, bottom: 5))
                             ])),
@@ -412,30 +389,22 @@ class PdfProvider {
                               crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
                                 pw.Container(
-                                    child: pw.Text(
-                                      "Project Reference Code",
-                                      style: pw.TextStyle(
-                                          fontWeight: pw.FontWeight.bold,
-                                          decoration:
-                                              pw.TextDecoration.underline),
-                                    ),
+                                    child: pw.Text("Project Reference Code",
+                                        style: textStl12Line),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.SizedBox(height: 41),
                                 pw.Container(
                                     child: pw.Text(
                                         "Currency : ${selectedValue}",
-                                        style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold)),
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
                                     child: pw.Text("Customer ID : ${cxID}",
-                                        style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold)),
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
                                     child: pw.Text("Project ID : 00000",
-                                        style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold)),
+                                        style: textStl10),
                                     padding:
                                         pw.EdgeInsets.only(left: 5, bottom: 5))
                               ]))),
@@ -450,48 +419,30 @@ class PdfProvider {
                               children: [
                                 pw.Container(
                                     child: pw.Text(" Electronic Remittance",
-                                        style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold,
-                                            decoration:
-                                                pw.TextDecoration.underline)),
+                                        style: textStl12Line),
                                     padding: pw.EdgeInsets.only(left: 5)),
-                                pw.SizedBox(height: 13),
+                                pw.SizedBox(height: 10),
                                 pw.Container(
                                     child: pw.Text("Bank Name: IDFC FIRST BANK",
-                                        style: pw.TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: pw.FontWeight.bold,
-                                        )),
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
-                                    child:
-                                        pw.Text("Account Number: 10041186185",
-                                            style: pw.TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: pw.FontWeight.bold,
-                                            )),
+                                    child: pw.Text(
+                                        "Account Number: 10041186185",
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
                                     child: pw.Text("IFSC Code: IDFB0040101",
-                                        style: pw.TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: pw.FontWeight.bold,
-                                        )),
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
                                     child: pw.Text("SWIFT Code: IDFBINBBMUM",
-                                        style: pw.TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: pw.FontWeight.bold,
-                                        )),
+                                        style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
                                     child: pw.Text(
                                         "Bank Address: Rohini, New Delhi-110085",
-                                        style: pw.TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: pw.FontWeight.bold,
-                                        )),
+                                        style: textStl10),
                                     padding:
                                         pw.EdgeInsets.only(left: 5, bottom: 5)),
                               ]))),
@@ -524,8 +475,10 @@ class PdfProvider {
                               )),
                           pw.TextSpan(
                             text:
-                                "In case you face difficulty in obtaining our Terms and conditions from our official    website, contact your designated representative immediately to receive a copy of the same.",
-                            style: pw.TextStyle(fontSize: 7),
+                                "In case you face difficulty in obtaining our Terms and conditions from our\n  official website, contact your designated representative immediately to receive a copy of the same.",
+                            style: pw.TextStyle(
+                              fontSize: 7,
+                            ),
                           ),
                         ],
                       ),
@@ -579,17 +532,17 @@ class PdfProvider {
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.SizedBox(height: 80),
+                    pw.SizedBox(),
                     pw.Padding(
                       padding:
                           pw.EdgeInsets.only(left: 400, top: 20, right: 20),
                       child: pw.Column(
                           mainAxisAlignment: pw.MainAxisAlignment.center,
                           children: [
-                            pw.Text('JR' +
-                                actualinid.toString() +
-                                " | Page 1 of 1"),
-                            pw.Text("www.jrcompliance.com"),
+                            pw.Text(
+                                'JR' + actualinid.toString() + " | Page 1 of 1",
+                                style: textStl10),
+                            pw.Text("www.jrcompliance.com", style: textStl10),
                           ]),
                     )
                   ]),
@@ -598,11 +551,6 @@ class PdfProvider {
         }));
     Uint8List bytes = await pdf.save();
     print(bytes);
-
-    //  Uint8List fileBytes = Uint8List.fromList(bytes);
-    // var file =  File(fileBytes,"output.pdf");
-    //
-    // print('@@@@@'+file.toString());
     try {
       print(1);
       FirebaseStorage storage = FirebaseStorage.instance;
