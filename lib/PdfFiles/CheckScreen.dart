@@ -394,6 +394,7 @@ class PdfProvider {
                                         pw.EdgeInsets.only(left: 5, bottom: 2))
                               ]))),
                   pw.Expanded(
+                      //kmikjmnkimki
                       flex: 4,
                       child: pw.Container(
                           decoration: pw.BoxDecoration(border: pw.Border.all()),
