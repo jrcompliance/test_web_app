@@ -8,6 +8,11 @@ class GetInvoiceModel {
   String? invoiceType;
   String? invoiceurl;
   String? status;
+  String internalNotes;
+  String externalNotes;
+  String referenceID;
+  String docid;
+
   GetInvoiceModel(
       {this.amount,
       this.currencyType,
@@ -15,5 +20,9 @@ class GetInvoiceModel {
       this.invoiceID,
       this.invoiceType,
       this.invoiceurl,
-      this.status});
+      this.status,
+      required this.internalNotes,
+      required this.externalNotes,
+      required this.referenceID,
+      required this.docid});
 }

@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:emojis/emojis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,12 +18,25 @@ class AdvanceCustomAlert extends StatefulWidget {
   DateTime date;
   String email;
   String name;
+  Color? statusColor;
+  String? imageList;
+  String? referenceID;
+  String? externalNotes;
+  String? internalNotes;
+  String? id;
+
   AdvanceCustomAlert(
       {required this.invoiceid,
       required this.url,
       required this.date,
       required this.email,
-      required this.name});
+      required this.name,
+      this.statusColor,
+      this.imageList,
+      this.referenceID,
+      this.externalNotes,
+      this.internalNotes,
+      this.id});
 
   @override
   State<AdvanceCustomAlert> createState() => _AdvanceCustomAlertState();
@@ -31,7 +45,6 @@ class AdvanceCustomAlert extends StatefulWidget {
 class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
   final List<String> paymentstatus = ["PAID", "PARTIALLY PAID", "CANCEL"];
   String selectedValue1 = "CANCEL";
-
   final TextEditingController _externalController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
@@ -70,6 +83,10 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
                     child: Container(
+                      height: size.height * 0.68,
+                      width: size.width * 0.34,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0)),
                       padding: EdgeInsets.all(10.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -154,7 +171,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                       height: size.height * 0.05,
                                       child: field(
                                           _internalController,
-                                          "",
+                                          widget.internalNotes,
                                           1,
                                           dropSelected == null &&
                                                   menuItems ==
@@ -180,7 +197,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                       height: size.height * 0.05,
                                       child: field(
                                           _externalController,
-                                          "",
+                                          widget.externalNotes,
                                           1,
                                           dropSelected == null &&
                                                   menuItems ==
@@ -206,7 +223,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                       height: size.height * 0.05,
                                       child: field(
                                           _referenceController,
-                                          "",
+                                          widget.referenceID,
                                           1,
                                           dropSelected == null &&
                                                   menuItems ==
@@ -233,7 +250,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                       height: size.height * 0.05,
                                       child: field(
                                           _emailController,
-                                          "",
+                                          widget.email,
                                           1,
                                           dropSelected == null &&
                                                   menuItems == menuItems.email
@@ -350,7 +367,7 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                             ],
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 50,
                           ),
                           Align(
                             alignment: Alignment.center,
@@ -373,14 +390,16 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
             Positioned(
                 top: size.height * -0.17,
                 child: CircleAvatar(
-                  backgroundColor: Colors.redAccent,
-                  radius: 60,
-                  child: Icon(
-                    Icons.assistant_photo,
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                )),
+                    backgroundColor: widget.statusColor,
+                    radius: 60,
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      child: Image.asset(
+                        widget.imageList.toString(),
+                        fit: BoxFit.fill,
+                      ),
+                    ))),
           ],
         ));
   }

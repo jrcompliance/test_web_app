@@ -21,6 +21,7 @@ import 'package:test_web_app/PdfFiles/CheckScreen.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
+import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Providers/CustomerProvider.dart';
@@ -40,6 +41,13 @@ class _Finance1State extends State<Finance1> {
 
   final List<String> currencieslist = ["INR", "USD", "GBP", "EURO"];
   String selectedValue = "INR";
+  final List<String> statusList = [
+    "Pending",
+    "Received",
+    "Cancelled",
+    "Disputed"
+  ];
+  // String selectedStatus = "Pending";
 
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _generatedateController = TextEditingController();
@@ -304,8 +312,11 @@ class _Finance1State extends State<Finance1> {
                                                             .center,
                                                     children: [
                                                       Expanded(
-                                                          flex: 1,
+                                                          flex: 2,
                                                           child: Container(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
                                                               alignment:
                                                                   Alignment
                                                                       .center,
@@ -326,7 +337,7 @@ class _Finance1State extends State<Finance1> {
                                                                 ],
                                                               ))),
                                                       Expanded(
-                                                        flex: 1,
+                                                        flex: 2,
                                                         child: Container(
                                                           alignment:
                                                               Alignment.center,
@@ -339,7 +350,7 @@ class _Finance1State extends State<Finance1> {
                                                         ),
                                                       ),
                                                       Expanded(
-                                                        flex: 1,
+                                                        flex: 2,
                                                         child: Container(
                                                           alignment:
                                                               Alignment.center,
@@ -353,7 +364,7 @@ class _Finance1State extends State<Finance1> {
                                                         ),
                                                       ),
                                                       Expanded(
-                                                          flex: 1,
+                                                          flex: 2,
                                                           child: Container(
                                                             alignment: Alignment
                                                                 .center,
@@ -365,7 +376,7 @@ class _Finance1State extends State<Finance1> {
                                                                     color:
                                                                         btnColor),
                                                                 SizedBox(
-                                                                    width: 10),
+                                                                    width: 5),
                                                                 Text(
                                                                   DateFormat(
                                                                           "dd MMMM,yyyy")
@@ -378,40 +389,134 @@ class _Finance1State extends State<Finance1> {
                                                             ),
                                                           )),
                                                       Expanded(
-                                                        flex: 1,
+                                                        flex: 2,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(
                                                                   horizontal:
-                                                                      50.0,
+                                                                      30,
                                                                   vertical: 10),
                                                           child: Container(
                                                             alignment: Alignment
                                                                 .center,
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    10.0),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0)),
-                                                              color: btnColor,
+                                                            decoration: BoxDecoration(
+                                                                color: statusColor(data
+                                                                        .status)
+                                                                    .withOpacity(
+                                                                        0.25),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            child:
+                                                                DropdownButtonFormField2(
+                                                              decoration: InputDecoration(
+                                                                  isDense: true,
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none
+                                                                  // border:
+                                                                  //     OutlineInputBorder(
+                                                                  //   borderRadius:
+                                                                  //       BorderRadius
+                                                                  //           .circular(
+                                                                  //               10),
+                                                                  // ),
+                                                                  ),
+                                                              isExpanded: true,
+                                                              selectedItemBuilder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return statusList
+                                                                    .map((String
+                                                                        value) {
+                                                                  return Text(
+                                                                    data.status
+                                                                        .toString(),
+                                                                    style: GoogleFonts.nunito(
+                                                                        textStyle: TextStyle(
+                                                                            fontSize:
+                                                                                13,
+                                                                            color:
+                                                                                txtColor,
+                                                                            fontWeight: FontWeight
+                                                                                .bold),
+                                                                        fontSize:
+                                                                            13,
+                                                                        color: statusColor(data
+                                                                            .status),
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  );
+                                                                }).toList();
+                                                              },
+                                                              hint: Text(
+                                                                data.status
+                                                                    .toString(),
+                                                                style: TxtStls
+                                                                    .fieldtitlestyle,
+                                                              ),
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_drop_down,
+                                                                color: btnColor,
+                                                              ),
+                                                              iconSize: 20,
+                                                              buttonHeight: 50,
+                                                              buttonPadding:
+                                                                  EdgeInsets.only(
+                                                                      left: 20,
+                                                                      right:
+                                                                          10),
+                                                              dropdownDecoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              items: statusList
+                                                                  .map((item) =>
+                                                                      DropdownMenuItem<
+                                                                          String>(
+                                                                        value:
+                                                                            item,
+                                                                        child: Text(
+                                                                            item,
+                                                                            style:
+                                                                                TxtStls.fieldtitlestyle),
+                                                                      ))
+                                                                  .toList(),
+                                                              onChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  Provider.of<InvoiceUpdateProvder>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .invoiceUpdate(
+                                                                          Idocid,
+                                                                          data.docid,
+                                                                          value);
+                                                                });
+                                                              },
                                                             ),
-                                                            child: Text(
-                                                              data.status ==
-                                                                      true
-                                                                  ? "Sent"
-                                                                  : "Pending",
-                                                              style: TxtStls
-                                                                  .fieldstyle1,
-                                                            ),
+                                                            // child: Text(
+                                                            //   data.status ==
+                                                            //           true
+                                                            //       ? "Sent"
+                                                            //       : "Pending",
+                                                            //   style: TxtStls
+                                                            //       .fieldstyle1,
+                                                            // ),
                                                           ),
                                                         ),
                                                       ),
                                                       Expanded(
-                                                        flex: 1,
+                                                        flex: 2,
                                                         child: Container(
                                                           alignment:
                                                               Alignment.center,
@@ -443,6 +548,18 @@ class _Finance1State extends State<Finance1> {
                                                             cusname.toString(),
                                                         email:
                                                             cusemail.toString(),
+                                                        statusColor:
+                                                            statusColor(
+                                                                data.status),
+                                                        imageList: statusEmoji(
+                                                            data.status),
+                                                        referenceID:
+                                                            data.referenceID,
+                                                        internalNotes:
+                                                            data.internalNotes,
+                                                        externalNotes:
+                                                            data.externalNotes,
+                                                        id: data.docid,
                                                       );
                                                     });
 
@@ -489,6 +606,7 @@ class _Finance1State extends State<Finance1> {
   }
 
   List servicelist = [];
+
   void addingData() async {
     double _rate = double.parse(_rateController.text);
     int _qty = int.parse(_qtyController2.text);
@@ -1346,22 +1464,23 @@ class _Finance1State extends State<Finance1> {
                           isgst = false;
                           _isLoad = false;
                           PdfProvider.generatePdf(
-                            context,
-                            servicelist,
-                            cusname,
-                            tbal,
-                            inid,
-                            gstno,
-                            Idocid,
-                            activeid,
-                            selectedValue == "INR" ? _gstamount : 0.00,
-                            total,
-                            _generatedateController.text.toString(),
-                            _duedatedateController.text.toString(),
-                            selectedValue,
-                            "101",
-                            _extrenalController.text,
-                          );
+                              context,
+                              servicelist,
+                              cusname,
+                              tbal,
+                              inid,
+                              gstno,
+                              Idocid,
+                              activeid,
+                              selectedValue == "INR" ? _gstamount : 0.00,
+                              total,
+                              _generatedateController.text.toString(),
+                              _duedatedateController.text.toString(),
+                              selectedValue,
+                              "101",
+                              _extrenalController.text,
+                              _internalController.text,
+                              _referenceController.text);
                         });
                       },
                       icon: Icon(Icons.save_alt_rounded,
@@ -2074,6 +2193,7 @@ class _Finance1State extends State<Finance1> {
     "Status",
     "Inc Type"
   ];
+
   Widget titleWidget() {
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -2092,5 +2212,53 @@ class _Finance1State extends State<Finance1> {
                       ],
                     ))))
             .toList());
+  }
+
+  Color statusColor(value) {
+    switch (value) {
+      case "Received":
+        {
+          return wonClr;
+        }
+      case "Cancelled":
+        {
+          return clsClr;
+        }
+      case "Disputed":
+        {
+          return neClr;
+        }
+      default:
+        {
+          return flwClr;
+        }
+    }
+  }
+
+  String statusEmoji(value) {
+    final List emojiList = [
+      "Images/disputed.png",
+      "Images/pending.png",
+      "Images/received.png",
+      "Images/cancelled.png"
+    ];
+    switch (value) {
+      case "Received":
+        {
+          return emojiList[2];
+        }
+      case "Cancelled":
+        {
+          return emojiList[3];
+        }
+      case "Disputed":
+        {
+          return emojiList[0];
+        }
+      default:
+        {
+          return emojiList[1];
+        }
+    }
   }
 }

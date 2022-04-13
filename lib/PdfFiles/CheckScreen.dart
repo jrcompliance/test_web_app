@@ -15,22 +15,23 @@ import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
 
 class PdfProvider {
   static generatePdf(
-    BuildContext context,
-    List Servicelist,
-    Recievername,
-    tbal,
-    actualinid,
-    _gst,
-    docid,
-    activeid,
-    gstAmount,
-    total,
-    invoicedate,
-    duedate,
-    selectedValue,
-    cxID,
-    externalNotes,
-  ) async {
+      BuildContext context,
+      List Servicelist,
+      Recievername,
+      tbal,
+      actualinid,
+      _gst,
+      docid,
+      activeid,
+      gstAmount,
+      total,
+      invoicedate,
+      duedate,
+      selectedValue,
+      cxID,
+      externalNotes,
+      internalNotes,
+      referenceID) async {
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
     final image =
@@ -64,7 +65,8 @@ class PdfProvider {
     pdf.addPage(pw.Page(
         pageTheme: pageTheme,
         build: (pw.Context context) {
-          return pw.Column(children: [
+          return pw
+              .Column(mainAxisAlignment: pw.MainAxisAlignment.start, children: [
             pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
               pw.SizedBox(
                   width: 200,
@@ -553,8 +555,18 @@ class PdfProvider {
       print(e.toString());
       print(s.toString());
     }
-    Provider.of<InvoiceSaveProvider>(context, listen: false).invoiceData(docid,
-        myUrl, activeid, "Pending", actualinid, total, selectedValue, duedate);
+    Provider.of<InvoiceSaveProvider>(context, listen: false).invoiceData(
+        docid,
+        myUrl,
+        activeid,
+        "Pending",
+        actualinid,
+        total,
+        selectedValue,
+        duedate,
+        internalNotes,
+        externalNotes,
+        referenceID);
     print(6);
     return pdf.save();
   }

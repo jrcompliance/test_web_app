@@ -69,6 +69,7 @@ dependencies:
   pdf: ^3.7.3
   syncfusion_flutter_pdf: ^19.4.56-beta
   printing: ^5.7.5
+  emojis: ^0.9.9
 
 
 
@@ -139,6 +140,10 @@ flutter:
     - assets/Images/invoicebg.jpeg
     - assets/Images/invoicebg.png
     - assets/Images/Authorized_Sign.png
+    - assets/Images/disputed.png
+    - assets/Images/received.png
+    - assets/Images/pending.png
+    - assets/Images/cancelled.png
 
 
 

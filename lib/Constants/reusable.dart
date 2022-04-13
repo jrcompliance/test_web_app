@@ -27,6 +27,12 @@ class TxtStls {
       fontSize: 13,
       color: txtColor,
       fontWeight: FontWeight.bold);
+  // static TextStyle fieldtitlestyle13 = GoogleFonts.nunito(
+  //     textStyle:
+  //         TextStyle(fontSize: 13, color: bgColor, fontWeight: FontWeight.bold),
+  //     fontSize: 13,
+  //     color: bgColor,
+  //     fontWeight: FontWeight.bold);
   static TextStyle titlesstyle = GoogleFonts.nunito(
       textStyle:
           TextStyle(fontSize: 13, color: bgColor, fontWeight: FontWeight.bold),

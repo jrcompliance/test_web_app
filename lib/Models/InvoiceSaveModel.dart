@@ -8,6 +8,10 @@ class InvoiceSaveModel {
   String? duedate;
   String? status;
   String? invoiceType;
+  String? internalNotes;
+  String? externalNotes;
+  String? referenceID;
+  String? id;
 
   InvoiceSaveModel(
       {this.invoiceurl,
@@ -16,7 +20,11 @@ class InvoiceSaveModel {
       this.currencyType,
       this.duedate,
       this.status,
-      this.invoiceType});
+      this.invoiceType,
+      this.internalNotes,
+      this.externalNotes,
+      this.referenceID,
+      this.id});
 
   Map<String, dynamic> toMap() => {
         "invoiceurl": invoiceurl,
@@ -26,5 +34,9 @@ class InvoiceSaveModel {
         "duedate": duedate,
         "status": status,
         "invoiceType": invoiceType,
+        "internalNotes": internalNotes,
+        "externalNotes": externalNotes,
+        "referenceID": referenceID,
+        "id": id
       };
 }

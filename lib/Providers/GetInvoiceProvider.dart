@@ -17,14 +17,17 @@ class GetInvoiceListProvider extends ChangeNotifier {
     extractedResponse.docs.forEach((element) {
       print(element.data());
       loadedData.add(GetInvoiceModel(
-        amount: element["amount"],
-        currencyType: element["currencyType"],
-        duedate: element["duedate"],
-        invoiceID: element["invoiceID"],
-        invoiceType: element["invoiceType"],
-        invoiceurl: element["invoiceurl"],
-        status: element["status"],
-      ));
+          amount: element["amount"],
+          currencyType: element["currencyType"],
+          duedate: element["duedate"],
+          invoiceID: element["invoiceID"],
+          invoiceType: element["invoiceType"],
+          invoiceurl: element["invoiceurl"],
+          status: element["status"],
+          internalNotes: element["internalNotes"],
+          externalNotes: element["externalNotes"],
+          referenceID: element["referenceID"],
+          docid: element["id"]));
     });
     _invoicemodellist = loadedData;
     notifyListeners();
