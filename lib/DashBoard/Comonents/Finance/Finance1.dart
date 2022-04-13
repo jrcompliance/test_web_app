@@ -343,6 +343,7 @@ class _Finance1State extends State<Finance1> {
                                                         child: Container(
                                                           alignment:
                                                               Alignment.center,
+                                                          //currencytype
                                                           child: Text(
                                                             data.currencyType
                                                                 .toString(),
