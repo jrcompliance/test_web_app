@@ -55,43 +55,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              MyLogo(),
+                              SizedBox(
+                                  width: size.width,
+                                  height: size.height * 0.2,
+                                  child: MyLogo()),
                               Text(
                                 'Log in',
                                 style: TxtStls.titlestyle,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SignInButton(
-                                      buttonType: ButtonType.googleDark,
-                                      imagePosition: ImagePosition.left,
-                                      buttonSize: ButtonSize.large,
-                                      btnTextColor: txtColor,
-                                      btnColor: fieldColor,
-                                      elevation: 0.0,
-                                      width: 150,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(7.0))),
-                                      btnText: 'Google',
-                                      onPressed: () {}),
-                                  SizedBox(width: 25),
-                                  SignInButton(
-                                      buttonType: ButtonType.facebookDark,
-                                      imagePosition: ImagePosition.left,
-                                      buttonSize: ButtonSize.large,
-                                      btnTextColor: txtColor,
-                                      btnColor: fieldColor,
-                                      elevation: 0.0,
-                                      width: 150,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(7.0))),
-                                      btnText: 'Facebook',
-                                      onPressed: () {}),
-                                ],
                               ),
                               SizedBox(height: size.height * 0.01),
                               Padding(
@@ -306,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: size.width,
                     height: size.height,
                     child: Image.asset(
-                      "assets/Logos/login.png",
+                      "assets/Logos/SignUp.png",
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.high,
                     ),

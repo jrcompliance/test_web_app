@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "JR CRM",
+      title: "JR CENTRAL",
       theme: ThemeData.light().copyWith(
         scrollbarTheme:
             ScrollbarThemeData(thumbColor: MaterialStateProperty.all(btnColor)),

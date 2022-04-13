@@ -55,46 +55,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       duration: Duration(seconds: 1),
                       child: SingleChildScrollView(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            MyLogo(),
+                            SizedBox(
+                                width: size.width,
+                                height: size.height * 0.2,
+                                child: MyLogo()),
                             Text(
                               'Sign Up',
                               style: TxtStls.titlestyle,
-                            ),
-                            space(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SignInButton(
-                                    buttonType: ButtonType.googleDark,
-                                    imagePosition: ImagePosition.left,
-                                    buttonSize: ButtonSize.large,
-                                    btnTextColor: txtColor,
-                                    btnColor: fieldColor,
-                                    elevation: 0.0,
-                                    width: 150,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(7.0))),
-                                    btnText: 'Google',
-                                    onPressed: () {}),
-                                SizedBox(width: 25),
-                                SignInButton(
-                                    buttonType: ButtonType.facebookDark,
-                                    imagePosition: ImagePosition.left,
-                                    buttonSize: ButtonSize.large,
-                                    btnTextColor: txtColor,
-                                    btnColor: fieldColor,
-                                    elevation: 0.0,
-                                    width: 150,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(7.0))),
-                                    btnText: 'Facebook',
-                                    onPressed: () {}),
-                              ],
                             ),
                             space(),
                             Padding(
@@ -109,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Text(
                                       'Or',
                                       style: TxtStls.fieldstyle,
@@ -124,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: size.height * 0.01),
+                            space(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.075),
@@ -411,7 +379,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 duration: Duration(seconds: 1),
                 child: Image.asset(
                   "assets/Logos/SignUp.png",
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   filterQuality: FilterQuality.high,
                 ),
               ),
