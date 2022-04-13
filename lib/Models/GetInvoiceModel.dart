@@ -1,12 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GetInvoiceModel {
-  String? url;
-  Timestamp? timestamp;
-  bool? status;
-  String? invoiceid;
-  String? type;
-
+  double? amount;
+  String? currencyType;
+  String? duedate;
+  String? invoiceID;
+  String? invoiceType;
+  String? invoiceurl;
+  String? status;
   GetInvoiceModel(
-      {this.url, this.timestamp, this.status, this.invoiceid, this.type});
+      {this.amount,
+      this.currencyType,
+      this.duedate,
+      this.invoiceID,
+      this.invoiceType,
+      this.invoiceurl,
+      this.status});
 }

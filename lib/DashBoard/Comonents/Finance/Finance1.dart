@@ -12,13 +12,12 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_web_app/CheckScreen.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
+import 'package:test_web_app/PdfFiles/CheckScreen.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
@@ -273,6 +272,7 @@ class _Finance1State extends State<Finance1> {
                                           ],
                                         ),
                                   SizedBox(height: size.height * 0.1),
+                                  titleWidget(),
                                   Expanded(
                                       child: ListView.builder(
                                           itemCount: Provider.of<
@@ -285,8 +285,8 @@ class _Finance1State extends State<Finance1> {
                                                         GetInvoiceListProvider>(
                                                     context)
                                                 .invoicemodellist[i];
-                                            var createdate =
-                                                data.timestamp!.toDate();
+                                            var createdate = DateTime.parse(
+                                                data.duedate.toString());
                                             return InkWell(
                                               child: Card(
                                                 shape: RoundedRectangleBorder(
@@ -296,32 +296,66 @@ class _Finance1State extends State<Finance1> {
                                                               10.0)),
                                                 ),
                                                 elevation: 10.0,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(10.0),
+                                                child: Container(
+                                                  height: size.height * 0.07,
                                                   child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Expanded(
-                                                          flex: 3,
+                                                          flex: 1,
                                                           child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
                                                               child: Row(
-                                                            children: [
-                                                              Icon(
-                                                                  Icons
-                                                                      .picture_as_pdf_rounded,
-                                                                  color:
-                                                                      clsClr),
-                                                              Text(
-                                                                "  JR" +
-                                                                    data.invoiceid
-                                                                        .toString(),
-                                                                style: TxtStls
-                                                                    .fieldtitlestyle,
-                                                              ),
-                                                            ],
-                                                          ))),
+                                                                children: [
+                                                                  Icon(
+                                                                      Icons
+                                                                          .picture_as_pdf_rounded,
+                                                                      color:
+                                                                          clsClr),
+                                                                  Text(
+                                                                    "  JR" +
+                                                                        data.invoiceID
+                                                                            .toString(),
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle,
+                                                                  ),
+                                                                ],
+                                                              ))),
                                                       Expanded(
-                                                          flex: 2,
+                                                        flex: 1,
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                            data.amount
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                            data.currencyType
+                                                                .toString(),
+                                                            style: TxtStls
+                                                                .fieldtitlestyle,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                          flex: 1,
                                                           child: Container(
+                                                            alignment: Alignment
+                                                                .center,
                                                             child: Row(
                                                               children: [
                                                                 Icon(
@@ -343,12 +377,13 @@ class _Finance1State extends State<Finance1> {
                                                             ),
                                                           )),
                                                       Expanded(
-                                                        flex: 2,
+                                                        flex: 1,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(
                                                                   horizontal:
-                                                                      50.0),
+                                                                      50.0,
+                                                                  vertical: 10),
                                                           child: Container(
                                                             alignment: Alignment
                                                                 .center,
@@ -377,20 +412,16 @@ class _Finance1State extends State<Finance1> {
                                                       Expanded(
                                                         flex: 1,
                                                         child: Container(
+                                                          alignment:
+                                                              Alignment.center,
                                                           child: Text(
-                                                            data.type
+                                                            data.invoiceType
                                                                 .toString(),
                                                             style: TxtStls
                                                                 .fieldtitlestyle,
                                                           ),
                                                         ),
                                                       ),
-                                                      Expanded(
-                                                          flex: 1,
-                                                          child: Container(
-                                                            child: Icon(Icons
-                                                                .more_horiz),
-                                                          ))
                                                     ],
                                                   ),
                                                 ),
@@ -402,10 +433,10 @@ class _Finance1State extends State<Finance1> {
                                                         (BuildContext context) {
                                                       return AdvanceCustomAlert(
                                                         invoiceid: data
-                                                            .invoiceid
+                                                            .invoiceID
                                                             .toString(),
-                                                        url:
-                                                            data.url.toString(),
+                                                        url: data.invoiceurl
+                                                            .toString(),
                                                         date: createdate,
                                                         name:
                                                             cusname.toString(),
@@ -1100,8 +1131,14 @@ class _Finance1State extends State<Finance1> {
                                 Expanded(
                                   flex: 4,
                                   child: isSwitched1
-                                      ? field(_extrenalController,
-                                          "External Notes", 3, true)
+                                      ? field(
+                                          _extrenalController,
+                                          "External Notes",
+                                          3,
+                                          true,
+                                          null,
+                                          null,
+                                          200)
                                       : SizedBox(),
                                 ),
                                 for (int i = 1; i <= 2; i++)
@@ -1305,20 +1342,25 @@ class _Finance1State extends State<Finance1> {
                             ? ""
                             : _gstController.text.toString();
                         setState(() {
+                          isgst = false;
+                          _isLoad = false;
                           PdfProvider.generatePdf(
-                              servicelist,
-                              cusname,
-                              tbal,
-                              inid,
-                              gstno,
-                              Idocid,
-                              activeid,
-                              selectedValue == "INR" ? _gstamount : 0.00,
-                              total,
-                              _generatedateController.text.toString(),
-                              _duedatedateController.text.toString(),
-                              selectedValue,
-                              "101");
+                            context,
+                            servicelist,
+                            cusname,
+                            tbal,
+                            inid,
+                            gstno,
+                            Idocid,
+                            activeid,
+                            selectedValue == "INR" ? _gstamount : 0.00,
+                            total,
+                            _generatedateController.text.toString(),
+                            _duedatedateController.text.toString(),
+                            selectedValue,
+                            "101",
+                            _extrenalController.text,
+                          );
                         });
                       },
                       icon: Icon(Icons.save_alt_rounded,
@@ -1819,7 +1861,7 @@ class _Finance1State extends State<Finance1> {
                     child: IconButton(
                       hoverColor: Colors.transparent,
                       tooltip: "Close Window",
-                      icon: Icon(Icons.close),
+                      icon: Icon(Icons.close_rounded),
                       color: neClr,
                       onPressed: () {
                         Navigator.pop(context);
@@ -1965,7 +2007,8 @@ class _Finance1State extends State<Finance1> {
         });
   }
 
-  Widget field(_controller, hintText, maxlines, bool isenable, [icn, icn1]) {
+  Widget field(_controller, hintText, maxlines, bool isenable,
+      [icn, icn1, maxlength]) {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: deco,
@@ -1974,6 +2017,7 @@ class _Finance1State extends State<Finance1> {
           horizontal: size.width * 0.01,
         ),
         child: TextFormField(
+          maxLength: maxlength,
           enabled: isenable,
           cursorColor: btnColor,
           controller: _controller,
@@ -2019,5 +2063,33 @@ class _Finance1State extends State<Finance1> {
     } else {
       return 0;
     }
+  }
+
+  final List _titlelist = [
+    "Inc No",
+    "Amount",
+    "Currency",
+    "Due Date",
+    "Status",
+    "Inc Type"
+  ];
+  Widget titleWidget() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _titlelist
+            .map((e) => Expanded(
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          e,
+                          style: TxtStls.fieldtitlestyle,
+                        ),
+                        Icon(Icons.arrow_drop_down)
+                      ],
+                    ))))
+            .toList());
   }
 }

@@ -12,13 +12,15 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDa
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
-import 'package:test_web_app/ProgramScreen.dart';
+import 'package:test_web_app/PracticeProviders/Providers/FakeProvider.dart';
+import 'package:test_web_app/PracticeProviders/Views/FakeScreen.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
+import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
@@ -58,12 +60,14 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => RemoveServiceProvider()),
       ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider()),
       ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
+      ChangeNotifierProvider(create: (ctx) => InvoiceSaveProvider()),
     ],
-    child: MyApp(),
+    child: const MyApp(),
   ));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -75,12 +79,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         canvasColor: bgColor.withOpacity(1),
       ),
-      home: LandingScreen(),
+      home: const LandingScreen(),
     );
   }
 }
 
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({Key? key}) : super(key: key);
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -89,7 +94,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3))
+    Future.delayed(const Duration(seconds: 3))
         .then((value) => _checkAuthentication());
   }
 
@@ -111,7 +116,7 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       if (prefs.getString("email") == null) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => LoginScreen()));
+            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => MainScreen()));

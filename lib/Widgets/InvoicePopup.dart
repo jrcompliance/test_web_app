@@ -31,6 +31,7 @@ class AdvanceCustomAlert extends StatefulWidget {
 class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
   final List<String> paymentstatus = ["PAID", "PARTIALLY PAID", "CANCEL"];
   String selectedValue1 = "CANCEL";
+
   final TextEditingController _externalController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
@@ -152,8 +153,16 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                   child: SizedBox(
                                       height: size.height * 0.05,
                                       child: field(
-                                          _internalController, "", 1, true))),
-                              Expanded(flex: 2, child: popupMenu())
+                                          _internalController,
+                                          "",
+                                          1,
+                                          dropSelected == null &&
+                                                  menuItems ==
+                                                      menuItems.internal
+                                              ? false
+                                              : true))),
+                              Expanded(
+                                  flex: 2, child: popupMenu(menuItems.internal))
                             ],
                           ),
                           spacer(),
@@ -170,8 +179,16 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                   child: SizedBox(
                                       height: size.height * 0.05,
                                       child: field(
-                                          _externalController, "", 1, true))),
-                              Expanded(flex: 2, child: popupMenu())
+                                          _externalController,
+                                          "",
+                                          1,
+                                          dropSelected == null &&
+                                                  menuItems ==
+                                                      menuItems.external
+                                              ? false
+                                              : true))),
+                              Expanded(
+                                  flex: 2, child: popupMenu(menuItems.external))
                             ],
                           ),
                           spacer(),
@@ -188,8 +205,17 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                   child: SizedBox(
                                       height: size.height * 0.05,
                                       child: field(
-                                          _referenceController, "", 1, true))),
-                              Expanded(flex: 2, child: popupMenu())
+                                          _referenceController,
+                                          "",
+                                          1,
+                                          dropSelected == null &&
+                                                  menuItems ==
+                                                      menuItems.reference
+                                              ? false
+                                              : true))),
+                              Expanded(
+                                  flex: 2,
+                                  child: popupMenu(menuItems.reference))
                             ],
                           ),
                           spacer(),
@@ -206,8 +232,15 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                                   child: SizedBox(
                                       height: size.height * 0.05,
                                       child: field(
-                                          _emailController, "", 1, true))),
-                              Expanded(flex: 2, child: popupMenu())
+                                          _emailController,
+                                          "",
+                                          1,
+                                          dropSelected == null &&
+                                                  menuItems == menuItems.email
+                                              ? true
+                                              : false))),
+                              Expanded(
+                                  flex: 2, child: popupMenu(menuItems.email))
                             ],
                           ),
                           spacer(),
@@ -421,10 +454,10 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
     );
   }
 
-  Widget popupMenu() {
+  Widget popupMenu(item) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      child: PopupMenuButton(
+      child: PopupMenuButton<menuItems>(
         shape: TooltipShape(),
         offset: Offset(-40, 30),
         icon: Icon(
@@ -436,21 +469,30 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
             dropSelected = value;
           });
           print(value);
+          // if(value == "EDIT"){
+          //   return
+          // }
         },
         itemBuilder: (BuildContext context) {
           return [
             PopupMenuItem(
-                value: "EDIT",
-                onTap: () {},
+                value: item,
+                onTap: () {
+                  print("Edit " + item.toString());
+                },
                 child: dropdecor(Icons.edit, "EDIT", _clrslist[0])),
             PopupMenuItem(
-              value: "DELETE",
-              onTap: () {},
+              value: item,
+              onTap: () {
+                print("delete " + item.toString());
+              },
               child: dropdecor(Icons.delete, "DELETE", _clrslist[1]),
             ),
             PopupMenuItem(
-                value: "ADD",
-                onTap: () {},
+                value: item,
+                onTap: () {
+                  print("add " + item.toString());
+                },
                 child: dropdecor(
                     Icons.add_circle_outline_outlined, "ADD", _clrslist[2])),
           ];
@@ -483,3 +525,5 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
 
   generateDocument(PdfPageFormat format) {}
 }
+
+enum menuItems { internal, external, reference, email }
