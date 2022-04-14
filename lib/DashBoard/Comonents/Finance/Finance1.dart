@@ -201,6 +201,7 @@ class _Finance1State extends State<Finance1> {
                                     backgroundColor: btnColor.withOpacity(0.1),
                                   ),
                                   onTap: () {
+                                    print(2);
                                     Provider.of<GetInvoiceListProvider>(context,
                                             listen: false)
                                         .getInvoiceList(snp.Idocid);
@@ -209,6 +210,8 @@ class _Finance1State extends State<Finance1> {
                                       cusphone = snp.Customerphone;
                                       cusemail = snp.Customeremail;
                                       Idocid = snp.Idocid;
+                                      cusID = snp.CxID;
+                                      print(cusID);
                                     });
                                   },
                                   shape: RoundedRectangleBorder(
@@ -390,7 +393,7 @@ class _Finance1State extends State<Finance1> {
                                                             ),
                                                           )),
                                                       Expanded(
-                                                        flex: 2,
+                                                        flex: 3,
                                                         child: Padding(
                                                           padding: EdgeInsets
                                                               .symmetric(

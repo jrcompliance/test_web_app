@@ -15,7 +15,6 @@ class GetInvoiceListProvider extends ChangeNotifier {
         await _collectionref.doc(id).collection("Invoices").get();
     List<GetInvoiceModel> loadedData = [];
     extractedResponse.docs.forEach((element) {
-      print(element.data());
       loadedData.add(GetInvoiceModel(
           amount: element["amount"],
           currencyType: element["currencyType"],

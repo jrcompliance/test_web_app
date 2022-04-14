@@ -333,7 +333,7 @@ class PdfProvider {
               alignment: pw.Alignment.centerLeft,
               child: pw.Flexible(
                   flex: 1,
-                  child: pw.Text("Note : " + externalNotes.toString(),
+                  child: pw.Text(r"Note : " + externalNotes.toString(),
                       style: textStl10)),
             ),
             pw.SizedBox(height: 7.5),
