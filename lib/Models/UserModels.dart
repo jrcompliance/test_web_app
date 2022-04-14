@@ -6,3 +6,4 @@ String? tradename;
 String? address;
 String? pan;
 String? pincode;
+int? cusID;

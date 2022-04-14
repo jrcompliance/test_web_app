@@ -62,7 +62,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider()),
       ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceSaveProvider()),
-      ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvder()),
+      ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvider()),
     ],
     child: const MyApp(),
   ));

@@ -329,9 +329,13 @@ class PdfProvider {
               ),
             ),
             pw.Divider(color: PdfColors.black, thickness: 0.5),
-            pw.Flexible(
-                flex: 1,
-                child: pw.Text("Notes : " + externalNotes, style: textStl10)),
+            pw.Container(
+              alignment: pw.Alignment.centerLeft,
+              child: pw.Flexible(
+                  flex: 1,
+                  child: pw.Text("Note : " + externalNotes.toString(),
+                      style: textStl10)),
+            ),
             pw.SizedBox(height: 7.5),
             pw.Container(
                 child: pw.Row(
@@ -386,7 +390,7 @@ class PdfProvider {
                                         style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(
-                                    child: pw.Text("Customer ID : ${cxID}",
+                                    child: pw.Text("Customer ID : $cxID",
                                         style: textStl10),
                                     padding: pw.EdgeInsets.only(left: 5)),
                                 pw.Container(

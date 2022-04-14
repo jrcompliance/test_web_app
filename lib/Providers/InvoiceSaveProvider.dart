@@ -7,7 +7,7 @@ class InvoiceSaveProvider extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future invoiceData(id, invoiceurl, invoiceType, status, invoiceID, amount,
-      currenctType, duedate, internalNotes, externalNotes, referenceID) async {
+      currencyType, duedate, internalNotes, externalNotes, referenceID) async {
     try {
       CollectionReference reference = await _firestore.collection("Tasks");
       String docID = reference.doc(id).collection("Invoices").doc().id;
@@ -15,7 +15,7 @@ class InvoiceSaveProvider extends ChangeNotifier {
       model.invoiceurl = invoiceurl;
       model.invoiceID = invoiceID;
       model.amount = amount;
-      model.currencyType = currenctType;
+      model.currencyType = currencyType;
       model.duedate = duedate;
       model.status = status;
       model.invoiceType = invoiceType;

@@ -16,6 +16,7 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/PdfFiles/CheckScreen.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
@@ -493,25 +494,20 @@ class _Finance1State extends State<Finance1> {
                                                               onChanged:
                                                                   (value) {
                                                                 setState(() {
-                                                                  Provider.of<InvoiceUpdateProvder>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .invoiceUpdate(
-                                                                          Idocid,
-                                                                          data.docid,
-                                                                          value);
+                                                                  data.status =
+                                                                      value
+                                                                          .toString();
                                                                 });
+                                                                Provider.of<InvoiceUpdateProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .invoiceUpdate(
+                                                                        Idocid,
+                                                                        data.docid,
+                                                                        value);
                                                               },
                                                             ),
-                                                            // child: Text(
-                                                            //   data.status ==
-                                                            //           true
-                                                            //       ? "Sent"
-                                                            //       : "Pending",
-                                                            //   style: TxtStls
-                                                            //       .fieldstyle1,
-                                                            // ),
                                                           ),
                                                         ),
                                                       ),
@@ -1477,7 +1473,7 @@ class _Finance1State extends State<Finance1> {
                               _generatedateController.text.toString(),
                               _duedatedateController.text.toString(),
                               selectedValue,
-                              "101",
+                              cusID,
                               _extrenalController.text,
                               _internalController.text,
                               _referenceController.text);
@@ -1814,7 +1810,8 @@ class _Finance1State extends State<Finance1> {
                                       color: btnColor,
                                     )),
                                 title: Text(
-                                  snp.Customername.toString(),
+                                  snp.Customername.toString() +
+                                      snp.Idocid.toString(),
                                   style: TxtStls.fieldtitlestyle,
                                 ),
                                 subtitle: Column(
@@ -1845,7 +1842,9 @@ class _Finance1State extends State<Finance1> {
                                     cusname = snp.Customername;
                                     cusphone = snp.Customerphone;
                                     cusemail = snp.Customeremail;
+                                    cusID = snp.CxID;
                                   });
+                                  print("CxID");
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
@@ -1885,6 +1884,7 @@ class _Finance1State extends State<Finance1> {
                                         children: [
                                           Text(
                                               cusname.toString() +
+                                                  cusID.toString() +
                                                   "\n(${cusemail.toString()})",
                                               style: TxtStls.fieldtitlestyle),
                                           Align(

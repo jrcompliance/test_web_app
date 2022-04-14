@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class InvoiceUpdateProvder extends ChangeNotifier {
+class InvoiceUpdateProvider extends ChangeNotifier {
   Future invoiceUpdate(firstID, secondID, choosenValue) async {
     print(1);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
