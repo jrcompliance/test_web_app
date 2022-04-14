@@ -365,7 +365,7 @@ class _Finance1State extends State<Finance1> {
                                                     child: Padding(
                                                       padding: EdgeInsets.only(
                                                           right: size.width *
-                                                              0.02),
+                                                              0.015),
                                                       child: Container(
                                                         alignment:
                                                             Alignment.center,
