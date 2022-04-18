@@ -96,7 +96,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3))
+    Future.delayed(const Duration(seconds: 2))
         .then((value) => _checkAuthentication());
   }
 
