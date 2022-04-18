@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
+import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -189,7 +190,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              //Flexible(child: TaskPreview()),
+              Flexible(child: TaskPreview()),
             ],
           );
         }

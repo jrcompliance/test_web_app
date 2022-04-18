@@ -12,12 +12,11 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDa
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
-import 'package:test_web_app/PracticeProviders/Providers/FakeProvider.dart';
-import 'package:test_web_app/PracticeProviders/Views/FakeScreen.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
+import 'package:test_web_app/Providers/DupicatesFinderProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
@@ -63,6 +62,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceSaveProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvider()),
+      ChangeNotifierProvider(create: (ctx) => DuplicatesFinderProvider()),
     ],
     child: const MyApp(),
   ));
@@ -102,6 +102,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<DuplicatesFinderProvider>(context).dupicates();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Center(
