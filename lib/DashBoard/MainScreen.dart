@@ -9,13 +9,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
-import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
-import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
-import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
-import 'package:test_web_app/DashBoard/Comonents/Finance/Finance1.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
-import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -23,7 +18,6 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
-import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -215,7 +209,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: "Finance"),
-              Finance1(),
+              Finance(),
             ],
           );
         }

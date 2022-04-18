@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
-
 import 'package:test_web_app/Constants/reusable.dart';
 
 class SuccessScreen extends StatefulWidget {
