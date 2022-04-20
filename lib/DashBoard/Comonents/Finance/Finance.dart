@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -14,11 +15,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
+import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Constants/shape.dart';
+import 'package:test_web_app/Widgets/DetailsPopBox.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/PdfFiles/PdfScreen.dart';
+import 'package:test_web_app/Providers/ActivityProvider.dart';
+import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
@@ -65,8 +72,8 @@ class _FinanceState extends State<Finance> {
 
   @override
   void initState() {
-    Provider.of<CustmerProvider>(context, listen: false).getCustomers();
     super.initState();
+    Provider.of<CustmerProvider>(context, listen: false).getCustomers(context);
   }
 
   final _list = ["Quotation", "Performer Invoice", "Invoice"];
@@ -103,7 +110,8 @@ class _FinanceState extends State<Finance> {
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
         child: Row(
           children: [
-            Expanded(
+            Flexible(
+              fit: FlexFit.tight,
               flex: 3,
               child: Column(
                 children: [
@@ -206,12 +214,22 @@ class _FinanceState extends State<Finance> {
                                             listen: false)
                                         .getInvoiceList(snp.Idocid);
                                     setState(() {
+                                      Idocid = snp.Idocid;
                                       cusname = snp.Customername;
                                       cusphone = snp.Customerphone;
                                       cusemail = snp.Customeremail;
-                                      Idocid = snp.Idocid;
                                       cusID = snp.CxID;
-                                      print(cusID);
+                                      cusTask = snp.taskname;
+                                      startDate = snp.startDate;
+                                      endDate = snp.endDate;
+                                      priority = snp.priority;
+                                      lastseen = snp.lastseen;
+                                      cat = snp.cat;
+                                      message = snp.message;
+                                      status = snp.status;
+                                      s = snp.s;
+                                      f = snp.f;
+                                      assign = snp.assign;
                                     });
                                   },
                                   shape: RoundedRectangleBorder(
@@ -500,28 +518,52 @@ class _FinanceState extends State<Finance> {
                                           showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                return AdvanceCustomAlert(
-                                                  invoiceid:
-                                                      data.invoiceID.toString(),
-                                                  url: data.invoiceurl
-                                                      .toString(),
-                                                  date: createdate,
-                                                  name: cusname.toString(),
-                                                  email: cusemail.toString(),
-                                                  statusColor:
-                                                      statusColor(data.status),
-                                                  imageList:
-                                                      statusEmoji(data.status),
-                                                  referenceID: data.referenceID,
-                                                  internalNotes:
-                                                      data.internalNotes,
-                                                  externalNotes:
-                                                      data.externalNotes,
-                                                  id: data.docid,
+                                                return DeatailsPopBox(
+                                                  f: f as int,
+                                                  startDate:
+                                                      startDate as Timestamp,
+                                                  lastseen:
+                                                      lastseen as Timestamp,
+                                                  s: s as int,
+                                                  cat: cat.toString(),
+                                                  endDate: endDate.toString(),
+                                                  CxID: cusID as int,
+                                                  taskname: cusTask.toString(),
+                                                  priority: priority.toString(),
+                                                  status: status.toString(),
+                                                  assign: assign as List,
+                                                  Idocid: Idocid.toString(),
+                                                  message: message.toString(),
                                                 );
                                               });
 
                                           print("Hey Yalagala");
+
+                                          // showDialog(
+                                          //     context: context,
+                                          //     builder: (BuildContext context) {
+                                          //       return AdvanceCustomAlert(
+                                          //         invoiceid:
+                                          //             data.invoiceID.toString(),
+                                          //         url: data.invoiceurl
+                                          //             .toString(),
+                                          //         date: createdate,
+                                          //         name: cusname.toString(),
+                                          //         email: cusemail.toString(),
+                                          //         statusColor:
+                                          //             statusColor(data.status),
+                                          //         imageList:
+                                          //             statusEmoji(data.status),
+                                          //         referenceID: data.referenceID,
+                                          //         internalNotes:
+                                          //             data.internalNotes,
+                                          //         externalNotes:
+                                          //             data.externalNotes,
+                                          //         id: data.docid,
+                                          //       );
+                                          //     });
+                                          //
+                                          // print("Hey Yalagala");
                                         },
                                       );
                                     },
@@ -1726,402 +1768,12 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  Widget wid() {
-    Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              child: Row(
-                children: _list.map((e) => newMethod(e, () {})).toList(),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.025,
-        ),
-        Row(
-          children: [
-            Expanded(
-                flex: isPreview ? 4 : 3,
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    height: size.height * 0.845,
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: fieldColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          child: Padding(
-                            padding:
-                                EdgeInsets.only(left: 15, right: 15, top: 2),
-                            child: TextField(
-                              controller: _customersearchController,
-                              style: TxtStls.fieldstyle,
-                              decoration: InputDecoration(
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: btnColor,
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                  border: InputBorder.none,
-                                  hintText: "Enter Customer name",
-                                  hintStyle: TxtStls.fieldstyle),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: Provider.of<CustmerProvider>(context)
-                              .customerlist
-                              .length,
-                          itemBuilder: (BuildContext context, int i) {
-                            var snp = Provider.of<CustmerProvider>(context)
-                                .customerlist[i];
-                            return Material(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: bgColor,
-                              child: ListTile(
-                                tileColor: grClr.withOpacity(0.1),
-                                hoverColor: btnColor.withOpacity(0.2),
-                                selectedColor: btnColor.withOpacity(0.2),
-                                selectedTileColor: btnColor.withOpacity(0.2),
-                                leading: CircleAvatar(
-                                    backgroundColor: btnColor.withOpacity(0.1),
-                                    child: Icon(
-                                      Icons.person,
-                                      color: btnColor,
-                                    )),
-                                title: Text(
-                                  snp.Customername.toString() +
-                                      snp.Idocid.toString(),
-                                  style: TxtStls.fieldtitlestyle,
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snp.Customeremail.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                    Text(
-                                      snp.Customerphone.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ],
-                                ),
-                                trailing: CircleAvatar(
-                                  backgroundColor: btnColor.withOpacity(0.1),
-                                  child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.more_horiz,
-                                        color: btnColor,
-                                      )),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    Idocid = snp.Idocid;
-                                    cusname = snp.Customername;
-                                    cusphone = snp.Customerphone;
-                                    cusemail = snp.Customeremail;
-                                    cusID = snp.CxID;
-                                  });
-                                  print("CxID");
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return Divider(color: grClr.withOpacity(0.5));
-                          },
-                        ),
-                      ],
-                    ))),
-            SizedBox(
-              width: 7.5,
-            ),
-            isPreview == true
-                ? PreviewInvoice(context)
-                : Expanded(
-                    flex: 7,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      height: size.height * 0.845,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        color: bgColor,
-                      ),
-                      child: _isLoad
-                          ? show1(context)
-                          : Column(
-                              children: [
-                                cusname == null
-                                    ? SizedBox()
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              cusname.toString() +
-                                                  cusID.toString() +
-                                                  "\n(${cusemail.toString()})",
-                                              style: TxtStls.fieldtitlestyle),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: FlatButton.icon(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10.0))),
-                                                color: btnColor,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _dateController.text =
-                                                        DateTime.now()
-                                                            .toString()
-                                                            .split(" ")[0];
-                                                    _isLoad = true;
-                                                  });
-                                                },
-                                                icon: Icon(Icons.add,
-                                                    color: bgColor),
-                                                label: Text(
-                                                  "Create New $activeid",
-                                                  style: TxtStls.fieldstyle1,
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                // Expanded(
-                                //   flex: 1,
-                                //   child: Container(
-                                //     child: Column(
-                                //       chil
-                                //     ),
-                                //   ),
-                                // ),
-                                SizedBox(height: size.height * 0.2),
-                                Lottie.asset("assets/Lotties/empty.json",
-                                    animate: true, reverse: true),
-                                SizedBox(height: size.height * 0.2),
-                                cusname == null
-                                    ? Text(
-                                        "Select any Customer to Proceed",
-                                        style: TxtStls.fieldtitlestyle,
-                                      )
-                                    : SizedBox()
-                              ],
-                            ),
-                    ),
-                  )
-          ],
-        ),
-      ],
-    );
-  }
-
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> errorbox(e) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       dismissDirection: DismissDirection.startToEnd,
       content: Text(e),
       backgroundColor: Colors.red,
     ));
-  }
-
-  // 1.preview of invoice
-  detailspopBox(context, url) {
-    Size size = MediaQuery.of(context).size;
-    var alertDialog = AlertDialog(
-      contentPadding: EdgeInsets.all(0),
-      actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
-      insetPadding: EdgeInsets.all(0),
-      buttonPadding: EdgeInsets.all(0),
-      backgroundColor: Colors.white.withOpacity(0.9),
-      content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-        return Container(
-          color: bgColor,
-          padding: EdgeInsets.all(10.0),
-          height: size.height * 0.15,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "JR03212201",
-                    style: TxtStls.fieldtitlestyle,
-                  ),
-                  CircleAvatar(
-                    backgroundColor: neClr.withOpacity(0.1),
-                    child: IconButton(
-                      hoverColor: Colors.transparent,
-                      tooltip: "Close Window",
-                      icon: Icon(Icons.close_rounded),
-                      color: neClr,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  FlatButton.icon(
-                      color: btnColor,
-                      onPressed: () {
-                        downloadInvoice(url);
-                      },
-                      icon: Icon(Icons.download_rounded, color: bgColor),
-                      label: Text(
-                        "Download",
-                        style: TxtStls.fieldstyle1,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                  VerticalDivider(),
-                  FlatButton.icon(
-                      color: btnColor,
-                      onPressed: () {},
-                      icon: Icon(Icons.print_rounded, color: bgColor),
-                      label: Text(
-                        "Print",
-                        style: TxtStls.fieldstyle1,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                  VerticalDivider(),
-                  FlatButton.icon(
-                      color: btnColor,
-                      onPressed: () {
-                        forwardtoemail(context);
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: bgColor,
-                      ),
-                      label: Text(
-                        "Forward",
-                        style: TxtStls.fieldstyle1,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                  VerticalDivider(),
-                  FlatButton.icon(
-                      color: btnColor,
-                      onPressed: () {
-                        fileview1(context, "JR03212201", url);
-                      },
-                      icon: Icon(Icons.copy, color: bgColor),
-                      label: Text(
-                        "Preview",
-                        style: TxtStls.fieldstyle1,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      )),
-                ],
-              ),
-            ],
-          ),
-        );
-      }),
-    );
-    showDialog(
-        barrierDismissible: false,
-        barrierColor: txtColor.withOpacity(0.75),
-        context: context,
-        builder: (_) {
-          return alertDialog;
-        });
-  }
-
-  // 2.Download the Invoice
-
-  downloadInvoice(_url) async {
-    if (!await launch(
-      _url,
-      forceWebView: true,
-      forceSafariVC: true,
-      enableJavaScript: true,
-    )) throw 'Could not launch $_url';
-  }
-
-  // 3.Print the Invoice on A4
-
-  printInoice() async {}
-
-  // 4. Forward Invoice to email
-
-  forwardtoemail(BuildContext context) async {
-    print("we are sending data to email please wait");
-    Navigator.pop(context);
-    sendBox(context);
-  }
-
-  sendBox(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    TextEditingController _toemailController = TextEditingController();
-    var alertDialog = AlertDialog(
-      contentPadding: EdgeInsets.all(0),
-      actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
-      insetPadding: EdgeInsets.all(0),
-      buttonPadding: EdgeInsets.all(0),
-      backgroundColor: Colors.white.withOpacity(0.9),
-      content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FlatButton.icon(
-              color: btnColor,
-              onPressed: () {},
-              icon: Icon(Icons.send),
-              label: Text(
-                "Send",
-                style: TxtStls.fieldstyle1,
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-            )
-          ],
-        );
-      }),
-    );
-    showDialog(
-        barrierDismissible: false,
-        barrierColor: txtColor.withOpacity(0.75),
-        context: context,
-        builder: (_) {
-          return alertDialog;
-        });
   }
 
   symbol(selectedcurrency) {

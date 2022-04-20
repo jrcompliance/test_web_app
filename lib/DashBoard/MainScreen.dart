@@ -9,6 +9,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
+import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
@@ -19,6 +20,7 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -31,22 +33,25 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Finance;
+  Tabs active = Tabs.DashBoard;
   var radioItem;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1)).then((value) {
-      Provider.of<UserDataProvider>(context, listen: false).getUserData();
+    Provider.of<UserDataProvider>(context, listen: false).getUserData();
+    Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    Future.delayed(Duration(seconds: 4)).then((value) {
+      userTasks();
+      Provider.of<EmergencyTaskProvider>(context, listen: false)
+          .fetchEmergencyTasks(
+              context, DateTime.now().toString().split(" ")[0].toString());
     });
+
     Future.delayed(Duration(seconds: 10), () {
       Provider.of<UserDataProvider>(context, listen: false).imageUrl == null
           ? completeProfile()
           : null;
-    });
-    Future.delayed(Duration.zero).then((value) {
-      Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     });
   }
 
@@ -181,7 +186,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               Header(
                 title: "DashBoard",
               ),
-              //UserDashBoard(),
+              UserDashBoard(),
             ],
           );
         }
@@ -265,7 +270,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   // functions are from here...
 
   Future<void> userTasks() async {
-    final userdata = Provider.of<UserDataProvider>(context);
+    final userdata = Provider.of<UserDataProvider>(context, listen: false);
     try {
       FirebaseFirestore.instance
           .collection("Tasks")
@@ -280,6 +285,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           .listen((value) {
             setState(() {
               newLength = value.docs.length.toDouble();
+              // print(newLength);
             });
           });
     } on Exception catch (e) {

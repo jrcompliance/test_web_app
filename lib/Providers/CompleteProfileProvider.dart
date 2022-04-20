@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CompleteProfielProvider with ChangeNotifier {
-  FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
   String? error;
   bool isLoading = false;

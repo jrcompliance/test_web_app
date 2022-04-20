@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 String? cusname;
 String? cusemail;
 String? cusphone;
@@ -7,3 +9,14 @@ String? address;
 String? pan;
 String? pincode;
 int? cusID;
+String? cusTask;
+Timestamp? startDate;
+String? endDate;
+String? priority;
+Timestamp? lastseen;
+String? cat;
+String? message;
+String? status;
+int? s;
+int? f;
+List? assign;

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class CreateLeadProvider with ChangeNotifier {
   String? error;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> createTask(
       _leadnameController,
       _endDateController,
@@ -14,8 +14,7 @@ class CreateLeadProvider with ChangeNotifier {
       _selectperson,
       _image,
       cxid) async {
-    CollectionReference collectionReference =
-        await _firestore.collection("Tasks");
+    CollectionReference collectionReference = _firestore.collection("Tasks");
     String did = collectionReference.doc().id;
 
     try {
@@ -52,7 +51,7 @@ class CreateLeadProvider with ChangeNotifier {
         "Certificates": [],
       });
       notifyListeners();
-    } on FirebaseException catch (e, s) {
+    } on FirebaseException catch (e) {
       error = e.message.toString();
       print("error is  $error");
       notifyListeners();

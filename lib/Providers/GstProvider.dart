@@ -34,6 +34,7 @@ class GstProvider with ChangeNotifier {
         });
         var extractedResponse = json.decode(response.body);
         var myData = extractedResponse["data"]["details"];
+
         pincode = myData["pincode"];
         pan = myData["pan"];
         //gstinstatusfetched = myData["gstinstatusfetched"];

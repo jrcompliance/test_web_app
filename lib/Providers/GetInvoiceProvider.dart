@@ -8,27 +8,31 @@ class GetInvoiceListProvider extends ChangeNotifier {
     return [..._invoicemodellist];
   }
 
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> getInvoiceList(id) async {
-    CollectionReference _collectionref = _firestore.collection("Tasks");
-    QuerySnapshot extractedResponse =
-        await _collectionref.doc(id).collection("Invoices").get();
-    List<GetInvoiceModel> loadedData = [];
-    extractedResponse.docs.forEach((element) {
-      loadedData.add(GetInvoiceModel(
-          amount: element["amount"],
-          currencyType: element["currencyType"],
-          duedate: element["duedate"],
-          invoiceID: element["invoiceID"],
-          invoiceType: element["invoiceType"],
-          invoiceurl: element["invoiceurl"],
-          status: element["status"],
-          internalNotes: element["internalNotes"],
-          externalNotes: element["externalNotes"],
-          referenceID: element["referenceID"],
-          docid: element["id"]));
-    });
-    _invoicemodellist = loadedData;
-    notifyListeners();
+    try {
+      CollectionReference _collectionref = _firestore.collection("Tasks");
+      QuerySnapshot extractedResponse =
+          await _collectionref.doc(id).collection("Invoices").get();
+      List<GetInvoiceModel> loadedData = [];
+      extractedResponse.docs.forEach((element) {
+        loadedData.add(GetInvoiceModel(
+            amount: element["amount"],
+            currencyType: element["currencyType"],
+            duedate: element["duedate"],
+            invoiceID: element["invoiceID"],
+            invoiceType: element["invoiceType"],
+            invoiceurl: element["invoiceurl"],
+            status: element["status"],
+            internalNotes: element["internalNotes"],
+            externalNotes: element["externalNotes"],
+            referenceID: element["referenceID"],
+            docid: element["id"]));
+      });
+      _invoicemodellist = loadedData;
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }

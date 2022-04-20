@@ -17,6 +17,7 @@ import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/DupicatesFinderProvider.dart';
+import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
@@ -62,6 +63,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceSaveProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvider()),
+      ChangeNotifierProvider(create: (ctx) => EmergencyTaskProvider()),
       ChangeNotifierProvider(create: (ctx) => DuplicatesFinderProvider()),
     ],
     child: const MyApp(),
@@ -81,7 +83,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         canvasColor: bgColor.withOpacity(1),
       ),
-      home: const LandingScreen(),
+      home: SafeArea(child: const LandingScreen()),
     );
   }
 }
@@ -102,13 +104,14 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<DuplicatesFinderProvider>(context).dupicates();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Center(
-        child: SpinKitFadingCube(
-          size: size.height * 0.075,
-          color: btnColor,
+      body: SafeArea(
+        child: Center(
+          child: SpinKitFadingCube(
+            size: size.height * 0.075,
+            color: btnColor,
+          ),
         ),
       ),
     );

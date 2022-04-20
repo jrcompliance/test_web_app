@@ -1,7 +1,5 @@
 import 'dart:html' show ImageElement;
 import 'dart:ui' as ui;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,11 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/tasklength.dart';
-import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 
 class UserDashBoard extends StatefulWidget {
   const UserDashBoard({Key? key}) : super(key: key);
@@ -23,13 +20,23 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   int chartval = 4;
   int duelistval = 1;
+  showLead() {
+    if (duelistval == 1) {
+      return DateTime.now().toString().split(" ")[0];
+    } else if (duelistval == 2) {
+      return DateTime.now()
+          .subtract(Duration(days: 1))
+          .toString()
+          .split(" ")[0];
+    } else if (duelistval == 3) {
+      return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Container(
       color: AbgColor.withOpacity(0.0001),
@@ -403,158 +410,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
           SizedBox(height: size.height * 0.02),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  alignment: Alignment.center,
-                  width: Responsive.isMediumScreen(context)
-                      ? size.width * 0.48
-                      : size.width * 0.5,
-                  height: size.height * 0.3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Text("Recent Interactions",
-                            style: TxtStls.fieldtitlestyle),
-                      )
-                    ],
-                  )),
-              Container(
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  alignment: Alignment.center,
-                  width: Responsive.isMediumScreen(context)
-                      ? size.width * 0.28
-                      : size.width * 0.3,
-                  height: size.height * 0.3,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            showtitle(duelistval),
-                            PopupMenuButton(
-                              offset: Offset(0, 32),
-                              elevation: 10.0,
-                              shape: TooltipShape(),
-                              icon: Icon(
-                                Icons.more_horiz,
-                              ),
-                              onSelected: (int value) {
-                                duelistval = value;
-                                setState(() {});
-                              },
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: 1,
-                                    child: Text(
-                                      "Today's Duelist",
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                      value: 2,
-                                      child: Text(
-                                        "Outdated List",
-                                        style: TxtStls.fieldstyle,
-                                      )),
-                                  PopupMenuItem(
-                                    value: 3,
-                                    child: Text(
-                                      "Tommorrow's Duelist",
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ),
-                                ];
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: size.height * 0.23,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("Tasks")
-                              .where("endDate", isEqualTo: showLead(duelistval))
-                              .where("Attachments", arrayContainsAny: [
-                            {
-                              "image": userdata.imageUrl,
-                              "uid": _auth.currentUser!.uid.toString(),
-                            }
-                          ]).snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SpinKitFadingCube(
-                                  color: btnColor,
-                                  size: 25,
-                                ),
-                              );
-                            }
-                            if (snapshot.data!.docs.length == 0) {
-                              return Center(
-                                  child: Text(
-                                "No Data Found",
-                                style: TxtStls.fieldtitlestyle,
-                              ));
-                            }
-                            return ListView.separated(
-                              separatorBuilder: (_, i) => SizedBox(height: 5.0),
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (_, index) {
-                                String logo =
-                                    snapshot.data!.docs[index]["logo"];
-                                // ignore: undefined_prefixed_name
-                                ui.platformViewRegistry.registerViewFactory(
-                                  logo,
-                                  (int _) => ImageElement()..src = logo,
-                                );
-                                return ListTile(
-                                  leading: SizedBox(
-                                      width: 30,
-                                      height: 30,
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: HtmlElementView(
-                                            viewType: logo,
-                                          ))),
-                                  title: Text(
-                                      snapshot.data!.docs[index]["task"],
-                                      style: TxtStls.fieldtitlestyle),
-                                  subtitle: Text(
-                                    snapshot.data!.docs[index]["CompanyDetails"]
-                                        [0]["email"],
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                  trailing: Icon(Icons.arrow_forward),
-                                  onTap: () {},
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  )),
-            ],
+            children: [RecentInteractions(), EmergencyLeads()],
           ),
         ],
       ),
@@ -767,17 +623,158 @@ class _UserDashBoardState extends State<UserDashBoard> {
     }
   }
 
-  showLead(dval) {
-    if (dval == 1) {
-      return DateTime.now().toString().split(" ")[0];
-    } else if (dval == 2) {
-      return DateTime.now()
-          .subtract(Duration(days: 1))
-          .toString()
-          .split(" ")[0];
-    } else if (dval == 3) {
-      return DateTime.now().add(Duration(days: 1)).toString().split(" ")[0];
-    }
+  Widget RecentInteractions() {
+    Size size = MediaQuery.of(context).size;
+    return Flexible(
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Card(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        elevation: 10.0,
+        child: Container(
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            alignment: Alignment.center,
+            height: size.height * 0.3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Text("Recent Interactions",
+                      style: TxtStls.fieldtitlestyle),
+                )
+              ],
+            )),
+      ),
+    );
+  }
+
+  Widget EmergencyLeads() {
+    Size size = MediaQuery.of(context).size;
+    final emergencylist =
+        Provider.of<EmergencyTaskProvider>(context, listen: false)
+            .emergencylist;
+    return Flexible(
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Card(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        elevation: 10.0,
+        child: Container(
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            alignment: Alignment.center,
+            height: size.height * 0.3,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      showtitle(duelistval),
+                      PopupMenuButton(
+                        offset: Offset(0, 32),
+                        elevation: 10.0,
+                        shape: TooltipShape(),
+                        icon: Icon(
+                          Icons.more_horiz,
+                        ),
+                        onSelected: (int value) {
+                          Provider.of<EmergencyTaskProvider>(context,
+                                  listen: false)
+                              .fetchEmergencyTasks(context, value);
+                          duelistval = value;
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text(
+                                "Today's Duelist",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                            PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Outdated List",
+                                  style: TxtStls.fieldstyle,
+                                )),
+                            PopupMenuItem(
+                              value: 3,
+                              child: Text(
+                                "Tommorrow's Duelist",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ),
+                          ];
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: emergencylist.length <= 0 ||
+                            emergencylist.length == null
+                        ? Center(
+                            child: SpinKitFadingCube(color: btnColor, size: 15),
+                          )
+                        : ListView.separated(
+                            separatorBuilder: (_, i) => SizedBox(height: 2),
+                            itemCount: emergencylist.length,
+                            itemBuilder: (_, index) {
+                              String? logo =
+                                  emergencylist[index].logo.toString();
+                              // ignore: undefined_prefixed_name
+                              ui.platformViewRegistry.registerViewFactory(
+                                logo,
+                                (int _) => ImageElement()..src = logo,
+                              );
+                              return Card(
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  leading: SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: HtmlElementView(
+                                            viewType: logo,
+                                          ))),
+                                  title: Text(
+                                      emergencylist[index].taskname.toString(),
+                                      style: TxtStls.fieldtitlestyle),
+                                  subtitle: Text(
+                                    emergencylist[index].email.toString(),
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                  trailing: Icon(Icons.arrow_forward),
+                                  onTap: () {},
+                                ),
+                              );
+                            },
+                          ))
+              ],
+            )),
+      ),
+    );
   }
 }
 

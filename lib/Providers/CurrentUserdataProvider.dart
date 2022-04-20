@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,12 +21,11 @@ class UserDataProvider extends ChangeNotifier {
   Future<void> getUserData() async {
     try {
       FirebaseFirestore _firebasefirestore = FirebaseFirestore.instance;
-      FirebaseAuth _auth = FirebaseAuth.instance;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var uid = prefs.getString("uid");
+      var userid = prefs.getString("uid");
       await _firebasefirestore
           .collection("EmployeeData")
-          .doc(uid)
+          .doc(userid)
           .get()
           .then((value) {
         //print(value.data());
@@ -44,6 +42,7 @@ class UserDataProvider extends ChangeNotifier {
         imageUrl = value.get("uimage");
         role = value.get("urole");
         eid = value.get("eid");
+        uid = value.get("uid");
         notifyListeners();
       });
     } on Exception catch (e) {

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 class AddDocumentsProvider with ChangeNotifier {
   FirebaseStorage storage = FirebaseStorage.instance;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> addDocument(id) async {
     try {
       FilePickerResult? result = await FilePicker.platform
