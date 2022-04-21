@@ -42,192 +42,147 @@ class _UserDashBoardState extends State<UserDashBoard> {
       color: AbgColor.withOpacity(0.0001),
       width: size.width,
       height: size.height * 0.93,
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: 0),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: Responsive.isMediumScreen(context)
-                    ? size.width * 0.18
-                    : size.width * 0.2,
-                height: size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 30.0,
-                      child: Image.asset("assets/Logos/4.png"),
-                      backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        prospectLength == null
-                            ? Text("0+", style: TxtStls.numstyle)
-                            : Row(
-                                children: [
-                                  Countup(
-                                    end: prospectLength!.toDouble(),
-                                    begin: 0,
-                                    style: TxtStls.numstyle,
-                                  ),
-                                  Text(
-                                    "+",
-                                    style: TxtStls.numstyle,
-                                  )
-                                ],
-                              ),
-                        Text("PROSPECT", style: TxtStls.fieldstyle)
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: Responsive.isMediumScreen(context)
-                    ? size.width * 0.18
-                    : size.width * 0.2,
-                height: size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 30.0,
-                      child: Image.asset("assets/Logos/1.png"),
-                      backgroundColor: Colors.orangeAccent.withOpacity(0.1),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        newLength == null
-                            ? Text("0+", style: TxtStls.numstyle)
-                            : Row(
-                                children: [
-                                  Countup(
-                                    end: newLength!.toDouble(),
-                                    begin: 0,
-                                    style: TxtStls.numstyle,
-                                  ),
-                                  Text(
-                                    "+",
-                                    style: TxtStls.numstyle,
-                                  )
-                                ],
-                              ),
-                        Text("NEW LEADS", style: TxtStls.fieldstyle)
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: Responsive.isMediumScreen(context)
-                    ? size.width * 0.18
-                    : size.width * 0.2,
-                height: size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 30.0,
-                      child: Center(
-                        child: Image.asset("assets/Logos/2.png",
-                            fit: BoxFit.fill,
-                            filterQuality: FilterQuality.high),
-                      ),
-                      backgroundColor: Colors.yellowAccent.withOpacity(0.1),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ipLength == null
-                            ? Text("0+", style: TxtStls.numstyle)
-                            : Row(
-                                children: [
-                                  Countup(
-                                    end: ipLength!.toDouble(),
-                                    begin: 0,
-                                    style: TxtStls.numstyle,
-                                  ),
-                                  Text(
-                                    "+",
-                                    style: TxtStls.numstyle,
-                                  )
-                                ],
-                              ),
-                        Text("IN PROGRESS", style: TxtStls.fieldstyle)
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: Responsive.isMediumScreen(context)
-                    ? size.width * 0.18
-                    : size.width * 0.2,
-                height: size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 30.0,
-                      child: Image.asset("assets/Logos/3.png",
+              cover(Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    maxRadius: 30.0,
+                    child: Image.asset("assets/Logos/4.png"),
+                    backgroundColor: Colors.blueAccent.withOpacity(0.1),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      prospectLength == null
+                          ? Text("0+", style: TxtStls.numstyle)
+                          : Row(
+                              children: [
+                                Countup(
+                                  end: prospectLength!.toDouble(),
+                                  begin: 0,
+                                  style: TxtStls.numstyle,
+                                ),
+                                Text(
+                                  "+",
+                                  style: TxtStls.numstyle,
+                                )
+                              ],
+                            ),
+                      Text("PROSPECT", style: TxtStls.fieldstyle)
+                    ],
+                  )
+                ],
+              )),
+              cover(Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    maxRadius: 30.0,
+                    child: Image.asset("assets/Logos/1.png"),
+                    backgroundColor: Colors.orangeAccent.withOpacity(0.1),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      newLength == null
+                          ? Text("0+", style: TxtStls.numstyle)
+                          : Row(
+                              children: [
+                                Countup(
+                                  end: newLength!.toDouble(),
+                                  begin: 0,
+                                  style: TxtStls.numstyle,
+                                ),
+                                Text(
+                                  "+",
+                                  style: TxtStls.numstyle,
+                                )
+                              ],
+                            ),
+                      Text("NEW LEADS", style: TxtStls.fieldstyle)
+                    ],
+                  )
+                ],
+              )),
+              cover(Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    maxRadius: 30.0,
+                    child: Center(
+                      child: Image.asset("assets/Logos/2.png",
                           fit: BoxFit.fill, filterQuality: FilterQuality.high),
-                      backgroundColor: btnColor.withOpacity(0.1),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        wonLength == null
-                            ? Text("0+", style: TxtStls.numstyle)
-                            : Row(
-                                children: [
-                                  Countup(
-                                    end: wonLength!.toDouble(),
-                                    begin: 0,
-                                    style: TxtStls.numstyle,
-                                  ),
-                                  Text(
-                                    "+",
-                                    style: TxtStls.numstyle,
-                                  )
-                                ],
-                              ),
-                        Text("WON", style: TxtStls.fieldstyle)
-                      ],
-                    )
-                  ],
-                ),
-              ),
+                    backgroundColor: Colors.yellowAccent.withOpacity(0.1),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ipLength == null
+                          ? Text("0+", style: TxtStls.numstyle)
+                          : Row(
+                              children: [
+                                Countup(
+                                  end: ipLength!.toDouble(),
+                                  begin: 0,
+                                  style: TxtStls.numstyle,
+                                ),
+                                Text(
+                                  "+",
+                                  style: TxtStls.numstyle,
+                                )
+                              ],
+                            ),
+                      Text("IN PROGRESS", style: TxtStls.fieldstyle)
+                    ],
+                  )
+                ],
+              )),
+              cover(Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    maxRadius: 30.0,
+                    child: Image.asset("assets/Logos/3.png",
+                        fit: BoxFit.fill, filterQuality: FilterQuality.high),
+                    backgroundColor: btnColor.withOpacity(0.1),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      wonLength == null
+                          ? Text("0+", style: TxtStls.numstyle)
+                          : Row(
+                              children: [
+                                Countup(
+                                  end: wonLength!.toDouble(),
+                                  begin: 0,
+                                  style: TxtStls.numstyle,
+                                ),
+                                Text(
+                                  "+",
+                                  style: TxtStls.numstyle,
+                                )
+                              ],
+                            ),
+                      Text("WON", style: TxtStls.fieldstyle)
+                    ],
+                  )
+                ],
+              )),
             ],
           ),
-          SizedBox(height: size.height * 0.02),
+          space(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -371,7 +326,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                   )),
             ],
           ),
-          SizedBox(height: size.height * 0.02),
+          space(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -407,7 +362,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
               ),
             ],
           ),
-          SizedBox(height: size.height * 0.02),
+          space(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [RecentInteractions(), EmergencyLeads()],
@@ -415,6 +370,61 @@ class _UserDashBoardState extends State<UserDashBoard> {
         ],
       ),
     );
+  }
+
+  Widget space() {
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(height: size.height * 0.02);
+  }
+
+  Widget cover(child) {
+    Size size = MediaQuery.of(context).size;
+    return Flexible(
+        flex: 1,
+        fit: FlexFit.tight,
+        child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 10,
+            child: Container(
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                alignment: Alignment.center,
+                height: size.height * 0.1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CircleAvatar(
+                      maxRadius: 30.0,
+                      child: Image.asset("assets/Logos/4.png"),
+                      backgroundColor: Colors.blueAccent.withOpacity(0.1),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        prospectLength == null
+                            ? Text("0+", style: TxtStls.numstyle)
+                            : Row(
+                                children: [
+                                  Countup(
+                                    end: prospectLength!.toDouble(),
+                                    begin: 0,
+                                    style: TxtStls.numstyle,
+                                  ),
+                                  Text(
+                                    "+",
+                                    style: TxtStls.numstyle,
+                                  )
+                                ],
+                              ),
+                        Text("PROSPECT", style: TxtStls.fieldstyle)
+                      ],
+                    )
+                  ],
+                ))));
   }
 
   showtitle1(cval) {

@@ -249,8 +249,9 @@ class _FinanceState extends State<Finance> {
               ),
             ),
             SizedBox(width: 10),
-            Expanded(
+            Flexible(
                 flex: 7,
+                fit: FlexFit.tight,
                 child: isPreview
                     ? PreviewInvoice(context)
                     : Container(

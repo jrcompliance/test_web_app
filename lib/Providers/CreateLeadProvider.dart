@@ -13,7 +13,8 @@ class CreateLeadProvider with ChangeNotifier {
       _firstmessageController,
       _selectperson,
       _image,
-      cxid) async {
+      cxid,
+      leadId) async {
     CollectionReference collectionReference = _firestore.collection("Tasks");
     String did = collectionReference.doc().id;
 
@@ -49,6 +50,7 @@ class CreateLeadProvider with ChangeNotifier {
         ],
         "lastseen": Timestamp.now(),
         "Certificates": [],
+        "LeadId": leadId
       });
       notifyListeners();
     } on FirebaseException catch (e) {

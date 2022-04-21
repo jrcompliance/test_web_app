@@ -1159,6 +1159,7 @@ class _TaskPreviewState extends State<TaskPreview>
               String id = snp["id"];
               String taskname = snp["task"];
               String CxID = snp["CxID"].toString();
+              int LeadId = snp["LeadId"];
               Timestamp startDate = snp["startDate"];
               String endDate = snp["endDate"];
               String priority = snp["priority"];
@@ -1267,7 +1268,7 @@ class _TaskPreviewState extends State<TaskPreview>
                                 SizedBox(width: 2),
                                 Flexible(
                                   child: Text(
-                                    taskname,
+                                    taskname+" (JRL-${LeadId<10?"0${LeadId}":LeadId})",
                                     style: ClrStls.tnClr,
                                   ),
                                 ),

@@ -8,6 +8,7 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
   int? eid;
   int? inid;
   String? actualinid;
+  int? leadId;
   Future<void> fetchRecent() async {
     try {
       await _firestore
@@ -102,5 +103,26 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
     actualinid = storeval;
     print(actualinid);
     notifyListeners();
+  }
+
+  Future<void> fetchLeadId() async {
+    try {
+      await _firestore
+          .collection("GenerateId's")
+          .doc("LeadID")
+          .update({"leadId": FieldValue.increment(1)}).then((value) async {
+        await _firestore
+            .collection("GenerateId's")
+            .doc("LeadID")
+            .get()
+            .then((value) {
+          leadId = value.get("leadId");
+          notifyListeners();
+        });
+      });
+      notifyListeners();
+    } on Exception catch (e, s) {
+      print("${s}" + "${e.toString()}");
+    }
   }
 }
