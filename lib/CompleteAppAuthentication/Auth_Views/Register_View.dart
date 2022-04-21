@@ -29,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final _scrollController = ScrollController();
   var maxLength = 10;
   var textLength = 0;
 
@@ -54,320 +55,372 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     )
                   : ScaleAnimatedWidget.tween(
                       duration: Duration(seconds: 1),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            MyLogo(),
-                            Text(
-                              'Sign Up',
-                              style: TxtStls.titlestyle,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          MyLogo(),
+                          Text(
+                            'Sign Up',
+                            style: TxtStls.titlestyle,
+                          ),
+                          MySpacer(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.05),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.black,
+                                    thickness: 0.2,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Or',
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.black,
+                                    thickness: 0.2,
+                                  ),
+                                ),
+                              ],
                             ),
-                            MySpacer(),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.05),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      color: Colors.black,
-                                      thickness: 0.2,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Or',
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Divider(
-                                      color: Colors.black,
-                                      thickness: 0.2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            MySpacer(),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.075),
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Full Name",
-                                        style: TxtStls.fieldtitlestyle),
-                                    field(
-                                      _usernameController,
-                                      "Enter Your name..",
-                                      (fullname) {
-                                        if (fullname!.isEmpty) {
-                                          return "Name can not be empty";
-                                        } else if (fullname.length < 3) {
-                                          return "Name should be atleast 3 letters";
+                          ),
+                          MySpacer(),
+                          SizedBox(
+                            height: size.height * 0.6,
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.width * 0.075),
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Full Name",
+                                          style: TxtStls.fieldtitlestyle),
+                                      field(
+                                        _usernameController,
+                                        "Enter Your name..",
+                                        (fullname) {
+                                          if (fullname!.isEmpty) {
+                                            return "Name can not be empty";
+                                          } else if (fullname.length < 3) {
+                                            return "Name should be atleast 3 letters";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                      ),
+                                      MySpacer(),
+                                      Text("Phone Number",
+                                          style: TxtStls.fieldtitlestyle),
+                                      Container(
+                                        decoration: deco,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: size.width * 0.01),
+                                          child: TextFormField(
+                                            cursorColor: btnColor,
+                                            keyboardType: TextInputType.number,
+                                            maxLength: maxLength,
+                                            controller: _phonenumberController,
+                                            style: TxtStls.fieldstyle,
+                                            decoration: InputDecoration(
+                                              suffixStyle: ClrStls.tnClr,
+                                              errorStyle: ClrStls.errorstyle,
+                                              suffixText:
+                                                  '${textLength.toString()}/${maxLength.toString()}',
+                                              counterText: "",
+                                              hintText: "Phone Number",
+                                              hintStyle: TxtStls.fieldstyle,
+                                              border: InputBorder.none,
+                                            ),
+                                            validator: (phoneNumber) {
+                                              String patttern =
+                                                  r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                              RegExp regExp = RegExp(patttern);
+                                              if (phoneNumber!.isEmpty) {
+                                                return "Phone Number can not be empty";
+                                              } else if (phoneNumber.length <
+                                                      10 ||
+                                                  phoneNumber.length > 10) {
+                                                return "Enter valid Phone Number";
+                                              } else if (!regExp
+                                                  .hasMatch(phoneNumber)) {
+                                                return "Only numbers are allowed";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            onChanged: (value) {
+                                              setState(() {
+                                                textLength = value.length;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      MySpacer(),
+                                      Text("Email Address",
+                                          style: TxtStls.fieldtitlestyle),
+                                      field(
+                                          _emailController, "Enter your email",
+                                          (email) {
+                                        String pattern =
+                                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                        RegExp regExp = RegExp(pattern);
+                                        if (email!.isEmpty) {
+                                          return "Email can not be empty";
+                                        } else if (!regExp.hasMatch(email)) {
+                                          return "Enter a valid email";
                                         } else {
                                           return null;
                                         }
-                                      },
-                                    ),
-                                    MySpacer(),
-                                    Text("Phone Number",
-                                        style: TxtStls.fieldtitlestyle),
-                                    Container(
-                                      decoration: deco,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: size.width * 0.01),
-                                        child: TextFormField(
-                                          cursorColor: btnColor,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: maxLength,
-                                          controller: _phonenumberController,
-                                          style: TxtStls.fieldstyle,
-                                          decoration: InputDecoration(
-                                            suffixStyle: ClrStls.tnClr,
-                                            errorStyle: ClrStls.errorstyle,
-                                            suffixText:
-                                                '${textLength.toString()}/${maxLength.toString()}',
-                                            counterText: "",
-                                            hintText: "Phone Number",
-                                            hintStyle: TxtStls.fieldstyle,
-                                            border: InputBorder.none,
+                                      }),
+                                      MySpacer(),
+                                      Text("Password",
+                                          style: TxtStls.fieldtitlestyle),
+                                      Container(
+                                        decoration: deco,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 15, right: 15, top: 2),
+                                          child: TextFormField(
+                                            cursorColor: btnColor,
+                                            controller: _passwordController,
+                                            style: TxtStls.fieldstyle,
+                                            obscureText: _isSecured,
+                                            decoration: InputDecoration(
+                                              errorStyle: ClrStls.errorstyle,
+                                              hintText: "Password",
+                                              hintStyle: TxtStls.fieldstyle,
+                                              border: InputBorder.none,
+                                              suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    _isSecured
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility,
+                                                    color: btnColor,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _isSecured = !_isSecured;
+                                                    });
+                                                  },
+                                                  color: txtColor),
+                                            ),
+                                            validator: (password) {
+                                              if (password!.isEmpty) {
+                                                return "Password can not be empty";
+                                              } else if (password.length < 6) {
+                                                return "Passowrd should be atleast 6 letters";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
                                           ),
-                                          validator: (phoneNumber) {
-                                            String patttern =
-                                                r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                                            RegExp regExp = RegExp(patttern);
-                                            if (phoneNumber!.isEmpty) {
-                                              return "Phone Number can not be empty";
-                                            } else if (phoneNumber.length <
-                                                    10 ||
-                                                phoneNumber.length > 10) {
-                                              return "Enter valid Phone Number";
-                                            } else if (!regExp
-                                                .hasMatch(phoneNumber)) {
-                                              return "Only numbers are allowed";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                          onChanged: (value) {
-                                            setState(() {
-                                              textLength = value.length;
-                                            });
-                                          },
                                         ),
                                       ),
-                                    ),
-                                    MySpacer(),
-                                    Text("Email Address",
-                                        style: TxtStls.fieldtitlestyle),
-                                    field(_emailController, "Enter your email",
-                                        (email) {
-                                      String pattern =
-                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                      RegExp regExp = RegExp(pattern);
-                                      if (email!.isEmpty) {
-                                        return "Email can not be empty";
-                                      } else if (!regExp.hasMatch(email)) {
-                                        return "Enter a valid email";
-                                      } else {
-                                        return null;
-                                      }
-                                    }),
-                                    MySpacer(),
-                                    Text("Password",
-                                        style: TxtStls.fieldtitlestyle),
-                                    Container(
-                                      decoration: deco,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, right: 15, top: 2),
-                                        child: TextFormField(
-                                          cursorColor: btnColor,
-                                          controller: _passwordController,
-                                          style: TxtStls.fieldstyle,
-                                          obscureText: _isSecured,
-                                          decoration: InputDecoration(
-                                            errorStyle: ClrStls.errorstyle,
-                                            hintText: "Password",
-                                            hintStyle: TxtStls.fieldstyle,
-                                            border: InputBorder.none,
-                                            suffixIcon: IconButton(
-                                                icon: Icon(
-                                                  _isSecured
-                                                      ? Icons.visibility_off
-                                                      : Icons.visibility,
-                                                  color: btnColor,
+                                      MySpacer(),
+                                      Container(
+                                        decoration: deco,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 15, right: 15, top: 2),
+                                          child: TextFormField(
+                                            cursorColor: btnColor,
+                                            controller: _passwordController,
+                                            style: TxtStls.fieldstyle,
+                                            obscureText: _isSecured,
+                                            decoration: InputDecoration(
+                                              errorStyle: ClrStls.errorstyle,
+                                              hintText: "Password",
+                                              hintStyle: TxtStls.fieldstyle,
+                                              border: InputBorder.none,
+                                              suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    _isSecured
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility,
+                                                    color: btnColor,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _isSecured = !_isSecured;
+                                                    });
+                                                  },
+                                                  color: txtColor),
+                                            ),
+                                            validator: (password) {
+                                              if (password!.isEmpty) {
+                                                return "Password can not be empty";
+                                              } else if (password.length < 6) {
+                                                return "Passowrd should be atleast 6 letters";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      MySpacer(),
+                                      Row(
+                                        children: [
+                                          Checkbox(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5.0))),
+                                            activeColor: btnColor,
+                                            value: _isAgree,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _isAgree = value ?? false;
+                                              });
+                                            },
+                                          ),
+                                          Expanded(
+                                            child: RichText(
+                                              text: TextSpan(
+                                                  text:
+                                                      "By creating an account you agree to the \n",
+                                                  style: TxtStls.fieldstyle,
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text: "terms of use",
+                                                        style: TextStyle(
+                                                            color: btnColor,
+                                                            fontSize: 12.5,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline),
+                                                        recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap = () {
+                                                                launches
+                                                                    .termsofuse();
+                                                              }),
+                                                    TextSpan(
+                                                      text: " and our ",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                    TextSpan(
+                                                        text: "privacy policy",
+                                                        style: TextStyle(
+                                                            color: btnColor,
+                                                            fontSize: 12.5,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline),
+                                                        recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap = () {
+                                                                launches
+                                                                    .privacy();
+                                                              }),
+                                                    TextSpan(
+                                                      text: " followed by \n",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                    TextSpan(
+                                                        text:
+                                                            "purchase and billing",
+                                                        style: TextStyle(
+                                                            color: btnColor,
+                                                            fontSize: 12.5,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline),
+                                                        recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap = () {
+                                                                launches
+                                                                    .purchase();
+                                                              })
+                                                  ]),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      MySpacer(),
+                                      _isAgree
+                                          ? InkWell(
+                                              child: Container(
+                                                padding: EdgeInsets.all(12.0),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    color: _isAgree
+                                                        ? btnColor
+                                                        : fieldColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                child: Text(
+                                                  "Create Account",
+                                                  style: TextStyle(
+                                                      color: _isAgree
+                                                          ? Colors.white
+                                                          : txtColor),
                                                 ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _isSecured = !_isSecured;
-                                                  });
-                                                },
-                                                color: txtColor),
-                                          ),
-                                          validator: (password) {
-                                            if (password!.isEmpty) {
-                                              return "Password can not be empty";
-                                            } else if (password.length < 6) {
-                                              return "Passowrd should be atleast 6 letters";
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    MySpacer(),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0))),
-                                          activeColor: btnColor,
-                                          value: _isAgree,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _isAgree = value ?? false;
-                                            });
-                                          },
-                                        ),
-                                        Expanded(
-                                          child: RichText(
-                                            text: TextSpan(
-                                                text:
-                                                    "By creating an account you agree to the \n",
-                                                style: TxtStls.fieldstyle,
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                      text: "terms of use",
-                                                      style: TextStyle(
-                                                          color: btnColor,
-                                                          fontSize: 12.5,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              launches
-                                                                  .termsofuse();
-                                                            }),
-                                                  TextSpan(
-                                                    text: " and our ",
-                                                    style: TxtStls.fieldstyle,
-                                                  ),
-                                                  TextSpan(
-                                                      text: "privacy policy",
-                                                      style: TextStyle(
-                                                          color: btnColor,
-                                                          fontSize: 12.5,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              launches
-                                                                  .privacy();
-                                                            }),
-                                                  TextSpan(
-                                                    text: " followed by \n",
-                                                    style: TxtStls.fieldstyle,
-                                                  ),
-                                                  TextSpan(
-                                                      text:
-                                                          "purchase and billing",
-                                                      style: TextStyle(
-                                                          color: btnColor,
-                                                          fontSize: 12.5,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              launches
-                                                                  .purchase();
-                                                            })
-                                                ]),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    MySpacer(),
-                                    _isAgree
-                                        ? InkWell(
-                                            child: Container(
+                                              ),
+                                              onTap: () {
+                                                getRegister(context);
+                                              },
+                                            )
+                                          : Container(
                                               padding: EdgeInsets.all(12.0),
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                  color: _isAgree
-                                                      ? btnColor
-                                                      : fieldColor,
+                                                  color: fieldColor,
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(
                                                               10.0))),
                                               child: Text(
                                                 "Create Account",
-                                                style: TextStyle(
-                                                    color: _isAgree
-                                                        ? Colors.white
-                                                        : txtColor),
+                                                style:
+                                                    TextStyle(color: txtColor),
                                               ),
                                             ),
-                                            onTap: () {
-                                              getRegister(context);
-                                            },
-                                          )
-                                        : Container(
-                                            padding: EdgeInsets.all(12.0),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                color: fieldColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0))),
-                                            child: Text(
-                                              "Create Account",
-                                              style: TextStyle(color: txtColor),
-                                            ),
-                                          ),
-                                    MySpacer(),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: RichText(
-                                        text: TextSpan(
-                                            text: "Already have an account? ",
-                                            style: TxtStls.fieldtitlestyle,
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text: "Log in",
-                                                  style: TxtStls.btnstyle,
-                                                  recognizer:
-                                                      TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          Navigator.pushReplacement(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (_) =>
-                                                                      LoginScreen()));
-                                                        })
-                                            ]),
+                                      MySpacer(),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: RichText(
+                                          text: TextSpan(
+                                              text: "Already have an account? ",
+                                              style: TxtStls.fieldtitlestyle,
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                    text: "Log in",
+                                                    style: TxtStls.btnstyle,
+                                                    recognizer:
+                                                        TapGestureRecognizer()
+                                                          ..onTap = () {
+                                                            Navigator.pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (_) =>
+                                                                        LoginScreen()));
+                                                          })
+                                              ]),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
             ),

@@ -48,9 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: btnColor,
                       ),
                     )
-                  : SingleChildScrollView(
-                      child: ScaleAnimatedWidget.tween(
-                        duration: Duration(seconds: 1),
+                  : ScaleAnimatedWidget.tween(
+                      duration: Duration(seconds: 1),
+                      child: SingleChildScrollView(
                         child: Form(
                           key: _formKey,
                           child: Column(
