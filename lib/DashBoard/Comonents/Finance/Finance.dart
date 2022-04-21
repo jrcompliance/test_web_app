@@ -532,7 +532,7 @@ class _FinanceState extends State<Finance> {
                                                   taskname: cusTask.toString(),
                                                   priority: priority.toString(),
                                                   status: status.toString(),
-                                                  assign: assign as List,
+                                                  assigns: assign as List,
                                                   Idocid: Idocid.toString(),
                                                   message: message.toString(),
                                                 );

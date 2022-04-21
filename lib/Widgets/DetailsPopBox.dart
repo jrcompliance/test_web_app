@@ -30,7 +30,7 @@ class DeatailsPopBox extends StatefulWidget {
   String status;
   int s;
   int f;
-  List assign;
+  List assigns;
 
   DeatailsPopBox(
       {
@@ -46,7 +46,7 @@ class DeatailsPopBox extends StatefulWidget {
         required this.lastseen,
         required this.f,
         required this.s,
-        required this.assign});
+        required this.assigns});
 
   @override
   _DeatailsPopBoxState createState() => _DeatailsPopBoxState();
@@ -497,7 +497,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     return AlertDialog(
       contentPadding: EdgeInsets.all(0),
       actionsPadding: EdgeInsets.all(0),
-      titlePadding: EdgeInsets.all(0),
+      titlePadding: EdgeInsets.zero,
       insetPadding: EdgeInsets.all(0),
       buttonPadding: EdgeInsets.all(0),
       backgroundColor: Colors.white.withOpacity(0.9),
@@ -512,15 +512,21 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              width: 150,
-              child: Image.asset("assets/Logos/Controlifylogo.png",
-                  filterQuality: FilterQuality.high, fit: BoxFit.fill),
-            ),
-            Text(
-              widget.CxID.toString(),
-              style: TxtStls.fieldtitlestyle,
+            Image.asset("assets/Logos/Controlifylogo.png",
+                height: 50,
+                width: 500,
+                filterQuality: FilterQuality.high,fit: BoxFit.cover,),
+            Column(
+              children: [
+                Text(
+                  "CxID"+widget.CxID.toString(),
+                  style: TxtStls.fieldtitlestyle,
+                ),
+                Text(
+                  "LeadId"+widget.CxID.toString(),
+                  style: TxtStls.fieldtitlestyle,
+                ),
+              ],
             ),
             CircleAvatar(
               backgroundColor: neClr.withOpacity(0.1),
@@ -2595,7 +2601,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                         children: [
                                           Tooltip(
                                               message: "Agents",
-                                              child: widget.assign.length == 0
+                                              child: widget.assigns.length == 0
                                                   ? CircleAvatar(
                                                   backgroundColor: btnColor
                                                       .withOpacity(0.1),
@@ -2609,7 +2615,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               shrinkWrap: true,
                                               scrollDirection: Axis.horizontal,
                                               physics: ClampingScrollPhysics(),
-                                              itemCount: widget.assign.length,
+                                              itemCount: widget.assigns.length,
                                               itemBuilder: (_, index) {
                                                 return ClipRRect(
                                                     borderRadius:
@@ -2620,7 +2626,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                         width: 35,
                                                         height: 30,
                                                         child: Image.network(
-                                                            assign![index]
+                                                            widget.assigns[index]
                                                             ["image"],
                                                             fit: BoxFit.cover,
                                                             filterQuality:
