@@ -20,7 +20,8 @@ class UserDashBoard extends StatefulWidget {
 }
 
 class _UserDashBoardState extends State<UserDashBoard> {
-  int chartval = 4;
+  int chartval = 1;
+  int graphval = 1;
   int duelistval = 1;
   showLead() {
     if (duelistval == 1) {
@@ -46,320 +47,189 @@ class _UserDashBoardState extends State<UserDashBoard> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              cover(Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    maxRadius: 30.0,
-                    child: Image.asset("assets/Logos/4.png"),
-                    backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      prospectLength == null
-                          ? Text("0+", style: TxtStls.numstyle)
-                          : Row(
-                              children: [
-                                Countup(
-                                  end: prospectLength!.toDouble(),
-                                  begin: 0,
-                                  style: TxtStls.numstyle,
-                                ),
-                                Text(
-                                  "+",
-                                  style: TxtStls.numstyle,
-                                )
-                              ],
-                            ),
-                      Text("PROSPECT", style: TxtStls.fieldstyle)
-                    ],
-                  )
-                ],
-              )),
-              cover(Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    maxRadius: 30.0,
-                    child: Image.asset("assets/Logos/1.png"),
-                    backgroundColor: Colors.orangeAccent.withOpacity(0.1),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      newLength == null
-                          ? Text("0+", style: TxtStls.numstyle)
-                          : Row(
-                              children: [
-                                Countup(
-                                  end: newLength!.toDouble(),
-                                  begin: 0,
-                                  style: TxtStls.numstyle,
-                                ),
-                                Text(
-                                  "+",
-                                  style: TxtStls.numstyle,
-                                )
-                              ],
-                            ),
-                      Text("NEW LEADS", style: TxtStls.fieldstyle)
-                    ],
-                  )
-                ],
-              )),
-              cover(Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    maxRadius: 30.0,
-                    child: Center(
-                      child: Image.asset("assets/Logos/2.png",
-                          fit: BoxFit.fill, filterQuality: FilterQuality.high),
-                    ),
-                    backgroundColor: Colors.yellowAccent.withOpacity(0.1),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ipLength == null
-                          ? Text("0+", style: TxtStls.numstyle)
-                          : Row(
-                              children: [
-                                Countup(
-                                  end: ipLength!.toDouble(),
-                                  begin: 0,
-                                  style: TxtStls.numstyle,
-                                ),
-                                Text(
-                                  "+",
-                                  style: TxtStls.numstyle,
-                                )
-                              ],
-                            ),
-                      Text("IN PROGRESS", style: TxtStls.fieldstyle)
-                    ],
-                  )
-                ],
-              )),
-              cover(Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    maxRadius: 30.0,
-                    child: Image.asset("assets/Logos/3.png",
-                        fit: BoxFit.fill, filterQuality: FilterQuality.high),
-                    backgroundColor: btnColor.withOpacity(0.1),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      wonLength == null
-                          ? Text("0+", style: TxtStls.numstyle)
-                          : Row(
-                              children: [
-                                Countup(
-                                  end: wonLength!.toDouble(),
-                                  begin: 0,
-                                  style: TxtStls.numstyle,
-                                ),
-                                Text(
-                                  "+",
-                                  style: TxtStls.numstyle,
-                                )
-                              ],
-                            ),
-                      Text("WON", style: TxtStls.fieldstyle)
-                    ],
-                  )
-                ],
-              )),
+              cover("assets/Logos/1.png", newLength, "NEW"),
+              cover("assets/Logos/4.png", prospectLength, "PROSPECT"),
+              cover("assets/Logos/2.png", ipLength, "INPROGRESS"),
+              cover("assets/Logos/3.png", wonLength, "WON"),
             ],
           ),
           space(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  alignment: Alignment.center,
-                  width: Responsive.isMediumScreen(context)
-                      ? size.width * 0.48
-                      : size.width * 0.5,
-                  height: size.height * 0.4,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Reports", style: TxtStls.fieldtitlestyle),
-                            PopupMenuButton(
-                              offset: Offset(0, 32),
-                              elevation: 10.0,
-                              shape: TooltipShape(),
-                              icon: Icon(
-                                Icons.more_horiz,
-                              ),
-                              onSelected: (int value) {},
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: 4,
-                                    child: Text(
-                                      "Leads",
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                      value: 5,
-                                      child: Text(
-                                        "Transactions",
-                                        style: TxtStls.fieldstyle,
-                                      )),
-                                ];
-                              },
-                            ),
-                          ],
-                        ),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 2,
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      Container(
-                          height: size.height * 0.3,
-                          child: SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
-                              // Chart title
-                              title: ChartTitle(
-                                  text: 'Half yearly sales analysis',
-                                  textStyle: TxtStls.fieldstyle),
-                              // Enable legend
-                              legend: Legend(isVisible: true),
-                              // Enable tooltip
+                      alignment: Alignment.center,
+                      height: size.height * 0.4,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(graphval == 1 ? "Reports" : "History",
+                                    style: TxtStls.fieldtitlestyle),
+                                PopupMenuButton(
+                                  offset: Offset(0, 32),
+                                  elevation: 10.0,
+                                  shape: TooltipShape(),
+                                  icon: Icon(
+                                    Icons.more_horiz,
+                                  ),
+                                  onSelected: (int value) {
+                                    setState(() {
+                                      graphval = value;
+                                    });
+                                  },
+                                  itemBuilder: (context) {
+                                    return [
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Text(
+                                          "Reports",
+                                          style: TxtStls.fieldstyle,
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                          value: 2,
+                                          child: Text(
+                                            "History",
+                                            style: TxtStls.fieldstyle,
+                                          )),
+                                    ];
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                              height: size.height * 0.3,
+                              child: graphval == 1
+                                  ? SfCartesianChart(
+                                      primaryXAxis: CategoryAxis(),
+                                      // Chart title
+                                      title: ChartTitle(
+                                          text: 'Half yearly sales analysis',
+                                          textStyle: TxtStls.fieldstyle),
+                                      // Enable legend
+                                      legend: Legend(isVisible: true),
+                                      // Enable tooltip
 
-                              series: <LineSeries<SalesData, String>>[
-                                LineSeries<SalesData, String>(
-                                    dataSource: <SalesData>[
-                                      SalesData('Jan', 35),
-                                      SalesData('Feb', 28),
-                                      SalesData('Mar', 34),
-                                      SalesData('Apr', 32),
-                                      SalesData('May', 40)
-                                    ],
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.year,
-                                    yValueMapper: (SalesData sales, _) =>
-                                        sales.sales,
-                                    // Enable data label
-                                    dataLabelSettings:
-                                        DataLabelSettings(isVisible: true))
-                              ]))
-                    ],
-                  )),
-              Container(
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  alignment: Alignment.center,
-                  width: Responsive.isMediumScreen(context)
-                      ? size.width * 0.28
-                      : size.width * 0.3,
-                  height: size.height * 0.4,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            showtitle1(chartval),
-                            PopupMenuButton(
-                              offset: Offset(0, 32),
-                              elevation: 10.0,
-                              shape: TooltipShape(),
-                              icon: Icon(
-                                Icons.more_horiz,
-                              ),
-                              onSelected: (int value) {
-                                chartval = value;
-                                setState(() {});
-                              },
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: 4,
-                                    child: Text(
-                                      "Leads",
-                                      style: TxtStls.fieldstyle,
-                                    ),
+                                      series: <LineSeries<SalesData, String>>[
+                                          LineSeries<SalesData, String>(
+                                              dataSource: <SalesData>[
+                                                SalesData('Jan', 35),
+                                                SalesData('Feb', 28),
+                                                SalesData('Mar', 34),
+                                                SalesData('Apr', 32),
+                                                SalesData('May', 40)
+                                              ],
+                                              xValueMapper:
+                                                  (SalesData sales, _) =>
+                                                      sales.year,
+                                              yValueMapper:
+                                                  (SalesData sales, _) =>
+                                                      sales.sales,
+                                              // Enable data label
+                                              dataLabelSettings:
+                                                  DataLabelSettings(
+                                                      isVisible: true))
+                                        ])
+                                  : Text("will Update soon"))
+                        ],
+                      )),
+                ),
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 1,
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      alignment: Alignment.center,
+                      height: size.height * 0.4,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                showtitleofPiechart(chartval),
+                                PopupMenuButton(
+                                  offset: Offset(0, 32),
+                                  elevation: 10.0,
+                                  shape: TooltipShape(),
+                                  icon: Icon(
+                                    Icons.more_horiz,
                                   ),
-                                  PopupMenuItem(
-                                      value: 5,
-                                      child: Text(
-                                        "Transactions",
-                                        style: TxtStls.fieldstyle,
-                                      )),
-                                ];
-                              },
+                                  onSelected: (int value) {
+                                    setState(() {
+                                      chartval = value;
+                                    });
+                                  },
+                                  itemBuilder: (context) {
+                                    return [
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Text(
+                                          "Leads",
+                                          style: TxtStls.fieldstyle,
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                          value: 2,
+                                          child: Text(
+                                            "Transactions",
+                                            style: TxtStls.fieldstyle,
+                                          )),
+                                    ];
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: size.height * 0.28,
-                        width: size.width * 0.28,
-                        child: showbody(chartval),
-                      ),
-                      showbottom(chartval),
-                    ],
-                  )),
+                          ),
+                          Container(
+                            height: size.height * 0.28,
+                            width: size.width * 0.28,
+                            child: showbodyofPieChart(chartval),
+                          ),
+                          showbottomofPieChart(chartval),
+                        ],
+                      )),
+                ),
+              ),
             ],
           ),
           space(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: size.width * 0.25,
-                height: size.height * 0.06,
-                child: Text("PI -Amount", style: TxtStls.numstyle),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: size.width * 0.25,
-                height: size.height * 0.06,
-                child: Text("Q -Amount", style: TxtStls.numstyle),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                alignment: Alignment.center,
-                width: size.width * 0.25,
-                height: size.height * 0.06,
-                child: Text("Invoice -Amount", style: TxtStls.numstyle),
-              ),
+              cover1("PI-Amount"),
+              SizedBox(width: 20),
+              cover1("Q-Amount"),
+              SizedBox(width: 20),
+              cover1("Invoice-Amount"),
             ],
           ),
           space(),
@@ -377,241 +247,80 @@ class _UserDashBoardState extends State<UserDashBoard> {
     return SizedBox(height: size.height * 0.02);
   }
 
-  Widget cover(child) {
+  Widget cover(imageUrl, datalength, title) {
     Size size = MediaQuery.of(context).size;
     return Flexible(
-        flex: 1,
-        fit: FlexFit.tight,
-        child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 10,
-            child: Container(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 10,
+        child: Container(
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          alignment: Alignment.center,
+          height: size.height * 0.1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircleAvatar(
+                maxRadius: 30.0,
+                child: Image.asset(
+                  imageUrl,
+                  filterQuality: FilterQuality.high,
                 ),
-                alignment: Alignment.center,
-                height: size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 30.0,
-                      child: Image.asset("assets/Logos/4.png"),
-                      backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        prospectLength == null
-                            ? Text("0+", style: TxtStls.numstyle)
-                            : Row(
-                                children: [
-                                  Countup(
-                                    end: prospectLength!.toDouble(),
-                                    begin: 0,
-                                    style: TxtStls.numstyle,
-                                  ),
-                                  Text(
-                                    "+",
-                                    style: TxtStls.numstyle,
-                                  )
-                                ],
-                              ),
-                        Text("PROSPECT", style: TxtStls.fieldstyle)
-                      ],
-                    )
-                  ],
-                ))));
-  }
-
-  showtitle1(cval) {
-    if (cval == 4) {
-      return Text(
-        "Leads Analytics",
-        style: TxtStls.fieldtitlestyle,
-      );
-    } else if (cval == 5) {
-      return Text(
-        "Transactions",
-        style: TxtStls.fieldtitlestyle,
-      );
-    }
-  }
-
-  showbody(cval) {
-    if (cval == 4) {
-      return PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
-            if (clickResponse.clickHappened) {}
-          }),
-          sectionsSpace: 0,
-          centerSpaceRadius: 50,
-          startDegreeOffset: -50,
-          sections: [
-            PieChartSectionData(
-              color: Colors.blueAccent.withOpacity(0.75),
-              value: prospectLength == null ? 0 : prospectLength!.toDouble(),
-              showTitle: true,
-              radius: 19,
-            ),
-            PieChartSectionData(
-              color: Colors.orangeAccent.withOpacity(0.75),
-              value: newLength == null ? 0 : newLength!.toDouble(),
-              showTitle: true,
-              radius: 22,
-            ),
-            PieChartSectionData(
-              color: Colors.yellowAccent.withOpacity(0.75),
-              value: ipLength == null ? 0 : ipLength!.toDouble(),
-              showTitle: true,
-              radius: 19,
-            ),
-            PieChartSectionData(
-              color: btnColor.withOpacity(0.75),
-              value: wonLength == null ? 0 : wonLength!.toDouble(),
-              showTitle: true,
-              radius: 22,
-            ),
-          ],
+                backgroundColor: Colors.blueAccent.withOpacity(0.1),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  datalength == null
+                      ? Text("0+", style: TxtStls.numstyle)
+                      : Row(
+                          children: [
+                            Countup(
+                              end: datalength!.toDouble(),
+                              begin: 0,
+                              style: TxtStls.numstyle,
+                            ),
+                            Text(
+                              "+",
+                              style: TxtStls.numstyle,
+                            )
+                          ],
+                        ),
+                  Text(title, style: TxtStls.fieldstyle)
+                ],
+              )
+            ],
+          ),
         ),
-      );
-    } else if (cval == 5) {
-      return PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
-            if (clickResponse.clickHappened) {}
-          }),
-          sectionsSpace: 0,
-          centerSpaceRadius: 50,
-          startDegreeOffset: -50,
-          sections: [
-            PieChartSectionData(
-              color: Colors.blueAccent.withOpacity(0.75),
-              value: 178,
-              showTitle: true,
-              radius: 19,
-            ),
-            PieChartSectionData(
-              color: Colors.orangeAccent.withOpacity(0.75),
-              value: 20,
-              showTitle: true,
-              radius: 22,
-            ),
-            PieChartSectionData(
-              color: Colors.yellowAccent.withOpacity(0.75),
-              value: 198,
-              showTitle: true,
-              radius: 19,
-            ),
-            PieChartSectionData(
-              color: btnColor.withOpacity(0.75),
-              value: 12,
-              showTitle: true,
-              radius: 22,
-            ),
-          ],
-        ),
-      );
-    }
+      ),
+    );
   }
 
-  showbottom(cval) {
-    if (cval == 4) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: Colors.blueAccent.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "Prospect",
-                style: TxtStls.fieldstyle,
-              )),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: Colors.orangeAccent.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "New",
-                style: TxtStls.fieldstyle,
-              )),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: Colors.yellowAccent.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "InProgress",
-                style: TxtStls.fieldstyle,
-              )),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: btnColor.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "Won",
-                style: TxtStls.fieldstyle,
-              )),
-        ],
-      );
-    } else if (cval == 5) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: Colors.blueAccent.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "Prospect",
-                style: TxtStls.fieldstyle,
-              )),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: Colors.yellowAccent.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "InProgress",
-                style: TxtStls.fieldstyle,
-              )),
-          TextButton.icon(
-              onPressed: () {},
-              icon: Icon(
-                Icons.circle,
-                color: btnColor.withOpacity(0.75),
-                size: 15,
-              ),
-              label: Text(
-                "Won",
-                style: TxtStls.fieldstyle,
-              )),
-        ],
-      );
-    }
+  Widget cover1(title) {
+    Size size = MediaQuery.of(context).size;
+    return Flexible(
+      flex: 1,
+      fit: FlexFit.tight,
+      child: Card(
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Container(
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          alignment: Alignment.center,
+          height: size.height * 0.06,
+          child: Text(title, style: TxtStls.numstyle),
+        ),
+      ),
+    );
   }
 
   showtitle(dval) {
@@ -648,7 +357,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
               borderRadius: BorderRadius.circular(10),
             ),
             alignment: Alignment.center,
-            height: size.height * 0.3,
+            height: size.height * 0.27,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -683,7 +392,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
               borderRadius: BorderRadius.circular(10),
             ),
             alignment: Alignment.center,
-            height: size.height * 0.3,
+            height: size.height * 0.27,
             child: Column(
               children: [
                 Padding(
@@ -785,6 +494,189 @@ class _UserDashBoardState extends State<UserDashBoard> {
             )),
       ),
     );
+  }
+
+  // Part of Pie Chart Data here
+
+  showtitleofPiechart(chartval) {
+    if (chartval == 1) {
+      return Text(
+        "Leads Analytics",
+        style: TxtStls.fieldtitlestyle,
+      );
+    } else if (chartval == 2) {
+      return Text(
+        "Transactions",
+        style: TxtStls.fieldtitlestyle,
+      );
+    }
+  }
+
+  showbodyofPieChart(chartval) {
+    if (chartval == 1) {
+      return PieChart(
+        PieChartData(
+          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
+            if (clickResponse.clickHappened) {}
+          }),
+          sectionsSpace: 0,
+          centerSpaceRadius: 50,
+          startDegreeOffset: -50,
+          sections: [
+            PieChartSectionData(
+              color: Colors.blueAccent.withOpacity(0.75),
+              value: prospectLength == null ? 0 : prospectLength!.toDouble(),
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: Colors.orangeAccent.withOpacity(0.75),
+              value: newLength == null ? 0 : newLength!.toDouble(),
+              showTitle: true,
+              radius: 22,
+            ),
+            PieChartSectionData(
+              color: Colors.yellowAccent.withOpacity(0.75),
+              value: ipLength == null ? 0 : ipLength!.toDouble(),
+              showTitle: true,
+              radius: 19,
+            ),
+            PieChartSectionData(
+              color: btnColor.withOpacity(0.75),
+              value: wonLength == null ? 0 : wonLength!.toDouble(),
+              showTitle: true,
+              radius: 22,
+            ),
+          ],
+        ),
+      );
+    } else if (chartval == 2) {
+      return PieChart(
+        PieChartData(
+          pieTouchData: PieTouchData(touchCallback: (clickResponse) {
+            if (clickResponse.clickHappened) {}
+          }),
+          sectionsSpace: 0,
+          centerSpaceRadius: 50,
+          startDegreeOffset: -50,
+          sections: [
+            PieChartSectionData(
+              color: Colors.blueAccent.withOpacity(0.75),
+              value: 100,
+              showTitle: true,
+              radius: 25,
+            ),
+            PieChartSectionData(
+              color: Colors.yellowAccent.withOpacity(0.75),
+              value: 100,
+              showTitle: true,
+              radius: 25,
+            ),
+            PieChartSectionData(
+              color: btnColor.withOpacity(0.75),
+              value: 100,
+              showTitle: true,
+              radius: 25,
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  showbottomofPieChart(chartval) {
+    if (chartval == 1) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: Colors.blueAccent.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "Prospect",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: Colors.orangeAccent.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "New",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: Colors.yellowAccent.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "InProgress",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: btnColor.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "Won",
+                style: TxtStls.fieldstyle,
+              )),
+        ],
+      );
+    } else if (chartval == 2) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: Colors.blueAccent.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "PI-Amount",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: Colors.yellowAccent.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "Q-Amount",
+                style: TxtStls.fieldstyle,
+              )),
+          TextButton.icon(
+              onPressed: () {},
+              icon: Icon(
+                Icons.circle,
+                color: btnColor.withOpacity(0.75),
+                size: 15,
+              ),
+              label: Text(
+                "Invoice-Amount",
+                style: TxtStls.fieldstyle,
+              )),
+        ],
+      );
+    }
   }
 }
 
