@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.DashBoard;
+  Tabs active = Tabs.TaskPreview;
   var radioItem;
 
   @override
@@ -195,7 +195,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           return Column(
             children: [
               Header(title: 'Task Preview'),
-              Flexible(child: TaskPreview()),
+              TaskPreview(),
             ],
           );
         }

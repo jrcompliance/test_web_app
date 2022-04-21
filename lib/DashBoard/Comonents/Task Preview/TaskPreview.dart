@@ -642,32 +642,38 @@ class _TaskPreviewState extends State<TaskPreview>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: size.width * 0.2,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15, top: 2),
-                      child: TextField(
-                        controller: _searchController,
-                        style: TxtStls.fieldstyle,
-                        decoration: new InputDecoration(
-                            suffixIcon: _isSearching
-                                ? IconButton(
-                                    icon: Icon(
-                                      Icons.cancel,
-                                      color: btnColor,
-                                    ),
-                                    onPressed: () {
-                                      _handleSearchEnd();
-                                    },
-                                  )
-                                : Icon(Icons.search, color: btnColor),
-                            border: InputBorder.none,
-                            hintText: "Search...",
-                            hintStyle: TxtStls.fieldstyle),
-                        onChanged: searchOperation,
+                  Card(
+    elevation:10,
+                    shape:RoundedRectangleBorder(
+    borderRadius:BorderRadius.circular(10)
+    ),
+                    child: Container(
+                      width: size.width * 0.2,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15, top: 2),
+                        child: TextField(
+                          controller: _searchController,
+                          style: TxtStls.fieldstyle,
+                          decoration: new InputDecoration(
+                              suffixIcon: _isSearching
+                                  ? IconButton(
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: btnColor,
+                                      ),
+                                      onPressed: () {
+                                        _handleSearchEnd();
+                                      },
+                                    )
+                                  : Icon(Icons.search, color: btnColor),
+                              border: InputBorder.none,
+                              hintText: "Search...",
+                              hintStyle: TxtStls.fieldstyle),
+                          onChanged: searchOperation,
+                        ),
                       ),
                     ),
                   ),
@@ -675,7 +681,7 @@ class _TaskPreviewState extends State<TaskPreview>
                   PopupMenuButton(
                       offset: Offset(0, size.height * 0.037),
                       child: Container(
-                        width: size.width * 0.05,
+                        padding:EdgeInsets.symmetric(horizontal: 20,vertical:2),
                         height: size.height * 0.035,
                         decoration: BoxDecoration(
                             borderRadius:
@@ -710,8 +716,7 @@ class _TaskPreviewState extends State<TaskPreview>
                   PopupMenuButton(
                       offset: Offset(0, size.height * 0.037),
                       child: Container(
-                        width: size.width * 0.05,
-                        height: size.height * 0.035,
+    padding:EdgeInsets.symmetric(horizontal: 10,vertical:2),
                         decoration: BoxDecoration(
                             borderRadius:
                             BorderRadius.all(Radius.circular(10.0)),
