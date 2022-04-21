@@ -48,54 +48,53 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: btnColor,
                       ),
                     )
-                  : ScaleAnimatedWidget.tween(
-                      duration: Duration(seconds: 1),
-                      child: SingleChildScrollView(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              MyLogo(),
-                              Text(
-                                'Log in',
-                                style: TxtStls.titlestyle,
+                  : SingleChildScrollView(
+                      child: ScaleAnimatedWidget.tween(
+                        duration: Duration(seconds: 1),
+                        child: Column(
+                          children: [
+                            MyLogo(),
+                            Text(
+                              'Log in',
+                              style: TxtStls.titlestyle,
+                            ),
+                            MySpacer(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.05),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.black,
+                                      thickness: 0.2,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Or',
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.black,
+                                      thickness: 0.2,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              MySpacer(),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.05),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Divider(
-                                        color: Colors.black,
-                                        thickness: 0.2,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Or',
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Divider(
-                                        color: Colors.black,
-                                        thickness: 0.2,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              MySpacer(),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.075),
+                            ),
+                            MySpacer(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.075),
+                              child: Form(
+                                key: _formKey,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text("Email Address",
                                         style: TxtStls.fieldtitlestyle),
@@ -259,9 +258,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),

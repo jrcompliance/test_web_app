@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   : ScaleAnimatedWidget.tween(
                       duration: Duration(seconds: 1),
                       child: Column(
-                        mainAxisSize: MainAxisSize.max,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           MyLogo(),
                           Text(
@@ -92,8 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           MySpacer(),
-                          SizedBox(
-                            height: size.height * 0.6,
+                          Expanded(
                             child: SingleChildScrollView(
                               controller: _scrollController,
                               child: Padding(
@@ -102,6 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 child: Form(
                                   key: _formKey,
                                   child: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -189,48 +189,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       MySpacer(),
                                       Text("Password",
                                           style: TxtStls.fieldtitlestyle),
-                                      Container(
-                                        decoration: deco,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15, right: 15, top: 2),
-                                          child: TextFormField(
-                                            cursorColor: btnColor,
-                                            controller: _passwordController,
-                                            style: TxtStls.fieldstyle,
-                                            obscureText: _isSecured,
-                                            decoration: InputDecoration(
-                                              errorStyle: ClrStls.errorstyle,
-                                              hintText: "Password",
-                                              hintStyle: TxtStls.fieldstyle,
-                                              border: InputBorder.none,
-                                              suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    _isSecured
-                                                        ? Icons.visibility_off
-                                                        : Icons.visibility,
-                                                    color: btnColor,
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _isSecured = !_isSecured;
-                                                    });
-                                                  },
-                                                  color: txtColor),
-                                            ),
-                                            validator: (password) {
-                                              if (password!.isEmpty) {
-                                                return "Password can not be empty";
-                                              } else if (password.length < 6) {
-                                                return "Passowrd should be atleast 6 letters";
-                                              } else {
-                                                return null;
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      MySpacer(),
                                       Container(
                                         decoration: deco,
                                         child: Padding(
