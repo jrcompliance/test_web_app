@@ -69,7 +69,7 @@ dependencies:
   pdf: ^3.7.3
   syncfusion_flutter_pdf: ^19.4.56-beta
   printing: ^5.7.5
-  emojis: ^0.9.9
+  fluttertoast: ^8.0.9
 
 
 

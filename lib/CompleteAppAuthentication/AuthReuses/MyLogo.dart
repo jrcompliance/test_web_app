@@ -4,13 +4,15 @@ class MyLogo extends StatelessWidget {
   const MyLogo({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
-      alignment: Alignment.center,
-      child: Image.asset(
-        "assets/Logos/Controlifylogo.png",
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.high,
-      ),
+      height: size.height * 0.3,
+      width: size.width,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/Logos/Controlifylogo.png"),
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high)),
     );
   }
 }

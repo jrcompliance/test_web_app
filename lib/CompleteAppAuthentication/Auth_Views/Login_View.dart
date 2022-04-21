@@ -1,12 +1,17 @@
+import 'dart:ui';
+
 import 'package:animated_widgets/animated_widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LoginProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MySpacer.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/RecoverPassword_View.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Register_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/SignUpImage.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 
@@ -33,8 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Row(
           children: [
-            Expanded(
+            Flexible(
               flex: 1,
+              fit: FlexFit.tight,
               child: Provider.of<LoginProvider>(context).isLoading
                   ? Center(
                       child: SpinKitFadingCube(
@@ -42,9 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: btnColor,
                       ),
                     )
-                  : SizedBox(
-                      width: size.width,
-                      height: size.height,
+                  : SingleChildScrollView(
                       child: ScaleAnimatedWidget.tween(
                         duration: Duration(seconds: 1),
                         child: Form(
@@ -53,15 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              SizedBox(
-                                  width: size.width,
-                                  height: size.height * 0.2,
-                                  child: MyLogo()),
+                              MyLogo(),
                               Text(
                                 'Log in',
                                 style: TxtStls.titlestyle,
                               ),
-                              SizedBox(height: size.height * 0.01),
+                              MySpacer(),
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: size.width * 0.05),
@@ -89,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: size.height * 0.01),
+                              MySpacer(),
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: size.width * 0.075),
@@ -129,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: size.height * 0.01),
+                                    MySpacer(),
                                     Text("Password",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
@@ -173,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: size.height * 0.01),
+                                    MySpacer(),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -213,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         )
                                       ],
                                     ),
-                                    SizedBox(height: size.height * 0.01),
+                                    MySpacer(),
                                     InkWell(
                                       child: Container(
                                         padding: EdgeInsets.all(12.0),
@@ -232,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         getLogin(context);
                                       },
                                     ),
-                                    SizedBox(height: size.height * 0.01),
+                                    MySpacer(),
                                     Align(
                                       alignment: Alignment.center,
                                       child: RichText(
@@ -265,23 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
             ),
-            Expanded(
-              flex: 2,
-              child: ScaleAnimatedWidget.tween(
-                duration: Duration(seconds: 1),
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    width: size.width,
-                    height: size.height,
-                    child: Image.asset(
-                      "assets/Logos/SignUp.png",
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.high,
-                    ),
-                  ),
-                ),
-              ),
-            )
+            SigUpImage(),
           ],
         ),
       ),

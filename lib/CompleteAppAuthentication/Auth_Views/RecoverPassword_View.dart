@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/ResetPasswordProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MySpacer.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 
 class Recoverpassword extends StatefulWidget {
@@ -37,9 +38,9 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     MyLogo(),
-                    SizedBox(height: size.height * 0.01),
+                    MySpacer(),
                     Text("Password Recover", style: TxtStls.titlestyle),
-                    SizedBox(height: size.height * 0.01),
+                    MySpacer(),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0.06),
@@ -78,7 +79,7 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                               ),
                             ),
                           ),
-                          SizedBox(height: size.height * 0.02),
+                          for (int i = 1; i <= 2; i++) MySpacer(),
                           Provider.of<PasswordResetProvider>(context).isLoading
                               ? Center(
                                   child: SpinKitFadingCube(
@@ -103,7 +104,7 @@ class _RecoverpasswordState extends State<Recoverpassword> {
                                     getPassword(context);
                                   },
                                 ),
-                          SizedBox(height: 40.0),
+                          for (int i = 1; i <= 3; i++) MySpacer(),
                         ],
                       ),
                     ),

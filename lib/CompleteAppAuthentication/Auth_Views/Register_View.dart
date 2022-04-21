@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/RegisterProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDataProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MyLogo.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MySpacer.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
+import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/SignUpImage.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Success_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
@@ -40,8 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
+            Flexible(
               flex: 1,
+              fit: FlexFit.tight,
               child: Provider.of<RegisterProvider>(context).isLoading
                   ? Center(
                       child: SpinKitFadingCube(
@@ -54,15 +57,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            SizedBox(
-                                width: size.width,
-                                height: size.height * 0.2,
-                                child: MyLogo()),
+                            MyLogo(),
                             Text(
                               'Sign Up',
                               style: TxtStls.titlestyle,
                             ),
-                            space(),
+                            MySpacer(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.05),
@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ],
                               ),
                             ),
-                            space(),
+                            MySpacer(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: size.width * 0.075),
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         }
                                       },
                                     ),
-                                    space(),
+                                    MySpacer(),
                                     Text("Phone Number",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     ),
-                                    space(),
+                                    MySpacer(),
                                     Text("Email Address",
                                         style: TxtStls.fieldtitlestyle),
                                     field(_emailController, "Enter your email",
@@ -179,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         return null;
                                       }
                                     }),
-                                    space(),
+                                    MySpacer(),
                                     Text("Password",
                                         style: TxtStls.fieldtitlestyle),
                                     Container(
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     ),
-                                    space(),
+                                    MySpacer(),
                                     Row(
                                       children: [
                                         Checkbox(
@@ -301,7 +301,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         )
                                       ],
                                     ),
-                                    space(),
+                                    MySpacer(),
                                     _isAgree
                                         ? InkWell(
                                             child: Container(
@@ -339,7 +339,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               style: TextStyle(color: txtColor),
                                             ),
                                           ),
-                                    space(),
+                                    MySpacer(),
                                     Align(
                                       alignment: Alignment.center,
                                       child: RichText(
@@ -371,17 +371,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
             ),
-            Expanded(
-              flex: 2,
-              child: ScaleAnimatedWidget.tween(
-                duration: Duration(seconds: 1),
-                child: Image.asset(
-                  "assets/Logos/SignUp.png",
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.high,
-                ),
-              ),
-            )
+            SigUpImage(),
           ],
         ),
       ),
@@ -410,11 +400,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             validator: _validator),
       ),
     );
-  }
-
-  Widget space() {
-    Size size = MediaQuery.of(context).size;
-    return SizedBox(height: size.height * 0.01);
   }
 
   // register method
