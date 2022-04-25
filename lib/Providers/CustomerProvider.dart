@@ -40,6 +40,7 @@ class CustmerProvider extends ChangeNotifier {
             status: element["status"],
             f: element["fail"],
             cat: element["cat"],
+            leadId: element["LeadId"],
             lastseen: element["lastseen"],
             priority: element["priority"],
             assign: element["Attachments"]));

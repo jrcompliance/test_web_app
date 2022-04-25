@@ -4,26 +4,19 @@ import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/Constants/Charts.dart';
-import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/LabelText.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
-import 'package:test_web_app/Constants/slectionfiles.dart';
 import 'package:test_web_app/Models/tasksearchmodel.dart';
-import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
-import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
@@ -154,394 +147,6 @@ class _TaskPreviewState extends State<TaskPreview>
     color: Colors.white,
   );
   final myGlobalkey = GlobalKey<ScaffoldState>();
-  final TextEditingController _mysearchController = TextEditingController();
-  List _mysearchList = [];
-  bool _mySearching = false;
-  String _mysearchText = "";
-  List mysearchresult = [];
-
-  void myvalues() {
-    _mysearchList = [];
-    _mysearchList.add("ETA certification");
-    _mysearchList.add("ETA approval");
-    _mysearchList.add("Recycler");
-    _mysearchList.add("scrapper");
-    _mysearchList.add("dispose off");
-    _mysearchList.add("waste management services");
-    _mysearchList.add("LMPC certificate for import");
-    _mysearchList.add("LMPC certificate online");
-    _mysearchList.add("LMPC certification");
-    _mysearchList.add("Bio-medical waste management");
-    _mysearchList.add("STQC certification");
-    _mysearchList.add("CPCB guidelines for poultry farms");
-    _mysearchList.add("CPCB guidelines for environmental management of dairy farms and gaushalas");
-    _mysearchList.add("Delhi Pollution Control Committee (DPCC) & Waste Management Authorization");
-    _mysearchList.add("Haryana State Pollution Control Board, HPCB");
-    _mysearchList.add("Uttar Pradesh Pollution Control Board, UPPCB");
-    _mysearchList.add("Maharashtra State Pollution Control Board, MPCB");
-    _mysearchList.add("Delhi Forest Department");
-    _mysearchList.add("Bihar State Pollution Control Board, BPCB");
-    _mysearchList.add("Gujarat State Pollution Control Board, GPCB");
-    _mysearchList.add("Maharashtra State Pollution Control Board, MPCBM");
-    _mysearchList.add("Public limited company");
-    _mysearchList.add("public limited incorporation");
-    _mysearchList.add("incorporation of public limited company");
-    _mysearchList.add("formation of public limited company");
-    _mysearchList.add("public limited company formation");
-    _mysearchList.add("Delhi Pollution Control Committee, DPCC");
-    _mysearchList.add("DPCC registration");
-    _mysearchList.add("CPCB DPCC");
-    _mysearchList.add("DPCC approval");
-    _mysearchList.add("CRA type approval");
-    _mysearchList.add("Qatar type approval");
-    _mysearchList.add("CRA Qatar type approval");
-    _mysearchList.add("communications regulatory authority");
-    _mysearchList.add("cra qatar");
-    _mysearchList.add("NTC type approval");
-    _mysearchList.add("NTC philippines type approval");
-    _mysearchList.add("Philippines type approval / NTC Thailand type approval");
-    _mysearchList.add("Thailand type approval");
-    _mysearchList.add("Philippines radio type approval");
-    _mysearchList.add("NTC approval");
-    _mysearchList.add("NTC Philippines");
-    _mysearchList.add("NTC list");
-    _mysearchList.add("MTC type approval");
-    _mysearchList.add("MTC Peru type approval");
-    _mysearchList.add("Peru type approval");
-    _mysearchList.add("Peru MTC telecom approval");
-    _mysearchList.add("MTC certification");
-    _mysearchList.add("TRA type approval");
-    _mysearchList.add("TRA Oman type approval");
-    _mysearchList.add("Oman type approval / TRA type approval");
-    _mysearchList.add("TRA UAE type approval");
-    _mysearchList.add("UAE type approval");
-    _mysearchList.add("oman radio type approval");
-    _mysearchList.add("TRA certification");
-    _mysearchList.add("TRa registration");
-    _mysearchList.add("ANRT type approval");
-    _mysearchList.add("ANRT Morocco type approval");
-    _mysearchList.add("Morocco type approval");
-    _mysearchList.add("ANRT certification");
-    _mysearchList.add("morocco anrt type");
-    _mysearchList.add("TRA type approval");
-    _mysearchList.add("TRA Lebanon type approval");
-    _mysearchList.add("type approval");
-    _mysearchList.add("TRA certificate");
-    _mysearchList.add("TRA regulations");
-    _mysearchList.add("CITRA type approval");
-    _mysearchList.add("CITRA Kuwait type approval");
-    _mysearchList.add("Kuwait type approval");
-    _mysearchList.add("Kuwait CITRA");
-    _mysearchList.add("CITRA regulations");
-    _mysearchList.add("TRC Cambodia type approval");
-    _mysearchList.add("Cambodia type approval");
-    _mysearchList.add("TRC certification");
-    _mysearchList.add("DSRT type approval");
-    _mysearchList.add("Macau type approval");
-    _mysearchList.add("DSRT Macau type approval");
-    _mysearchList.add("Sirim type approval");
-    _mysearchList.add("Malaysia type approval");
-    _mysearchList.add("Sirim Malaysia type approval");
-    _mysearchList.add("SIRIM certification");
-    _mysearchList.add("SIRIM malaysia");
-    _mysearchList.add("SIRIM QAS");
-    _mysearchList.add("NTA type approval");
-    _mysearchList.add("Nepal NTA type approval");
-    _mysearchList.add("NTA type approval");
-    _mysearchList.add("NTA Nepal type approval");
-    _mysearchList.add("NTA imei");
-    _mysearchList.add("NTA registration");
-    _mysearchList.add("PTA type approval");
-    _mysearchList.add("Pakistan PTA type approval");
-    _mysearchList.add("PTA Pakistan type approval");
-    _mysearchList.add("PTA mobile registration");
-    _mysearchList.add("IMDA equipment registration");
-    _mysearchList.add("Singapore IMDA equipment registration");
-    _mysearchList.add("IMDA singapore equipment registration");
-    _mysearchList.add("IMDA Telecom Approval");
-    _mysearchList.add("imda telecommunication equipment");
-    _mysearchList.add("IMDA certification");
-    _mysearchList.add("IMDA standards");
-    _mysearchList.add("TCRA type approval");
-    _mysearchList.add("Tanzania TCRA type approval");
-    _mysearchList.add("Tanzania type approval");
-    _mysearchList.add("TCRA Tanzania type approval");
-    _mysearchList.add("TCRA Tanzania");
-    _mysearchList.add("CONATEL type approval");
-    _mysearchList.add("CONATEL approval");
-    _mysearchList.add("CONATEL Venezuela type approval");
-    _mysearchList.add("Venezuela CONATEL approval");
-    _mysearchList.add("ICT type approval certificate (TAC)");
-    _mysearchList.add("Declaration of Conformity (DoC)");
-    _mysearchList.add("VNTA type approval");
-    _mysearchList.add("Vietnam type approval");
-    _mysearchList.add("ICT Vietnam type approval");
-    _mysearchList.add("VNTA Vietnam type approval");
-    _mysearchList.add("ICT approval");
-    _mysearchList.add("ICT Qatar");
-    _mysearchList.add("MITIT approval");
-    _mysearchList.add("MITIT Yemen type approval");
-    _mysearchList.add("MITIT approval");
-    _mysearchList.add("Yemen MITIT type approval");
-    _mysearchList.add("Barbados Type Approval For Telecom and Radio Equipment");
-    _mysearchList.add("Barbados type approval");
-    _mysearchList.add("Barbados global approvals");
-    _mysearchList.add("Barbados certification");
-    _mysearchList.add("NOC Bangladesh");
-    _mysearchList.add("Bangladesh NOC");
-    _mysearchList.add("Bangladesh certification");
-    _mysearchList.add("Bangladesh global approval");
-    _mysearchList.add("AITI type approval");
-    _mysearchList.add("Brunei AITI approval");
-    _mysearchList.add("Brunei approval");
-    _mysearchList.add("Brunei global approval");
-    _mysearchList.add("Brunei certification");
-    _mysearchList.add("AITI approval");
-    _mysearchList.add("CRS Homologation");
-    _mysearchList.add("Colombia CRS homologation");
-    _mysearchList.add("Colombia homologation");
-    _mysearchList.add("Colombia global approval");
-    _mysearchList.add("Colombia certification");
-    _mysearchList.add("SUTEL Approval");
-    _mysearchList.add("Costa Rica SUTEL Approval");
-    _mysearchList.add("Costa Rica approval");
-    _mysearchList.add("Costa Rica global approval");
-    _mysearchList.add("Costa Rica certification");
-    _mysearchList.add("SUTEL certification");
-    _mysearchList.add("Costa Rica type approval");
-    _mysearchList.add("INDOTEL Type Approval");
-    _mysearchList.add("Dominican Republic INDOTEL Type Approval");
-    _mysearchList.add("Dominican Republic approval");
-    _mysearchList.add("Dominican Republic global approval");
-    _mysearchList.add("Dominican Republic certification");
-    _mysearchList.add("Dominican Republic Type Approval");
-    _mysearchList.add("ARCOTEL Type Approval");
-    _mysearchList.add("Ecuador ARCOTEL Type Approval");
-    _mysearchList.add("Ecuador type approval");
-    _mysearchList.add("Ecuador global approval");
-    _mysearchList.add("Ecuador certification");
-    _mysearchList.add("ARCOTEL approval");
-    _mysearchList.add("HKCA Telecom Equipment Certification");
-    _mysearchList.add("HKCA certification");
-    _mysearchList.add("HKCA registration");
-    _mysearchList.add("HKCA Hong Kong certification");
-    _mysearchList.add("Hong Kong HKCA certification");
-    _mysearchList.add("Hong Kong certification");
-    _mysearchList.add("Hong Kong approval");
-    _mysearchList.add("NTRA Type Approval");
-    _mysearchList.add("Egypt NTRA  Type Approval");
-    _mysearchList.add("Egypt NTRA Approval");
-    _mysearchList.add("NTRA Egypt approval");
-    _mysearchList.add("NTRA Approval");
-    _mysearchList.add("Egypt global approval");
-    _mysearchList.add("Egypt certification");
-    _mysearchList.add("Egypt radio type approval");
-    _mysearchList.add("NTRA egypt, NTRA certification");
-    _mysearchList.add("SDPPI Type Approval");
-    _mysearchList.add("Indonesia SDPPI Type Approval");
-    _mysearchList.add("Indonesia SDPPI Approval");
-    _mysearchList.add("SDPPI Indonesia approval");
-    _mysearchList.add("SDPPI Approval");
-    _mysearchList.add("Indonesia global approval");
-    _mysearchList.add("Indonesia certification");
-    _mysearchList.add("SDPPI certification");
-    _mysearchList.add("Indonesian standards");
-    _mysearchList.add("ISRAEL Global Certification");
-    _mysearchList.add("MoC approval");
-    _mysearchList.add("MoC type approval");
-    _mysearchList.add("MoE approval");
-    _mysearchList.add("MoE type  approval");
-    _mysearchList.add("SII type approval");
-    _mysearchList.add("SII  approval");
-    _mysearchList.add("Israel global certification");
-    _mysearchList.add("Israel certification");
-    _mysearchList.add("MoC certification");
-    _mysearchList.add( "Israel MoC");
-    _mysearchList.add("TRC type approval");
-    _mysearchList.add("TRC Jordan type approval");
-    _mysearchList.add("Jordan type approval / TRC type approval");
-    _mysearchList.add("TRC Sri Lanka type approval");
-    _mysearchList.add("Sri Lanka type approval");
-    _mysearchList.add("Jordan TRC type approval");
-    _mysearchList.add("TRC approval");
-    _mysearchList.add("Telepermit Certificate");
-    _mysearchList.add("New Zealand telepermit certificate");
-    _mysearchList.add("New Zealand certification");
-    _mysearchList.add("New Zealand global approval");
-    _mysearchList.add("TRA approval");
-    _mysearchList.add("Bahrain TRA approval");
-    _mysearchList.add("Bahrain approval");
-    _mysearchList.add("Bahrain global approval");
-    _mysearchList.add("Bahrain certification");
-    _mysearchList.add("Oman radio type approval");
-    _mysearchList.add("UAE TRA");
-    _mysearchList.add("Bahrain radio type approval");
-    _mysearchList.add("Ministere des Technologies de la Communication");
-    _mysearchList.add("Tunisia Type Approval");
-    _mysearchList.add("Tunisia global approval");
-    _mysearchList.add("Tunisia certification");
-    _mysearchList.add("CITC Type Approval");
-    _mysearchList.add("Saudi Arabia CITC Type Approval");
-    _mysearchList.add("Saudi Arabia CITC Approval");
-    _mysearchList.add("CITC Saudi Arabia approval");
-    _mysearchList.add("CITC Approval");
-    _mysearchList.add("Saudi Arabia certification");
-    _mysearchList.add("Saudi Arabia global approval");
-    _mysearchList.add("Saudi Arabia Radio type Approval");
-    _mysearchList.add("CITC Certification");
-    _mysearchList.add("CITC Saudi");
-    _mysearchList.add("SUBTEL approval");
-    _mysearchList.add("Chile SUBTEL approval");
-    _mysearchList.add("Chile approval");
-    _mysearchList.add("Chile global approval");
-    _mysearchList.add("Chile certification");
-    _mysearchList.add("chile radio type approval");
-    _mysearchList.add("SUBTEL approval chile");
-    _mysearchList.add("SUBTEL certification");
-    _mysearchList.add("Punjab Pollution Control Board NOC, PPCB");
-    _mysearchList.add("Karnataka Pollution Control Board NOC, KSPCB");
-    _mysearchList.add("Madhya Pradesh Pollution Board NOC, MPPCB");
-    _mysearchList.add("Rajasthan Pollution Board NOC, RPCB");
-    _mysearchList.add("Tamil Nadu Pollution Board NOC, TNPCB");
-    _mysearchList.add("Telangana Pollution Board NOC, TSPCB");
-    _mysearchList.add("Chhattisgarh Pollution Board NOC, CPCB");
-    _mysearchList.add("Jharkhand Pollution Board NOC, JSPCB");
-    _mysearchList.add("Uttarakhand Environment Protection and Pollution Board NOC, UEPPCB");
-    _mysearchList.add("Himachal Pradesh Pollution Board NOC, HPPCB");
-    _mysearchList.add("West Bengal Pollution Board NOC, WBPCB");
-    _mysearchList.add("Kerala Pollution Board NOC, KPCB");
-    _mysearchList.add("Odisha Pollution Board NOC, OSPCB");
-    _mysearchList.add("Puducherry Pollution Control Committee NOC, PPCC");
-    _mysearchList.add("Sikkim Pollution Control Board NOC, SPCB-Sikkim");
-    _mysearchList.add("Tripura State Pollution Control Committee NOC, TSPCB");
-    _mysearchList.add("Goa State Pollution Control Board NOC, GSPCB");
-    _mysearchList.add("Jammu & Kashmir Pollution Control Committee, JKPCB");
-    _mysearchList.add("Meghalaya State Pollution Control Committee, MSPCB");
-    _mysearchList.add("Andhra Pradesh Pollution Board NOC, APPCB");
-    _mysearchList.add("One Person Company");
-    _mysearchList.add("Limited Liability Partnership Registration");
-    _mysearchList.add("Private Limited Company");
-    _mysearchList.add("FSSAI");
-    _mysearchList.add("DSC or Digital Signature Certificate");
-    _mysearchList.add("IEC code");
-    _mysearchList.add("Microfinance company registration");
-    _mysearchList.add("NBFC registration");
-    _mysearchList.add("Asset reconstruction company registration");
-    _mysearchList.add("Mutual fund company registration");
-    _mysearchList.add("BIS Certification");
-    _mysearchList.add("Foreign Manufacturer Certification Scheme");
-    _mysearchList.add("Indian Standards Institute Certification");
-    _mysearchList.add("Compulsory Registration Scheme");
-    _mysearchList.add("AYUSH Manufacturing License or AYUSH License");
-    _mysearchList.add("TEC certificate");
-    _mysearchList.add("WPC certification");
-    _mysearchList.add("BEE certification");
-    _mysearchList.add("AERB approval or AERB license");
-    _mysearchList.add("EPR certificate");
-    _mysearchList.add("Automotive Research Association of India certification");
-    _mysearchList.add("ISO Certification");
-    _mysearchList.add("FCC Certificate");
-    _mysearchList.add("Federal Communications Commission");
-    _mysearchList.add("NRTL Approval");
-    _mysearchList.add("Nationally Recognized Testing Laboratory");
-    _mysearchList.add("China CCC certification service");
-    _mysearchList.add("CCC certificate");
-    _mysearchList.add("CCC automotive certification");
-    _mysearchList.add( "china CCC automotive certification");
-    _mysearchList.add("China SRRC Certification");
-    _mysearchList.add("SRRC certificate");
-    _mysearchList.add("China NAL Certification");
-    _mysearchList.add("NAL certificate");
-    _mysearchList.add("China CCIS Certification");
-    _mysearchList.add("CCIS certificate");
-    _mysearchList.add("China MIIT Network approval license");
-    _mysearchList.add("MIIT approval");
-    _mysearchList.add("Ministry of Information and Information Technology Approval");
-    _mysearchList.add("China CMIIT Radio Type Approval");
-    _mysearchList.add("China Ministry of Industry and Information Technology approval");
-    _mysearchList.add("China CEL Certification");
-    _mysearchList.add("CEL Certificate");
-    _mysearchList.add("NOM Certification");
-    _mysearchList.add("NOM certificate");
-    _mysearchList.add("IFETEL Certification");
-    _mysearchList.add("IFETEL Certificate");
-    _mysearchList.add("Japan PSE Mark Certification");
-    _mysearchList.add("PSE Certificate");
-    _mysearchList.add("Japan TELEC Certification service");
-    _mysearchList.add("TELEC Certificate");
-    _mysearchList.add("Japan VCCI Certification Service");
-    _mysearchList.add("VCCI Certificate");
-    _mysearchList.add("Japan Telecom Certification");
-    _mysearchList.add("South Korean KC Certification");
-    _mysearchList.add("KC certificate");
-    _mysearchList.add("Taiwan BSMI Certification");
-    _mysearchList.add("BSMI certificate");
-    _mysearchList.add("NCC Type Approval");
-    _mysearchList.add("National Communications Commission approval");
-    _mysearchList.add("Regulatory Compliance Mark");
-    _mysearchList.add("RCM Approval");
-    _mysearchList.add("Minimum Energy Performance Standards");
-    _mysearchList.add("MEPS Approval");
-    _mysearchList.add("Hygienic certification");
-    _mysearchList.add("Telecommunications Approval");
-    _mysearchList.add("EAC approval");
-    _mysearchList.add("FSB notifications");
-    _mysearchList.add("GOST-R certification");
-    _mysearchList.add("Radio import");
-    _mysearchList.add("ICASA Telecom Equipment Type Approval");
-    _mysearchList.add("Independent Communication Authority of South Africa approval");
-    _mysearchList.add("NRCS certification");
-    _mysearchList.add("National Regulator for Compulsory Specifications certification");
-    _mysearchList.add("SABS certification");
-    _mysearchList.add("South African Bureau of Standards certification");
-    _mysearchList.add("KEBS certification");
-    _mysearchList.add("NRTA certification");
-    _mysearchList.add("National Telecommunication Regulatory Authority certification");
-    _mysearchList.add("CoC certificate, Certificat de controle de qualite certification");
-    _mysearchList.add("Korea Conformity Assessment System for Broadcasting and Communications Equipment certification");
-    _mysearchList.add("CE certification, Conformite Europeenne certification");
-    _mysearchList.add("UKCA mark");
-    _mysearchList.add("UK Conformity Assessed mark");
-    _mysearchList.add("IEC/EN 62368-1 implementation");
-    _mysearchList.add("ANATEL Type Approval");
-    _mysearchList.add("Agencia Nacional de Telecomunicaciones type approval");
-    _mysearchList.add("INMETRO certification");
-    _mysearchList.add("Institute of Metrology");
-    _mysearchList.add("Standardisation and Industrial Quality certification");
-    _mysearchList.add("ENACOM approval, Ente Nacional de Comunicaciones approval");
-    _mysearchList.add("IRAM certification");
-    _mysearchList.add("Instituto Argentino de Normalizacion y Certificacion");
-    _mysearchList.add("Industry Canada (IC) Certification");
-  }
-
-
-  void _myhandleSearchEnd() {
-    setState(() {
-      this.icon = new Icon(
-        Icons.search,
-        color: Colors.white,
-      );
-      this.appBarTitle = new Text(
-        "Search Sample",
-        style: new TextStyle(color: Colors.white),
-      );
-      _mySearching = false;
-      _mysearchController.clear();
-    });
-  }
-
-  void mysearchOperation(String searchText) {
-    mysearchresult.clear();
-    if (_mySearching != null) {
-      for (int i = 0; i < _mysearchList.length; i++) {
-        String data = _mysearchList[i];
-        if (data.toLowerCase().contains(searchText.toLowerCase())) {
-          setState((){});
-          mysearchresult.add(data);
-        }
-      }
-    }
-  }
 
 
 
@@ -610,7 +215,6 @@ class _TaskPreviewState extends State<TaskPreview>
   @override
   void initState() {
     super.initState();
-    myvalues();
     //Future.delayed(Duration(seconds: 3)).then((value) => assignvel());
     _controller = TabController(
       length: 3,
@@ -1372,7 +976,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return DeatailsPopBox(endDate: endDate, lastseen: lastseen, s: s, status: status, priority: priority, taskname: taskname, cat: cat, f: f, startDate: startDate, message: message, Idocid: id, CxID: CxID,assigns: assignsto.toList());
+                              return DeatailsPopBox(endDate: endDate, lastseen: lastseen, s: s, status: status, priority: priority, taskname: taskname, cat: cat, f: f, startDate: startDate, message: message, Idocid: id, CxID: CxID,assigns: assignsto.toList(),leadID: LeadId,);
                             });
 
                       },
@@ -4407,7 +4011,4 @@ class _TaskPreviewState extends State<TaskPreview>
         .where("cat", isEqualTo: cat)
         .snapshots();
   }
-
 }
-
-

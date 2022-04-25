@@ -3,15 +3,17 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
+import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
+import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
+import 'package:test_web_app/DashBoard/Comonents/Leads/Leads_View.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
+import 'package:test_web_app/DashBoard/Comonents/Settings/Settings.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
@@ -24,6 +26,7 @@ import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -31,7 +34,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final globalKey = GlobalKey<ScaffoldState>();
   final ScrollController _controller = ScrollController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   Tabs active = Tabs.TaskPreview;
   var radioItem;
@@ -177,76 +180,46 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 
+  Widget shortcut(title, child) {
+    return Column(
+      children: [Header(title: title), child],
+    );
+  }
+
   DashboardBody(BuildContext context) {
     switch (active) {
       case Tabs.DashBoard:
         {
-          return Column(
-            children: [
-              Header(
-                title: "DashBoard",
-              ),
-              UserDashBoard(),
-            ],
-          );
+          return shortcut("DashBoard", UserDashBoard());
         }
       case Tabs.TaskPreview:
         {
-          return Column(
-            children: [
-              Header(title: 'Task Preview'),
-              TaskPreview(),
-            ],
-          );
+          return shortcut("Task Preview", TaskPreview());
         }
-
       case Tabs.Analytics:
         {
-          return Column(
-            children: [
-              Header(title: "Analytics"),
-              //Analytics(),
-            ],
-          );
+          return shortcut("Analytics", Analytics());
         }
-
       case Tabs.Finance:
         {
-          return Column(
-            children: [
-              Header(title: "Finance"),
-              Finance(),
-            ],
-          );
+          return shortcut("Finance", Finance());
         }
-
       case Tabs.Calendar:
         {
-          return Column(
-            children: [
-              Header(title: "Calendar"),
-              //Calendar(),
-            ],
-          );
+          return shortcut("Calendar", Calendar());
         }
-
       case Tabs.Messages:
         {
-          return Header(title: "Messages");
+          return shortcut("Messages", LeadScreen());
         }
-
       case Tabs.Notification:
         {
-          return Column(
-            children: [Header(title: "Notification"), Notifications()],
-          );
+          return shortcut("Notification", Notifications());
         }
 
       default:
         {
-          return Header(
-            title: "Settings",
-          );
+          return shortcut("Settings", SettingsScreen());
         }
     }
   }

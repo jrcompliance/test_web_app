@@ -31,6 +31,7 @@ class DeatailsPopBox extends StatefulWidget {
   int s;
   int f;
   List assigns;
+  int leadID;
 
   DeatailsPopBox(
       {
@@ -46,7 +47,7 @@ class DeatailsPopBox extends StatefulWidget {
         required this.lastseen,
         required this.f,
         required this.s,
-        required this.assigns});
+        required this.assigns,required this.leadID});
 
   @override
   _DeatailsPopBoxState createState() => _DeatailsPopBoxState();
@@ -523,7 +524,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                   style: TxtStls.fieldtitlestyle,
                 ),
                 Text(
-                  "LeadId"+widget.CxID.toString(),
+                  "LeadID: JRL-${widget.leadID<10?"0${widget.leadID}":widget.leadID}",
                   style: TxtStls.fieldtitlestyle,
                 ),
               ],

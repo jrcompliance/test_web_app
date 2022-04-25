@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,29 +8,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
-import 'package:test_web_app/Constants/Fileview.dart';
-import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Widgets/DetailsPopBox.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
-import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/PdfFiles/PdfScreen.dart';
-import 'package:test_web_app/Providers/ActivityProvider.dart';
-import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
-import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
-import 'package:test_web_app/Widgets/InvoicePopup.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../Providers/CustomerProvider.dart';
 
 class Finance extends StatefulWidget {
@@ -67,8 +56,11 @@ class _FinanceState extends State<Finance> {
 
   bool isSwitched = false;
   bool isSwitched1 = false;
+  bool isSwitched2 = true;
 
   double total = 0;
+
+  int? leadID;
 
   @override
   void initState() {
@@ -99,6 +91,7 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
+  final TextEditingController _leadController = TextEditingController();
   List cust = [];
 
   @override
@@ -209,7 +202,7 @@ class _FinanceState extends State<Finance> {
                                     backgroundColor: btnColor.withOpacity(0.1),
                                   ),
                                   onTap: () {
-                                    print(2);
+                                    //  print(2);
                                     Provider.of<GetInvoiceListProvider>(context,
                                             listen: false)
                                         .getInvoiceList(snp.Idocid);
@@ -230,6 +223,7 @@ class _FinanceState extends State<Finance> {
                                       s = snp.s;
                                       f = snp.f;
                                       assign = snp.assign;
+                                      leadID = snp.leadId;
                                     });
                                   },
                                   shape: RoundedRectangleBorder(
@@ -506,10 +500,9 @@ class _FinanceState extends State<Finance> {
                                                   flex: 1,
                                                   fit: FlexFit.tight,
                                                   child: Text(
-                                                    data.invoiceType.toString(),
-                                                    style:
-                                                        TxtStls.fieldtitlestyle,
-                                                  ),
+                                                      "JRL-${leadID! < 10 ? "0${leadID}" : leadID}",
+                                                      style: TxtStls
+                                                          .fieldtitlestyle),
                                                 ),
                                               ],
                                             ),
@@ -535,6 +528,7 @@ class _FinanceState extends State<Finance> {
                                                   assigns: assign as List,
                                                   Idocid: Idocid.toString(),
                                                   message: message.toString(),
+                                                  leadID: leadID as int,
                                                 );
                                               });
 
@@ -1278,7 +1272,13 @@ class _FinanceState extends State<Finance> {
                                     thickness: 2,
                                     color: bgColor,
                                   ),
-                                Expanded(flex: 3, child: SizedBox()),
+                                Expanded(
+                                  flex: 2,
+                                  child: isSwitched2
+                                      ? field(_leadController, "Lead ID", 1,
+                                          true, null, null, null)
+                                      : SizedBox(),
+                                ),
                                 for (int i = 1; i <= 2; i++)
                                   VerticalDivider(
                                     thickness: 2,
@@ -1329,6 +1329,22 @@ class _FinanceState extends State<Finance> {
                       ),
                 Row(
                   children: [
+                    Row(
+                      children: [
+                        Text("LeadId", style: TxtStls.fieldtitlestyle),
+                        Switch(
+                          value: isSwitched2,
+                          onChanged: (value) {
+                            setState(() {
+                              isSwitched2 = value;
+                              print(isSwitched2);
+                            });
+                          },
+                          activeTrackColor: btnColor.withOpacity(0.2),
+                          activeColor: btnColor,
+                        ),
+                      ],
+                    ),
                     Row(
                       children: [
                         Text("Internal Notes", style: TxtStls.fieldtitlestyle),
@@ -1812,7 +1828,7 @@ class _FinanceState extends State<Finance> {
     "Currency",
     "Due Date",
     "Status",
-    "Inc Type"
+    "Lead ID"
   ];
 
   Widget titleWidget() {
@@ -1882,5 +1898,10 @@ class _FinanceState extends State<Finance> {
           return emojiList[1];
         }
     }
+  }
+
+  findduplicates() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    QuerySnapshot snapshot = await firestore.collection("Tasks").get();
   }
 }

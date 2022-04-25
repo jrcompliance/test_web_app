@@ -17,6 +17,7 @@ class CustomerModel {
   int s;
   int f;
   List assign;
+  int leadId;
 
   CustomerModel(
       {required this.Customername,
@@ -34,5 +35,6 @@ class CustomerModel {
       required this.lastseen,
       required this.f,
       required this.s,
-      required this.assign});
+      required this.assign,
+      required this.leadId});
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -27,7 +28,7 @@ class _LeadScreenState extends State<LeadScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return UserDataProvider().role == "Admin"
+    return Provider.of<UserDataProvider>(context, listen: false).role == "Admin"
         ? Padding(
             padding: Responsive.isSmallScreen(context)
                 ? const EdgeInsets.all(10.0)
