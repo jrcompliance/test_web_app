@@ -289,23 +289,17 @@ class _LoginScreenState extends State<LoginScreen> {
           .then((value) {
         if (Provider.of<LoginProvider>(context, listen: false).success !=
             null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            dismissDirection: DismissDirection.startToEnd,
-            content: Text("Login successfully"),
-            backgroundColor: Colors.green,
-          ));
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => MainScreen()),
               (route) => false);
+          toastmessage.sucesstoast(context, "You are loggined in Successfully");
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            dismissDirection: DismissDirection.startToEnd,
-            content: Text(Provider.of<LoginProvider>(context, listen: false)
-                .error
-                .toString()),
-            backgroundColor: Colors.red,
-          ));
+          toastmessage.warningmessage(
+              context,
+              Provider.of<LoginProvider>(context, listen: false)
+                  .error
+                  .toString());
         }
       });
     }

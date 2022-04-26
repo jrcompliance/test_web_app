@@ -5,6 +5,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 
 const bgColor = Colors.white;
 const AbgColor = Colors.grey;
@@ -147,4 +149,28 @@ class statClr {
   static const ready = Colors.red;
   static const com = Colors.green;
   static const com1 = Colors.indigoAccent;
+}
+
+class toastmessage {
+  static sucesstoast(BuildContext context, e) {
+    Size size = MediaQuery.of(context).size;
+    MotionToast.success(
+      title: Text("Success", style: TxtStls.fieldtitlestyle),
+      description: Text(e, style: TxtStls.fieldstyle),
+      width: size.width * 0.25,
+      animationType: ANIMATION.fromRight,
+      position: MOTION_TOAST_POSITION.top,
+    ).show(context);
+  }
+
+  static warningmessage(BuildContext context, e) {
+    Size size = MediaQuery.of(context).size;
+    MotionToast.warning(
+      title: Text("Warning", style: TxtStls.fieldtitlestyle),
+      description: Text(e.toString(), style: TxtStls.fieldstyle),
+      width: size.width * 0.25,
+      animationType: ANIMATION.fromRight,
+      position: MOTION_TOAST_POSITION.top,
+    ).show(context);
+  }
 }

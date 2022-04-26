@@ -127,20 +127,14 @@ class _RecoverpasswordState extends State<Recoverpassword> {
         if (Provider.of<PasswordResetProvider>(context, listen: false).error ==
             null) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              dismissDirection: DismissDirection.startToEnd,
-              content: Text(
-                  "Password Reset Link sent to your registered email Successfully"),
-              backgroundColor: Colors.green));
+          toastmessage.sucesstoast(context,
+              "Password Reset Link sent to your registered email Successfully");
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              dismissDirection: DismissDirection.startToEnd,
-              content: Text(
-                Provider.of<PasswordResetProvider>(context, listen: false)
-                    .error
-                    .toString(),
-              ),
-              backgroundColor: Colors.red));
+          toastmessage.warningmessage(
+              context,
+              Provider.of<PasswordResetProvider>(context, listen: false)
+                  .error
+                  .toString());
         }
       });
     }

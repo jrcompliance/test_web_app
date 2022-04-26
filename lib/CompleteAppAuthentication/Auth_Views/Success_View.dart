@@ -17,7 +17,7 @@ class SuccessScreen extends StatefulWidget {
 class _SuccessScreenState extends State<SuccessScreen> {
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 6), () async {
+    Timer(Duration(seconds: 15), () async {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => LoginScreen()));
     });
@@ -25,6 +25,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: ScaleAnimatedWidget.tween(
         duration: Duration(milliseconds: 1500),
@@ -43,11 +44,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
                 children: [
                   MyLogo(),
                   SizedBox(
-                      height: 200,
+                      height: size.height * 0.2,
                       child:
                           Lottie.asset("assets/Lotties/registeredsucees.json")),
-                  SizedBox(height: 30),
+                  SizedBox(height: size.height * 0.01),
                   InkWell(
+                    hoverColor: Colors.transparent,
                     child: Container(
                       padding: EdgeInsets.all(12.0),
                       margin: EdgeInsets.symmetric(horizontal: 60.0),
@@ -65,7 +67,8 @@ class _SuccessScreenState extends State<SuccessScreen> {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (_) => LoginScreen()));
                     },
-                  )
+                  ),
+                  SizedBox(height: size.height * 0.01),
                 ],
               ),
             ),

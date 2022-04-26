@@ -15,9 +15,7 @@ class EmergencyTaskProvider extends ChangeNotifier {
     String? imageUrl =
         Provider.of<UserDataProvider>(context, listen: false).imageUrl;
     String? uid = Provider.of<UserDataProvider>(context, listen: false).uid;
-    print(imageUrl! + uid!);
     try {
-      print(1);
       var response = await _firebase
           .collection("Tasks")
           .where("endDate", isEqualTo: duedate)
@@ -27,17 +25,15 @@ class EmergencyTaskProvider extends ChangeNotifier {
           "uid": uid,
         }
       ]).get();
-      print(2);
+
       List<EmergencyTaskModel> loadedData = [];
-      print(3);
+
       response.docs.forEach((element) {
-        print(4);
         loadedData.add(EmergencyTaskModel(
           logo: element["logo"],
           email: element["CompanyDetails"][0]["email"],
           taskname: element["task"],
         ));
-        print(5);
         _emergencyModellist = loadedData;
         notifyListeners();
         print(_emergencyModellist.toString());

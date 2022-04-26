@@ -839,6 +839,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                     listen: false);
                 if (_formKey.currentState!.validate()) {
                   Future.delayed(Duration.zero).then((value) {}).then((value) {
+                    cxidprovider.fetchRecent();
                     cxidprovider.fetchLeadId().then((value) {
                       Provider.of<CreateLeadProvider>(context, listen: false)
                           .createTask(
@@ -850,7 +851,7 @@ class _MoveDrawerState extends State<MoveDrawer> {
                               _firstmessageController.text.toString(),
                               _selectperson,
                               _image,
-                              100,
+                              cxidprovider.CxID,
                               cxidprovider.leadId)
                           .then((value) {
                         Navigator.pop(context);

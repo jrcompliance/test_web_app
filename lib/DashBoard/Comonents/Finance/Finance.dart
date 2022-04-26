@@ -21,6 +21,7 @@ import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
+import 'package:test_web_app/Widgets/InvoicePopup.dart';
 import '../../../Providers/CustomerProvider.dart';
 
 class Finance extends StatefulWidget {
@@ -31,7 +32,7 @@ class Finance extends StatefulWidget {
 }
 
 class _FinanceState extends State<Finance> {
-  bool _isLoad = false;
+  bool _isCreate = false;
   bool isgst = false;
 
   bool isPreview = false;
@@ -61,12 +62,6 @@ class _FinanceState extends State<Finance> {
   double total = 0;
 
   int? leadID;
-
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<CustmerProvider>(context, listen: false).getCustomers(context);
-  }
 
   final _list = ["Quotation", "Performer Invoice", "Invoice"];
   var activeid = "Quotation";
@@ -244,341 +239,323 @@ class _FinanceState extends State<Finance> {
               ),
             ),
             SizedBox(width: 10),
-            Flexible(
-                flex: 7,
-                fit: FlexFit.tight,
-                child: isPreview
-                    ? PreviewInvoice(context)
-                    : Container(
-                        padding: EdgeInsets.all(20),
-                        height: size.height * 0.93,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          color: bgColor,
-                        ),
-                        child: _isLoad
-                            ? show1(context)
-                            : Column(
+            Expanded(
+              flex: 7,
+              child: Container(
+                padding: EdgeInsets.all(20),
+                height: size.height * 0.93,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: bgColor,
+                ),
+                child: _isCreate
+                    ? isPreview
+                        ? PreviewInvoice(context)
+                        : Createinvoice(context)
+                    : cusname == null
+                        ? Center(
+                            child: Text("Select any Customer to Proceed",
+                                style: TxtStls.fieldtitlestyle))
+                        : Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  cusname == null
-                                      ? SizedBox()
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                  Text(
+                                      cusname.toString() +
+                                          "\n(${cusemail.toString()})",
+                                      style: TxtStls.fieldtitlestyle),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: FlatButton.icon(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        color: btnColor,
+                                        onPressed: () {
+                                          setState(() {
+                                            _isCreate = true;
+                                            _dateController.text =
+                                                DateTime.now()
+                                                    .toString()
+                                                    .split(" ")[0];
+                                          });
+                                        },
+                                        icon: Icon(Icons.add, color: bgColor),
+                                        label: Text(
+                                          "Create New $activeid",
+                                          style: TxtStls.fieldstyle1,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: size.height * 0.05),
+                              titleWidget(),
+                              Expanded(
+                                  child: ListView.separated(
+                                itemCount:
+                                    Provider.of<GetInvoiceListProvider>(context)
+                                        .invoicemodellist
+                                        .length,
+                                itemBuilder: (_, i) {
+                                  var data =
+                                      Provider.of<GetInvoiceListProvider>(
+                                              context)
+                                          .invoicemodellist[i];
+                                  var createdate =
+                                      DateTime.parse(data.duedate.toString());
+                                  return InkWell(
+                                    child: Container(
+                                      height: size.height * 0.06,
+                                      child: Material(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        elevation: 15,
+                                        child: Row(
                                           children: [
-                                            Text(
-                                                cusname.toString() +
-                                                    "\n(${cusemail.toString()})",
-                                                style: TxtStls.fieldtitlestyle),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: FlatButton.icon(
-                                                  shape: RoundedRectangleBorder(
+                                            Flexible(
+                                                flex: 1,
+                                                fit: FlexFit.tight,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                        Icons
+                                                            .picture_as_pdf_rounded,
+                                                        color: clsClr),
+                                                    Text(
+                                                      "  JR" +
+                                                          data.invoiceID
+                                                              .toString(),
+                                                      style: TxtStls
+                                                          .fieldtitlestyle,
+                                                    ),
+                                                  ],
+                                                )),
+                                            Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.tight,
+                                              child: Text(
+                                                data.amount.toString(),
+                                                style: TxtStls.fieldtitlestyle,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.tight,
+                                              child: Text(
+                                                data.currencyType.toString(),
+                                                style: TxtStls.fieldtitlestyle,
+                                              ),
+                                            ),
+                                            Flexible(
+                                                flex: 1,
+                                                fit: FlexFit.tight,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                        Icons
+                                                            .calendar_today_rounded,
+                                                        color: btnColor),
+                                                    SizedBox(width: 5),
+                                                    Text(
+                                                      DateFormat("dd MMMM,yyyy")
+                                                          .format(createdate),
+                                                      style: TxtStls
+                                                          .fieldtitlestyle,
+                                                    ),
+                                                  ],
+                                                )),
+                                            Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.tight,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: size.width * 0.015,
+                                                  top: size.width * 0.002,
+                                                  bottom: size.width * 0.002,
+                                                ),
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                      color: statusColor(
+                                                              data.status)
+                                                          .withOpacity(0.25),
                                                       borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10.0))),
-                                                  color: btnColor,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _dateController.text =
-                                                          DateTime.now()
-                                                              .toString()
-                                                              .split(" ")[0];
-                                                      _isLoad = true;
-                                                    });
-                                                  },
-                                                  icon: Icon(Icons.add,
-                                                      color: bgColor),
-                                                  label: Text(
-                                                    "Create New $activeid",
-                                                    style: TxtStls.fieldstyle1,
-                                                  )),
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child:
+                                                      DropdownButtonFormField2(
+                                                    decoration: InputDecoration(
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        border: InputBorder.none
+                                                        // border:
+                                                        //     OutlineInputBorder(
+                                                        //   borderRadius:
+                                                        //       BorderRadius
+                                                        //           .circular(
+                                                        //               10),
+                                                        // ),
+                                                        ),
+                                                    isExpanded: true,
+                                                    selectedItemBuilder:
+                                                        (BuildContext context) {
+                                                      return statusList
+                                                          .map((String value) {
+                                                        return Text(
+                                                          data.status
+                                                              .toString(),
+                                                          style: GoogleFonts
+                                                              .nunito(
+                                                            textStyle: TextStyle(
+                                                                fontSize: 13,
+                                                                color: statusColor(
+                                                                    data
+                                                                        .status),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        );
+                                                      }).toList();
+                                                    },
+                                                    hint: Text(
+                                                      data.status.toString(),
+                                                      style: GoogleFonts.nunito(
+                                                          textStyle: TextStyle(
+                                                              fontSize: 13,
+                                                              color: statusColor(
+                                                                  data.status),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    ),
+                                                    icon: Icon(
+                                                      Icons.arrow_drop_down,
+                                                      color: btnColor,
+                                                    ),
+                                                    iconSize: 20,
+                                                    buttonHeight: 50,
+                                                    buttonPadding:
+                                                        EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    items: statusList
+                                                        .map((item) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                              value: item,
+                                                              child: Text(item,
+                                                                  style: TxtStls
+                                                                      .fieldtitlestyle),
+                                                            ))
+                                                        .toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        data.status =
+                                                            value.toString();
+                                                      });
+                                                      Provider.of<InvoiceUpdateProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .invoiceUpdate(
+                                                              Idocid,
+                                                              data.docid,
+                                                              value);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              flex: 1,
+                                              fit: FlexFit.tight,
+                                              child: InkWell(
+                                                hoverColor: Colors.transparent,
+                                                child: Text(
+                                                    "JRL-${leadID! < 10 ? "0${leadID}" : leadID}",
+                                                    style: TxtStls
+                                                        .fieldtitlestyle),
+                                                onTap: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return DeatailsPopBox(
+                                                          f: f as int,
+                                                          startDate: startDate
+                                                              as Timestamp,
+                                                          lastseen: lastseen
+                                                              as Timestamp,
+                                                          s: s as int,
+                                                          cat: cat.toString(),
+                                                          endDate: endDate
+                                                              .toString(),
+                                                          CxID: cusID as int,
+                                                          taskname: cusTask
+                                                              .toString(),
+                                                          priority: priority
+                                                              .toString(),
+                                                          status:
+                                                              status.toString(),
+                                                          assigns:
+                                                              assign as List,
+                                                          Idocid:
+                                                              Idocid.toString(),
+                                                          message: message
+                                                              .toString(),
+                                                          leadID: leadID as int,
+                                                        );
+                                                      });
+                                                },
+                                              ),
                                             ),
                                           ],
                                         ),
-                                  SizedBox(height: size.height * 0.1),
-                                  titleWidget(),
-                                  Expanded(
-                                      child: ListView.separated(
-                                    itemCount:
-                                        Provider.of<GetInvoiceListProvider>(
-                                                context)
-                                            .invoicemodellist
-                                            .length,
-                                    itemBuilder: (_, i) {
-                                      var data =
-                                          Provider.of<GetInvoiceListProvider>(
-                                                  context)
-                                              .invoicemodellist[i];
-                                      var createdate = DateTime.parse(
-                                          data.duedate.toString());
-                                      return InkWell(
-                                        child: Container(
-                                          height: size.height * 0.06,
-                                          child: Material(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            elevation: 15,
-                                            child: Row(
-                                              children: [
-                                                Flexible(
-                                                    flex: 1,
-                                                    fit: FlexFit.tight,
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(
-                                                            Icons
-                                                                .picture_as_pdf_rounded,
-                                                            color: clsClr),
-                                                        Text(
-                                                          "  JR" +
-                                                              data.invoiceID
-                                                                  .toString(),
-                                                          style: TxtStls
-                                                              .fieldtitlestyle,
-                                                        ),
-                                                      ],
-                                                    )),
-                                                Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.tight,
-                                                  child: Text(
-                                                    data.amount.toString(),
-                                                    style:
-                                                        TxtStls.fieldtitlestyle,
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.tight,
-                                                  child: Text(
-                                                    data.currencyType
-                                                        .toString(),
-                                                    style:
-                                                        TxtStls.fieldtitlestyle,
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                    flex: 1,
-                                                    fit: FlexFit.tight,
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(
-                                                            Icons
-                                                                .calendar_today_rounded,
-                                                            color: btnColor),
-                                                        SizedBox(width: 5),
-                                                        Text(
-                                                          DateFormat(
-                                                                  "dd MMMM,yyyy")
-                                                              .format(
-                                                                  createdate),
-                                                          style: TxtStls
-                                                              .fieldtitlestyle,
-                                                        ),
-                                                      ],
-                                                    )),
-                                                Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.tight,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      right: size.width * 0.015,
-                                                      top: size.width * 0.002,
-                                                      bottom:
-                                                          size.width * 0.002,
-                                                    ),
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                          color: statusColor(
-                                                                  data.status)
-                                                              .withOpacity(
-                                                                  0.25),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                      child:
-                                                          DropdownButtonFormField2(
-                                                        decoration: InputDecoration(
-                                                            isDense: true,
-                                                            contentPadding:
-                                                                EdgeInsets.zero,
-                                                            border:
-                                                                InputBorder.none
-                                                            // border:
-                                                            //     OutlineInputBorder(
-                                                            //   borderRadius:
-                                                            //       BorderRadius
-                                                            //           .circular(
-                                                            //               10),
-                                                            // ),
-                                                            ),
-                                                        isExpanded: true,
-                                                        selectedItemBuilder:
-                                                            (BuildContext
-                                                                context) {
-                                                          return statusList.map(
-                                                              (String value) {
-                                                            return Text(
-                                                              data.status
-                                                                  .toString(),
-                                                              style: GoogleFonts
-                                                                  .nunito(
-                                                                textStyle: TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    color: statusColor(data
-                                                                        .status),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            );
-                                                          }).toList();
-                                                        },
-                                                        hint: Text(
-                                                          data.status
-                                                              .toString(),
-                                                          style: GoogleFonts.nunito(
-                                                              textStyle: TextStyle(
-                                                                  fontSize: 13,
-                                                                  color: statusColor(
-                                                                      data
-                                                                          .status),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                        ),
-                                                        icon: Icon(
-                                                          Icons.arrow_drop_down,
-                                                          color: btnColor,
-                                                        ),
-                                                        iconSize: 20,
-                                                        buttonHeight: 50,
-                                                        buttonPadding:
-                                                            EdgeInsets.only(
-                                                                left: 20,
-                                                                right: 10),
-                                                        dropdownDecoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        items: statusList
-                                                            .map((item) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  value: item,
-                                                                  child: Text(
-                                                                      item,
-                                                                      style: TxtStls
-                                                                          .fieldtitlestyle),
-                                                                ))
-                                                            .toList(),
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            data.status = value
-                                                                .toString();
-                                                          });
-                                                          Provider.of<InvoiceUpdateProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .invoiceUpdate(
-                                                                  Idocid,
-                                                                  data.docid,
-                                                                  value);
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 1,
-                                                  fit: FlexFit.tight,
-                                                  child: Text(
-                                                      "JRL-${leadID! < 10 ? "0${leadID}" : leadID}",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return DeatailsPopBox(
-                                                  f: f as int,
-                                                  startDate:
-                                                      startDate as Timestamp,
-                                                  lastseen:
-                                                      lastseen as Timestamp,
-                                                  s: s as int,
-                                                  cat: cat.toString(),
-                                                  endDate: endDate.toString(),
-                                                  CxID: cusID as int,
-                                                  taskname: cusTask.toString(),
-                                                  priority: priority.toString(),
-                                                  status: status.toString(),
-                                                  assigns: assign as List,
-                                                  Idocid: Idocid.toString(),
-                                                  message: message.toString(),
-                                                  leadID: leadID as int,
-                                                );
-                                              });
-
-                                          print("Hey Yalagala");
-
-                                          // showDialog(
-                                          //     context: context,
-                                          //     builder: (BuildContext context) {
-                                          //       return AdvanceCustomAlert(
-                                          //         invoiceid:
-                                          //             data.invoiceID.toString(),
-                                          //         url: data.invoiceurl
-                                          //             .toString(),
-                                          //         date: createdate,
-                                          //         name: cusname.toString(),
-                                          //         email: cusemail.toString(),
-                                          //         statusColor:
-                                          //             statusColor(data.status),
-                                          //         imageList:
-                                          //             statusEmoji(data.status),
-                                          //         referenceID: data.referenceID,
-                                          //         internalNotes:
-                                          //             data.internalNotes,
-                                          //         externalNotes:
-                                          //             data.externalNotes,
-                                          //         id: data.docid,
-                                          //       );
-                                          //     });
-                                          //
-                                          // print("Hey Yalagala");
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) =>
-                                            SizedBox(
-                                      height: size.height * 0.01,
+                                      ),
                                     ),
-                                  )),
-                                  SizedBox(height: size.height * 0.2),
-                                  cusname == null
-                                      ? Text(
-                                          "Select any Customer to Proceed",
-                                          style: TxtStls.fieldtitlestyle,
-                                        )
-                                      : SizedBox()
-                                ],
-                              ),
-                      )),
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AdvanceCustomAlert(
+                                              invoiceid:
+                                                  data.invoiceID.toString(),
+                                              url: data.invoiceurl.toString(),
+                                              date: createdate,
+                                              name: cusname.toString(),
+                                              email: cusemail.toString(),
+                                              statusColor:
+                                                  statusColor(data.status),
+                                              imageList:
+                                                  statusEmoji(data.status),
+                                              referenceID: data.referenceID,
+                                              internalNotes: data.internalNotes,
+                                              externalNotes: data.externalNotes,
+                                              id: data.docid,
+                                            );
+                                          });
+                                    },
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        SizedBox(
+                                  height: size.height * 0.01,
+                                ),
+                              )),
+                            ],
+                          ),
+              ),
+            ),
           ],
         ));
   }
@@ -628,780 +605,686 @@ class _FinanceState extends State<Finance> {
     print("Data added ");
   }
 
-  Widget show1(BuildContext context) {
+  Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Expanded(
-        flex: 7,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Container(
-            height: size.height * 0.845,
-            decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: btnColor,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_rounded,
-                            color: bgColor,
-                          ),
-                          onPressed: () {
-                            _isLoad = false;
-                            isgst = false;
-                            setState(() {});
-                          },
-                        ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundColor: btnColor,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: bgColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isCreate = false;
+                    });
+                  },
+                ),
+              ),
+              Row(
+                children: [
+                  Container(
+                    width: size.width * 0.225,
+                    decoration: BoxDecoration(
+                      color: fieldColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10.0),
+                          bottomLeft: Radius.circular(10.0)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15, right: 0, top: 2),
+                      child: TextField(
+                        controller: _gstController,
+                        style: TxtStls.fieldstyle,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Enter Gst Number...",
+                            hintStyle: TxtStls.fieldstyle),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            width: size.width * 0.225,
-                            decoration: BoxDecoration(
-                              color: fieldColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  bottomLeft: Radius.circular(10.0)),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      var provider =
+                          Provider.of<GstProvider>(context, listen: false);
+                      provider
+                          .fetchGstData(_gstController.text.toString())
+                          .whenComplete(() {
+                        Future.delayed(Duration(seconds: 2)).then((value) {
+                          setState(() {
+                            tradename = provider.tradename.toString();
+                            address = provider.principalplace.toString();
+                            pan = provider.pan.toString();
+                            pincode = provider.pincode.toString();
+                          });
+                        });
+                      });
+                    },
+                    child: Container(
+                      width: size.width * 0.025,
+                      padding: EdgeInsets.symmetric(vertical: 12.5),
+                      color: btnColor,
+                      child: Provider.of<GstProvider>(context).isLoading
+                          ? SpinKitFadingCube(
+                              color: bgColor,
+                              size: 23,
+                            )
+                          : Icon(
+                              Icons.search,
+                              color: bgColor,
                             ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+              onPressed: () {
+                isgst = true;
+                setState(() {});
+              },
+              child: Text(
+                "Don't have Gst Number? Click Here",
+                style: ClrStls.tnClr,
+              )),
+        ),
+        Row(
+          children: [
+            Expanded(
+              flex: 6,
+              child: Row(
+                children: [
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: grClr.withOpacity(0.25),
+                      ),
+                      child: Text(
+                        "ReferenceID :",
+                        style: TxtStls.fieldtitlestyle,
+                      )),
+                  SizedBox(width: 7.5),
+                  Expanded(
+                    flex: 2,
+                    child: field(
+                        _referenceController, "Enter Reference ID", 1, true),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: SizedBox(),
+            ),
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: size.height * 0.05,
+                width: size.width * 0.05,
+                child: DropdownButtonFormField2(
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  isExpanded: true,
+                  hint: Text(
+                    selectedValue,
+                    style: TxtStls.fieldtitlestyle,
+                  ),
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: btnColor,
+                  ),
+                  iconSize: 30,
+                  buttonHeight: 60,
+                  buttonPadding: EdgeInsets.only(left: 20, right: 10),
+                  dropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  items: currencieslist
+                      .map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item, style: TxtStls.fieldtitlestyle),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value.toString();
+                    });
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: size.height * 0.025),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: tradename == null
+              ? SizedBox()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      tradename.toString(),
+                      style: TxtStls.fieldstyle,
+                    ),
+                    Text(address.toString(), style: TxtStls.fieldstyle),
+                    Text(pincode.toString(), style: TxtStls.fieldstyle),
+                    Text(pan.toString(), style: TxtStls.fieldstyle),
+                  ],
+                ),
+        ),
+        SizedBox(height: size.height * 0.025),
+        Expanded(
+          child: isgst
+              ? ScaleAnimatedWidget.tween(
+                  duration: Duration(milliseconds: 500),
+                  child: Column(
+                    children: [
+                      formfield("TradeName", _tradenameController, true),
+                      space(),
+                      formfield(
+                          "Address",
+                          _addressControoler,
+                          true,
+                          Icon(
+                            Icons.location_on_rounded,
+                            color: btnColor,
+                          )),
+                      space(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
                             child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 15, right: 0, top: 2),
-                              child: TextField(
-                                controller: _gstController,
-                                style: TxtStls.fieldstyle,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Enter Gst Number...",
-                                    hintStyle: TxtStls.fieldstyle),
-                              ),
+                              padding: EdgeInsets.only(right: 20),
+                              child: formfield(
+                                  "PanNumber", _panController, true, null, 10),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              var provider = Provider.of<GstProvider>(context,
-                                  listen: false);
-                              provider
-                                  .fetchGstData(_gstController.text.toString())
-                                  .whenComplete(() {
-                                Future.delayed(Duration(seconds: 2))
-                                    .then((value) {
-                                  setState(() {
-                                    tradename = provider.tradename.toString();
-                                    address =
-                                        provider.principalplace.toString();
-                                    pan = provider.pan.toString();
-                                    pincode = provider.pincode.toString();
-                                  });
-                                });
-                              });
-                            },
-                            child: Container(
-                              width: size.width * 0.025,
-                              padding: EdgeInsets.symmetric(vertical: 12.5),
-                              color: btnColor,
-                              child: Provider.of<GstProvider>(context).isLoading
-                                  ? SpinKitFadingCube(
-                                      color: bgColor,
-                                      size: 23,
-                                    )
-                                  : Icon(
-                                      Icons.search,
-                                      color: bgColor,
-                                    ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: formfield(
+                                  "PinCode", _pincodeController, true, null, 6),
                             ),
                           ),
                         ],
+                      ),
+                      space(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CircleAvatar(
+                          backgroundColor: btnColor,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: bgColor,
+                            ),
+                            onPressed: () async {
+                              print("Hey Yalagala Srinivas");
+                              tradename = _tradenameController.text.toString();
+                              pan = _panController.text.toString();
+                              pincode = _pincodeController.text.toString();
+                              address = _addressControoler.text.toString();
+                              isgst = false;
+                              setState(() {});
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                      onPressed: () {
-                        isgst = true;
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Don't have Gst Number? Click Here",
-                        style: ClrStls.tnClr,
-                      )),
-                ),
-                Row(
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 6,
+                    Container(
+                      height: size.height * 0.05,
+                      color: btnColor,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 13),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: grClr.withOpacity(0.25),
-                              ),
-                              child: Text(
-                                "ReferenceID :",
-                                style: TxtStls.fieldtitlestyle,
-                              )),
-                          SizedBox(width: 7.5),
+                          Expanded(
+                            flex: 4,
+                            child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "ITEM DETAILS",
+                                  style: TxtStls.titlesstyle,
+                                )),
+                          ),
+                          myverticalDivider(),
                           Expanded(
                             flex: 2,
-                            child: field(_referenceController,
-                                "Enter Reference ID", 1, true),
-                          )
+                            child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "RATE",
+                                  style: TxtStls.titlesstyle,
+                                )),
+                          ),
+                          myverticalDivider(),
+                          Expanded(
+                              flex: 1,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text("QUANTITY",
+                                      style: TxtStls.titlesstyle))),
+                          myverticalDivider(),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "DISC(%)",
+                                  style: TxtStls.titlesstyle,
+                                )),
+                          ),
+                          myverticalDivider(),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "PRICE",
+                                    style: TxtStls.titlesstyle,
+                                  ))),
                         ],
                       ),
                     ),
-                    Expanded(
-                      flex: 6,
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        height: size.height * 0.05,
-                        width: size.width * 0.05,
-                        child: DropdownButtonFormField2(
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                    SizedBox(height: size.height * 0.01),
+                    servicelist.length > 0
+                        ? ConstrainedBox(
+                            constraints:
+                                BoxConstraints(maxHeight: size.height * 0.22),
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: servicelist.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("${index + 1}. ",
+                                                    style: TxtStls
+                                                        .fieldtitlestyle),
+                                                Flexible(
+                                                  child: Text(
+                                                    "${servicelist[index]["item"].toString()}\n",
+                                                    style:
+                                                        TxtStls.fieldtitlestyle,
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      myverticalDivider(),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              servicelist[index]["rate"]
+                                                  .toString(),
+                                              style: TxtStls.fieldtitlestyle,
+                                            )),
+                                      ),
+                                      myverticalDivider(),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  servicelist[index]["qty"]
+                                                      .toString(),
+                                                  style: TxtStls
+                                                      .fieldtitlestyle))),
+                                      myverticalDivider(),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                servicelist[index]["disc"]
+                                                    .toString(),
+                                                style:
+                                                    TxtStls.fieldtitlestyle)),
+                                      ),
+                                      myverticalDivider(),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  servicelist[index]["price"]
+                                                      .toString(),
+                                                  style: TxtStls
+                                                      .fieldtitlestyle))),
+                                    ],
+                                  );
+                                }),
+                          )
+                        : SizedBox(),
+                    Container(
+                      height: size.height * 0.06,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: field(
+                                _selectController, "Item Description", 1, true),
                           ),
-                          isExpanded: true,
-                          hint: Text(
-                            selectedValue,
-                            style: TxtStls.fieldtitlestyle,
+                          myverticalDivider(),
+                          Expanded(
+                            flex: 2,
+                            child: field(_rateController,
+                                "${symbol(selectedValue)} 0", 1, true),
                           ),
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: btnColor,
+                          myverticalDivider(),
+                          Expanded(
+                              flex: 1,
+                              child: field(_qtyController2, "1", 1, true)),
+                          myverticalDivider(),
+                          Expanded(
+                            flex: 1,
+                            child: field(_discController, "0 %", 1, true),
                           ),
-                          iconSize: 30,
-                          buttonHeight: 60,
-                          buttonPadding: EdgeInsets.only(left: 20, right: 10),
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          items: currencieslist
-                              .map((item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(item,
-                                        style: TxtStls.fieldtitlestyle),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value.toString();
-                            });
-                          },
-                        ),
+                          myverticalDivider(),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: InkWell(
+                                    autofocus: false,
+                                    onTap: () {
+                                      setState(() {
+                                        var _customer =
+                                            Provider.of<CustmerProvider>(
+                                                context,
+                                                listen: false);
+                                        cust.forEach((element) => _customer);
+                                      });
+
+                                      print('custom cust' + cust.toString());
+                                      addingData();
+                                      total = tbal + getval();
+                                      Future.delayed(
+                                              Duration(milliseconds: 100))
+                                          .then((value) {
+                                        _rateController.clear();
+                                        _qtyController2.clear();
+                                        _priceController.clear();
+                                        _discController.clear();
+                                        _selectController.clear();
+                                        _descripController.clear();
+                                      });
+                                    },
+                                    child: Text(
+                                      " ADD ITEM + ",
+                                      style: TxtStls.btnstyle,
+                                    )),
+                              )),
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                SizedBox(height: size.height * 0.025),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: tradename == null
-                      ? SizedBox()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              tradename.toString(),
-                              style: TxtStls.fieldstyle,
-                            ),
-                            Text(address.toString(), style: TxtStls.fieldstyle),
-                            Text(pincode.toString(), style: TxtStls.fieldstyle),
-                            Text(pan.toString(), style: TxtStls.fieldstyle),
-                          ],
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: isSwitched
+                              ? field(_internalController, "Internal Notes", 3,
+                                  true, null, null, 200)
+                              : SizedBox(),
                         ),
-                ),
-                SizedBox(height: size.height * 0.025),
-                isgst
-                    ? Expanded(
-                        child: ScaleAnimatedWidget.tween(
-                          duration: Duration(milliseconds: 500),
+                        for (int i = 1; i <= 2; i++)
+                          VerticalDivider(
+                            thickness: 2,
+                            color: bgColor,
+                          ),
+                        Expanded(flex: 2, child: SizedBox()),
+                        for (int i = 1; i <= 2; i++)
+                          VerticalDivider(
+                            thickness: 2,
+                            color: bgColor,
+                          ),
+                        Expanded(
+                          flex: 4,
                           child: Column(
                             children: [
-                              formfield(
-                                  "TradeName", _tradenameController, true),
-                              space(),
-                              formfield(
-                                  "Address",
-                                  _addressControoler,
-                                  true,
-                                  Icon(
-                                    Icons.location_on_rounded,
-                                    color: btnColor,
-                                  )),
-                              space(),
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 20),
-                                      child: formfield("PanNumber",
-                                          _panController, true, null, 10),
-                                    ),
+                                  Text(
+                                    "Sub Total (${selectedValue}) : " +
+                                        symbol(selectedValue),
+                                    style: TxtStls.fieldtitlestyle,
                                   ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 20),
-                                      child: formfield("PinCode",
-                                          _pincodeController, true, null, 6),
-                                    ),
+                                  Text(
+                                    tbal == null
+                                        ? "0.00"
+                                        : tbal.toStringAsFixed(2),
+                                    style: TxtStls.fieldtitlestyle,
                                   ),
                                 ],
                               ),
-                              space(),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: CircleAvatar(
-                                  backgroundColor: btnColor,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: bgColor,
-                                    ),
-                                    onPressed: () async {
-                                      print("Hey Yalagala Srinivas");
-                                      tradename =
-                                          _tradenameController.text.toString();
-                                      pan = _panController.text.toString();
-                                      pincode =
-                                          _pincodeController.text.toString();
-                                      address =
-                                          _addressControoler.text.toString();
-                                      isgst = false;
-                                      setState(() {});
-                                    },
+                              selectedValue == "INR"
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "IGST/CGST/SGST(${selectedValue}) : " +
+                                              symbol(selectedValue),
+                                          style: TxtStls.fieldtitlestyle,
+                                        ),
+                                        Text(
+                                          selectedValue == "INR"
+                                              ? _gstamount.toStringAsFixed(2)
+                                              : "0.00",
+                                          style: TxtStls.fieldtitlestyle,
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              Divider(
+                                thickness: 0.5,
+                                color: Colors.grey.withOpacity(0.5),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Total (${selectedValue}) : " +
+                                        symbol(selectedValue),
+                                    style: TxtStls.fieldtitlestyle,
                                   ),
-                                ),
+                                  Text(
+                                    total.toStringAsFixed(2),
+                                    style: TxtStls.fieldtitlestyle,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      )
-                    : Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: size.height * 0.05,
-                              color: btnColor,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "ITEM DETAILS",
-                                          style: TxtStls.titlesstyle,
-                                        )),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "RATE",
-                                          style: TxtStls.titlesstyle,
-                                        )),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text("QUANTITY",
-                                              style: TxtStls.titlesstyle))),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "DISC(%)",
-                                          style: TxtStls.titlesstyle,
-                                        )),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "PRICE",
-                                            style: TxtStls.titlesstyle,
-                                          ))),
-                                ],
+                      ],
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: isSwitched1
+                              ? field(_extrenalController, "External Notes", 3,
+                                  true, null, null, 200)
+                              : SizedBox(),
+                        ),
+                        for (int i = 1; i <= 2; i++)
+                          VerticalDivider(
+                            thickness: 2,
+                            color: bgColor,
+                          ),
+                        Expanded(
+                          flex: 2,
+                          child: isSwitched2
+                              ? field(_leadController, "Lead ID", 1, true, null,
+                                  null, null)
+                              : SizedBox(),
+                        ),
+                        for (int i = 1; i <= 2; i++)
+                          VerticalDivider(
+                            thickness: 2,
+                            color: bgColor,
+                          ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            children: [
+                              InkWell(
+                                child: field(
+                                    _generatedateController,
+                                    "Select Generate Date",
+                                    1,
+                                    false,
+                                    Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: btnColor,
+                                    )),
+                                onTap: () {
+                                  MyCalenders.pickEndDate(
+                                      context, _generatedateController);
+                                },
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            servicelist.length > 0
-                                ? ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        maxHeight: size.height * 0.22),
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.vertical,
-                                        shrinkWrap: true,
-                                        itemCount: servicelist.length,
-                                        itemBuilder: (context, index) {
-                                          return Expanded(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  flex: 4,
-                                                  child: Container(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text("${index + 1}. ",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle),
-                                                          Flexible(
-                                                            child: Text(
-                                                              "${servicelist[index]["item"].toString()}\n",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                ),
-                                                VerticalDivider(
-                                                  thickness: 2,
-                                                  color: bgColor,
-                                                ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        servicelist[index]
-                                                                ["rate"]
-                                                            .toString(),
-                                                        style: TxtStls
-                                                            .fieldtitlestyle,
-                                                      )),
-                                                ),
-                                                VerticalDivider(
-                                                  thickness: 2,
-                                                  color: bgColor,
-                                                ),
-                                                Expanded(
-                                                    flex: 1,
-                                                    child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                            servicelist[index]
-                                                                    ["qty"]
-                                                                .toString(),
-                                                            style: TxtStls
-                                                                .fieldtitlestyle))),
-                                                VerticalDivider(
-                                                  thickness: 2,
-                                                  color: bgColor,
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                          servicelist[index]
-                                                                  ["disc"]
-                                                              .toString(),
-                                                          style: TxtStls
-                                                              .fieldtitlestyle)),
-                                                ),
-                                                VerticalDivider(
-                                                  thickness: 2,
-                                                  color: bgColor,
-                                                ),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                            servicelist[index]
-                                                                    ["price"]
-                                                                .toString(),
-                                                            style: TxtStls
-                                                                .fieldtitlestyle))),
-                                              ],
-                                            ),
-                                          );
-                                        }),
-                                  )
-                                : SizedBox(),
-                            Container(
-                              height: size.height * 0.06,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: field(_selectController,
-                                        "Item Description", 1, true),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: field(_rateController,
-                                        "${symbol(selectedValue)} 0", 1, true),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child:
-                                          field(_qtyController2, "1", 1, true)),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child:
-                                        field(_discController, "0 %", 1, true),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        child: InkWell(
-                                            autofocus: false,
-                                            onTap: () {
-                                              setState(() {
-                                                var _customer = Provider.of<
-                                                        CustmerProvider>(
-                                                    context,
-                                                    listen: false);
-                                                cust.forEach(
-                                                    (element) => _customer);
-                                              });
-
-                                              print('custom cust' +
-                                                  cust.toString());
-                                              addingData();
-                                              total = tbal + getval();
-                                              Future.delayed(Duration(
-                                                      milliseconds: 100))
-                                                  .then((value) {
-                                                _rateController.clear();
-                                                _qtyController2.clear();
-                                                _priceController.clear();
-                                                _discController.clear();
-                                                _selectController.clear();
-                                                _descripController.clear();
-                                              });
-                                            },
-                                            child: Text(
-                                              " ADD ITEM + ",
-                                              style: TxtStls.btnstyle,
-                                            )),
-                                      )),
-                                ],
+                              SizedBox(height: size.height * 0.005),
+                              InkWell(
+                                child: field(
+                                    _duedatedateController,
+                                    "Select Due Date",
+                                    1,
+                                    false,
+                                    Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: btnColor,
+                                    )),
+                                onTap: () {
+                                  MyCalenders.pickEndDate(
+                                      context, _duedatedateController);
+                                },
                               ),
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: isSwitched
-                                      ? field(
-                                          _internalController,
-                                          "Internal Notes",
-                                          3,
-                                          true,
-                                          null,
-                                          null,
-                                          200)
-                                      : SizedBox(),
-                                ),
-                                for (int i = 1; i <= 2; i++)
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                Expanded(flex: 2, child: SizedBox()),
-                                for (int i = 1; i <= 2; i++)
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Sub Total (${selectedValue}) : " +
-                                                symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            tbal == null
-                                                ? "0.00"
-                                                : tbal.toStringAsFixed(2),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
-                                      selectedValue == "INR"
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "IGST/CGST/SGST(${selectedValue}) : " +
-                                                      symbol(selectedValue),
-                                                  style:
-                                                      TxtStls.fieldtitlestyle,
-                                                ),
-                                                Text(
-                                                  selectedValue == "INR"
-                                                      ? _gstamount
-                                                          .toStringAsFixed(2)
-                                                      : "0.00",
-                                                  style:
-                                                      TxtStls.fieldtitlestyle,
-                                                ),
-                                              ],
-                                            )
-                                          : SizedBox(),
-                                      Divider(
-                                        thickness: 0.5,
-                                        color: Colors.grey.withOpacity(0.5),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Total (${selectedValue}) : " +
-                                                symbol(selectedValue),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                          Text(
-                                            total.toStringAsFixed(2),
-                                            style: TxtStls.fieldtitlestyle,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: isSwitched1
-                                      ? field(
-                                          _extrenalController,
-                                          "External Notes",
-                                          3,
-                                          true,
-                                          null,
-                                          null,
-                                          200)
-                                      : SizedBox(),
-                                ),
-                                for (int i = 1; i <= 2; i++)
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                Expanded(
-                                  flex: 2,
-                                  child: isSwitched2
-                                      ? field(_leadController, "Lead ID", 1,
-                                          true, null, null, null)
-                                      : SizedBox(),
-                                ),
-                                for (int i = 1; i <= 2; i++)
-                                  VerticalDivider(
-                                    thickness: 2,
-                                    color: bgColor,
-                                  ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    children: [
-                                      InkWell(
-                                        child: field(
-                                            _generatedateController,
-                                            "Select Generate Date",
-                                            1,
-                                            false,
-                                            Icon(
-                                              Icons.calendar_today_outlined,
-                                              color: btnColor,
-                                            )),
-                                        onTap: () {
-                                          MyCalenders.pickEndDate(
-                                              context, _generatedateController);
-                                        },
-                                      ),
-                                      SizedBox(height: size.height * 0.005),
-                                      InkWell(
-                                        child: field(
-                                            _duedatedateController,
-                                            "Select Due Date",
-                                            1,
-                                            false,
-                                            Icon(
-                                              Icons.calendar_today_outlined,
-                                              color: btnColor,
-                                            )),
-                                        onTap: () {
-                                          MyCalenders.pickEndDate(
-                                              context, _duedatedateController);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        Text("LeadId", style: TxtStls.fieldtitlestyle),
-                        Switch(
-                          value: isSwitched2,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched2 = value;
-                              print(isSwitched2);
-                            });
-                          },
-                          activeTrackColor: btnColor.withOpacity(0.2),
-                          activeColor: btnColor,
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text("Internal Notes", style: TxtStls.fieldtitlestyle),
-                        Switch(
-                          value: isSwitched,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched = value;
-                              print(isSwitched);
-                            });
-                          },
-                          activeTrackColor: btnColor.withOpacity(0.2),
-                          activeColor: btnColor,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("External Notes", style: TxtStls.fieldtitlestyle),
-                        Switch(
-                          value: isSwitched1,
-                          onChanged: (value) {
-                            setState(() {
-                              isSwitched1 = value;
-                              print(isSwitched1);
-                            });
-                          },
-                          activeTrackColor: btnColor.withOpacity(0.2),
-                          activeColor: btnColor,
-                        ),
-                      ],
-                    ),
-                    FlatButton.icon(
-                        color: btnColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        onPressed: () {
-                          if (servicelist.length > 0) {
-                            isPreview = true;
-                            setState(() {});
-                            Provider.of<RecentFetchCXIDProvider>(context,
-                                    listen: false)
-                                .fetchRecentInvoiceid();
-                          }
-                        },
-                        icon: Icon(Icons.copy, size: 10, color: bgColor),
-                        label: Text(
-                          "Preview",
-                          style: TxtStls.fieldstyle1,
-                        )),
                   ],
+                ),
+        ),
+        Row(
+          children: [
+            Row(
+              children: [
+                Text("LeadId", style: TxtStls.fieldtitlestyle),
+                Switch(
+                  value: isSwitched2,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched2 = value;
+                      print(isSwitched2);
+                    });
+                  },
+                  activeTrackColor: btnColor.withOpacity(0.2),
+                  activeColor: btnColor,
                 ),
               ],
             ),
-          ),
-        ));
+            Row(
+              children: [
+                Text("Internal Notes", style: TxtStls.fieldtitlestyle),
+                Switch(
+                  value: isSwitched,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched = value;
+                      print(isSwitched);
+                    });
+                  },
+                  activeTrackColor: btnColor.withOpacity(0.2),
+                  activeColor: btnColor,
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text("External Notes", style: TxtStls.fieldtitlestyle),
+                Switch(
+                  value: isSwitched1,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched1 = value;
+                      print(isSwitched1);
+                    });
+                  },
+                  activeTrackColor: btnColor.withOpacity(0.2),
+                  activeColor: btnColor,
+                ),
+              ],
+            ),
+            FlatButton.icon(
+                color: btnColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                onPressed: () {
+                  if (servicelist.length > 0) {
+                    isPreview = true;
+                    setState(() {});
+                    Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                        .fetchRecentInvoiceid();
+                  }
+                },
+                icon: Icon(Icons.copy, size: 10, color: bgColor),
+                label: Text(
+                  "Preview",
+                  style: TxtStls.fieldstyle1,
+                )),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget space() {
@@ -1514,8 +1397,6 @@ class _FinanceState extends State<Finance> {
                             ? ""
                             : _gstController.text.toString();
                         setState(() {
-                          isgst = false;
-                          _isLoad = false;
                           PdfProvider.generatePdf(
                               context,
                               servicelist,
@@ -1534,6 +1415,8 @@ class _FinanceState extends State<Finance> {
                               _extrenalController.text,
                               _internalController.text,
                               _referenceController.text);
+                          isPreview = false;
+                          _isCreate = false;
                         });
                       },
                       icon: Icon(Icons.save_alt_rounded,
@@ -1904,5 +1787,12 @@ class _FinanceState extends State<Finance> {
   findduplicates() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await firestore.collection("Tasks").get();
+  }
+
+  Widget myverticalDivider() {
+    return VerticalDivider(
+      thickness: 2,
+      color: bgColor,
+    );
   }
 }

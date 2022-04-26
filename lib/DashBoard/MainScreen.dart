@@ -22,6 +22,7 @@ import 'package:test_web_app/Constants/Header.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
+import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
@@ -36,7 +37,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.TaskPreview;
+  Tabs active = Tabs.Finance;
   var radioItem;
 
   @override
@@ -44,8 +45,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
     Provider.of<UserDataProvider>(context, listen: false).getUserData();
     Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    Future.delayed(Duration(seconds: 4)).then((value) {
+    Future.delayed(Duration(seconds: 5)).then((value) {
       userTasks();
+      Provider.of<CustmerProvider>(context, listen: false)
+          .getCustomers(context);
       Provider.of<EmergencyTaskProvider>(context, listen: false)
           .fetchEmergencyTasks(
               context, DateTime.now().toString().split(" ")[0].toString());

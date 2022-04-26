@@ -18,7 +18,7 @@ class RegisterProvider with ChangeNotifier {
       notifyListeners();
     } on FirebaseException catch (e) {
       isLoading = false;
-      error = e.toString();
+      error = e.message.toString();
       notifyListeners();
     }
   }

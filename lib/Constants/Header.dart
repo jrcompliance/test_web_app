@@ -71,11 +71,7 @@ class _HeaderState extends State<Header> {
               context,
               MaterialPageRoute(builder: (_) => LoginScreen()),
               (route) => false);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            dismissDirection: DismissDirection.startToEnd,
-            content: Text("LogOut Successfully"),
-            backgroundColor: Colors.green,
-          ));
+          toastmessage.sucesstoast(context, "You are Logout Successfully");
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

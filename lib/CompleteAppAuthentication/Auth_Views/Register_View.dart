@@ -439,12 +439,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 context,
                 MaterialPageRoute(builder: (_) => SuccessScreen()),
                 (route) => false);
+            toastmessage.sucesstoast(context, "Registered Successfully");
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              dismissDirection: DismissDirection.startToEnd,
-              content: Text(provider.error.toString()),
-              backgroundColor: Colors.red,
-            ));
+            toastmessage.warningmessage(context, provider.error.toString());
           }
         });
       });
