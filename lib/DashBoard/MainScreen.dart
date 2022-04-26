@@ -547,7 +547,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   completeprofile(name, logoBase64) {
     if (_formKey.currentState!.validate()) {
-      Provider.of<CompleteProfielProvider>(context, listen: false)
+      var providerdata =
+          Provider.of<CompleteProfielProvider>(context, listen: false);
+      providerdata
           .completProfile(
               name,
               logoBase64,
@@ -558,13 +560,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               radioItem.toString(),
               _dojController.text.toString())
           .then((value) {
-        if (Provider.of<CompleteProfielProvider>(context, listen: false)
-                .error ==
-            null) {
+        if (providerdata.error == null) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => MainScreen()));
+          toastmessage.sucesstoast(context, "Profile Updated Successfully");
+        } else {
+          toastmessage.warningmessage(context, providerdata.error);
         }
-        ;
       });
     }
   }

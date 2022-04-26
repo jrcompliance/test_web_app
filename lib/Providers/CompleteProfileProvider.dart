@@ -32,7 +32,7 @@ class CompleteProfielProvider with ChangeNotifier {
       });
       notifyListeners();
     } on FirebaseException catch (e) {
-      error = e.toString();
+      error = e.message.toString();
       isLoading = false;
       notifyListeners();
     }

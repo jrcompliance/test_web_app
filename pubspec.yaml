@@ -69,7 +69,6 @@ dependencies:
   pdf: ^3.7.3
   syncfusion_flutter_pdf: ^19.4.56-beta
   printing: ^5.7.5
-  fluttertoast: ^8.0.9
   motion_toast: ^2.1.6
 
 
