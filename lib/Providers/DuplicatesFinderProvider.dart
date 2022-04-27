@@ -18,11 +18,14 @@ class DuplicatesFinderProvider extends ChangeNotifier {
         value.docs.forEach((element) {
           existingCutomerid = element.get("CxID");
           isLoading = false;
-
           notifyListeners();
         });
       });
+      isLoading = false;
+      notifyListeners();
     } on Exception catch (e) {
+      isLoading = false;
+      notifyListeners();
       print(e.toString());
     }
   }
