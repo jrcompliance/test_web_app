@@ -520,7 +520,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
             Column(
               children: [
                 Text(
-                  "CxID"+widget.CxID.toString(),
+                  "CxID: "+widget.CxID.toString(),
                   style: TxtStls.fieldtitlestyle,
                 ),
                 Text(

@@ -16,6 +16,7 @@ class DuplicatesFinderProvider extends ChangeNotifier {
       extractedResponse.docs.forEach((element) {
         lodedData
             .add(DuplicateModel(email: element["CompanyDetails"][0]["email"]));
+        print(lodedData.toSet().toList());
         _duplicatelist = lodedData;
         notifyListeners();
       });

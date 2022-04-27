@@ -1758,28 +1758,22 @@ class _FinanceState extends State<Finance> {
   }
 
   String statusEmoji(value) {
-    final List emojiList = [
-      "Images/disputed.png",
-      "Images/pending.png",
-      "Images/received.png",
-      "Images/cancelled.png"
-    ];
     switch (value) {
       case "Received":
         {
-          return emojiList[2];
+          return "assets/Images/received.png";
         }
       case "Cancelled":
         {
-          return emojiList[3];
+          return "assets/Images/cancelled.png";
         }
       case "Disputed":
         {
-          return emojiList[0];
+          return "assets/Images/disputed.png";
         }
       default:
         {
-          return emojiList[1];
+          return "assets/Images/pending.png";
         }
     }
   }

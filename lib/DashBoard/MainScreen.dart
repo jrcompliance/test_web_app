@@ -23,6 +23,7 @@ import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
+import 'package:test_web_app/Providers/DuplicatesFinderProvider.dart';
 import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 
@@ -45,6 +46,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
     Provider.of<UserDataProvider>(context, listen: false).getUserData();
     Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
+    Provider.of<DuplicatesFinderProvider>(context, listen: false).dupicates();
     Future.delayed(Duration(seconds: 5)).then((value) {
       userTasks();
       Provider.of<CustmerProvider>(context, listen: false)

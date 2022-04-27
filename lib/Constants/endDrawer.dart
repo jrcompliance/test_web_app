@@ -1,14 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Models/Time%20Model.dart';
-import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
@@ -23,6 +21,8 @@ class MoveDrawer extends StatefulWidget {
 }
 
 class _MoveDrawerState extends State<MoveDrawer> {
+  List emaillist = [];
+
   @override
   void initState() {
     super.initState();
@@ -834,34 +834,42 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 ),
               ),
               onTap: () {
+                findduplicates();
+                print('777');
                 final cxidprovider = Provider.of<RecentFetchCXIDProvider>(
                     context,
                     listen: false);
+                // if (emaillist.contains(_clientemailController.text)) {
+                //   print('12345');
+                //   return print('cxid--' + cxidprovider.CxID.toString());
+                // } else {
+                //   return null;
+                // }
                 if (_formKey.currentState!.validate()) {
                   Future.delayed(Duration.zero).then((value) {}).then((value) {
                     cxidprovider.fetchRecent();
                     cxidprovider.fetchLeadId().then((value) {
-                      Provider.of<CreateLeadProvider>(context, listen: false)
-                          .createTask(
-                              _leadnameController.text.toString(),
-                              _endDateController.text.toString(),
-                              _clientnameController.text.toString(),
-                              _clientemailController.text.toString(),
-                              _clientphoneController.text.toString(),
-                              _firstmessageController.text.toString(),
-                              _selectperson,
-                              _image,
-                              cxidprovider.CxID,
-                              cxidprovider.leadId)
-                          .then((value) {
-                        Navigator.pop(context);
-                        _leadnameController.clear();
-                        _endDateController.clear();
-                        _clientnameController.clear();
-                        _clientemailController.clear();
-                        _clientphoneController.clear();
-                        _firstmessageController.clear();
-                      });
+                      // Provider.of<CreateLeadProvider>(context, listen: false)
+                      //     .createTask(
+                      //         _leadnameController.text.toString(),
+                      //         _endDateController.text.toString(),
+                      //         _clientnameController.text.toString(),
+                      //         _clientemailController.text.toString(),
+                      //         _clientphoneController.text.toString(),
+                      //         _firstmessageController.text.toString(),
+                      //         _selectperson,
+                      //         _image,
+                      //         cxidprovider.CxID,
+                      //         cxidprovider.leadId)
+                      //     .then((value) {
+                      //   Navigator.pop(context);
+                      //   _leadnameController.clear();
+                      //   _endDateController.clear();
+                      //   _clientnameController.clear();
+                      //   _clientemailController.clear();
+                      //   _clientphoneController.clear();
+                      //   _firstmessageController.clear();
+                      // });
                     });
                   });
                 }
@@ -1195,6 +1203,28 @@ class _MoveDrawerState extends State<MoveDrawer> {
         ),
       ),
     );
+  }
+
+  findduplicates() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    var snapshot = await firestore
+        .collection("Tasks")
+        .where("email", isEqualTo: _clientemailController.text);
+    var data = snapshot.get().then((value) => print('2222' + value.toString()));
+    print('1111' + data.toString());
+
+    // print(snapshot);
+    //
+    // snapshot.docs.forEach((element) {
+    //   var email = element["CompanyDetails"]["email"];
+    //   var cusid = element["CxID"];
+    //   print('####' + cusid + email.toString());
+    // });
+    // snapshot.docs.forEach((element) {
+    //   var dd = element["CompanyDetails"][0]["email"];
+    //   emaillist = dd.split(",");
+    //   print('2222--' + emaillist.toString());
+    // });
   }
 }
 

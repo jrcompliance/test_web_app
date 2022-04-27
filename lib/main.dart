@@ -16,7 +16,7 @@ import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
-import 'package:test_web_app/Providers/DupicatesFinderProvider.dart';
+import 'package:test_web_app/Providers/DuplicatesFinderProvider.dart';
 import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';

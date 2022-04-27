@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -54,6 +55,8 @@ class _TaskPreviewState extends State<TaskPreview>
   List<TaskSearchModel> searchresult = [];
 
   var img;
+
+  bool _isTapped = false;
 
 
   _TaskPreviewState() {
@@ -877,9 +880,12 @@ class _TaskPreviewState extends State<TaskPreview>
                                         ))),
                                 SizedBox(width: 2),
                                 Flexible(
-                                  child: Text(
-                                    taskname+" (JRL-${LeadId<10?"0${LeadId}":LeadId})",
-                                    style: ClrStls.tnClr,
+                                  child: Tooltip(
+                                    message: _isTapped  ? "copied to clipboard":"double tap to copy lead-id",
+                                    child: Text(
+                                      taskname+" (JRL-${LeadId<10?"0${LeadId}":LeadId})",
+                                      style: ClrStls.tnClr,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -978,6 +984,13 @@ class _TaskPreviewState extends State<TaskPreview>
                             builder: (BuildContext context) {
                               return DeatailsPopBox(endDate: endDate, lastseen: lastseen, s: s, status: status, priority: priority, taskname: taskname, cat: cat, f: f, startDate: startDate, message: message, Idocid: id, CxID: CxID,assigns: assignsto.toList(),leadID: LeadId,);
                             });
+
+                      },
+                      onDoubleTap: () {
+                        Clipboard.setData(ClipboardData(text: ("JRL-${LeadId <
+                            10 ? "0${LeadId}" : LeadId}")));
+                        _isTapped = true;
+                        setState(() {});
 
                       },
                     ),
