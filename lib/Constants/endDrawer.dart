@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
@@ -825,78 +826,87 @@ class _MoveDrawerState extends State<MoveDrawer> {
               ),
             ),
             SizedBox(height: 10.0),
-            InkWell(
-              child: Container(
-                padding: EdgeInsets.all(12.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: btnColor,
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: Text(
-                  "Create Lead",
-                  style: TxtStls.fieldstyle1,
-                ),
-              ),
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  var duplicateprovider = Provider.of<DuplicatesFinderProvider>(
-                      context,
-                      listen: false);
-                  var generatedidprovider =
-                      Provider.of<RecentFetchCXIDProvider>(context,
-                          listen: false);
-                  duplicateprovider
-                      .findduplicates(_clientemailController.text.toString())
-                      .then((value) {
-                    print(duplicateprovider.existingCutomerid);
-                    if (duplicateprovider.existingCutomerid == null) {
-                      generatedidprovider.fetchLeadId().then((value) {
-                        generatedidprovider.fetchRecent().then((value) {
-                          Provider.of<CreateLeadProvider>(context,
-                                  listen: false)
-                              .createTask(
-                                  _leadnameController.text.toString(),
-                                  _endDateController.text.toString(),
-                                  _clientnameController.text.toString(),
-                                  _clientemailController.text.toString(),
-                                  _clientphoneController.text.toString(),
-                                  _firstmessageController.text.toString(),
-                                  _selectperson,
-                                  _image,
-                                  generatedidprovider.CxID,
-                                  generatedidprovider.leadId)
-                              .then((value) {
-                            Navigator.of(context).pop();
-                          });
-                        });
-                      });
-                    } else {
-                      generatedidprovider.fetchLeadId().then((value) {
-                        var existid = Provider.of<DuplicatesFinderProvider>(
-                                context,
-                                listen: false)
-                            .existingCutomerid;
-                        Provider.of<CreateLeadProvider>(context, listen: false)
-                            .createTask(
-                                _leadnameController.text.toString(),
-                                _endDateController.text.toString(),
-                                _clientnameController.text.toString(),
-                                _clientemailController.text.toString(),
-                                _clientphoneController.text.toString(),
-                                _firstmessageController.text.toString(),
-                                _selectperson,
-                                _image,
-                                existid,
-                                generatedidprovider.leadId)
+            Provider.of<DuplicatesFinderProvider>(context).isLoading
+                ? SpinKitFadingCube(color: btnColor, size: 30)
+                : InkWell(
+                    child: Container(
+                      padding: EdgeInsets.all(12.0),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: btnColor,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      child: Text(
+                        "Create Lead",
+                        style: TxtStls.fieldstyle1,
+                      ),
+                    ),
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        var duplicateprovider =
+                            Provider.of<DuplicatesFinderProvider>(context,
+                                listen: false);
+                        var generatedidprovider =
+                            Provider.of<RecentFetchCXIDProvider>(context,
+                                listen: false);
+                        duplicateprovider
+                            .findduplicates(
+                                _clientemailController.text.toString())
                             .then((value) {
-                          Navigator.of(context).pop();
+                          print(duplicateprovider.existingCutomerid);
+                          if (duplicateprovider.existingCutomerid == null) {
+                            generatedidprovider.fetchLeadId().then((value) {
+                              generatedidprovider.fetchRecent().then((value) {
+                                Provider.of<CreateLeadProvider>(context,
+                                        listen: false)
+                                    .createTask(
+                                        _leadnameController.text.toString(),
+                                        _endDateController.text.toString(),
+                                        _clientnameController.text.toString(),
+                                        _clientemailController.text.toString(),
+                                        _clientphoneController.text.toString(),
+                                        _firstmessageController.text.toString(),
+                                        _selectperson,
+                                        _image,
+                                        generatedidprovider.CxID,
+                                        generatedidprovider.leadId)
+                                    .then((value) {
+                                  Navigator.of(context).pop();
+                                  toastmessage.sucesstoast(
+                                      context, "Lead Created Successfully");
+                                });
+                              });
+                            });
+                          } else {
+                            generatedidprovider.fetchLeadId().then((value) {
+                              var existid =
+                                  Provider.of<DuplicatesFinderProvider>(context,
+                                          listen: false)
+                                      .existingCutomerid;
+                              Provider.of<CreateLeadProvider>(context,
+                                      listen: false)
+                                  .createTask(
+                                      _leadnameController.text.toString(),
+                                      _endDateController.text.toString(),
+                                      _clientnameController.text.toString(),
+                                      _clientemailController.text.toString(),
+                                      _clientphoneController.text.toString(),
+                                      _firstmessageController.text.toString(),
+                                      _selectperson,
+                                      _image,
+                                      existid,
+                                      generatedidprovider.leadId)
+                                  .then((value) {
+                                Navigator.of(context).pop();
+                                toastmessage.warningmessage(context,
+                                    "Lead Created Successfully\nThe Customer is already existed");
+                              });
+                            });
+                          }
                         });
-                      });
-                    }
-                  });
-                }
-              },
-            )
+                      }
+                    },
+                  )
           ],
         ),
       ),

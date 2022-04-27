@@ -57,7 +57,6 @@ class CreateLeadProvider with ChangeNotifier {
     } on FirebaseException catch (e) {
       error = e.message.toString();
       print("error is  $error");
-      notifyListeners();
     }
   }
 }
