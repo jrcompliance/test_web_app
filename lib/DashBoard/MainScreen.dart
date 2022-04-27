@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.TaskPreview;
+  Tabs active = Tabs.Finance;
   var radioItem;
 
   @override
