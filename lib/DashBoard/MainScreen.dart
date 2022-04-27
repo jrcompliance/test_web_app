@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Finance;
+  Tabs active = Tabs.TaskPreview;
   var radioItem;
 
   @override
@@ -46,7 +46,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
     Provider.of<UserDataProvider>(context, listen: false).getUserData();
     Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
-    Provider.of<DuplicatesFinderProvider>(context, listen: false).dupicates();
     Future.delayed(Duration(seconds: 5)).then((value) {
       userTasks();
       Provider.of<CustmerProvider>(context, listen: false)

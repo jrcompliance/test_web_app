@@ -7,6 +7,8 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Providers/CreateLeadProvider.dart';
+import 'package:test_web_app/Providers/DuplicatesFinderProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
@@ -22,6 +24,8 @@ class MoveDrawer extends StatefulWidget {
 
 class _MoveDrawerState extends State<MoveDrawer> {
   List emaillist = [];
+
+  var cusid;
 
   @override
   void initState() {
@@ -834,43 +838,61 @@ class _MoveDrawerState extends State<MoveDrawer> {
                 ),
               ),
               onTap: () {
-                findduplicates();
-                print('777');
-                final cxidprovider = Provider.of<RecentFetchCXIDProvider>(
-                    context,
-                    listen: false);
-                // if (emaillist.contains(_clientemailController.text)) {
-                //   print('12345');
-                //   return print('cxid--' + cxidprovider.CxID.toString());
-                // } else {
-                //   return null;
-                // }
                 if (_formKey.currentState!.validate()) {
-                  Future.delayed(Duration.zero).then((value) {}).then((value) {
-                    cxidprovider.fetchRecent();
-                    cxidprovider.fetchLeadId().then((value) {
-                      // Provider.of<CreateLeadProvider>(context, listen: false)
-                      //     .createTask(
-                      //         _leadnameController.text.toString(),
-                      //         _endDateController.text.toString(),
-                      //         _clientnameController.text.toString(),
-                      //         _clientemailController.text.toString(),
-                      //         _clientphoneController.text.toString(),
-                      //         _firstmessageController.text.toString(),
-                      //         _selectperson,
-                      //         _image,
-                      //         cxidprovider.CxID,
-                      //         cxidprovider.leadId)
-                      //     .then((value) {
-                      //   Navigator.pop(context);
-                      //   _leadnameController.clear();
-                      //   _endDateController.clear();
-                      //   _clientnameController.clear();
-                      //   _clientemailController.clear();
-                      //   _clientphoneController.clear();
-                      //   _firstmessageController.clear();
-                      // });
-                    });
+                  var duplicateprovider = Provider.of<DuplicatesFinderProvider>(
+                      context,
+                      listen: false);
+                  var generatedidprovider =
+                      Provider.of<RecentFetchCXIDProvider>(context,
+                          listen: false);
+                  duplicateprovider
+                      .findduplicates(_clientemailController.text.toString())
+                      .then((value) {
+                    print(duplicateprovider.existingCutomerid);
+                    if (duplicateprovider.existingCutomerid == null) {
+                      generatedidprovider.fetchLeadId().then((value) {
+                        generatedidprovider.fetchRecent().then((value) {
+                          Provider.of<CreateLeadProvider>(context,
+                                  listen: false)
+                              .createTask(
+                                  _leadnameController.text.toString(),
+                                  _endDateController.text.toString(),
+                                  _clientnameController.text.toString(),
+                                  _clientemailController.text.toString(),
+                                  _clientphoneController.text.toString(),
+                                  _firstmessageController.text.toString(),
+                                  _selectperson,
+                                  _image,
+                                  generatedidprovider.CxID,
+                                  generatedidprovider.leadId)
+                              .then((value) {
+                            Navigator.of(context).pop();
+                          });
+                        });
+                      });
+                    } else {
+                      generatedidprovider.fetchLeadId().then((value) {
+                        var existid = Provider.of<DuplicatesFinderProvider>(
+                                context,
+                                listen: false)
+                            .existingCutomerid;
+                        Provider.of<CreateLeadProvider>(context, listen: false)
+                            .createTask(
+                                _leadnameController.text.toString(),
+                                _endDateController.text.toString(),
+                                _clientnameController.text.toString(),
+                                _clientemailController.text.toString(),
+                                _clientphoneController.text.toString(),
+                                _firstmessageController.text.toString(),
+                                _selectperson,
+                                _image,
+                                existid,
+                                generatedidprovider.leadId)
+                            .then((value) {
+                          Navigator.of(context).pop();
+                        });
+                      });
+                    }
                   });
                 }
               },
@@ -1206,12 +1228,18 @@ class _MoveDrawerState extends State<MoveDrawer> {
   }
 
   findduplicates() async {
+    print('clientemail-' + _clientemailController.text.toString());
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    var snapshot = await firestore
+    await firestore
         .collection("Tasks")
-        .where("email", isEqualTo: _clientemailController.text);
-    var data = snapshot.get().then((value) => print('2222' + value.toString()));
-    print('1111' + data.toString());
+        .where("dupmail", isEqualTo: _clientemailController.text)
+        .get()
+        .then((value) {
+      print(value.docs);
+      value.docs.forEach((element) {
+        print(element.get("CxID"));
+      });
+    });
 
     // print(snapshot);
     //

@@ -20,6 +20,7 @@ class CreateLeadProvider with ChangeNotifier {
 
     try {
       collectionReference.doc(did).set({
+        "dupmail": _clientemailController,
         "time": Timestamp.now(),
         "flag": false,
         "CxID": cxid,
