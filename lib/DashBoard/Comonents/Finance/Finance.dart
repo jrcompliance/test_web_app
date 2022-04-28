@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Widgets/DetailsPopBox.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -39,6 +40,7 @@ class _FinanceState extends State<Finance> {
 
   final List<String> currencieslist = ["INR", "USD", "GBP", "EURO"];
   String selectedValue = "INR";
+  var selectedleadid;
   final List<String> statusList = [
     "Pending",
     "Received",
@@ -199,6 +201,7 @@ class _FinanceState extends State<Finance> {
                                   ),
                                   onTap: () {
                                     //  print(2);
+
                                     Provider.of<GetInvoiceListProvider>(context,
                                             listen: false)
                                         .getInvoiceList(snp.Idocid);
@@ -221,6 +224,9 @@ class _FinanceState extends State<Finance> {
                                       assign = snp.assign;
                                       leadID = snp.leadId;
                                     });
+                                    Provider.of<LeadIdProviders>(context,
+                                            listen: false)
+                                        .getLeadIds(snp.CxID);
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -1159,13 +1165,60 @@ class _FinanceState extends State<Finance> {
                             thickness: 2,
                             color: bgColor,
                           ),
+                        // Expanded(
+                        //   flex: 2,
+                        //   child: isSwitched2
+                        //       ? field(_leadController, "Lead ID", 1, true, null,
+                        //           null, null)
+                        //       : SizedBox(),
+                        // ),
                         Expanded(
                           flex: 2,
-                          child: isSwitched2
-                              ? field(_leadController, "Lead ID", 1, true, null,
-                                  null, null)
-                              : SizedBox(),
+                          child: SizedBox(
+                            height: size.height * 0.05,
+                            width: size.width * 0.05,
+                            child: DropdownButtonFormField2(
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              isExpanded: true,
+                              hint: Text(
+                                "Select LeadID",
+                                style: TxtStls.fieldtitlestyle,
+                              ),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: btnColor,
+                              ),
+                              iconSize: 30,
+                              buttonHeight: 60,
+                              buttonPadding:
+                                  EdgeInsets.only(left: 20, right: 10),
+                              dropdownDecoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              items: Provider.of<LeadIdProviders>(context,
+                                      listen: false)
+                                  .leadidslist
+                                  .map((item) => DropdownMenuItem(
+                                        value: item,
+                                        child: Text(item,
+                                            style: TxtStls.fieldtitlestyle),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedleadid = value as int;
+                                });
+                              },
+                            ),
+                          ),
                         ),
+
                         for (int i = 1; i <= 2; i++)
                           VerticalDivider(
                             thickness: 2,
@@ -1414,7 +1467,8 @@ class _FinanceState extends State<Finance> {
                               cusID,
                               _extrenalController.text,
                               _internalController.text,
-                              _referenceController.text);
+                              _referenceController.text,
+                              selectedleadid);
                           isPreview = false;
                           _isCreate = false;
                         });

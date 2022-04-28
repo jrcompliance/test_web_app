@@ -29,7 +29,8 @@ class PdfProvider {
       cxID,
       externalNotes,
       internalNotes,
-      referenceID) async {
+      referenceID,
+      LeadId) async {
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
     final image =
@@ -558,7 +559,6 @@ class PdfProvider {
       print(s.toString());
     }
     Provider.of<InvoiceSaveProvider>(context, listen: false).invoiceData(
-        docid,
         myUrl,
         activeid,
         "Pending",
@@ -568,7 +568,9 @@ class PdfProvider {
         duedate,
         internalNotes,
         externalNotes,
-        referenceID);
+        referenceID,
+        cxID,
+        LeadId);
     print(6);
     return pdf.save();
   }

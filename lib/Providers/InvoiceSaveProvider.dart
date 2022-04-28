@@ -1,16 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:test_web_app/Models/InvoiceSaveModel.dart';
 
 class InvoiceSaveProvider extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future invoiceData(id, invoiceurl, invoiceType, status, invoiceID, amount,
-      currencyType, duedate, internalNotes, externalNotes, referenceID) async {
+  Future invoiceData(
+      invoiceurl,
+      invoiceType,
+      status,
+      invoiceID,
+      amount,
+      currencyType,
+      duedate,
+      internalNotes,
+      externalNotes,
+      referenceID,
+      customerid,
+      leadid) async {
     try {
-      CollectionReference reference = await _firestore.collection("Tasks");
-      String docID = reference.doc(id).collection("Invoices").doc().id;
+      CollectionReference reference = await _firestore.collection("Invoices");
+      String docID = reference.doc().id;
       InvoiceSaveModel model = InvoiceSaveModel();
       model.invoiceurl = invoiceurl;
       model.invoiceID = invoiceID;
@@ -23,7 +33,9 @@ class InvoiceSaveProvider extends ChangeNotifier {
       model.externalNotes = externalNotes;
       model.referenceID = referenceID;
       model.id = docID;
-      reference.doc(id).collection("Invoices").doc(docID).set(model.toMap());
+      model.cxid = customerid;
+      model.leadid = leadid;
+      reference.doc(docID).set(model.toMap());
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());

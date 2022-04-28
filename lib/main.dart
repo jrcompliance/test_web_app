@@ -22,6 +22,7 @@ import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
+import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
@@ -65,6 +66,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvider()),
       ChangeNotifierProvider(create: (ctx) => EmergencyTaskProvider()),
       ChangeNotifierProvider(create: (ctx) => DuplicatesFinderProvider()),
+      ChangeNotifierProvider(create: (ctx) => LeadIdProviders()),
     ],
     child: const MyApp(),
   ));
