@@ -48,8 +48,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     Provider.of<AllUSerProvider>(context, listen: false).fetchAllUser();
     Future.delayed(Duration(seconds: 5)).then((value) {
       userTasks();
-      Provider.of<CustmerProvider>(context, listen: false)
-          .getCustomers(context);
+      Provider.of<CustmerProvider>(context, listen: false).getCustomers(
+        context,
+      );
       Provider.of<EmergencyTaskProvider>(context, listen: false)
           .fetchEmergencyTasks(
               context, DateTime.now().toString().split(" ")[0].toString());

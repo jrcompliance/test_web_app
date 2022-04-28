@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +24,92 @@ class CustmerProvider extends ChangeNotifier {
           "uid": uid.toString(),
         }
       ]).get();
+      List<CustomerModel> loadedData = [];
+
       extractedResponse.docs.forEach((element) {
-        //print(element.data());
-        var mylist = [element.data()];
-        final jsonList = mylist.map((item) => jsonEncode(item)).toList();
-        final uniqieJsonList = jsonList.toSet().toList();
-        final result = uniqieJsonList.map((e) => jsonDecode(e)).toList();
-        print(result);
+        loadedData.add(element.data());
+        print(loadedData);
+        List<CustomerModel> mylist;
+        List<CustomerModel> dummy = loadedData;
+
+        for (int i = 0; i < loadedData.length; i++) {
+          for (int j = 1; j < dummy.length; j++) {
+            if (dummy[i].dupmail == loadedData[j].dupmail) {
+              dummy.removeAt(j);
+            }
+          }
+        }
+        mylist = dummy;
+
+        //create one list to store the distinct models
+
+        _customerlist = mylist;
+        notifyListeners();
+        loadedData.add(CustomerModel(
+            Customername: element["CompanyDetails"][0]["contactperson"],
+            Customeremail: element["CompanyDetails"][0]["email"],
+            Customerphone: element["CompanyDetails"][0]["phone"],
+            Idocid: element["id"],
+            CxID: element["CxID"],
+            taskname: element["task"],
+            endDate: element["endDate"],
+            s: element["success"],
+            message: element["message"],
+            //startDate: element["startDate"],
+            status: element["status"],
+            f: element["fail"],
+            cat: element["cat"],
+            leadId: element["LeadId"],
+            //lastseen: element["lastseen"],
+            priority: element["priority"],
+            dupmail: element["dupmail"],
+            assign: element["Attachments"]));
       });
+
+      List<CustomerModel> distinct;
+      //List<CustomerModel> dummy = loadedData;
+
+      // for (int i = 0; i < loadedData.length; i++) {
+      //   for (int j = 1; j < dummy.length; j++) {
+      //     if (dummy[i].dupmail == loadedData[j].dupmail) {
+      //       dummy.removeAt(j);
+      //     }
+      //   }
+      // }
+      // distinct = dummy;
+      //
+      // //create one list to store the distinct models
+      //
+      // _customerlist = loadedData;
+      // notifyListeners();
+      // //return distinct.map((e) => e).toList();
+
+      // extractedResponse.docs.forEach((element) {
+      //   //print(element.data());
+      //   var mylist = [element.data()];
+      //   Set mySet = Set();
+      //   //print('mylist--' + mylist.toString());
+      //   for (var item in mylist) {
+      //     // If a map with the same name exists don't add the item.
+      //     if (mySet.any((e) => e['LeadId'] == item['LeadId'])) {
+      //       continue;
+      //     }
+      //     mySet.add(item);
+      //     print(mySet);
+      //   }
+      // mylist.forEach((element) {
+      //   var dmail = element["dupmail"];
+      //   var fmail = dmail.toSet().toList();
+      //   print('fmail--' + fmail.toString());
+      // });
+
+      // final jsonList = mylist.map((item) => jsonEncode(item)).toList();
+      // //print(jsonList);
+      // final uniqieJsonList = jsonList.toSet().toList();
+      // final result = uniqieJsonList.map((e) => jsonDecode(e)).toList();
+      // print(result);
+      // print(result.length);
+      //});
       //final jsonList = extra
       // final mymap = Map();
       // extractedResponse.docs.forEach((element) {
@@ -102,5 +178,20 @@ class CustmerProvider extends ChangeNotifier {
     } on Exception catch (e) {
       print(e.toString());
     }
+  }
+
+  List<CustomerModel> removeDuplicates(List<CustomerModel> loadedData) {
+    List<CustomerModel> distinct;
+    List<CustomerModel> dummy = loadedData;
+
+    for (int i = 0; i < loadedData.length; i++) {
+      for (int j = 1; j < dummy.length; j++) {
+        if (dummy[i].CxID == loadedData[j].CxID) {
+          dummy.removeAt(j);
+        }
+      }
+    }
+    distinct = dummy;
+    return distinct;
   }
 }

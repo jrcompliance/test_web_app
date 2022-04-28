@@ -209,10 +209,10 @@ class _FinanceState extends State<Finance> {
                                       cusemail = snp.Customeremail;
                                       cusID = snp.CxID;
                                       cusTask = snp.taskname;
-                                      startDate = snp.startDate;
+                                      //startDate = snp.startDate;
                                       endDate = snp.endDate;
                                       priority = snp.priority;
-                                      lastseen = snp.lastseen;
+                                      //lastseen = snp.lastseen;
                                       cat = snp.cat;
                                       message = snp.message;
                                       status = snp.status;
