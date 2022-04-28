@@ -18,7 +18,7 @@ class CustomerModel {
   int? f;
   List? assign;
   int? leadId;
-  String? dupmail;
+  String dupmail;
 
   CustomerModel(
       {this.Customername,
@@ -38,5 +38,5 @@ class CustomerModel {
       this.s,
       this.assign,
       this.leadId,
-      this.dupmail});
+      required this.dupmail});
 }
