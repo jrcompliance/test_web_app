@@ -16,7 +16,6 @@ class GetInvoiceListProvider extends ChangeNotifier {
           await _collectionref.where("cxid", isEqualTo: custometid).get();
       List<GetInvoiceModel> loadedData = [];
       extractedResponse.docs.forEach((element) {
-        print(element.data());
         loadedData.add(GetInvoiceModel(
             amount: element["amount"],
             currencyType: element["currencyType"],

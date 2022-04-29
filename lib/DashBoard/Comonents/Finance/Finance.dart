@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -310,265 +311,331 @@ class _FinanceState extends State<Finance> {
                               SizedBox(height: size.height * 0.05),
                               titleWidget(),
                               Expanded(
-                                  child: ListView.separated(
-                                itemCount:
-                                    Provider.of<GetInvoiceListProvider>(context)
-                                        .invoicemodellist
-                                        .length,
-                                itemBuilder: (_, i) {
-                                  var data =
+                                  child:
                                       Provider.of<GetInvoiceListProvider>(
-                                              context)
-                                          .invoicemodellist[i];
-                                  var createdate =
-                                      DateTime.parse(data.duedate.toString());
-                                  return InkWell(
-                                    child: Container(
-                                      height: size.height * 0.06,
-                                      child: Material(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        elevation: 15,
-                                        child: Row(
-                                          children: [
-                                            Flexible(
-                                                flex: 1,
-                                                fit: FlexFit.tight,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                        Icons
-                                                            .picture_as_pdf_rounded,
-                                                        color: clsClr),
-                                                    Text(
-                                                      "  JR" +
-                                                          data.invoiceID
-                                                              .toString(),
-                                                      style: TxtStls
-                                                          .fieldtitlestyle,
-                                                    ),
-                                                  ],
-                                                )),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: Text(
-                                                data.amount.toString(),
-                                                style: TxtStls.fieldtitlestyle,
-                                              ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: Text(
-                                                data.currencyType.toString(),
-                                                style: TxtStls.fieldtitlestyle,
-                                              ),
-                                            ),
-                                            Flexible(
-                                                flex: 1,
-                                                fit: FlexFit.tight,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                        Icons
-                                                            .calendar_today_rounded,
-                                                        color: btnColor),
-                                                    SizedBox(width: 5),
-                                                    Text(
-                                                      DateFormat("dd MMMM,yyyy")
-                                                          .format(createdate),
-                                                      style: TxtStls
-                                                          .fieldtitlestyle,
-                                                    ),
-                                                  ],
-                                                )),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: size.width * 0.015,
-                                                  top: size.width * 0.002,
-                                                  bottom: size.width * 0.002,
-                                                ),
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      color: statusColor(
-                                                              data.status)
-                                                          .withOpacity(0.25),
+                                                      context)
+                                                  .invoicemodellist
+                                                  .length <=
+                                              0
+                                          ? Center(
+                                              child: Lottie.asset(
+                                                  "assets/Lotties/empty.json"),
+                                            )
+                                          : ListView.separated(
+                                              itemCount: Provider.of<
+                                                          GetInvoiceListProvider>(
+                                                      context)
+                                                  .invoicemodellist
+                                                  .length,
+                                              itemBuilder: (_, i) {
+                                                var data = Provider.of<
+                                                            GetInvoiceListProvider>(
+                                                        context)
+                                                    .invoicemodellist[i];
+                                                var createdate = DateTime.parse(
+                                                    data.duedate.toString());
+                                                return InkWell(
+                                                  child: Container(
+                                                    height: size.height * 0.06,
+                                                    child: Material(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              10)),
-                                                  child:
-                                                      DropdownButtonFormField2(
-                                                    decoration: InputDecoration(
-                                                        isDense: true,
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        border: InputBorder.none
-                                                        // border:
-                                                        //     OutlineInputBorder(
-                                                        //   borderRadius:
-                                                        //       BorderRadius
-                                                        //           .circular(
-                                                        //               10),
-                                                        // ),
-                                                        ),
-                                                    isExpanded: true,
-                                                    selectedItemBuilder:
-                                                        (BuildContext context) {
-                                                      return statusList
-                                                          .map((String value) {
-                                                        return Text(
-                                                          data.status
-                                                              .toString(),
-                                                          style: GoogleFonts
-                                                              .nunito(
-                                                            textStyle: TextStyle(
-                                                                fontSize: 13,
-                                                                color: statusColor(
-                                                                    data
-                                                                        .status),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                              10.0),
+                                                      elevation: 15,
+                                                      child: Row(
+                                                        children: [
+                                                          Flexible(
+                                                              flex: 1,
+                                                              fit:
+                                                                  FlexFit.tight,
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                      Icons
+                                                                          .picture_as_pdf_rounded,
+                                                                      color:
+                                                                          clsClr),
+                                                                  Text(
+                                                                    "  JR" +
+                                                                        data.invoiceID
+                                                                            .toString(),
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle,
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                          Flexible(
+                                                            flex: 1,
+                                                            fit: FlexFit.tight,
+                                                            child: Text(
+                                                              data.amount
+                                                                  .toString(),
+                                                              style: TxtStls
+                                                                  .fieldtitlestyle,
+                                                            ),
                                                           ),
-                                                        );
-                                                      }).toList();
-                                                    },
-                                                    hint: Text(
-                                                      data.status.toString(),
-                                                      style: GoogleFonts.nunito(
-                                                          textStyle: TextStyle(
-                                                              fontSize: 13,
-                                                              color: statusColor(
-                                                                  data.status),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                    ),
-                                                    icon: Icon(
-                                                      Icons.arrow_drop_down,
-                                                      color: btnColor,
-                                                    ),
-                                                    iconSize: 20,
-                                                    buttonHeight: 50,
-                                                    buttonPadding:
-                                                        EdgeInsets.only(
-                                                            left: 20,
-                                                            right: 10),
-                                                    dropdownDecoration:
-                                                        BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    items: statusList
-                                                        .map((item) =>
-                                                            DropdownMenuItem<
-                                                                String>(
-                                                              value: item,
-                                                              child: Text(item,
+                                                          Flexible(
+                                                            flex: 1,
+                                                            fit: FlexFit.tight,
+                                                            child: Text(
+                                                              data.currencyType
+                                                                  .toString(),
+                                                              style: TxtStls
+                                                                  .fieldtitlestyle,
+                                                            ),
+                                                          ),
+                                                          Flexible(
+                                                              flex: 1,
+                                                              fit:
+                                                                  FlexFit.tight,
+                                                              child: Row(
+                                                                children: [
+                                                                  Icon(
+                                                                      Icons
+                                                                          .calendar_today_rounded,
+                                                                      color:
+                                                                          btnColor),
+                                                                  SizedBox(
+                                                                      width: 5),
+                                                                  Text(
+                                                                    DateFormat(
+                                                                            "dd MMMM,yyyy")
+                                                                        .format(
+                                                                            createdate),
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle,
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                          Flexible(
+                                                            flex: 1,
+                                                            fit: FlexFit.tight,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                right:
+                                                                    size.width *
+                                                                        0.015,
+                                                                top:
+                                                                    size.width *
+                                                                        0.002,
+                                                                bottom:
+                                                                    size.width *
+                                                                        0.002,
+                                                              ),
+                                                              child: Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                decoration: BoxDecoration(
+                                                                    color: statusColor(data
+                                                                            .status)
+                                                                        .withOpacity(
+                                                                            0.25),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child:
+                                                                    DropdownButtonFormField2(
+                                                                  decoration: InputDecoration(
+                                                                      isDense:
+                                                                          true,
+                                                                      contentPadding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      border:
+                                                                          InputBorder
+                                                                              .none
+                                                                      // border:
+                                                                      //     OutlineInputBorder(
+                                                                      //   borderRadius:
+                                                                      //       BorderRadius
+                                                                      //           .circular(
+                                                                      //               10),
+                                                                      // ),
+                                                                      ),
+                                                                  isExpanded:
+                                                                      true,
+                                                                  selectedItemBuilder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return statusList
+                                                                        .map((String
+                                                                            value) {
+                                                                      return Text(
+                                                                        data.status
+                                                                            .toString(),
+                                                                        style: GoogleFonts
+                                                                            .nunito(
+                                                                          textStyle: TextStyle(
+                                                                              fontSize: 13,
+                                                                              color: statusColor(data.status),
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                      );
+                                                                    }).toList();
+                                                                  },
+                                                                  hint: Text(
+                                                                    data.status
+                                                                        .toString(),
+                                                                    style: GoogleFonts.nunito(
+                                                                        textStyle: TextStyle(
+                                                                            fontSize:
+                                                                                13,
+                                                                            color:
+                                                                                statusColor(data.status),
+                                                                            fontWeight: FontWeight.bold)),
+                                                                  ),
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .arrow_drop_down,
+                                                                    color:
+                                                                        btnColor,
+                                                                  ),
+                                                                  iconSize: 20,
+                                                                  buttonHeight:
+                                                                      50,
+                                                                  buttonPadding:
+                                                                      EdgeInsets.only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              10),
+                                                                  dropdownDecoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                  ),
+                                                                  items: statusList
+                                                                      .map((item) => DropdownMenuItem<String>(
+                                                                            value:
+                                                                                item,
+                                                                            child:
+                                                                                Text(item, style: TxtStls.fieldtitlestyle),
+                                                                          ))
+                                                                      .toList(),
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      data.status =
+                                                                          value
+                                                                              .toString();
+                                                                    });
+                                                                    Provider.of<InvoiceUpdateProvider>(
+                                                                            context,
+                                                                            listen:
+                                                                                false)
+                                                                        .invoiceUpdate(
+                                                                            Idocid,
+                                                                            data.docid,
+                                                                            value);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Flexible(
+                                                            flex: 1,
+                                                            fit: FlexFit.tight,
+                                                            child: InkWell(
+                                                              hoverColor: Colors
+                                                                  .transparent,
+                                                              child: Text(
+                                                                  "JRL-${data.LeadId.toString()}",
                                                                   style: TxtStls
                                                                       .fieldtitlestyle),
-                                                            ))
-                                                        .toList(),
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        data.status =
-                                                            value.toString();
-                                                      });
-                                                      Provider.of<InvoiceUpdateProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .invoiceUpdate(
-                                                              Idocid,
-                                                              data.docid,
-                                                              value);
-                                                    },
+                                                              onTap: () {
+                                                                // showDialog(
+                                                                //     context:
+                                                                //         context,
+                                                                //     builder:
+                                                                //         (BuildContext
+                                                                //             context) {
+                                                                //       return DeatailsPopBox(
+                                                                //         f: f
+                                                                //             as int,
+                                                                //         startDate:
+                                                                //             startDate
+                                                                //                 as Timestamp,
+                                                                //         lastseen:
+                                                                //             lastseen
+                                                                //                 as Timestamp,
+                                                                //         s: s
+                                                                //             as int,
+                                                                //         cat: cat
+                                                                //             .toString(),
+                                                                //         endDate:
+                                                                //             endDate.toString(),
+                                                                //         CxID: cusID
+                                                                //             as int,
+                                                                //         taskname:
+                                                                //             cusTask.toString(),
+                                                                //         priority:
+                                                                //             priority.toString(),
+                                                                //         status:
+                                                                //             status.toString(),
+                                                                //         assigns:
+                                                                //             assign
+                                                                //                 as List,
+                                                                //         Idocid:
+                                                                //             Idocid.toString(),
+                                                                //         message:
+                                                                //             message.toString(),
+                                                                //         leadID: leadID
+                                                                //             as int,
+                                                                //       );
+                                                                //     });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  onTap: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AdvanceCustomAlert(
+                                                            invoiceid: data
+                                                                .invoiceID
+                                                                .toString(),
+                                                            url: data.invoiceurl
+                                                                .toString(),
+                                                            date: createdate,
+                                                            name: cusname
+                                                                .toString(),
+                                                            email: cusemail
+                                                                .toString(),
+                                                            statusColor:
+                                                                statusColor(data
+                                                                    .status),
+                                                            imageList:
+                                                                statusEmoji(data
+                                                                    .status),
+                                                            referenceID: data
+                                                                .referenceID,
+                                                            internalNotes: data
+                                                                .internalNotes,
+                                                            externalNotes: data
+                                                                .externalNotes,
+                                                            id: data.docid,
+                                                          );
+                                                        });
+                                                  },
+                                                );
+                                              },
+                                              separatorBuilder:
+                                                  (BuildContext context,
+                                                          int index) =>
+                                                      SizedBox(
+                                                height: size.height * 0.01,
                                               ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              fit: FlexFit.tight,
-                                              child: InkWell(
-                                                hoverColor: Colors.transparent,
-                                                child: Text(
-                                                    "JRL-${data.LeadId.toString()}",
-                                                    style: TxtStls
-                                                        .fieldtitlestyle),
-                                                onTap: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return DeatailsPopBox(
-                                                          f: f as int,
-                                                          startDate: startDate
-                                                              as Timestamp,
-                                                          lastseen: lastseen
-                                                              as Timestamp,
-                                                          s: s as int,
-                                                          cat: cat.toString(),
-                                                          endDate: endDate
-                                                              .toString(),
-                                                          CxID: cusID as int,
-                                                          taskname: cusTask
-                                                              .toString(),
-                                                          priority: priority
-                                                              .toString(),
-                                                          status:
-                                                              status.toString(),
-                                                          assigns:
-                                                              assign as List,
-                                                          Idocid:
-                                                              Idocid.toString(),
-                                                          message: message
-                                                              .toString(),
-                                                          leadID: leadID as int,
-                                                        );
-                                                      });
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AdvanceCustomAlert(
-                                              invoiceid:
-                                                  data.invoiceID.toString(),
-                                              url: data.invoiceurl.toString(),
-                                              date: createdate,
-                                              name: cusname.toString(),
-                                              email: cusemail.toString(),
-                                              statusColor:
-                                                  statusColor(data.status),
-                                              imageList:
-                                                  statusEmoji(data.status),
-                                              referenceID: data.referenceID,
-                                              internalNotes: data.internalNotes,
-                                              externalNotes: data.externalNotes,
-                                              id: data.docid,
-                                            );
-                                          });
-                                    },
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) =>
-                                        SizedBox(
-                                  height: size.height * 0.01,
-                                ),
-                              )),
+                                            )),
                             ],
                           ),
               ),
