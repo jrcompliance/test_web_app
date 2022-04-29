@@ -12,6 +12,7 @@ class GetInvoiceModel {
   String externalNotes;
   String referenceID;
   String docid;
+  int LeadId;
 
   GetInvoiceModel(
       {this.amount,
@@ -24,5 +25,6 @@ class GetInvoiceModel {
       required this.internalNotes,
       required this.externalNotes,
       required this.referenceID,
-      required this.docid});
+      required this.docid,
+      required this.LeadId});
 }

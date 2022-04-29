@@ -212,9 +212,6 @@ class _FinanceState extends State<Finance> {
                                   onTap: () {
                                     //  print(2);
 
-                                    Provider.of<GetInvoiceListProvider>(context,
-                                            listen: false)
-                                        .getInvoiceList(snp.Idocid);
                                     setState(() {
                                       Idocid = snp.Idocid;
                                       cusname = snp.Customername;
@@ -233,10 +230,11 @@ class _FinanceState extends State<Finance> {
                                       f = snp.f;
                                       assign = snp.assign;
                                       leadID = snp.leadId;
+                                      Provider.of<GetInvoiceListProvider>(
+                                              context,
+                                              listen: false)
+                                          .getInvoiceList(snp.CxID);
                                     });
-                                    Provider.of<LeadIdProviders>(context,
-                                            listen: false)
-                                        .getLeadIds(snp.CxID);
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -290,6 +288,9 @@ class _FinanceState extends State<Finance> {
                                                 Radius.circular(10.0))),
                                         color: btnColor,
                                         onPressed: () {
+                                          Provider.of<LeadIdProviders>(context,
+                                                  listen: false)
+                                              .getLeadIds(cusID);
                                           setState(() {
                                             _isCreate = true;
                                             _dateController.text =
@@ -497,7 +498,7 @@ class _FinanceState extends State<Finance> {
                                               child: InkWell(
                                                 hoverColor: Colors.transparent,
                                                 child: Text(
-                                                    "JRL-${leadID! < 10 ? "0${leadID}" : leadID}",
+                                                    "JRL-${data.LeadId.toString()}",
                                                     style: TxtStls
                                                         .fieldtitlestyle),
                                                 onTap: () {
@@ -1222,7 +1223,7 @@ class _FinanceState extends State<Finance> {
                                   .toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  selectedleadid = value as int;
+                                  selectedleadid = int.parse(value.toString());
                                 });
                               },
                             ),

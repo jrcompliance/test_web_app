@@ -9,13 +9,14 @@ class GetInvoiceListProvider extends ChangeNotifier {
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> getInvoiceList(id) async {
+  Future<void> getInvoiceList(custometid) async {
     try {
-      CollectionReference _collectionref = _firestore.collection("Tasks");
-      QuerySnapshot extractedResponse =
-          await _collectionref.doc(id).collection("Invoices").get();
+      CollectionReference _collectionref = _firestore.collection("Invoices");
+      var extractedResponse =
+          await _collectionref.where("cxid", isEqualTo: custometid).get();
       List<GetInvoiceModel> loadedData = [];
       extractedResponse.docs.forEach((element) {
+        print(element.data());
         loadedData.add(GetInvoiceModel(
             amount: element["amount"],
             currencyType: element["currencyType"],
@@ -27,7 +28,8 @@ class GetInvoiceListProvider extends ChangeNotifier {
             internalNotes: element["internalNotes"],
             externalNotes: element["externalNotes"],
             referenceID: element["referenceID"],
-            docid: element["id"]));
+            docid: element["id"],
+            LeadId: element["leadid"]));
       });
       _invoicemodellist = loadedData;
       notifyListeners();
