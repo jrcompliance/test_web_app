@@ -90,6 +90,16 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _internalController = TextEditingController();
   final TextEditingController _leadController = TextEditingController();
   List cust = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 3)).then((value) {
+      Provider.of<CustmerProvider>(context, listen: false).getCustomers(
+        context,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
