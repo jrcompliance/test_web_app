@@ -12,6 +12,7 @@ import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
 import 'package:test_web_app/DashBoard/Comonents/DashBoard/UserDashBoard.dart';
 import 'package:test_web_app/DashBoard/Comonents/Finance/Finance.dart';
 import 'package:test_web_app/DashBoard/Comonents/Leads/Leads_View.dart';
+import 'package:test_web_app/DashBoard/Comonents/Messages/MessageScreen.dart';
 import 'package:test_web_app/DashBoard/Comonents/Notifications/NotificationScreen.dart';
 import 'package:test_web_app/DashBoard/Comonents/Settings/Settings.dart';
 import 'package:test_web_app/DashBoard/Comonents/Task%20Preview/TaskPreview.dart';
@@ -71,9 +72,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!Responsive.isSmallScreen(context))
-              Expanded(child: SideDrawer(context)),
-            Expanded(flex: 6, child: DashboardBody(context)),
+            Expanded(flex: 2, child: SideDrawer(context)),
+            Expanded(flex: 10, child: DashboardBody(context)),
           ],
         ),
       ),
@@ -105,7 +105,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     final userdata = Provider.of<UserDataProvider>(context);
     Size size = MediaQuery.of(context).size;
     return Drawer(
-      elevation: 1,
+      elevation: 0,
       child: Container(
         height: size.height * 1,
         child: Column(
@@ -119,21 +119,21 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               shrinkWrap: true,
               children: [
                 DrawerListTile("DashBoard", "assets/Notations/Category.png",
-                    Tabs.DashBoard),
+                    Tabs.DashBoard, 0),
                 DrawerListTile("TaskPreview", "assets/Notations/Document.png",
-                    Tabs.TaskPreview),
+                    Tabs.TaskPreview, 1),
+                DrawerListTile("Analytics", "assets/Notations/Chart.png",
+                    Tabs.Analytics, 2),
                 DrawerListTile(
-                    "Analytics", "assets/Notations/Chart.png", Tabs.Analytics),
-                DrawerListTile(
-                    "Finance", "assets/Notations/Ticket.png", Tabs.Finance),
-                DrawerListTile(
-                    "Calendar", "assets/Notations/Calendar.png", Tabs.Calendar),
-                DrawerListTile(
-                    "Messages", "assets/Notations/Activity.png", Tabs.Messages),
+                    "Finance", "assets/Notations/Ticket.png", Tabs.Finance, 3),
+                DrawerListTile("Calendar", "assets/Notations/Calendar.png",
+                    Tabs.Calendar, 4),
+                DrawerListTile("Messages", "assets/Notations/Activity.png",
+                    Tabs.Messages, 5),
                 DrawerListTile("Notification",
-                    "assets/Notations/Notification.png", Tabs.Notification),
-                DrawerListTile(
-                    "Settings", "assets/Notations/Setting.png", Tabs.Settings),
+                    "assets/Notations/Notification.png", Tabs.Notification, 6),
+                DrawerListTile("Settings", "assets/Notations/Setting.png",
+                    Tabs.Settings, 7),
               ],
             )),
             Card(
@@ -212,7 +212,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         }
       case Tabs.Messages:
         {
-          return shortcut("Messages", LeadScreen());
+          return shortcut("Messages", MessageScreen());
         }
       case Tabs.Notification:
         {
@@ -226,19 +226,29 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-  DrawerListTile(title, image, tab) {
-    return ListTile(
-      title: Responsive.isMediumScreen(context)
-          ? Text("")
-          : Text(title, style: TxtStls.fieldtitlestyle),
-      leading: SizedBox(
-        child: Image.asset(image,
-            fit: BoxFit.fill, filterQuality: FilterQuality.high),
-        height: 22.5,
+  int selectedindex = 3;
+  DrawerListTile(title, image, tab, int index) {
+    return Material(
+      elevation: selectedindex == index ? 20 : 0,
+      shadowColor: Colors.transparent,
+      color: selectedindex == index ? AbgColor.withOpacity(0.15) : null,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), bottomLeft: Radius.circular(20))),
+      child: ListTile(
+        title: Text(title, style: TxtStls.fieldtitlestyle),
+        leading: SizedBox(
+          child: Image.asset(image,
+              fit: BoxFit.fill, filterQuality: FilterQuality.high),
+          height: 22.5,
+        ),
+        onTap: () => setState(() {
+          active = tab;
+          selectedindex = index;
+        }),
+        hoverColor: Colors.transparent,
+        selectedTileColor: selectedindex == index ? btnColor : null,
       ),
-      onTap: () => setState(() => active = tab),
-      selectedColor: btnColor,
-      hoverColor: btnColor.withOpacity(0.5),
     );
   }
 
