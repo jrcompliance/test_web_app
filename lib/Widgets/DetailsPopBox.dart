@@ -486,11 +486,14 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     }
   }
   @override
+  void initState() {
+    super.initState();
+    myvalues();
+  }
+  @override
   Widget build(BuildContext context) {
-    bool isSelected = false;
     Size size = MediaQuery.of(context).size;
-    String createDate =
-    DateFormat('EEE | MMM dd, yy').format(widget.startDate.toDate());
+    String createDate = DateFormat('EEE | MMM dd, yy').format(widget.startDate.toDate());
     DateTime dt = DateTime.parse(widget.endDate);
     String deadline = DateFormat('EEE | MMM dd, yy').format(dt);
     String lastview = DateFormat('EEE | MMM dd, yy').format(widget.lastseen.toDate());
