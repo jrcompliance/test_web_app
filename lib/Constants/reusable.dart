@@ -155,6 +155,7 @@ class toastmessage {
   static sucesstoast(BuildContext context, e) {
     Size size = MediaQuery.of(context).size;
     MotionToast.success(
+      toastDuration: Duration(seconds: 2),
       title: Text("Success", style: TxtStls.fieldtitlestyle),
       description: Text(e, style: TxtStls.fieldstyle),
       width: size.width * 0.25,
@@ -166,6 +167,7 @@ class toastmessage {
   static warningmessage(BuildContext context, e) {
     Size size = MediaQuery.of(context).size;
     MotionToast.warning(
+      toastDuration: Duration(seconds: 2),
       title: Text("Warning", style: TxtStls.fieldtitlestyle),
       description: Text(e.toString(), style: TxtStls.fieldstyle),
       width: size.width * 0.25,

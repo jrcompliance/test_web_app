@@ -387,13 +387,13 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
               ),
             ),
             Positioned(
-                top: size.height * -0.17,
+                bottom: size.height * 0.725,
                 child: CircleAvatar(
                     backgroundColor: widget.statusColor,
                     radius: 60,
                     child: Container(
-                      height: 80,
-                      width: 80,
+                      height: size.height * 0.2,
+                      width: size.width * 0.2,
                       child: Image.asset(
                         widget.imageList.toString(),
                         fit: BoxFit.fill,
