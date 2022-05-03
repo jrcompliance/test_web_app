@@ -172,94 +172,104 @@ class _FinanceState extends State<Finance> {
                                               color: btnColor,
                                             ),
                                       border: InputBorder.none,
-                                      hintText: "Search...",
+                                      hintText:
+                                          "Enter Customer name or email or phone.....",
                                       hintStyle: TxtStls.fieldstyle),
                                   onChanged: searchCustomer),
                             ),
                           ),
                           SizedBox(height: 10),
-                          ListView.separated(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: allCustomers.length,
-                            itemBuilder: (BuildContext context, int i) {
-                              var snp = allCustomers[i];
-                              return Material(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                color: bgColor,
-                                child: ListTile(
-                                  tileColor: grClr.withOpacity(0.1),
-                                  hoverColor: btnColor.withOpacity(0.2),
-                                  selectedColor: btnColor.withOpacity(0.2),
-                                  selectedTileColor: btnColor.withOpacity(0.2),
-                                  leading: CircleAvatar(
-                                      backgroundColor:
-                                          btnColor.withOpacity(0.1),
-                                      child: Icon(
-                                        Icons.person,
-                                        color: btnColor,
-                                      )),
-                                  title: Text(
-                                    snp.Customername.toString(),
-                                    style: TxtStls.fieldtitlestyle,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        snp.Customeremail.toString(),
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                      Text(
-                                        snp.Customerphone.toString(),
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: CircleAvatar(
-                                    backgroundColor: btnColor.withOpacity(0.1),
-                                  ),
-                                  onTap: () {
-                                    //  print(2);
-
-                                    setState(() {
-                                      Idocid = snp.Idocid;
-                                      cusname = snp.Customername;
-                                      cusphone = snp.Customerphone;
-                                      cusemail = snp.Customeremail;
-                                      cusID = snp.CxID;
-                                      cusTask = snp.taskname;
-                                      //startDate = snp.startDate;
-                                      endDate = snp.endDate;
-                                      priority = snp.priority;
-                                      //lastseen = snp.lastseen;
-                                      cat = snp.cat;
-                                      message = snp.message;
-                                      status = snp.status;
-                                      s = snp.s;
-                                      f = snp.f;
-                                      assign = snp.assign;
-                                      leadID = snp.leadId;
-                                      Provider.of<GetInvoiceListProvider>(
-                                              context,
-                                              listen: false)
-                                          .getInvoiceList(snp.CxID);
-                                    });
-                                  },
-                                  shape: RoundedRectangleBorder(
+                          allCustomers.length <= 0
+                              ? Center(
+                                  child: SpinKitFadingCube(
+                                      color: btnColor, size: 15),
+                                )
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  physics: ClampingScrollPhysics(),
+                                  itemCount: allCustomers.length,
+                                  itemBuilder: (BuildContext context, int i) {
+                                    var snp = allCustomers[i];
+                                    return Material(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                ),
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return Divider(color: grClr.withOpacity(0.5));
-                            },
-                          )
+                                          Radius.circular(10.0)),
+                                      color: bgColor,
+                                      child: ListTile(
+                                        tileColor: grClr.withOpacity(0.1),
+                                        hoverColor: btnColor.withOpacity(0.2),
+                                        selectedColor:
+                                            btnColor.withOpacity(0.2),
+                                        selectedTileColor:
+                                            btnColor.withOpacity(0.2),
+                                        leading: CircleAvatar(
+                                            backgroundColor:
+                                                btnColor.withOpacity(0.1),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: btnColor,
+                                            )),
+                                        title: Text(
+                                          snp.Customername.toString(),
+                                          style: TxtStls.fieldtitlestyle,
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              snp.Customeremail.toString(),
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                            Text(
+                                              snp.Customerphone.toString(),
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: CircleAvatar(
+                                          backgroundColor:
+                                              btnColor.withOpacity(0.1),
+                                        ),
+                                        onTap: () {
+                                          //  print(2);
+
+                                          setState(() {
+                                            Idocid = snp.Idocid;
+                                            cusname = snp.Customername;
+                                            cusphone = snp.Customerphone;
+                                            cusemail = snp.Customeremail;
+                                            cusID = snp.CxID;
+                                            cusTask = snp.taskname;
+                                            //startDate = snp.startDate;
+                                            endDate = snp.endDate;
+                                            priority = snp.priority;
+                                            //lastseen = snp.lastseen;
+                                            cat = snp.cat;
+                                            message = snp.message;
+                                            status = snp.status;
+                                            s = snp.s;
+                                            f = snp.f;
+                                            assign = snp.assign;
+                                            leadID = snp.leadId;
+                                            Provider.of<GetInvoiceListProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .getInvoiceList(snp.CxID);
+                                          });
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                      ),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return Divider(
+                                        color: grClr.withOpacity(0.5));
+                                  },
+                                )
                         ],
                       ))
                 ],
