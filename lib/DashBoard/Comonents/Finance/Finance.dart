@@ -152,8 +152,25 @@ class _FinanceState extends State<Finance> {
                                   controller: _customersearchController,
                                   style: TxtStls.fieldstyle,
                                   decoration: InputDecoration(
-                                      suffixIcon:
-                                          Icon(Icons.search, color: btnColor),
+                                      suffixIcon: _customersearchController
+                                              .text.isNotEmpty
+                                          ? IconButton(
+                                              icon: Icon(
+                                                Icons.cancel,
+                                                color: btnColor,
+                                              ),
+                                              onPressed: () {
+                                                _customersearchController
+                                                    .clear();
+                                                searchCustomer("");
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
+                                              },
+                                            )
+                                          : Icon(
+                                              Icons.search,
+                                              color: btnColor,
+                                            ),
                                       border: InputBorder.none,
                                       hintText: "Search...",
                                       hintStyle: TxtStls.fieldstyle),
@@ -1395,7 +1412,18 @@ class _FinanceState extends State<Finance> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 onPressed: () {
-                  if (servicelist.length > 0) {
+                  if (servicelist.length <= 0 ||
+                      selectedleadid == null ||
+                      tradename == null ||
+                      address == null ||
+                      pincode == null ||
+                      pan == null ||
+                      _generatedateController.text.isEmpty ||
+                      _duedatedateController.text.isEmpty ||
+                      _internalController.text.isEmpty ||
+                      _extrenalController.text.isEmpty) {
+                    toastmessage.warningmessage(context, showmessage());
+                  } else {
                     isPreview = true;
                     setState(() {});
                     Provider.of<RecentFetchCXIDProvider>(context, listen: false)
@@ -1920,5 +1948,28 @@ class _FinanceState extends State<Finance> {
       query = query;
       this.allCustomers = allCustomers;
     });
+  }
+
+  showmessage() {
+    if (servicelist.length <= 0) {
+      return "Add the service descrption";
+    } else if (_internalController.text.isEmpty) {
+      return "Enter the InternalNote";
+    } else if (_extrenalController.text.isEmpty) {
+      return "Enter the ExternalNote";
+    } else if (_generatedateController.text.isEmpty) {
+      return "Select the Genarated Date";
+    } else if (_duedatedateController.text.isEmpty) {
+      return "Select the Due Date";
+    } else if (selectedleadid == null) {
+      return "Select the Lead Id";
+    } else if (tradename == null) {
+      return "Enter the Trade Name";
+    } else if (address == null) {
+      return "Enter the Trade Address";
+    } else if (pincode == null) {
+      return "Enter teh Pincode";
+    }
+    return "Enter the PanCard Number";
   }
 }
