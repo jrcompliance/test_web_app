@@ -7,10 +7,10 @@ class CustomerModel {
   final String? Idocid;
   final int? CxID;
   String? taskname;
-  //Timestamp startDate;
+  Timestamp startDate;
   String? endDate;
   String? priority;
-  //Timestamp lastseen;
+  Timestamp lastseen;
   String? cat;
   String? message;
   String? status;
@@ -31,9 +31,9 @@ class CustomerModel {
       this.cat,
       this.endDate,
       this.message,
-      //required this.startDate,
+      required this.startDate,
       this.priority,
-      //required this.lastseen,
+      required this.lastseen,
       this.f,
       this.s,
       this.assign,

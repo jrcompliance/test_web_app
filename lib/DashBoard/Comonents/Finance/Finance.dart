@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -14,8 +13,8 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
-import 'package:test_web_app/Widgets/DetailsPopBox.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/PdfFiles/PdfScreen.dart';
@@ -48,8 +47,7 @@ class _FinanceState extends State<Finance> {
     "Cancelled",
     "Disputed"
   ];
-  // String selectedStatus = "Pending";
-//jh
+
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _generatedateController = TextEditingController();
   final TextEditingController _duedatedateController = TextEditingController();
@@ -89,16 +87,22 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
-  final TextEditingController _leadController = TextEditingController();
+
   List cust = [];
+  List<CustomerModel> allCustomers = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(seconds: 3)).then((value) {
-      Provider.of<CustmerProvider>(context, listen: false).getCustomers(
+      Provider.of<CustmerProvider>(context, listen: false)
+          .getCustomers(
         context,
-      );
+      )
+          .then((value) {
+        allCustomers =
+            Provider.of<CustmerProvider>(context, listen: false).customerlist;
+      });
     });
   }
 
@@ -145,21 +149,15 @@ class _FinanceState extends State<Finance> {
                               padding:
                                   EdgeInsets.only(left: 15, right: 15, top: 2),
                               child: TextField(
-                                controller: _customersearchController,
-                                style: TxtStls.fieldstyle,
-                                decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        Icons.search,
-                                        color: btnColor,
-                                      ),
-                                      onPressed: () {},
-                                    ),
-                                    //40784774
-                                    border: InputBorder.none,
-                                    hintText: "Enter Customer name",
-                                    hintStyle: TxtStls.fieldstyle),
-                              ),
+                                  controller: _customersearchController,
+                                  style: TxtStls.fieldstyle,
+                                  decoration: InputDecoration(
+                                      suffixIcon:
+                                          Icon(Icons.search, color: btnColor),
+                                      border: InputBorder.none,
+                                      hintText: "Search...",
+                                      hintStyle: TxtStls.fieldstyle),
+                                  onChanged: searchCustomer),
                             ),
                           ),
                           SizedBox(height: 10),
@@ -167,12 +165,9 @@ class _FinanceState extends State<Finance> {
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             physics: ClampingScrollPhysics(),
-                            itemCount: Provider.of<CustmerProvider>(context)
-                                .customerlist
-                                .length,
+                            itemCount: allCustomers.length,
                             itemBuilder: (BuildContext context, int i) {
-                              var snp = Provider.of<CustmerProvider>(context)
-                                  .customerlist[i];
+                              var snp = allCustomers[i];
                               return Material(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
@@ -247,7 +242,7 @@ class _FinanceState extends State<Finance> {
                                 (BuildContext context, int index) {
                               return Divider(color: grClr.withOpacity(0.5));
                             },
-                          ),
+                          )
                         ],
                       ))
                 ],
@@ -1801,14 +1796,6 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> errorbox(e) {
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      dismissDirection: DismissDirection.startToEnd,
-      content: Text(e),
-      backgroundColor: Colors.red,
-    ));
-  }
-
   symbol(selectedcurrency) {
     switch (selectedcurrency) {
       case "GBP":
@@ -1910,15 +1897,28 @@ class _FinanceState extends State<Finance> {
     }
   }
 
-  findduplicates() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    QuerySnapshot snapshot = await firestore.collection("Tasks").get();
-  }
-
   Widget myverticalDivider() {
     return VerticalDivider(
       thickness: 2,
       color: bgColor,
     );
+  }
+
+  void searchCustomer(String query) {
+    final allCustomers = Provider.of<CustmerProvider>(context, listen: false)
+        .customerlist
+        .where((element) {
+      final customertitle = element.Customername!.toLowerCase();
+      final customeremail = element.Customeremail!.toLowerCase();
+      final customerphone = element.Customerphone!.toLowerCase();
+      final input = query.toLowerCase();
+      return customertitle.contains(input) ||
+          customeremail.contains(input) ||
+          customerphone.contains(input);
+    }).toList();
+    setState(() {
+      query = query;
+      this.allCustomers = allCustomers;
+    });
   }
 }

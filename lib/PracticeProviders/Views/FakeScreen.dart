@@ -25,7 +25,6 @@ class _FakeScreenState extends State<FakeScreen> {
         itemCount: mylist.length,
         itemBuilder: (BuildContext context, int i) {
           return ListTile(
-            leading: Text(mylist[i].userId.toString()),
             title: Text(mylist[i].title.toString()),
             subtitle: Text(mylist[i].body.toString()),
           );

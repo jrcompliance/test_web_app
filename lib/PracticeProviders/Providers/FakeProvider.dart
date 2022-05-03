@@ -11,7 +11,7 @@ class FakeProvider extends ChangeNotifier {
   }
 
   Future getData() async {
-    var url = Uri.parse("https://jsonplaceholder.typicode.com/posts");
+    var url = Uri.parse("https://postmylead.herokuapp.com/get");
     var response = await http.get(url);
     var convertedData = json.decode(response.body);
     print(convertedData);
@@ -19,9 +19,8 @@ class FakeProvider extends ChangeNotifier {
     convertedData.forEach((data) {
       _list.add(FakeModels(
         id: data["id"],
-        userId: data["userId"],
-        title: data["title"],
-        body: data["body"],
+        title: data["task"],
+        body: data["message"],
       ));
       _fakemodellist = _list;
       notifyListeners();
