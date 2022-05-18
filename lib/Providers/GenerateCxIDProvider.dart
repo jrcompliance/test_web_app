@@ -9,6 +9,11 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
   int? inid;
   String? actualinid;
   int? leadId;
+  int? creditid;
+  int? debitid;
+  int? deliveryid;
+
+  int? cashmemoid;
   Future<void> fetchRecent() async {
     try {
       await _firestore
@@ -103,6 +108,78 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
     actualinid = storeval;
     print(actualinid);
     notifyListeners();
+  }
+
+  Future<void> fetchcreditID() async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    _firestore
+        .collection("GenerateId's")
+        .doc("creditID")
+        .update({"creditid": FieldValue.increment(1)}).then((value) async {
+      await _firestore
+          .collection("GenerateId's")
+          .doc("creditID")
+          .get()
+          .then((value) {
+        creditid = value.get("creditid");
+      });
+      print("creditid--" + creditid.toString());
+      notifyListeners();
+    });
+  }
+
+  Future<void> fetchDebitID() async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    _firestore
+        .collection("GenerateId's")
+        .doc("debitID")
+        .update({"debitid": FieldValue.increment(1)}).then((value) async {
+      await _firestore
+          .collection("GenerateId's")
+          .doc("debitID")
+          .get()
+          .then((value) {
+        creditid = value.get("debitid");
+      });
+      print("debitid--" + debitid.toString());
+      notifyListeners();
+    });
+  }
+
+  Future<void> fetchDeliveryID() async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    _firestore
+        .collection("GenerateId's")
+        .doc("DeliveryID")
+        .update({"deliveryid": FieldValue.increment(1)}).then((value) async {
+      await _firestore
+          .collection("GenerateId's")
+          .doc("DeliveryID")
+          .get()
+          .then((value) {
+        deliveryid = value.get("deliveryid");
+      });
+      print("deliveryid--" + deliveryid.toString());
+      notifyListeners();
+    });
+  }
+
+  Future<void> fetchCashMemoID() async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    _firestore
+        .collection("GenerateId's")
+        .doc("CashMemoID")
+        .update({"cashmemoid": FieldValue.increment(1)}).then((value) async {
+      await _firestore
+          .collection("GenerateId's")
+          .doc("CashMemoID")
+          .get()
+          .then((value) {
+        cashmemoid = value.get("cashmemoid");
+      });
+      print("cashmemoid--" + cashmemoid.toString());
+      notifyListeners();
+    });
   }
 
   Future<void> fetchLeadId() async {

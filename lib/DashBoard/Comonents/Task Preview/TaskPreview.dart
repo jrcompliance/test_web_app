@@ -806,7 +806,7 @@ class _TaskPreviewState extends State<TaskPreview>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: size.width * 0.115,
+                      width: size.width * 0.11,
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
@@ -863,7 +863,7 @@ class _TaskPreviewState extends State<TaskPreview>
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         preferredDirection: AxisDirection.right,
                         child: Container(
-                            width: size.width * 0.115,
+                            width: size.width * 0.110,
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
@@ -977,13 +977,15 @@ class _TaskPreviewState extends State<TaskPreview>
                         shadow: Shadow(color: btnColor, blurRadius: 20),
                       ),
                       onTap: () {
-                        Provider.of<ActivityProvider>(context,listen: false).getAllActivitys(id);
-                        Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(id,date1,date2);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DeatailsPopBox(endDate: endDate, lastseen: lastseen, s: s, status: status, priority: priority, taskname: taskname, cat: cat, f: f, startDate: startDate, message: message, Idocid: id, CxID: CxID,assigns: assignsto.toList(),leadID: LeadId,);
-                            });
+                          Provider.of<ActivityProvider>(context,listen: false).getAllActivitys(id).whenComplete((){
+                            print( Provider.of<ActivityProvider>(context,listen: false).activitymodellist.length);
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DeatailsPopBox(endDate: endDate, lastseen: lastseen, s: s, status: snp["status"], priority: priority, taskname: taskname, cat: cat, f: f, startDate: startDate, message: message, Idocid: snp["id"], CxID: CxID,assigns: assignsto.toList(),leadID: LeadId, list: Provider.of<ActivityProvider>(context,listen: false).activitymodellist.length<=0||Provider.of<ActivityProvider>(context,listen: false).activitymodellist.length==null?[]:Provider.of<ActivityProvider>(context,listen: false).activitymodellist);
+                                });
+                          });
+
 
                       },
                       onDoubleTap: () {
@@ -1081,7 +1083,7 @@ class _TaskPreviewState extends State<TaskPreview>
                       ),
                     ),
                     Container(
-                      width: size.width * 0.08,
+                      width: size.width * 0.07,
                       alignment: Alignment.centerLeft,
                       child:  dropdowns(cat,status,id),
                     ),
@@ -3713,6 +3715,9 @@ class _TaskPreviewState extends State<TaskPreview>
       physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       scrollDirection: Axis.vertical,
       children: [
+
+
+
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),

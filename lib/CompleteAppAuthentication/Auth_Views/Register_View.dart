@@ -10,6 +10,7 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/MySpacer.dart'
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/SignUpImage.dart';
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Success_View.dart';
+import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
@@ -227,6 +228,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 return null;
                                               }
                                             },
+                                            onFieldSubmitted: (_) {
+                                              getRegister(context);
+                                            },
                                           ),
                                         ),
                                       ),
@@ -382,7 +386,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
             ),
-            SigUpImage(),
+            if (Responsive.isLargeScreen(context) ||
+                Responsive.isMediumScreen(context))
+              SigUpImage(),
           ],
         ),
       ),

@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.Finance;
+  Tabs active = Tabs.DashBoard;
   var radioItem;
 
   @override
@@ -69,13 +69,19 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       drawer: SideDrawer(context),
       endDrawer: MoveDrawer(),
       body: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(flex: 2, child: SideDrawer(context)),
-            Expanded(flex: 10, child: DashboardBody(context)),
-          ],
-        ),
+        child: Responsive.isSmallScreen(context)
+            ? Center(
+                child: Text(
+                    "Mobile View is not Supported😔,Experiance it in Tab and Desktop",
+                    style: TxtStls.titlestyle))
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (Responsive.isLargeScreen(context))
+                    Expanded(flex: 2, child: SideDrawer(context)),
+                  Expanded(flex: 10, child: DashboardBody(context)),
+                ],
+              ),
       ),
     );
   }
@@ -226,7 +232,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-  int selectedindex = 3;
+  int selectedindex = 0;
   DrawerListTile(title, image, tab, int index) {
     return Material(
       elevation: selectedindex == index ? 20 : 0,
@@ -242,10 +248,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               fit: BoxFit.fill, filterQuality: FilterQuality.high),
           height: 22.5,
         ),
-        onTap: () => setState(() {
-          active = tab;
-          selectedindex = index;
-        }),
+        onTap: () {
+          if (mounted) {
+            setState(() {
+              active = tab;
+              selectedindex = index;
+            });
+          }
+        },
         hoverColor: Colors.transparent,
         selectedTileColor: selectedindex == index ? btnColor : null,
       ),

@@ -14,6 +14,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
+import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
 import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/DuplicatesFinderProvider.dart';
@@ -30,10 +31,14 @@ import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
+import 'package:test_web_app/ResponsiveScreens/ResponsiveScreen.dart';
+import 'package:test_web_app/ResponsiveScreens/ResponsiveTablet.dart';
+import 'package:test_web_app/SureshTest.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/firebase_options.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +72,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => EmergencyTaskProvider()),
       ChangeNotifierProvider(create: (ctx) => DuplicatesFinderProvider()),
       ChangeNotifierProvider(create: (ctx) => LeadIdProviders()),
+      ChangeNotifierProvider(create: (ctx) => ChatProvider()),
     ],
     child: const MyApp(),
   ));
@@ -85,7 +91,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         canvasColor: bgColor.withOpacity(1),
       ),
-      home: SafeArea(child: const LandingScreen()),
+      home: SafeArea(child: LandingScreen()),
     );
   }
 }
@@ -102,6 +108,7 @@ class _LandingScreenState extends State<LandingScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 2))
         .then((value) => _checkAuthentication());
+    //  success();
   }
 
   @override
@@ -133,7 +140,158 @@ class _LandingScreenState extends State<LandingScreen> {
       return e;
     }
   }
+
+  success() async {
+    var response = await http.post(
+        Uri.parse("http://api.schedyo.com/api/Login/Login"),
+        body: {"email": "super@gmail.com", "password": "123456"});
+    print(response.body);
+  }
 }
+
+// class DataTableSxreen extends StatefulWidget {
+//   const DataTableSxreen({Key? key}) : super(key: key);
+//
+//   @override
+//   _DataTableSxreenState createState() => _DataTableSxreenState();
+// }
+//
+// class _DataTableSxreenState extends State<DataTableSxreen> {
+//   List<String> titlelist = [
+//     "id",
+//     "Product",
+//     "Qty",
+//     "Price",
+//     "Discount",
+//     "Gst",
+//     "Total"
+//   ];
+//
+//   bool selected = false;
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     myall();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+//     return Scaffold(
+//       body: Container(
+//         width: size.width * 1,
+//         child: DataTable(
+//             showCheckboxColumn: true,
+//             sortAscending: true,
+//             columns: titlelist
+//                 .map((e) => DataColumn(
+//                         label: Text(
+//                       e.toString(),
+//                       style: TxtStls.fieldtitlestyle,
+//                     )))
+//                 .toList(),
+//             rows: productdata
+//                 .map(
+//                   (e) => DataRow(
+//                     selected: titlelist.contains(e.id),
+//                     cells: [
+//                       DataCell(Text(e.id, style: TxtStls.fieldstyle)),
+//                       DataCell(Text(e.product, style: TxtStls.fieldstyle)),
+//                       DataCell(
+//                           Text(e.qty.toString(), style: TxtStls.fieldstyle)),
+//                       DataCell(
+//                           Text(e.price.toString(), style: TxtStls.fieldstyle)),
+//                       DataCell(Text(e.discount.toString(),
+//                           style: TxtStls.fieldstyle)),
+//                       DataCell(
+//                           Text(e.gst.toString(), style: TxtStls.fieldstyle)),
+//                       DataCell(
+//                           Text(e.total.toString(), style: TxtStls.fieldstyle)),
+//                     ],
+//                     onSelectChanged: (value) {
+//                       setState(() {
+//                         selected = !selected;
+//                       });
+//                     },
+//                   ),
+//                 )
+//                 .toList()),
+//       ),
+//     );
+//   }
+//
+//   List<ProductModel> productdata = [];
+//   myall() {
+//     productdata.add(ProductModel(
+//         id: "05222301",
+//         product: "Himalaya Baby Soap",
+//         qty: 1,
+//         price: 100,
+//         discount: 0,
+//         gst: 18,
+//         total: 118));
+//     productdata.add(ProductModel(
+//         id: "05222302",
+//         product: "Himalaya Baby Shampoo",
+//         qty: 1,
+//         price: 200,
+//         discount: 0,
+//         gst: 36,
+//         total: 236));
+//     productdata.add(ProductModel(
+//         id: "05222303",
+//         product: "Himalaya Baby Powder",
+//         qty: 1,
+//         price: 300,
+//         discount: 0,
+//         gst: 54,
+//         total: 354));
+//     productdata.add(ProductModel(
+//         id: "05222304",
+//         product: "Himalaya Baby Body Lotion",
+//         qty: 1,
+//         price: 400,
+//         discount: 0,
+//         gst: 72,
+//         total: 472));
+//     productdata.add(ProductModel(
+//         id: "05222305",
+//         product: "Himalaya Baby oil",
+//         qty: 1,
+//         price: 500,
+//         discount: 0,
+//         gst: 90,
+//         total: 590));
+//     productdata.add(ProductModel(
+//         id: "05222306",
+//         product: "Himalaya Baby Pampers",
+//         qty: 1,
+//         price: 600,
+//         discount: 0,
+//         gst: 108,
+//         total: 708));
+//   }
+// }
+//
+// class ProductModel {
+//   String id;
+//   String product;
+//   int qty;
+//   int price;
+//   int discount;
+//   int gst;
+//   int total;
+//   ProductModel(
+//       {required this.id,
+//       required this.product,
+//       required this.qty,
+//       required this.price,
+//       required this.discount,
+//       required this.gst,
+//       required this.total});
+// }
+
 //
 // // import 'dart:async';
 // // import 'dart:convert';

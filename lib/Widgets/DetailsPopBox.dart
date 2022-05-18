@@ -9,8 +9,8 @@ import 'package:test_web_app/Constants/Fileview.dart';
 import 'package:test_web_app/Constants/Services.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
+import 'package:test_web_app/Models/ActivityModels.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/Models/tasksearchmodel.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
@@ -20,18 +20,20 @@ import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 class DeatailsPopBox extends StatefulWidget {
    String Idocid;
    int CxID;
-  String taskname;
-  Timestamp startDate;
-  String endDate;
-  String priority;
-  Timestamp lastseen;
-  String cat;
-  String message;
-  String status;
-  int s;
-  int f;
-  List assigns;
-  int leadID;
+   String taskname;
+   Timestamp startDate;
+   String endDate;
+   String priority;
+   Timestamp lastseen;
+   String cat;
+   String message;
+   String status;
+   int s;
+   int f;
+   List assigns;
+   int leadID;
+   List<ActivityModel> list;
+
 
   DeatailsPopBox(
       {
@@ -47,7 +49,7 @@ class DeatailsPopBox extends StatefulWidget {
         required this.lastseen,
         required this.f,
         required this.s,
-        required this.assigns,required this.leadID});
+        required this.assigns,required this.leadID,required this.list});
 
   @override
   _DeatailsPopBoxState createState() => _DeatailsPopBoxState();
@@ -87,10 +89,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
   final TextEditingController _taxController = TextEditingController();
   final TextEditingController _balanceController = TextEditingController();
   final TextEditingController _tdsController = TextEditingController();
-  List<TaskSearchModel> _searchList = [];
-  void values() {
-    _searchList = [];
-  }
+
 
   Widget mytitile = Text(
     "Search Example",
@@ -489,9 +488,14 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
   void initState() {
     super.initState();
     myvalues();
+    setState(() {
+      print(widget.Idocid);
+      Provider.of<ActivityProvider>(context,listen: false).getAllActivitys(widget.Idocid);
+    });
   }
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     String createDate = DateFormat('EEE | MMM dd, yy').format(widget.startDate.toDate());
     DateTime dt = DateTime.parse(widget.endDate);
@@ -550,10 +554,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       ),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          final activitylist =
-              Provider.of<ActivityProvider>(context).activitymodellist;
-          final activitylist1 =
-              Provider.of<ActivityProvider1>(context).activitymodellist1;
+
           _mysearchController.addListener(() {
             if (_mysearchController.text.isEmpty) {
               setState(() {
@@ -2653,7 +2654,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                 date1 == null && date2 == null
                                     ? InkWell(
                                     onTap: () {
-                                      dateTimeRangePicker(widget.Idocid);
+                                      dateTimeRangePicker();
                                       setState(() {});
                                     },
                                     child: Tooltip(
@@ -2733,7 +2734,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           horizontal: 5, vertical: 3),
                                       decoration: BoxDecoration(
                                           color: StatusUpdateServices.CatColor(
-                                              cat),
+                                              widget.cat
+                                          ),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       alignment: Alignment.center,
@@ -2749,7 +2751,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       decoration: BoxDecoration(
                                           color:
                                           StatusUpdateServices.subcatColor(
-                                              status),
+                                              widget.status),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       alignment: Alignment.center,
@@ -2834,27 +2836,26 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                           flex: 8,
                           child: _isGraph
                               ? Chart(context, s, f)
-                              : ListView.separated(
+                              : widget.list.length<=0?Text("No activity Found"):ListView.separated(
                             shrinkWrap: true,
                             separatorBuilder: (_, i) => Divider(
                               height: 10,
                               color: Color(0xFFE0E0E0),
                             ),
-                            itemCount: date1 == null && date2 == null
-                                ? activitylist.length
-                                : activitylist1.length,
+                            itemCount:  date1==null&&date2==null?widget.list.length:activitylist1.length,
+
                             itemBuilder:
                                 (BuildContext context, int index) {
                               String statecolor =
-                                  activitylist[index].from;
-                              String statecolor1 = activitylist[index].to;
+                                  widget.list[index].from;
+                              String statecolor1 = widget.list[index].to;
                               String date = DateFormat("EEE | MMM dd, yy")
                                   .format(
-                                  activitylist[index].when.toDate());
+                                  widget.list[index].when.toDate());
                               String time = DateFormat('hh:mm a').format(
-                                  activitylist[index].when.toDate());
+                                  widget.list[index].when.toDate());
                               DateTime dt1 = DateTime.parse(
-                                  activitylist[index].lastdate);
+                                  widget.list[index].lastdate);
                               String lastDate =
                               DateFormat("EEE | MMM dd, yy")
                                   .format(dt1);
@@ -2954,7 +2955,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           Container(
                                             alignment: Alignment.center,
                                             width: 50,
-                                            child: activitylist[index]
+                                            child: widget.list[index]
                                                 .yes ==
                                                 true
                                                 ? InkWell(
@@ -3042,7 +3043,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                         statecolor),
                                                   ),
                                                   child: Text(
-                                                      activitylist[index]
+                                                      widget.list[index]
                                                           .from,
                                                       style: TxtStls
                                                           .fieldstyle1),
@@ -3068,7 +3069,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                         statecolor1),
                                                   ),
                                                   child: Text(
-                                                      activitylist[index]
+                                                      widget.list[index]
                                                           .to,
                                                       style: TxtStls
                                                           .fieldstyle1),
@@ -3106,7 +3107,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                     Alignment.center,
                                                     width: 150,
                                                     decoration: BoxDecoration(
-                                                        color: activitylist[
+                                                        color: widget.list[
                                                         index]
                                                             .bound ==
                                                             "InBound"
@@ -3117,7 +3118,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                             .circular(
                                                             10.0))),
                                                     child: Text(
-                                                      activitylist[index]
+                                                      widget.list[index]
                                                           .bound,
                                                       style: TxtStls
                                                           .fieldstyle1,
@@ -3132,7 +3133,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                     width: 100,
                                                     decoration: BoxDecoration(
                                                         color: clr(
-                                                            activitylist[
+                                                            widget.list[
                                                             index]
                                                                 .action),
                                                         borderRadius: BorderRadius
@@ -3140,7 +3141,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                             .circular(
                                                             10.0))),
                                                     child: Text(
-                                                        activitylist[
+                                                        widget.list[
                                                         index]
                                                             .action,
                                                         style: TxtStls
@@ -3167,7 +3168,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                     alignment: Alignment
                                                         .centerLeft,
                                                     child: Text(
-                                                      activitylist[index]
+                                                      widget.list[index]
                                                           .who,
                                                       style: TxtStls
                                                           .fieldstyle,
@@ -3197,7 +3198,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                   width:
                                                   size.width * 0.35,
                                                   child: Text(
-                                                      activitylist[index]
+                                                      widget.list[index]
                                                           .note,
                                                       style: TxtStls
                                                           .notestyle)),
@@ -3331,53 +3332,9 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       ),
     );
   }
-  var date11;
-  var date22;
-  dateTimeRangePicker1() async {
-    DateTimeRange? picked = await showDateRangePicker(
-        context: context,
-        firstDate: DateTime(2022),
-        lastDate: DateTime.now(),
-        builder: (BuildContext context, Widget ?child) {
-          return Theme(
-            data: ThemeData(
-              primarySwatch: Colors.grey,
-              splashColor: Colors.black,
-              textTheme: TextTheme(
-                subtitle1: TextStyle(color: Colors.black),
-                button: TextStyle(color: Colors.black),
-              ),
-              accentColor: Colors.black,
-              colorScheme: ColorScheme.light(
-                  primary: btnColor,
-                  primaryVariant: Colors.black,
-                  secondaryVariant: Colors.black,
-                  onSecondary: Colors.black,
-                  onPrimary: Colors.white,
-                  surface: Colors.black,
-                  onSurface: Colors.black,
-                  secondary: Colors.black),
-              dialogBackgroundColor: Colors.white,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
-                  child: child,
-                )
-              ],
-            ),
-          );
-        });
-    if (picked != null && picked != null) {
-      setState(() {
-        date11 = picked.start.toString().split(" ")[0];
-        date22 = picked.end.toString().split(" ")[0];
-      });
-    }
-  }
-  dateTimeRangePicker(id) async {
+
+  List<ActivityModel> activitylist1 =[] ;
+  dateTimeRangePicker() async {
     DateTimeRange? picked = await showDateRangePicker(
       builder: (BuildContext context, Widget ?child) {
         return Theme(
@@ -3416,10 +3373,19 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       lastDate: DateTime.now(),
     );
     if (picked != null) {
+      date1 = picked.start.toString().split(" ")[0];
+      date2 = picked.end.toString().split(" ")[0];
       setState(() {
-        date1 = picked.start.toString().split(" ")[0];
-        date2 = picked.end.toString().split(" ")[0];
-        Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(id,date1,date2);
+        Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(widget.Idocid.toString(),picked.start.toString().split(" ")[0],picked.end.toString().split(" ")[0]).then((value) {
+
+
+            setState(() {
+              activitylist1 =
+                  Provider.of<ActivityProvider1>(context,listen: false).activitymodellist1;
+            });
+          });
+
+
       });
     }
   }

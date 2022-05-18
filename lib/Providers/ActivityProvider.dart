@@ -9,17 +9,16 @@ class ActivityProvider extends ChangeNotifier {
     return [..._activitymodellist];
   }
 
-  Future<void> getAllActivitys(did) async {
+  Future<void> getAllActivitys(id) async {
+    FirebaseFirestore _firebase = FirebaseFirestore.instance;
     try {
-      FirebaseFirestore _firebase = FirebaseFirestore.instance;
-      QuerySnapshot extractedResponse = await _firebase
+      var response = await _firebase
           .collection("Tasks")
-          .doc(did)
+          .doc(id)
           .collection("Activitys")
-          .orderBy("When", descending: true)
           .get();
       List<ActivityModel> loadedData = [];
-      return extractedResponse.docs.forEach((element) {
+      response.docs.forEach((element) {
         loadedData.add(ActivityModel(
             action: element['Action'],
             bound: element['Bound'],
@@ -31,9 +30,9 @@ class ActivityProvider extends ChangeNotifier {
             qdate: element["queryDate"],
             when: element["When"],
             note: element["Note"]));
-        _activitymodellist = loadedData;
-        notifyListeners();
       });
+      _activitymodellist = loadedData;
+      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
     }
@@ -47,20 +46,20 @@ class ActivityProvider1 extends ChangeNotifier {
     return [..._activitymodellist1];
   }
 
-  Future<void> getAllActivitys1(did, date1, date2) async {
+  Future<void> getAllActivitys1(id, date1, date2) async {
+    FirebaseFirestore _firebase = FirebaseFirestore.instance;
     try {
-      FirebaseFirestore _firebase = FirebaseFirestore.instance;
-      QuerySnapshot extractedResponse = await _firebase
+      var extractedResponse = await _firebase
           .collection("Tasks")
-          .doc(did)
+          .doc(id)
           .collection("Activitys")
           .where("queryDate", isGreaterThanOrEqualTo: date1)
           .where("queryDate", isLessThanOrEqualTo: date2)
           .get();
 
       List<ActivityModel> loadedData = [];
-      return extractedResponse.docs.forEach((element) {
-        //print(element.data());
+      extractedResponse.docs.forEach((element) {
+        print(element.data());
         loadedData.add(ActivityModel(
             action: element['Action'],
             bound: element['Bound'],
@@ -72,9 +71,9 @@ class ActivityProvider1 extends ChangeNotifier {
             qdate: element["queryDate"],
             when: element["When"],
             note: element["Note"]));
-        _activitymodellist1 = loadedData;
-        notifyListeners();
       });
+      _activitymodellist1 = loadedData;
+      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
     }

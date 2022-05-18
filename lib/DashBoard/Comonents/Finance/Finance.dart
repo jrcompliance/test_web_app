@@ -17,7 +17,7 @@ import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
-import 'package:test_web_app/PdfFiles/PdfScreen.dart';
+import 'package:test_web_app/PdfFiles/InvoiceNote.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
@@ -35,6 +35,8 @@ class Finance extends StatefulWidget {
 class _FinanceState extends State<Finance> {
   bool _isCreate = false;
   bool isgst = false;
+  var date1;
+  var date2;
 
   bool isPreview = false;
 
@@ -87,6 +89,7 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
+  final TextEditingController _filterDateController = TextEditingController();
 
   List cust = [];
   List<CustomerModel> allCustomers = [];
@@ -94,7 +97,7 @@ class _FinanceState extends State<Finance> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(seconds: 3)).then((value) {
+    Future.delayed(Duration(seconds: 2)).then((value) {
       Provider.of<CustmerProvider>(context, listen: false)
           .getCustomers(
         context,
@@ -129,6 +132,38 @@ class _FinanceState extends State<Finance> {
                               _list.map((e) => newMethod(e, () {})).toList(),
                         ),
                       ),
+                      SizedBox(width: 10),
+                      InkWell(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: btnColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          height: 40,
+                          width: 40,
+                          child: Icon(
+                            Icons.calendar_today_sharp,
+                            color: bgColor,
+                          ),
+                        ),
+                        onTap: () {
+                          dateTimeRangePicker();
+                        },
+                      ),
+                      // RaisedButton(
+                      //   shape: RoundedRectangleBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0))),
+                      //   color: btnColor,
+                      //   onPressed: () {
+                      //     MyCalenders.pickFilerDate(
+                      //         context, _filterDateController);
+                      //   },
+                      //   child: Icon(
+                      //     Icons.calendar_today_outlined,
+                      //     color: bgColor,
+                      //   ),
+                      //   // label: Text("")),
+                      // ),
                     ],
                   ),
                   SizedBox(height: size.height * 0.025),
@@ -331,7 +366,10 @@ class _FinanceState extends State<Finance> {
                                 ],
                               ),
                               SizedBox(height: size.height * 0.05),
-                              titleWidget(),
+                              Padding(
+                                padding:  EdgeInsets.only(left: 10),
+                                child: titleWidget(),
+                              ),
                               Expanded(
                                   child:
                                       Provider.of<GetInvoiceListProvider>(
@@ -372,11 +410,13 @@ class _FinanceState extends State<Finance> {
                                                                   FlexFit.tight,
                                                               child: Row(
                                                                 children: [
-                                                                  Icon(
-                                                                      Icons
-                                                                          .picture_as_pdf_rounded,
-                                                                      color:
-                                                                          clsClr),
+                                                                 Padding(
+                                                                   padding: EdgeInsets.only(left: 10),
+                                                                   child:  Icon(
+                                                                       Icons
+                                                                           .picture_as_pdf_rounded,
+                                                                       color:
+                                                                       clsClr),                                                                ),
                                                                   Text(
                                                                     "  JR" +
                                                                         data.invoiceID
@@ -513,7 +553,7 @@ class _FinanceState extends State<Finance> {
                                                                     Icons
                                                                         .arrow_drop_down,
                                                                     color:
-                                                                        btnColor,
+                                                                        statusColor(data.status),
                                                                   ),
                                                                   iconSize: 20,
                                                                   buttonHeight:
@@ -1864,7 +1904,7 @@ class _FinanceState extends State<Finance> {
   }
 
   final List _titlelist = [
-    "Inc No",
+    "  Inc No",
     "Amount",
     "Currency",
     "Due Date",
@@ -1981,5 +2021,54 @@ class _FinanceState extends State<Finance> {
       return "Enter teh Pincode";
     }
     return "Enter the PanCard Number";
+  }
+
+  dateTimeRangePicker() async {
+
+    DateTimeRange? picked = await showDateRangePicker(
+
+      builder: (BuildContext context, Widget ?child) {
+
+        return Theme(
+          data: ThemeData(
+            primarySwatch: Colors.grey,
+            splashColor: Colors.black,
+            textTheme: TextTheme(
+              subtitle1: TextStyle(color: Colors.black),
+              button: TextStyle(color: Colors.black),
+            ),
+            accentColor: Colors.black,
+            colorScheme: ColorScheme.light(
+                primary: btnColor,
+                primaryVariant: Colors.black,
+                secondaryVariant: Colors.black,
+                onSecondary: Colors.black,
+                onPrimary: Colors.white,
+                surface: Colors.black,
+                onSurface: Colors.black,
+                secondary: Colors.black),
+            dialogBackgroundColor: Colors.white,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 400, maxHeight: 450),
+                child: child,
+              )
+            ],
+          ),
+        );
+      }
+      context: context,
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        date1 = picked.start.toString().split(" ")[0];
+        date2 = picked.end.toString().split(" ")[0];
+      });
+    }
   }
 }

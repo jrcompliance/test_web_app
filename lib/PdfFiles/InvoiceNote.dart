@@ -42,6 +42,8 @@ class PdfProvider {
     // final fontBold = await PdfGoogleFonts.openSansBold();
     final textStl10 =
         pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold);
+    final textStl15 =
+        pw.TextStyle(fontSize: 15, fontWeight: pw.FontWeight.bold);
     final textStl12 =
         pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold);
     final textStl12Line = pw.TextStyle(
@@ -66,6 +68,15 @@ class PdfProvider {
         build: (pw.Context context) {
           return pw
               .Column(mainAxisAlignment: pw.MainAxisAlignment.start, children: [
+            pw.Flexible(
+              flex: 1,
+              child: pw.Align(
+                  alignment: pw.Alignment.topCenter,
+                  child: pw.Text(
+                    "Tax Invoice",
+                    style: textStl15,
+                  )),
+            ),
             pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
               pw.SizedBox(
                   width: 200,

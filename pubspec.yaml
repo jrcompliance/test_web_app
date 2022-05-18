@@ -68,6 +68,10 @@ dependencies:
   syncfusion_flutter_pdf: ^19.4.56-beta
   printing: ^5.7.5
   motion_toast: ^2.1.6
+  number_to_words: ^1.0.0
+  image_picker: ^0.8.5
+  socket_io_client: ^1.0.2
+  video_call_flutter: ^1.0.2
 
 
 
@@ -107,6 +111,7 @@ flutter:
     - assets/Logos/lamp.png
     - assets/Logos/upload.png
     - assets/Logos/jrlogo.png
+    - assets/Logos/attachLogo.png
     - assets/Lotties/registeredsucees.json
     - assets/Notations/Category.png
     - assets/Notations/Chart.png

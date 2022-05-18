@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -20,6 +22,8 @@ class LoginProvider extends ChangeNotifier {
       if (success != null) {
         isLoading = false;
         _sharedPreferences.setString("email", _email);
+        _sharedPreferences.setString("lastSeen",
+            DateFormat("yyyy-MM-dd kk:mm a").format(DateTime.now()));
         _sharedPreferences.setString("uid", _auth.currentUser!.uid.toString());
         notifyListeners();
       }
