@@ -9,3 +9,4 @@ String? peerUid;
 String? messages;
 String? onlinestatus;
 String? employeeImageUrl;
+bool isloggedOut = false;

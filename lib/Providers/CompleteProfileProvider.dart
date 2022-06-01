@@ -25,7 +25,8 @@ class CompleteProfielProvider with ChangeNotifier {
         "bgroup": _bgroup,
         "add": _add,
         "gender": _gender,
-        "doj": _doj
+        "doj": _doj,
+        "Attachments1": [],
       }).then((value) {
         isLoading = false;
         notifyListeners();

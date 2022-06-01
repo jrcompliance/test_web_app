@@ -1,10 +1,11 @@
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class AddDocumentsProvider with ChangeNotifier {
+class AddDocumentsProvider2 with ChangeNotifier {
   FirebaseStorage storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> addDocument(id) async {
@@ -16,10 +17,10 @@ class AddDocumentsProvider with ChangeNotifier {
         String fileName = result.files.first.name;
         notifyListeners();
         TaskSnapshot upload =
-            await storage.ref('Attachments/$fileName').putData(fileBytes!);
+            await storage.ref('Attachments2/$fileName').putData(fileBytes!);
         String myUrl = await upload.ref.getDownloadURL();
         CollectionReference collectionReference =
-            _firestore.collection("Tasks");
+            _firestore.collection("EmployeeData");
         collectionReference.doc(id).update({
           "Attachments1": FieldValue.arrayUnion([
             {

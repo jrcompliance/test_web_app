@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Models/UserModel2.dart';
 
 class LoginProvider extends ChangeNotifier {
   String? success;
@@ -21,6 +22,7 @@ class LoginProvider extends ChangeNotifier {
       success = response.user!.email.toString();
       if (success != null) {
         isLoading = false;
+        isloggedOut = false;
         _sharedPreferences.setString("email", _email);
         _sharedPreferences.setString("lastSeen",
             DateFormat("yyyy-MM-dd kk:mm a").format(DateTime.now()));

@@ -340,11 +340,13 @@ class _FinanceState extends State<Finance> {
                                       style: TxtStls.fieldtitlestyle),
                                   Align(
                                     alignment: Alignment.centerRight,
-                                    child: FlatButton.icon(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        color: btnColor,
+                                    child: ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0))),
+                                          primary: btnColor,
+                                        ),
                                         onPressed: () {
                                           Provider.of<LeadIdProviders>(context,
                                                   listen: false)
@@ -367,7 +369,7 @@ class _FinanceState extends State<Finance> {
                               ),
                               SizedBox(height: size.height * 0.05),
                               Padding(
-                                padding:  EdgeInsets.only(left: 10),
+                                padding: EdgeInsets.only(left: 10),
                                 child: titleWidget(),
                               ),
                               Expanded(
@@ -410,13 +412,17 @@ class _FinanceState extends State<Finance> {
                                                                   FlexFit.tight,
                                                               child: Row(
                                                                 children: [
-                                                                 Padding(
-                                                                   padding: EdgeInsets.only(left: 10),
-                                                                   child:  Icon(
-                                                                       Icons
-                                                                           .picture_as_pdf_rounded,
-                                                                       color:
-                                                                       clsClr),                                                                ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            left:
+                                                                                10),
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .picture_as_pdf_rounded,
+                                                                        color:
+                                                                            clsClr),
+                                                                  ),
                                                                   Text(
                                                                     "  JR" +
                                                                         data.invoiceID
@@ -552,8 +558,8 @@ class _FinanceState extends State<Finance> {
                                                                   icon: Icon(
                                                                     Icons
                                                                         .arrow_drop_down,
-                                                                    color:
-                                                                        statusColor(data.status),
+                                                                    color: statusColor(
+                                                                        data.status),
                                                                   ),
                                                                   iconSize: 20,
                                                                   buttonHeight:
@@ -707,11 +713,13 @@ class _FinanceState extends State<Finance> {
   }
 
   Widget newMethod(e, callack) {
-    return RaisedButton(
-      elevation: 0.0,
-      color: activeid == e ? btnColor : bgColor,
-      hoverColor: Colors.transparent,
-      hoverElevation: 0.0,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        elevation: 0.0,
+        primary: activeid == e ? btnColor : bgColor,
+        // hoverColor: Colors.transparent,
+        // hoverElevation: 0.0,
+      ),
       onPressed: () {
         setState(() {
           activeid = e;
@@ -1457,10 +1465,12 @@ class _FinanceState extends State<Finance> {
                 ),
               ],
             ),
-            FlatButton.icon(
-                color: btnColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
+            ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  primary: btnColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                ),
                 onPressed: () {
                   if (servicelist.length <= 0 ||
                       selectedleadid == null ||
@@ -1588,10 +1598,12 @@ class _FinanceState extends State<Finance> {
               Expanded(child: SizedBox()),
               Provider.of<RecentFetchCXIDProvider>(context).actualinid == null
                   ? SizedBox()
-                  : FlatButton.icon(
-                      color: btnColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
+                  : ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        primary: btnColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                      ),
                       onPressed: () {
                         var inid = Provider.of<RecentFetchCXIDProvider>(context,
                                 listen: false)
@@ -2024,11 +2036,8 @@ class _FinanceState extends State<Finance> {
   }
 
   dateTimeRangePicker() async {
-
     DateTimeRange? picked = await showDateRangePicker(
-
-      builder: (BuildContext context, Widget ?child) {
-
+      builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData(
             primarySwatch: Colors.grey,
@@ -2059,7 +2068,7 @@ class _FinanceState extends State<Finance> {
             ],
           ),
         );
-      }
+      },
       context: context,
       firstDate: DateTime(2022),
       lastDate: DateTime.now(),

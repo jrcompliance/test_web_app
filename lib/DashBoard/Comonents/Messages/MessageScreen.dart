@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,21 +13,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/ChatWidgets/MyOwnCard.dart';
 import 'package:test_web_app/ChatWidgets/ReplyCard.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/ChatModel.dart';
-import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
-import 'package:test_web_app/Models/UserModels.dart';
 import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:video_call_flutter/video_call_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart';
+import 'package:test_web_app/Providers/GetChatProvider.dart';
+import 'package:dio/dio.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   File? imageFile;
-  late FocusNode focusNode;
+  FocusNode _focusNode = new FocusNode();
   bool isLoading = false;
   List<ChatModel> messages = [];
   bool isLogggedIn = false;
@@ -45,33 +45,31 @@ class _MessageScreenState extends State<MessageScreen> {
   String? employee;
   String? currentuid;
   String? lastLoggedIn;
+  String? lastLoggedOut;
+  var messageList = [];
+  Socket? socket;
 
   // var currentUser;
 
   bool filePicked = false;
 
   var fileName;
-  String? currentUserID;
-  String? peerId;
-  var chatDocID;
-
-  late IO.Socket socket;
-
+  bool show = false;
+  // late IO.Socket socket;
+  //
   bool sendByMe = false;
-
-  bool sendButton = false;
-
+  bool _flagTyping = false;
   @override
   void initState() {
     super.initState();
-    focusNode = new FocusNode();
-    focusNode.addListener(
-        () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+    initializeSocket();
+    print("ggggg" + getChatMessage().toString());
     Future.delayed(Duration(seconds: 2)).then((value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
       currentuid = pref.getString("uid");
       lastLoggedIn = pref.getString("lastSeen");
-      print("@" + lastLoggedIn.toString());
+      lastLoggedOut = pref.getString("logoutTime");
+      print("@" + lastLoggedIn.toString() + "@" + lastLoggedOut.toString());
     });
 
     Future.delayed(Duration(seconds: 2)).then((value) {
@@ -95,7 +93,9 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   void dispose() {
-    focusNode.dispose();
+    socket!.disconnect();
+    _chatController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -227,6 +227,11 @@ class _MessageScreenState extends State<MessageScreen> {
                                     employeePhone = snp.uphoneNumber;
                                     employeeImageUrl = snp.uimage;
                                     peerUid = snp.uid;
+                                    Provider.of<GetMessagesListProvider>(
+                                            context,
+                                            listen: false)
+                                        .getMessagesList(peerUid);
+
                                     // _isTapped ? getChatMessage(peerUid!) : null;
                                     // Provider.of<ChatProvider>(context,
                                     //         listen: false)
@@ -298,8 +303,9 @@ class _MessageScreenState extends State<MessageScreen> {
                         child: Text(""),
                       ),
                       title: Text(employeename.toString()),
-                      subtitle: Text(
-                          "lastseen at ${lastLoggedIn?.replaceRange(0, 10, "")}"),
+                      subtitle: Text(isloggedOut
+                          ? "lastseen at ${lastLoggedIn?.replaceRange(0, 10, "")}"
+                          : "Online"),
                       trailing: Container(
                         width: size.width * 0.08,
                         child: Row(
@@ -332,8 +338,160 @@ class _MessageScreenState extends State<MessageScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.02),
-                  _isTapped ? listview() : Expanded(child: SizedBox()),
+                  // Expanded(
+                  //   child: Container(
+                  //     child: StreamBuilder(
+                  //       stream: channel.stream,
+                  //       builder: (context, snapshot) {
+                  //         print('agagaga' + snapshot.data.toString());
+                  //         return Text(snapshot.hasData
+                  //             ? '${snapshot.data}'
+                  //             : 'no data found');
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  _isTapped ? listview() : Expanded(flex: 1, child: SizedBox()),
+                  // Container(
+                  //   height: size.height * 0.06,
+                  //   decoration: BoxDecoration(
+                  //       color: fieldColor,
+                  //       // border: Border.all(color: AbgColor.withOpacity(0.5)),
+                  //       borderRadius: BorderRadius.circular(10.0)),
+                  //   child: Row(
+                  //     children: [
+                  //       Padding(
+                  //         padding: EdgeInsets.only(left: 20, right: 20),
+                  //         child: Container(
+                  //             // padding: EdgeInsets.only(left: 10),
+                  //             height: 25,
+                  //             width: 25,
+                  //             child: InkWell(
+                  //               child: Image.asset(
+                  //                 "Logos/attachLogo.png",
+                  //                 filterQuality: FilterQuality.high,
+                  //                 fit: BoxFit.fill,
+                  //                 color: AbgColor,
+                  //               ),
+                  //               onTap: () {
+                  //                 getFile();
+                  //               },
+                  //             )),
+                  //       ),
+                  //       Container(
+                  //         padding:
+                  //             EdgeInsets.only(top: 10, bottom: 10, right: 20),
+                  //         child: VerticalDivider(
+                  //           thickness: 2,
+                  //           color: AbgColor,
+                  //         ),
+                  //       ),
+                  //       Container(
+                  //         height: size.height * 0.4,
+                  //         width: size.width * 0.3,
+                  //         child: Center(
+                  //           child: TextFormField(
+                  //             keyboardType: TextInputType.text,
+                  //             //  autofocus: true,
+                  //             controller: _chatController,
+                  //             //  focusNode: focusNode,
+                  //             textCapitalization: TextCapitalization.sentences,
+                  //             textInputAction: TextInputAction.next,
+                  //             decoration: InputDecoration(
+                  //               border: InputBorder.none,
+                  //               hintText: "Type a message",
+                  //               hintStyle: TxtStls.fieldtitlestyle1,
+                  //             ),
+                  //             onFieldSubmitted: (_) {
+                  //               Provider.of<ChatProvider>(context,
+                  //                       listen: false)
+                  //                   .saveChatMessage(
+                  //                       _chatController.text,
+                  //                       currentuid.toString(),
+                  //                       peerUid.toString(),
+                  //                       DateTime.now()
+                  //                           .toString()
+                  //                           .substring(10, 16),
+                  //                       "source");
+                  //               setState(() {});
+                  //               // messageList.add(ChatModel(
+                  //               //         type: "source",
+                  //               //         content: _chatController.text,
+                  //               //         time: DateTime.now()
+                  //               //             .toString()
+                  //               //             .substring(10, 16),
+                  //               //         isFrom: currentuid,
+                  //               //         isTo: peerUid)
+                  //               //     .toJson());
+                  //               //    print(messageList.toString());
+                  //
+                  //               // if (_chatController.text.trim().isNotEmpty) {
+                  //               //   _chatController.clear();
+                  //               //   focusNode.requestFocus();
+                  //               //   Provider.of<ChatProvider>(context,
+                  //               //           listen: false)
+                  //               //       .saveChatMessage(
+                  //               //           _chatController.text,
+                  //               //           currentuid.toString(),
+                  //               //           peerUid.toString())
+                  //               //       .then((value) {});
+                  //               //
+                  //               //   setState(() {});
+                  //               // }
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: SizedBox(),
+                  //       ),
+                  //       Padding(
+                  //         padding: const EdgeInsets.only(left: 20, right: 20),
+                  //         child: Container(
+                  //           child: Text(
+                  //             "😀",
+                  //             style: TextStyle(fontSize: 20),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       space(),
+                  //       Padding(
+                  //         padding: EdgeInsets.only(right: 20),
+                  //         child: IconButton(
+                  //           color: btnColor,
+                  //           icon: Icon(Icons.send_rounded),
+                  //           onPressed: () {
+                  //             // sendMessage(_chatController.text,
+                  //             //     currentuid.toString(), peerUid.toString());
+                  //             _chatController.clear();
+                  //             // onSendMessage(_chatController.text, true);
+                  //             // focusNode.requestFocus();
+                  //             // _chatController.clear();
+                  //             //    sendMessage(_chatController.text);
+                  //             // setState(() {
+                  //             //   messages.add(ChatModel(
+                  //             //   messages.add(ChatModel(
+                  //             //       isTo: cusname.toString(),
+                  //             //       isFrom: employee.toString(),
+                  //             //       type: useruid.toString() !=
+                  //             //               docID.toString()
+                  //             //           ? "receiver"
+                  //             //           : "sender",
+                  //             //       timestamp:
+                  //             //           DateTime.now().toString(),
+                  //             //       content:
+                  //             //           chatContent.toString(),
+                  //             //       currentUid:
+                  //             //           currentuid.toString(),
+                  //             //       peerid: docID.toString()));
+                  //             //   _chatController.clear();
+                  //             // });
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
                     height: size.height * 0.06,
                     decoration: BoxDecoration(
@@ -343,7 +501,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     child: Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          padding: EdgeInsets.only(left: 20, right: 20),
                           child: Container(
                               // padding: EdgeInsets.only(left: 10),
                               height: 25,
@@ -372,40 +530,48 @@ class _MessageScreenState extends State<MessageScreen> {
                           height: size.height * 0.4,
                           width: size.width * 0.3,
                           child: Center(
-                            child: TextField(
-                              keyboardType: TextInputType.text,
-                              //  autofocus: true,
+                            child: TextFormField(
+                              autofocus: true,
+                              focusNode: _focusNode,
                               controller: _chatController,
-                              focusNode: focusNode,
-                              textCapitalization: TextCapitalization.sentences,
-                              textInputAction: TextInputAction.send,
+                              onFieldSubmitted: (val) {
+                                submitMsg(val);
+                                sendMessage(val, currentuid.toString(),
+                                    peerUid.toString());
+                              },
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(
+                                color: btnColor,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              onChanged: (val) {
+                                setState(() {
+                                  if (val.length == 0) {
+                                    if (_flagTyping) {
+                                      //   socketService.isTyping(false);
+                                      _flagTyping = false;
+                                    }
+                                  } else {
+                                    if (_flagTyping == false) {
+                                      //   socketService.isTyping(true);
+                                      _flagTyping = true;
+                                    }
+                                  }
+                                  chatContent = val.trim();
+                                });
+                              },
+                              textAlign: TextAlign.start,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Type a message",
                                 hintStyle: TxtStls.fieldtitlestyle1,
                               ),
-                              // onChanged: (value) {
-                              //   setState(() {
-                              //     _chatController.text = value;
-                              //   });
-                              // },
-                              onSubmitted: (_) {
-                                focusNode.requestFocus();
-                                if (_chatController.text.trim().isNotEmpty) {
-                                  Provider.of<ChatProvider>(context,
-                                          listen: false)
-                                      .saveChatMessage(
-                                          _chatController.text,
-                                          currentuid.toString(),
-                                          peerUid.toString());
-                                  _chatController.clear();
-                                  setState(() {});
-                                }
-                              },
                             ),
                           ),
                         ),
                         Expanded(
+                          flex: 1,
                           child: SizedBox(),
                         ),
                         Padding(
@@ -424,11 +590,15 @@ class _MessageScreenState extends State<MessageScreen> {
                             color: btnColor,
                             icon: Icon(Icons.send_rounded),
                             onPressed: () {
+                              // sendMessage(_chatController.text,
+                              //     currentuid.toString(), peerUid.toString());
+                              _chatController.clear();
                               // onSendMessage(_chatController.text, true);
                               // focusNode.requestFocus();
                               // _chatController.clear();
                               //    sendMessage(_chatController.text);
                               // setState(() {
+                              //   messages.add(ChatModel(
                               //   messages.add(ChatModel(
                               //       isTo: cusname.toString(),
                               //       isFrom: employee.toString(),
@@ -527,22 +697,22 @@ class _MessageScreenState extends State<MessageScreen> {
   //   }
   // }
 
-  void onSendMessage(String content, bool sendButtton) {
-    if (content.trim().isNotEmpty) {
-      Provider.of<ChatProvider>(context, listen: false).saveChatMessage(
-          _chatController.text, currentuid.toString(), peerUid.toString());
-      _chatController.clear();
-      if (currentuid != peerUid) {
-        setState(() {
-          sendByMe = true;
-        });
-      } else {
-        setState(() {
-          sendByMe = false;
-        });
-      }
-    }
-  }
+  // void onSendMessage(String content, bool sendButtton) {
+  //   if (content.trim().isNotEmpty) {
+  //     Provider.of<ChatProvider>(context, listen: false).saveChatMessage(
+  //         _chatController.text, currentuid.toString(), peerUid.toString());
+  //     _chatController.clear();
+  //     if (currentuid != peerUid) {
+  //       setState(() {
+  //         sendByMe = true;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         sendByMe = false;
+  //       });
+  //     }
+  //   }
+  // }
   // ChatProvider.sendChatMessage(
   // scrollController.animateTo(0,
   //     duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -862,90 +1032,213 @@ class _MessageScreenState extends State<MessageScreen> {
   //   );
   // }
   Widget listview() {
-    print("njjkasdjna");
     return Expanded(
+      flex: 1,
       child: SizedBox(
         child: Container(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: getChatMessage(),
-              builder: (context, AsyncSnapshot snapshot) {
-                var data = snapshot.data!.docs;
-                print("deedfwe");
-                print('qqqqqq' + data.toString());
-                return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    scrollDirection: Axis.vertical,
-                    controller: _scrollController,
-                    itemBuilder: (_, index) {
-                      var data1 = snapshot.data!.docs[index];
-                      if (!snapshot.hasData) {
-                        return Center(child: SpinKitFadingCube());
-                      }
-                      if (snapshot.data!.docs.length == 0) {
-                        return Center(
-                          child: Text("No data found"),
-                        );
-                      }
-                      if (currentuid != peerUid) {
-                        return OwnMessageCard(
-                            message: data1["message"] ?? "",
-                            time: data1["time"] ?? "");
-                      } else {
-                        return ReplyCard(
-                            message: data1["message"] ?? "",
-                            time: data1["time"] ?? "");
-                      }
-                    });
-              }),
-        ),
+            child: Provider.of<GetMessagesListProvider>(context, listen: false)
+                        .chatmodellist
+                        .length <=
+                    0
+                ? Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Lottie.asset("assets/Lotties/empty.json")))
+                : StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection("Chats")
+                        .doc(currentuid)
+                        .collection("messages")
+                        .where("isTo", isEqualTo: peerUid)
+                        .orderBy("time", descending: false)
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      var data1 = snapshot.data;
+                      print('dfdtatadd---' + data1.toString());
+                      return ListView.builder(
+                          controller: _scrollController,
+                          itemCount:
+                              //    snapshot.data.length,
+                              Provider.of<GetMessagesListProvider>(context,
+                                      listen: false)
+                                  .chatmodellist
+                                  .length,
+                          scrollDirection: Axis.vertical,
+                          // controller: _scrollController,
+                          itemBuilder: (_, index) {
+                            var data = Provider.of<GetMessagesListProvider>(
+                                    context,
+                                    listen: false)
+                                .chatmodellist[index];
+                            if (data.isFrom == currentuid) {
+                              return OwnMessageCard(
+                                  message: data.content ?? "",
+                                  time: data.time ?? "");
+                            } else {
+                              return ReplyCard(
+                                  message: data.content ?? "",
+                                  time: data.time ?? "");
+                            }
+                          });
+                    })
+            // :
+            // : Container(
+            //     child: Center(
+            //         child: Text(
+            //       "Say Hi....",
+            //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            //     )),
+            //   ),
+            //     }
+
+            //   Text(snapshot.data.docs[3]['time'].toString());
+            // }),
+            ),
       ),
     );
   }
 
-  Stream<QuerySnapshot> getChatMessage() {
+  Stream getChatMessage() {
     return FirebaseFirestore.instance
         .collection("Chats")
-        .where("isTo", isEqualTo: peerUid)
+        .doc(currentuid)
+        .collection("messages")
         .where("isFrom", isEqualTo: currentuid)
-        // .orderBy("time", descending: true)
+        .where("isTo", isEqualTo: peerUid)
+        .orderBy("time", descending: true)
         .snapshots();
   }
 
-  void setFocus() {
-    FocusScope.of(context).requestFocus(focusNode);
-  }
-
-  createRoom() {
+  createRoom() async {
     String url =
         "https://yalagala.whereby.com/0af4d394-e401-4409-89fa-54ea8aedf4d8";
 
-    var response = http.get(Uri.parse(url));
+    var response =
+        await Dio().get(url, options: Options(responseType: ResponseType.json));
     print(response.toString());
   }
-  // Stream<QuerySnapshot<Object?>> qry(cat) {
-  //   final userdata = Provider.of<UserDataProvider>(context);
-  //   if (newfilter != null) {
-  //     return FirebaseFirestore.instance
-  //         .collection("Tasks")
-  //         .where("Attachments", arrayContainsAny: [
-  //       {
-  //         "image": userdata.imageUrl,
-  //         "uid": _auth.currentUser!.uid.toString(),
-  //       }
-  //     ])
-  //         .where("cat", isEqualTo: cat)
-  //         .where("status", isEqualTo: newfilter)
-  //         .snapshots();
+
+  void setMessage(String type, String message) {
+    ChatModel messageModel = ChatModel(
+        type: type,
+        content: message,
+        time: DateTime.now().toString().substring(10, 16),
+        isFrom: currentuid,
+        isTo: peerUid);
+    print(messages);
+
+    setState(() {
+      messages.add(messageModel);
+    });
+  }
+
+  void sendMessage(String message, String sourceId, String targetId) {
+    setMessage("source", message);
+    socket?.emit("message",
+        {"message": message, "sourceId": sourceId, "targetId": targetId});
+  }
+
+  void initializeSocket() {
+    socket = io("http://127.0.0.1:3000/", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket!.connect(); //connect the Socket.IO Client to the Server
+
+    //SOCKET EVENTS
+    // --> listening for connection
+    socket!.on('connect', (data) {
+      print("connected");
+      print(socket!.connected);
+    });
+
+    //listen for incoming messages from the Server.
+    socket!.on('message', (data) {
+      print(data); //
+    });
+
+    //listens when the client is disconnected from the Server
+    socket!.on('disconnect', (data) {
+      print('disconnect');
+    });
+  }
+
+  // void connect() {
+  //   print("111");
+  //   // MessageModel messageModel = MessageModel(sourceId: widget.sourceChat.id.toString(),targetId: );
+  //   socket = IO.io("http://192.168.1.11:4000", <String, dynamic>{
+  //     "transports": ["websocket"],
+  //     "autoConnect": false,
+  //   });
+  //   print("222");
+  //   socket?.connect();
+  //   print("444");
+  //   socket?.emit("signin", currentuid);
+  //   socket!.onconnect();
+  //   socket?.on("message", (message) {
+  //     print(message);
+  //     // setMessage("destination", msg["message"]);
+  //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+  //         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+  //     print(socket?.connected);
+  //   });
+  //
+  //   // socket?.onConnect((data) {
+  //   //   print("555");
+  //   //   print("Connected");
+  //   //   socket?.on("message", (message) {
+  //   //     print(message);
+  //   //     // setMessage("destination", msg["message"]);
+  //   //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+  //   //         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+  //   //   });
+  //   //   print("333");
+  //   // });
+  // }
+
+  submitMsg(msg) {
+    if (msg == 'exit') {
+      SystemNavigator.pop();
+    } else if (msg != '') {
+      Provider.of<ChatProvider>(context, listen: false).saveChatMessage(
+          _chatController.text,
+          currentuid.toString(),
+          peerUid.toString(),
+          DateTime.now().toString().substring(10, 16),
+          "source");
+      // socketService.sendMessage(msg);
+      // socketService.isTyping(false);
+    }
+    setState(() {
+      _chatController.text = '';
+      chatContent = '';
+      _flagTyping = false;
+    });
+    _focusNode.requestFocus();
+  }
+
+  // void sendMessage() {
+  //   if (_chatController.text.isNotEmpty) {
+  //     channel.sink.add(_chatController.text.toString());
   //   }
-  //   return FirebaseFirestore.instance
-  //       .collection("Tasks")
-  //       .where("Attachments", arrayContainsAny: [
-  //     {
-  //       "image": userdata.imageUrl,
-  //       "uid": _auth.currentUser!.uid.toString(),
-  //     }
-  //   ])
-  //       .where("cat", isEqualTo: cat)
-  //       .snapshots();
+  // }
+  // void sendMessage(String message, String sourceId, String targetId) {
+  //   setMessage("source", message);
+  //   socket?.emit("message",
+  //       {"message": message, "sourceId": sourceId, "targetId": targetId});
+  // }
+
+  // void setMessage(String type, String message) {
+  //   ChatModel messageModel = ChatModel(
+  //       type: type,
+  //       content: message,
+  //       isTo: peerUid,
+  //       time: DateTime.now().toString().substring(10, 16));
+  //
+  //   print(messages);
+  //
+  //   setState(() {
+  //     messages.add(messageModel);
+  //   });
   // }
 }

@@ -1,4 +1,5 @@
 import 'package:animated_widgets/animated_widgets.dart';
+import 'package:cometchat/cometchat_sdk.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -335,6 +336,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 ),
                                               ),
                                               onTap: () {
+                                                CometChat.createUser(
+                                                    User(
+                                                        name:
+                                                            _usernameController
+                                                                .text,
+                                                        uid: _usernameController
+                                                            .text),
+                                                    "c2daa85de0992180937c031a8b99450e9e10810f",
+                                                    onSuccess: (user) {
+                                                  print("createdUser$user");
+                                                }, onError: (e) {
+                                                  print(e.toString());
+                                                });
                                                 getRegister(context);
                                               },
                                             )

@@ -23,7 +23,7 @@ class ReplyCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   left: 8,
                   right: 50,
                   top: 5,

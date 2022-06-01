@@ -16,40 +16,39 @@ import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
 
-
 class DeatailsPopBox extends StatefulWidget {
-   String Idocid;
-   int CxID;
-   String taskname;
-   Timestamp startDate;
-   String endDate;
-   String priority;
-   Timestamp lastseen;
-   String cat;
-   String message;
-   String status;
-   int s;
-   int f;
-   List assigns;
-   int leadID;
-   List<ActivityModel> list;
-
+  String Idocid;
+  int CxID;
+  String taskname;
+  Timestamp startDate;
+  String endDate;
+  String priority;
+  Timestamp lastseen;
+  String cat;
+  String message;
+  String status;
+  int s;
+  int f;
+  List assigns;
+  int leadID;
+  List<ActivityModel> list;
 
   DeatailsPopBox(
-      {
-        required this.Idocid,
-        required this.CxID,
-        required this.taskname,
-        required this.status,
-        required this.cat,
-        required this.endDate,
-        required this.message,
-        required this.startDate,
-        required this.priority,
-        required this.lastseen,
-        required this.f,
-        required this.s,
-        required this.assigns,required this.leadID,required this.list});
+      {required this.Idocid,
+      required this.CxID,
+      required this.taskname,
+      required this.status,
+      required this.cat,
+      required this.endDate,
+      required this.message,
+      required this.startDate,
+      required this.priority,
+      required this.lastseen,
+      required this.f,
+      required this.s,
+      required this.assigns,
+      required this.leadID,
+      required this.list});
 
   @override
   _DeatailsPopBoxState createState() => _DeatailsPopBoxState();
@@ -83,13 +82,13 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _paymentController = TextEditingController();
   final TextEditingController _dealController = TextEditingController();
-  final TextEditingController _paymentRecieveController = TextEditingController();
+  final TextEditingController _paymentRecieveController =
+      TextEditingController();
   final TextEditingController _sampleController = TextEditingController();
   final TextEditingController _advanceController = TextEditingController();
   final TextEditingController _taxController = TextEditingController();
   final TextEditingController _balanceController = TextEditingController();
   final TextEditingController _tdsController = TextEditingController();
-
 
   Widget mytitile = Text(
     "Search Example",
@@ -120,8 +119,10 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("Bio-medical waste management");
     _mysearchList.add("STQC certification");
     _mysearchList.add("CPCB guidelines for poultry farms");
-    _mysearchList.add("CPCB guidelines for environmental management of dairy farms and gaushalas");
-    _mysearchList.add("Delhi Pollution Control Committee (DPCC) & Waste Management Authorization");
+    _mysearchList.add(
+        "CPCB guidelines for environmental management of dairy farms and gaushalas");
+    _mysearchList.add(
+        "Delhi Pollution Control Committee (DPCC) & Waste Management Authorization");
     _mysearchList.add("Haryana State Pollution Control Board, HPCB");
     _mysearchList.add("Uttar Pradesh Pollution Control Board, UPPCB");
     _mysearchList.add("Maharashtra State Pollution Control Board, MPCB");
@@ -302,7 +303,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("Israel global certification");
     _mysearchList.add("Israel certification");
     _mysearchList.add("MoC certification");
-    _mysearchList.add( "Israel MoC");
+    _mysearchList.add("Israel MoC");
     _mysearchList.add("TRC type approval");
     _mysearchList.add("TRC Jordan type approval");
     _mysearchList.add("Jordan type approval / TRC type approval");
@@ -352,7 +353,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("Telangana Pollution Board NOC, TSPCB");
     _mysearchList.add("Chhattisgarh Pollution Board NOC, CPCB");
     _mysearchList.add("Jharkhand Pollution Board NOC, JSPCB");
-    _mysearchList.add("Uttarakhand Environment Protection and Pollution Board NOC, UEPPCB");
+    _mysearchList.add(
+        "Uttarakhand Environment Protection and Pollution Board NOC, UEPPCB");
     _mysearchList.add("Himachal Pradesh Pollution Board NOC, HPPCB");
     _mysearchList.add("West Bengal Pollution Board NOC, WBPCB");
     _mysearchList.add("Kerala Pollution Board NOC, KPCB");
@@ -393,7 +395,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("China CCC certification service");
     _mysearchList.add("CCC certificate");
     _mysearchList.add("CCC automotive certification");
-    _mysearchList.add( "china CCC automotive certification");
+    _mysearchList.add("china CCC automotive certification");
     _mysearchList.add("China SRRC Certification");
     _mysearchList.add("SRRC certificate");
     _mysearchList.add("China NAL Certification");
@@ -402,9 +404,11 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("CCIS certificate");
     _mysearchList.add("China MIIT Network approval license");
     _mysearchList.add("MIIT approval");
-    _mysearchList.add("Ministry of Information and Information Technology Approval");
+    _mysearchList
+        .add("Ministry of Information and Information Technology Approval");
     _mysearchList.add("China CMIIT Radio Type Approval");
-    _mysearchList.add("China Ministry of Industry and Information Technology approval");
+    _mysearchList
+        .add("China Ministry of Industry and Information Technology approval");
     _mysearchList.add("China CEL Certification");
     _mysearchList.add("CEL Certificate");
     _mysearchList.add("NOM Certification");
@@ -435,16 +439,21 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("GOST-R certification");
     _mysearchList.add("Radio import");
     _mysearchList.add("ICASA Telecom Equipment Type Approval");
-    _mysearchList.add("Independent Communication Authority of South Africa approval");
+    _mysearchList
+        .add("Independent Communication Authority of South Africa approval");
     _mysearchList.add("NRCS certification");
-    _mysearchList.add("National Regulator for Compulsory Specifications certification");
+    _mysearchList
+        .add("National Regulator for Compulsory Specifications certification");
     _mysearchList.add("SABS certification");
     _mysearchList.add("South African Bureau of Standards certification");
     _mysearchList.add("KEBS certification");
     _mysearchList.add("NRTA certification");
-    _mysearchList.add("National Telecommunication Regulatory Authority certification");
-    _mysearchList.add("CoC certificate, Certificat de controle de qualite certification");
-    _mysearchList.add("Korea Conformity Assessment System for Broadcasting and Communications Equipment certification");
+    _mysearchList
+        .add("National Telecommunication Regulatory Authority certification");
+    _mysearchList.add(
+        "CoC certificate, Certificat de controle de qualite certification");
+    _mysearchList.add(
+        "Korea Conformity Assessment System for Broadcasting and Communications Equipment certification");
     _mysearchList.add("CE certification, Conformite Europeenne certification");
     _mysearchList.add("UKCA mark");
     _mysearchList.add("UK Conformity Assessed mark");
@@ -454,12 +463,12 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     _mysearchList.add("INMETRO certification");
     _mysearchList.add("Institute of Metrology");
     _mysearchList.add("Standardisation and Industrial Quality certification");
-    _mysearchList.add("ENACOM approval, Ente Nacional de Comunicaciones approval");
+    _mysearchList
+        .add("ENACOM approval, Ente Nacional de Comunicaciones approval");
     _mysearchList.add("IRAM certification");
     _mysearchList.add("Instituto Argentino de Normalizacion y Certificacion");
     _mysearchList.add("Industry Canada (IC) Certification");
   }
-
 
   void _myhandleSearchEnd() {
     setState(() {
@@ -478,30 +487,35 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       for (int i = 0; i < _mysearchList.length; i++) {
         String data = _mysearchList[i];
         if (data.toLowerCase().contains(searchText.toLowerCase())) {
-          setState((){});
+          setState(() {});
           mysearchresult.add(data);
         }
       }
     }
   }
+
   @override
   void initState() {
     super.initState();
     myvalues();
     setState(() {
       print(widget.Idocid);
-      Provider.of<ActivityProvider>(context,listen: false).getAllActivitys(widget.Idocid);
+      Provider.of<ActivityProvider>(context, listen: false)
+          .getAllActivitys(widget.Idocid);
     });
   }
+
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
-    String createDate = DateFormat('EEE | MMM dd, yy').format(widget.startDate.toDate());
+    String createDate =
+        DateFormat('EEE | MMM dd, yy').format(widget.startDate.toDate());
     DateTime dt = DateTime.parse(widget.endDate);
     String deadline = DateFormat('EEE | MMM dd, yy').format(dt);
-    String lastview = DateFormat('EEE | MMM dd, yy').format(widget.lastseen.toDate());
-    String lastviewTime = DateFormat('hh:mm a').format(widget.lastseen.toDate());
+    String lastview =
+        DateFormat('EEE | MMM dd, yy').format(widget.lastseen.toDate());
+    String lastviewTime =
+        DateFormat('hh:mm a').format(widget.lastseen.toDate());
     return AlertDialog(
       contentPadding: EdgeInsets.all(0),
       actionsPadding: EdgeInsets.all(0),
@@ -520,18 +534,21 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset("assets/Logos/Controlifylogo.png",
-                height: 50,
-                width: 500,
-                filterQuality: FilterQuality.high,fit: BoxFit.cover,),
+            Image.asset(
+              "assets/Logos/Controlifylogo.png",
+              height: 50,
+              width: 500,
+              filterQuality: FilterQuality.high,
+              fit: BoxFit.cover,
+            ),
             Column(
               children: [
                 Text(
-                  "CxID: "+widget.CxID.toString(),
+                  "CxID: " + widget.CxID.toString(),
                   style: TxtStls.fieldtitlestyle,
                 ),
                 Text(
-                  "LeadID: JRL-${widget.leadID<10?"0${widget.leadID}":widget.leadID}",
+                  "LeadID: JRL-${widget.leadID < 10 ? "0${widget.leadID}" : widget.leadID}",
                   style: TxtStls.fieldtitlestyle,
                 ),
               ],
@@ -554,7 +571,6 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       ),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-
           _mysearchController.addListener(() {
             if (_mysearchController.text.isEmpty) {
               setState(() {
@@ -591,7 +607,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                             decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -601,21 +617,21 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       child: Container(
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             CircleAvatar(
                                                 backgroundColor:
-                                                btnColor.withOpacity(0.1),
+                                                    btnColor.withOpacity(0.1),
                                                 child: _isHover[0]
                                                     ? Lottie.asset(
-                                                  "assets/Lotties/createdate.json",
-                                                )
+                                                        "assets/Lotties/createdate.json",
+                                                      )
                                                     : Icon(
-                                                  Icons
-                                                      .calendar_today_outlined,
-                                                  color: btnColor,
-                                                  size: 20,
-                                                )),
+                                                        Icons
+                                                            .calendar_today_outlined,
+                                                        color: btnColor,
+                                                        size: 20,
+                                                      )),
                                             Text(createDate,
                                                 style: TxtStls.fieldstyle),
                                           ],
@@ -639,11 +655,11 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       child: Container(
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             CircleAvatar(
                                                 backgroundColor:
-                                                btnColor.withOpacity(0.1),
+                                                    btnColor.withOpacity(0.1),
                                                 child: Lottie.asset(
                                                     "assets/Lotties/lastdate.json",
                                                     animate: _isHover[1])),
@@ -668,12 +684,13 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       alignment: Alignment.center,
                                       child: CircleAvatar(
                                         backgroundColor:
-                                        FlagService.pricolorget(widget.priority)
-                                            .withOpacity(0.1),
+                                            FlagService.pricolorget(
+                                                    widget.priority)
+                                                .withOpacity(0.1),
                                         child: Icon(
                                           Icons.flag,
-                                          color:
-                                          FlagService.pricolorget(widget.priority),
+                                          color: FlagService.pricolorget(
+                                              widget.priority),
                                         ),
                                       )),
                                 ),
@@ -689,28 +706,28 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       alignment: Alignment.center,
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           CircleAvatar(
                                               backgroundColor:
-                                              btnColor.withOpacity(0.1),
+                                                  btnColor.withOpacity(0.1),
                                               child: SizedBox(
                                                 width: 50,
                                                 height: 50,
                                                 child: _isHover[2]
                                                     ? Lottie.asset(
-                                                  "assets/Lotties/lastseen.json",
-                                                  fit: BoxFit.fill,
-                                                )
+                                                        "assets/Lotties/lastseen.json",
+                                                        fit: BoxFit.fill,
+                                                      )
                                                     : Icon(
-                                                  Icons.remove_red_eye,
-                                                  color: btnColor,
-                                                  size: 32,
-                                                ),
+                                                        Icons.remove_red_eye,
+                                                        color: btnColor,
+                                                        size: 32,
+                                                      ),
                                               )),
                                           Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(lastview,
                                                   style: TxtStls.fieldstyle),
@@ -744,19 +761,19 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                             decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CircleAvatar(
                                         backgroundColor:
-                                        btnColor.withOpacity(0.1),
+                                            btnColor.withOpacity(0.1),
                                         child:
-                                        Icon(Icons.work, color: btnColor)),
+                                            Icon(Icons.work, color: btnColor)),
                                     Text("Organisation",
                                         style: TxtStls.fieldstyle)
                                   ],
@@ -775,7 +792,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           .snapshots(),
                                       builder: (BuildContext context,
                                           AsyncSnapshot<QuerySnapshot>
-                                          snapshot) {
+                                              snapshot) {
                                         if (!snapshot.hasData) {
                                           return Container();
                                         }
@@ -785,7 +802,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                             return ListTile(
                                               leading: CircleAvatar(
                                                 backgroundColor:
-                                                btnColor.withOpacity(0.2),
+                                                    btnColor.withOpacity(0.2),
                                                 child: SizedBox(
                                                   width: 30,
                                                   height: 30,
@@ -796,13 +813,13 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               ),
                                               title: Text(
                                                   snapshot.data!.docs[index]
-                                                  ["companyname"],
+                                                      ["companyname"],
                                                   style: TxtStls.fieldstyle),
                                               trailing: CircleAvatar(
                                                 maxRadius: 15,
                                                 child: IconButton(
                                                   hoverColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   icon: Icon(
                                                     Icons.edit,
                                                     size: 12.5,
@@ -811,7 +828,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                   onPressed: () {},
                                                 ),
                                                 backgroundColor:
-                                                btnColor.withOpacity(0.075),
+                                                    btnColor.withOpacity(0.075),
                                               ),
                                             );
                                           },
@@ -831,18 +848,18 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                             decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             width: size.width * 0.85 / 2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CircleAvatar(
                                       backgroundColor:
-                                      btnColor.withOpacity(0.1),
+                                          btnColor.withOpacity(0.1),
                                       child: Lottie.asset(
                                           "assets/Lotties/check.json",
                                           fit: BoxFit.fitHeight),
@@ -878,8 +895,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               ),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceEvenly,
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 children: [
                                                   Icon(
                                                     Icons.delete,
@@ -905,12 +922,12 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             width: size.width * 0.85 / 2,
                             child: StreamBuilder(
                               stream: FirebaseFirestore.instance
@@ -932,7 +949,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                     return ListView.builder(
                                         shrinkWrap: true,
                                         physics:
-                                        AlwaysScrollableScrollPhysics(),
+                                            AlwaysScrollableScrollPhysics(),
                                         itemCount: contactlist.length,
                                         itemBuilder: (_, i) {
                                           return Padding(
@@ -945,14 +962,14 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                 height: 50,
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceAround,
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
                                                     Expanded(
                                                       flex: 3,
                                                       child: Text(
                                                           contactlist[i]
-                                                          ["contactperson"],
+                                                              ["contactperson"],
                                                           style: TxtStls
                                                               .fieldstyle),
                                                     ),
@@ -976,8 +993,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                               ),
                                                               TextSpan(
                                                                   text: contactlist[
-                                                                  i]
-                                                                  ["email"],
+                                                                          i]
+                                                                      ["email"],
                                                                   style: TxtStls
                                                                       .fieldstyle),
                                                             ],
@@ -1002,9 +1019,9 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                             ),
                                                             TextSpan(
                                                                 text:
-                                                                contactlist[
-                                                                i][
-                                                                "phone"],
+                                                                    contactlist[
+                                                                            i][
+                                                                        "phone"],
                                                                 style: TxtStls
                                                                     .fieldstyle),
                                                           ],
@@ -1015,16 +1032,16 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                         flex: 1,
                                                         child: CircleAvatar(
                                                           backgroundColor:
-                                                          btnColor
-                                                              .withOpacity(
-                                                              0.1),
+                                                              btnColor
+                                                                  .withOpacity(
+                                                                      0.1),
                                                           child:
-                                                          PopupMenuButton(
+                                                              PopupMenuButton(
                                                             offset:
-                                                            Offset(-50, 32),
+                                                                Offset(-50, 32),
                                                             elevation: 10.0,
                                                             shape:
-                                                            TooltipShape(),
+                                                                TooltipShape(),
                                                             icon: Icon(
                                                               Icons.more_horiz,
                                                               color: btnColor,
@@ -1040,33 +1057,33 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                                 PopupMenuItem(
                                                                     value: 1,
                                                                     child:
-                                                                    Container(
+                                                                        Container(
                                                                       padding:
-                                                                      EdgeInsets.all(
-                                                                          5),
+                                                                          EdgeInsets.all(
+                                                                              5),
                                                                       decoration:
-                                                                      BoxDecoration(
+                                                                          BoxDecoration(
                                                                         borderRadius:
-                                                                        BorderRadius.all(Radius.circular(5)),
+                                                                            BorderRadius.all(Radius.circular(5)),
                                                                         color: btnColor
                                                                             .withOpacity(0.1),
                                                                       ),
                                                                       child:
-                                                                      Row(
+                                                                          Row(
                                                                         mainAxisAlignment:
-                                                                        MainAxisAlignment.spaceEvenly,
+                                                                            MainAxisAlignment.spaceEvenly,
                                                                         children: [
                                                                           Icon(
                                                                             Icons.edit,
                                                                             size:
-                                                                            15,
+                                                                                15,
                                                                             color:
-                                                                            btnColor,
+                                                                                btnColor,
                                                                           ),
                                                                           Text(
                                                                             "Edit",
                                                                             style:
-                                                                            ClrStls.tnClr,
+                                                                                ClrStls.tnClr,
                                                                           )
                                                                         ],
                                                                       ),
@@ -1074,33 +1091,33 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                                 PopupMenuItem(
                                                                     value: 2,
                                                                     child:
-                                                                    Container(
+                                                                        Container(
                                                                       padding:
-                                                                      EdgeInsets.all(
-                                                                          5),
+                                                                          EdgeInsets.all(
+                                                                              5),
                                                                       decoration:
-                                                                      BoxDecoration(
+                                                                          BoxDecoration(
                                                                         borderRadius:
-                                                                        BorderRadius.all(Radius.circular(5)),
+                                                                            BorderRadius.all(Radius.circular(5)),
                                                                         color: neClr
                                                                             .withOpacity(0.1),
                                                                       ),
                                                                       child:
-                                                                      Row(
+                                                                          Row(
                                                                         mainAxisAlignment:
-                                                                        MainAxisAlignment.spaceEvenly,
+                                                                            MainAxisAlignment.spaceEvenly,
                                                                         children: [
                                                                           Icon(
                                                                             Icons.delete,
                                                                             size:
-                                                                            15,
+                                                                                15,
                                                                             color:
-                                                                            neClr,
+                                                                                neClr,
                                                                           ),
                                                                           Text(
                                                                             "Delete",
                                                                             style:
-                                                                            ClrStls.endClr,
+                                                                                ClrStls.endClr,
                                                                           )
                                                                         ],
                                                                       ),
@@ -1138,9 +1155,9 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           Radius.circular(10))),
                                   child: Column(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text("Attachments :",
                                           style: TxtStls.fieldtitlestyle),
@@ -1150,11 +1167,12 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           child: StreamBuilder(
                                               stream: FirebaseFirestore.instance
                                                   .collection("Tasks")
-                                                  .where("id", isEqualTo: widget.Idocid)
+                                                  .where("id",
+                                                      isEqualTo: widget.Idocid)
                                                   .snapshots(),
                                               builder: (BuildContext context,
                                                   AsyncSnapshot<QuerySnapshot>
-                                                  snapshot) {
+                                                      snapshot) {
                                                 if (!snapshot.hasData) {
                                                   return Container(
                                                       width: 100,
@@ -1165,43 +1183,43 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                 return ListView.separated(
                                                   separatorBuilder:
                                                       (_, index) =>
-                                                      SizedBox(height: 1),
+                                                          SizedBox(height: 1),
                                                   shrinkWrap: true,
                                                   scrollDirection:
-                                                  Axis.vertical,
+                                                      Axis.vertical,
                                                   physics:
-                                                  AlwaysScrollableScrollPhysics(),
+                                                      AlwaysScrollableScrollPhysics(),
                                                   itemCount: snapshot
                                                       .data!.docs.length,
                                                   itemBuilder:
                                                       (BuildContext context,
-                                                      int index) {
+                                                          int index) {
                                                     List attachments1 = snapshot
-                                                        .data!.docs[index]
-                                                    ["Attachments1"];
+                                                            .data!.docs[index]
+                                                        ["Attachments1"];
                                                     return ListView.separated(
                                                       shrinkWrap: true,
                                                       itemCount:
-                                                      attachments1.length,
+                                                          attachments1.length,
                                                       itemBuilder:
                                                           (BuildContext context,
-                                                          i) {
+                                                              i) {
                                                         return ListTile(
                                                           leading: SizedBox(
                                                             height:
-                                                            size.height *
-                                                                0.025,
+                                                                size.height *
+                                                                    0.025,
                                                             child: Image.asset(
                                                                 "assets/Images/pdf.png",
                                                                 filterQuality:
-                                                                FilterQuality
-                                                                    .high,
+                                                                    FilterQuality
+                                                                        .high,
                                                                 fit: BoxFit
                                                                     .cover),
                                                           ),
                                                           title: Text(
                                                             attachments1[i]
-                                                            ['name'],
+                                                                ['name'],
                                                             style: TxtStls
                                                                 .fieldstyle,
                                                           ),
@@ -1209,17 +1227,17 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                                             fileview1(
                                                                 context,
                                                                 attachments1[i]
-                                                                ["name"],
+                                                                    ["name"],
                                                                 attachments1[i]
-                                                                ["url"]);
+                                                                    ["url"]);
                                                           },
                                                         );
                                                       },
                                                       separatorBuilder:
                                                           (BuildContext context,
-                                                          int index) =>
-                                                          Divider(
-                                                              color: grClr),
+                                                                  int index) =>
+                                                              Divider(
+                                                                  color: grClr),
                                                     );
                                                   },
                                                 );
@@ -1246,8 +1264,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               style: TxtStls.fieldstyle1),
                                           onPressed: () {
                                             Provider.of<AddDocumentsProvider>(
-                                                context,
-                                                listen: false)
+                                                    context,
+                                                    listen: false)
                                                 .addDocument(widget.Idocid);
                                           },
                                         ),
@@ -1270,7 +1288,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           Radius.circular(10))),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text("Services Obtained :",
                                           style: TxtStls.fieldtitlestyle),
@@ -1291,23 +1309,23 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               decoration: new InputDecoration(
                                                   suffixIcon: _mySearching
                                                       ? IconButton(
-                                                    icon: Icon(
-                                                      Icons.cancel,
-                                                      color: btnColor,
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {});
-                                                      _mySearching !=
-                                                          _mySearching;
-                                                      _myhandleSearchEnd();
-                                                    },
-                                                  )
+                                                          icon: Icon(
+                                                            Icons.cancel,
+                                                            color: btnColor,
+                                                          ),
+                                                          onPressed: () {
+                                                            setState(() {});
+                                                            _mySearching !=
+                                                                _mySearching;
+                                                            _myhandleSearchEnd();
+                                                          },
+                                                        )
                                                       : Icon(Icons.search,
-                                                      color: btnColor),
+                                                          color: btnColor),
                                                   border: InputBorder.none,
                                                   hintText: "Search...",
                                                   hintStyle:
-                                                  TxtStls.fieldstyle),
+                                                      TxtStls.fieldstyle),
                                               onChanged: mysearchOperation,
                                             ),
                                           ),
@@ -1315,94 +1333,95 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       ),
                                       StatefulBuilder(builder:
                                           (BuildContext context,
-                                          StateSetter setState) {
+                                              StateSetter setState) {
                                         return _mysearchController
-                                            .text.isNotEmpty
+                                                .text.isNotEmpty
                                             ? Flexible(
-                                          flex: 1,
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount:
-                                            mysearchresult.length,
-                                            itemBuilder:
-                                                (BuildContext context,
-                                                int index) {
-                                              String listData =
-                                              mysearchresult[index];
-                                              return ListTile(
-                                                title: Text(
-                                                    listData.toString(),
-                                                    style: TxtStls
-                                                        .fieldstyle),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            10.0))),
-                                                onTap: () {
-                                                  Provider.of<AddServiceProvider>(
-                                                      context,
-                                                      listen: false)
-                                                      .addService(
-                                                      widget.Idocid,
-                                                      mysearchresult[
-                                                      index])
-                                                      .then((value) =>
-                                                      _mysearchController
-                                                          .clear());
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        )
-                                            : Flexible(
-                                          child: StreamBuilder(
-                                              stream: FirebaseFirestore
-                                                  .instance
-                                                  .collection("Tasks")
-                                                  .where("id",
-                                                  isEqualTo: widget.Idocid)
-                                                  .snapshots(),
-                                              builder: (BuildContext
-                                              context,
-                                                  AsyncSnapshot<
-                                                      QuerySnapshot>
-                                                  snapshot) {
-                                                if (!snapshot.hasData) {
-                                                  return Container();
-                                                }
-                                                return ListView.builder(
+                                                flex: 1,
+                                                child: ListView.builder(
                                                   shrinkWrap: true,
-                                                  physics:
-                                                  AlwaysScrollableScrollPhysics(),
-                                                  itemCount: snapshot
-                                                      .data!.docs.length,
+                                                  itemCount:
+                                                      mysearchresult.length,
                                                   itemBuilder:
-                                                      (BuildContext
-                                                  context,
-                                                      int index) {
-                                                    List certificates =
-                                                    snapshot.data!
-                                                        .docs[
-                                                    index][
-                                                    "Certificates"];
-                                                    String id = snapshot
-                                                        .data!
-                                                        .docs[index]
-                                                    ["id"];
-                                                    return Wrap(
-                                                      children:
-                                                      certificates
-                                                          .map((e) =>
-                                                          service(
-                                                              e,
-                                                              id))
-                                                          .toList(),
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String listData =
+                                                        mysearchresult[index];
+                                                    return ListTile(
+                                                      title: Text(
+                                                          listData.toString(),
+                                                          style: TxtStls
+                                                              .fieldstyle),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      10.0))),
+                                                      onTap: () {
+                                                        Provider.of<AddServiceProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .addService(
+                                                                widget.Idocid,
+                                                                mysearchresult[
+                                                                    index])
+                                                            .then((value) =>
+                                                                _mysearchController
+                                                                    .clear());
+                                                      },
                                                     );
                                                   },
-                                                );
-                                              }),
-                                        );
+                                                ),
+                                              )
+                                            : Flexible(
+                                                child: StreamBuilder(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection("Tasks")
+                                                        .where("id",
+                                                            isEqualTo:
+                                                                widget.Idocid)
+                                                        .snapshots(),
+                                                    builder: (BuildContext
+                                                            context,
+                                                        AsyncSnapshot<
+                                                                QuerySnapshot>
+                                                            snapshot) {
+                                                      if (!snapshot.hasData) {
+                                                        return Container();
+                                                      }
+                                                      return ListView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            AlwaysScrollableScrollPhysics(),
+                                                        itemCount: snapshot
+                                                            .data!.docs.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          List certificates =
+                                                              snapshot.data!
+                                                                          .docs[
+                                                                      index][
+                                                                  "Certificates"];
+                                                          String id = snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                              ["id"];
+                                                          return Wrap(
+                                                            children:
+                                                                certificates
+                                                                    .map((e) =>
+                                                                        service(
+                                                                            e,
+                                                                            id))
+                                                                    .toList(),
+                                                          );
+                                                        },
+                                                      );
+                                                    }),
+                                              );
                                       })
                                     ],
                                   ),
@@ -1416,1163 +1435,1163 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                         flex: 3,
                         child: cat == "WON"
                             ? Padding(
-                          padding:
-                          const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(10.0)),
-                              color: bgColor,
-                            ),
-                            child: DefaultTabController(
-                              initialIndex: _selectedIndex,
-                              length: 3,
-                              child: Scaffold(
-                                backgroundColor: bgColor,
-                                appBar: AppBar(
-                                  toolbarHeight: 30,
-                                  backgroundColor: bgColor,
-                                  elevation: 0.0,
-                                  automaticallyImplyLeading: false,
-                                  centerTitle: true,
-                                  title: TabBar(
-                                    controller: _controller,
-                                    indicator: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(30),
-                                      color: neClr,
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    color: bgColor,
+                                  ),
+                                  child: DefaultTabController(
+                                    initialIndex: _selectedIndex,
+                                    length: 3,
+                                    child: Scaffold(
+                                      backgroundColor: bgColor,
+                                      appBar: AppBar(
+                                        toolbarHeight: 30,
+                                        backgroundColor: bgColor,
+                                        elevation: 0.0,
+                                        automaticallyImplyLeading: false,
+                                        centerTitle: true,
+                                        title: TabBar(
+                                          controller: _controller,
+                                          indicator: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: neClr,
+                                          ),
+                                          tabs: [
+                                            Tab(child: Text("Payment Terms 1")),
+                                            Tab(child: Text("Payment Terms 2")),
+                                            Tab(child: Text("Comments")),
+                                          ],
+                                        ),
+                                      ),
+                                      body: TabBarView(
+                                        controller: _controller,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Advance required",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _isadvance,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isadvance =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _isadvance,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isadvance =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("TDS Applicable",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _istds,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _istds =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _istds,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _istds =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("GST Applicable",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _isgst,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isgst =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _isgst,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _isgst =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Clients Location",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value:
+                                                                    "Domestic",
+                                                                groupValue:
+                                                                    _islocation,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _islocation =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("Domestic",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value:
+                                                                    "International",
+                                                                groupValue:
+                                                                    _islocation,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _islocation =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text(
+                                                                "International",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Sample required",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "YES",
+                                                                groupValue:
+                                                                    _issample,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _issample =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("YES",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Radio(
+                                                                value: "NO",
+                                                                groupValue:
+                                                                    _issample,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  _issample =
+                                                                      value;
+                                                                  setState(
+                                                                      () {});
+                                                                }),
+                                                            Text("NO",
+                                                                style: TxtStls
+                                                                    .fieldstyle)
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: CircleAvatar(
+                                                    backgroundColor: btnColor
+                                                        .withOpacity(0.1),
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                          Icons
+                                                              .arrow_forward_rounded,
+                                                          color: btnColor),
+                                                      onPressed: () {
+                                                        _controller!.animateTo(
+                                                            _selectedIndex +=
+                                                                1);
+                                                      },
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 100,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Text("Slab Percentage",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Advance : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _advanceController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_advanceController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _advanceController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_advanceController.text);
+                                                                              setState(() {
+                                                                                currentValue--;
+                                                                                _advanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Tax : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _taxController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_taxController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _taxController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_taxController.text);
+                                                                              setState(() {
+                                                                                currentValue--;
+                                                                                _taxController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("Balance : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _balanceController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_balanceController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _balanceController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_balanceController.text);
+                                                                              setState(() {
+                                                                                currentValue--;
+                                                                                _balanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 170,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text("TDS : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 70,
+                                                                height: 25,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Row(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Expanded(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          left:
+                                                                              4,
+                                                                          right:
+                                                                              2,
+                                                                          bottom:
+                                                                              12,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          style:
+                                                                              TxtStls.fieldstyle,
+                                                                          decoration:
+                                                                              InputDecoration(border: InputBorder.none),
+                                                                          controller:
+                                                                              _tdsController,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(
+                                                                            decimal:
+                                                                                false,
+                                                                            signed:
+                                                                                true,
+                                                                          ),
+                                                                          inputFormatters: <
+                                                                              TextInputFormatter>[],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          30.0,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_up,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_tdsController.text);
+                                                                              setState(() {
+                                                                                currentValue++;
+                                                                                _tdsController.text = (currentValue).toString(); // incrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.arrow_drop_down,
+                                                                              size: 12.0,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              int currentValue = int.parse(_tdsController.text);
+                                                                              setState(() {
+                                                                                currentValue--;
+                                                                                _tdsController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
+                                                                              });
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text("Fee Payment",
+                                                            style: TxtStls
+                                                                .fieldtitlestyle),
+                                                        Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    "Government Fee",
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "Client",
+                                                                        groupValue:
+                                                                            _govtfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _govtfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By Client",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "jr",
+                                                                        groupValue:
+                                                                            _govtfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _govtfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By JrCompliance",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                    "Testing Fee",
+                                                                    style: TxtStls
+                                                                        .fieldtitlestyle),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "Client",
+                                                                        groupValue:
+                                                                            _testfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _testfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By Client",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Radio(
+                                                                        value:
+                                                                            "jr",
+                                                                        groupValue:
+                                                                            _testfee,
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          _testfee =
+                                                                              value;
+                                                                          setState(
+                                                                              () {});
+                                                                        }),
+                                                                    Text(
+                                                                        "By JrCompliance",
+                                                                        style: TxtStls
+                                                                            .fieldstyle)
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Deal Size : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _dealController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Payment Recieved Date : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _paymentRecieveController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          width: 270,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                  "Samples Recieved Date : ",
+                                                                  style: TxtStls
+                                                                      .fieldstyle),
+                                                              Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: 120,
+                                                                height: 30,
+                                                                decoration:
+                                                                    deco,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 2,
+                                                                    right: 2,
+                                                                    bottom:
+                                                                        12.5,
+                                                                  ),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        _sampleController,
+                                                                    style: TxtStls
+                                                                        .fieldstyle,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TxtStls
+                                                                              .fieldstyle,
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
+                                                                    validator:
+                                                                        (fullname) {
+                                                                      if (fullname!
+                                                                          .isEmpty) {
+                                                                        return "Name can not be empty";
+                                                                      } else if (fullname
+                                                                              .length <
+                                                                          3) {
+                                                                        return "Name should be atleast 3 letters";
+                                                                      } else {
+                                                                        return null;
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 80,
+                                                      width: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor: btnColor
+                                                          .withOpacity(0.1),
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                            Icons
+                                                                .arrow_back_rounded,
+                                                            color: btnColor),
+                                                        onPressed: () {
+                                                          _controller!.animateTo(
+                                                              _selectedIndex -=
+                                                                  1);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    CircleAvatar(
+                                                      backgroundColor: btnColor
+                                                          .withOpacity(0.1),
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                            Icons
+                                                                .arrow_forward_rounded,
+                                                            color: btnColor),
+                                                        onPressed: () {
+                                                          _controller!.animateTo(
+                                                              _selectedIndex +=
+                                                                  1);
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          tab3(),
+                                        ],
+                                      ),
                                     ),
-                                    tabs: [
-                                      Tab(child: Text("Payment Terms 1")),
-                                      Tab(child: Text("Payment Terms 2")),
-                                      Tab(child: Text("Comments")),
-                                    ],
                                   ),
                                 ),
-                                body: TabBarView(
-                                  controller: _controller,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceAround,
-                                            children: [
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("Advance required",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "YES",
-                                                          groupValue:
-                                                          _isadvance,
-                                                          onChanged:
-                                                              (value) {
-                                                            _isadvance =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("YES",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "NO",
-                                                          groupValue:
-                                                          _isadvance,
-                                                          onChanged:
-                                                              (value) {
-                                                            _isadvance =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("NO",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("TDS Applicable",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "YES",
-                                                          groupValue:
-                                                          _istds,
-                                                          onChanged:
-                                                              (value) {
-                                                            _istds =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("YES",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "NO",
-                                                          groupValue:
-                                                          _istds,
-                                                          onChanged:
-                                                              (value) {
-                                                            _istds =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("NO",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("GST Applicable",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "YES",
-                                                          groupValue:
-                                                          _isgst,
-                                                          onChanged:
-                                                              (value) {
-                                                            _isgst =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("YES",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "NO",
-                                                          groupValue:
-                                                          _isgst,
-                                                          onChanged:
-                                                              (value) {
-                                                            _isgst =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("NO",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("Clients Location",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value:
-                                                          "Domestic",
-                                                          groupValue:
-                                                          _islocation,
-                                                          onChanged:
-                                                              (value) {
-                                                            _islocation =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("Domestic",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value:
-                                                          "International",
-                                                          groupValue:
-                                                          _islocation,
-                                                          onChanged:
-                                                              (value) {
-                                                            _islocation =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text(
-                                                          "International",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("Sample required",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "YES",
-                                                          groupValue:
-                                                          _issample,
-                                                          onChanged:
-                                                              (value) {
-                                                            _issample =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("YES",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Radio(
-                                                          value: "NO",
-                                                          groupValue:
-                                                          _issample,
-                                                          onChanged:
-                                                              (value) {
-                                                            _issample =
-                                                                value;
-                                                            setState(
-                                                                    () {});
-                                                          }),
-                                                      Text("NO",
-                                                          style: TxtStls
-                                                              .fieldstyle)
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                            ],
-                                          ),
-                                          Align(
-                                            alignment:
-                                            Alignment.bottomRight,
-                                            child: CircleAvatar(
-                                              backgroundColor: btnColor
-                                                  .withOpacity(0.1),
-                                              child: IconButton(
-                                                icon: Icon(
-                                                    Icons
-                                                        .arrow_forward_rounded,
-                                                    color: btnColor),
-                                                onPressed: () {
-                                                  _controller!.animateTo(
-                                                      _selectedIndex +=
-                                                      1);
-                                                },
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceAround,
-                                            children: [
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 100,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                children: [
-                                                  Text("Slab Percentage",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Container(
-                                                    width: 170,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text("Advance : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 70,
-                                                          height: 25,
-                                                          decoration:
-                                                          deco,
-                                                          child: Row(
-                                                            children: <
-                                                                Widget>[
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                    left:
-                                                                    4,
-                                                                    right:
-                                                                    2,
-                                                                    bottom:
-                                                                    12,
-                                                                  ),
-                                                                  child:
-                                                                  TextFormField(
-                                                                    style:
-                                                                    TxtStls.fieldstyle,
-                                                                    decoration:
-                                                                    InputDecoration(border: InputBorder.none),
-                                                                    controller:
-                                                                    _advanceController,
-                                                                    keyboardType:
-                                                                    TextInputType.numberWithOptions(
-                                                                      decimal:
-                                                                      false,
-                                                                      signed:
-                                                                      true,
-                                                                    ),
-                                                                    inputFormatters: <
-                                                                        TextInputFormatter>[],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                height:
-                                                                30.0,
-                                                                child:
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment.center,
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment.center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_up,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_advanceController.text);
-                                                                        setState(() {
-                                                                          currentValue++;
-                                                                          _advanceController.text = (currentValue).toString(); // incrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_down,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_advanceController.text);
-                                                                        setState(() {
-                                                                          currentValue--;
-                                                                          _advanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: 170,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text("Tax : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 70,
-                                                          height: 25,
-                                                          decoration:
-                                                          deco,
-                                                          child: Row(
-                                                            children: <
-                                                                Widget>[
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                    left:
-                                                                    4,
-                                                                    right:
-                                                                    2,
-                                                                    bottom:
-                                                                    12,
-                                                                  ),
-                                                                  child:
-                                                                  TextFormField(
-                                                                    style:
-                                                                    TxtStls.fieldstyle,
-                                                                    decoration:
-                                                                    InputDecoration(border: InputBorder.none),
-                                                                    controller:
-                                                                    _taxController,
-                                                                    keyboardType:
-                                                                    TextInputType.numberWithOptions(
-                                                                      decimal:
-                                                                      false,
-                                                                      signed:
-                                                                      true,
-                                                                    ),
-                                                                    inputFormatters: <
-                                                                        TextInputFormatter>[],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                height:
-                                                                30.0,
-                                                                child:
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment.center,
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment.center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_up,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_taxController.text);
-                                                                        setState(() {
-                                                                          currentValue++;
-                                                                          _taxController.text = (currentValue).toString(); // incrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_down,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_taxController.text);
-                                                                        setState(() {
-                                                                          currentValue--;
-                                                                          _taxController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: 170,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text("Balance : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 70,
-                                                          height: 25,
-                                                          decoration:
-                                                          deco,
-                                                          child: Row(
-                                                            children: <
-                                                                Widget>[
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                    left:
-                                                                    4,
-                                                                    right:
-                                                                    2,
-                                                                    bottom:
-                                                                    12,
-                                                                  ),
-                                                                  child:
-                                                                  TextFormField(
-                                                                    style:
-                                                                    TxtStls.fieldstyle,
-                                                                    decoration:
-                                                                    InputDecoration(border: InputBorder.none),
-                                                                    controller:
-                                                                    _balanceController,
-                                                                    keyboardType:
-                                                                    TextInputType.numberWithOptions(
-                                                                      decimal:
-                                                                      false,
-                                                                      signed:
-                                                                      true,
-                                                                    ),
-                                                                    inputFormatters: <
-                                                                        TextInputFormatter>[],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                height:
-                                                                30.0,
-                                                                child:
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment.center,
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment.center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_up,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_balanceController.text);
-                                                                        setState(() {
-                                                                          currentValue++;
-                                                                          _balanceController.text = (currentValue).toString(); // incrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_down,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_balanceController.text);
-                                                                        setState(() {
-                                                                          currentValue--;
-                                                                          _balanceController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: 170,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text("TDS : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 70,
-                                                          height: 25,
-                                                          decoration:
-                                                          deco,
-                                                          child: Row(
-                                                            children: <
-                                                                Widget>[
-                                                              Expanded(
-                                                                flex: 1,
-                                                                child:
-                                                                Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(
-                                                                    left:
-                                                                    4,
-                                                                    right:
-                                                                    2,
-                                                                    bottom:
-                                                                    12,
-                                                                  ),
-                                                                  child:
-                                                                  TextFormField(
-                                                                    style:
-                                                                    TxtStls.fieldstyle,
-                                                                    decoration:
-                                                                    InputDecoration(border: InputBorder.none),
-                                                                    controller:
-                                                                    _tdsController,
-                                                                    keyboardType:
-                                                                    TextInputType.numberWithOptions(
-                                                                      decimal:
-                                                                      false,
-                                                                      signed:
-                                                                      true,
-                                                                    ),
-                                                                    inputFormatters: <
-                                                                        TextInputFormatter>[],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                height:
-                                                                30.0,
-                                                                child:
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment.center,
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment.center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_up,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_tdsController.text);
-                                                                        setState(() {
-                                                                          currentValue++;
-                                                                          _tdsController.text = (currentValue).toString(); // incrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    InkWell(
-                                                                      child:
-                                                                      Icon(
-                                                                        Icons.arrow_drop_down,
-                                                                        size: 12.0,
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        int currentValue = int.parse(_tdsController.text);
-                                                                        setState(() {
-                                                                          currentValue--;
-                                                                          _tdsController.text = (currentValue > 0 ? currentValue : 0).toString(); // decrementing value
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
-                                                children: [
-                                                  Text("Fee Payment",
-                                                      style: TxtStls
-                                                          .fieldtitlestyle),
-                                                  Row(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          Text(
-                                                              "Government Fee",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle),
-                                                          Row(
-                                                            children: [
-                                                              Radio(
-                                                                  value:
-                                                                  "Client",
-                                                                  groupValue:
-                                                                  _govtfee,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    _govtfee =
-                                                                        value;
-                                                                    setState(
-                                                                            () {});
-                                                                  }),
-                                                              Text(
-                                                                  "By Client",
-                                                                  style: TxtStls
-                                                                      .fieldstyle)
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Radio(
-                                                                  value:
-                                                                  "jr",
-                                                                  groupValue:
-                                                                  _govtfee,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    _govtfee =
-                                                                        value;
-                                                                    setState(
-                                                                            () {});
-                                                                  }),
-                                                              Text(
-                                                                  "By JrCompliance",
-                                                                  style: TxtStls
-                                                                      .fieldstyle)
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                        children: [
-                                                          Text(
-                                                              "Testing Fee",
-                                                              style: TxtStls
-                                                                  .fieldtitlestyle),
-                                                          Row(
-                                                            children: [
-                                                              Radio(
-                                                                  value:
-                                                                  "Client",
-                                                                  groupValue:
-                                                                  _testfee,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    _testfee =
-                                                                        value;
-                                                                    setState(
-                                                                            () {});
-                                                                  }),
-                                                              Text(
-                                                                  "By Client",
-                                                                  style: TxtStls
-                                                                      .fieldstyle)
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Radio(
-                                                                  value:
-                                                                  "jr",
-                                                                  groupValue:
-                                                                  _testfee,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    _testfee =
-                                                                        value;
-                                                                    setState(
-                                                                            () {});
-                                                                  }),
-                                                              Text(
-                                                                  "By JrCompliance",
-                                                                  style: TxtStls
-                                                                      .fieldstyle)
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                children: [
-                                                  Container(
-                                                    width: 270,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            "Deal Size : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 120,
-                                                          height: 30,
-                                                          decoration:
-                                                          deco,
-                                                          child: Padding(
-                                                            padding:
-                                                            EdgeInsets
-                                                                .only(
-                                                              left: 2,
-                                                              right: 2,
-                                                              bottom:
-                                                              12.5,
-                                                            ),
-                                                            child:
-                                                            TextFormField(
-                                                              controller:
-                                                              _dealController,
-                                                              style: TxtStls
-                                                                  .fieldstyle,
-                                                              decoration:
-                                                              InputDecoration(
-                                                                hintStyle:
-                                                                TxtStls
-                                                                    .fieldstyle,
-                                                                border: InputBorder
-                                                                    .none,
-                                                              ),
-                                                              validator:
-                                                                  (fullname) {
-                                                                if (fullname!
-                                                                    .isEmpty) {
-                                                                  return "Name can not be empty";
-                                                                } else if (fullname
-                                                                    .length <
-                                                                    3) {
-                                                                  return "Name should be atleast 3 letters";
-                                                                } else {
-                                                                  return null;
-                                                                }
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: 270,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            "Payment Recieved Date : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 120,
-                                                          height: 30,
-                                                          decoration:
-                                                          deco,
-                                                          child: Padding(
-                                                            padding:
-                                                            EdgeInsets
-                                                                .only(
-                                                              left: 2,
-                                                              right: 2,
-                                                              bottom:
-                                                              12.5,
-                                                            ),
-                                                            child:
-                                                            TextFormField(
-                                                              controller:
-                                                              _paymentRecieveController,
-                                                              style: TxtStls
-                                                                  .fieldstyle,
-                                                              decoration:
-                                                              InputDecoration(
-                                                                hintStyle:
-                                                                TxtStls
-                                                                    .fieldstyle,
-                                                                border: InputBorder
-                                                                    .none,
-                                                              ),
-                                                              validator:
-                                                                  (fullname) {
-                                                                if (fullname!
-                                                                    .isEmpty) {
-                                                                  return "Name can not be empty";
-                                                                } else if (fullname
-                                                                    .length <
-                                                                    3) {
-                                                                  return "Name should be atleast 3 letters";
-                                                                } else {
-                                                                  return null;
-                                                                }
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Container(
-                                                    width: 270,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            "Samples Recieved Date : ",
-                                                            style: TxtStls
-                                                                .fieldstyle),
-                                                        Container(
-                                                          alignment:
-                                                          Alignment
-                                                              .center,
-                                                          width: 120,
-                                                          height: 30,
-                                                          decoration:
-                                                          deco,
-                                                          child: Padding(
-                                                            padding:
-                                                            EdgeInsets
-                                                                .only(
-                                                              left: 2,
-                                                              right: 2,
-                                                              bottom:
-                                                              12.5,
-                                                            ),
-                                                            child:
-                                                            TextFormField(
-                                                              controller:
-                                                              _sampleController,
-                                                              style: TxtStls
-                                                                  .fieldstyle,
-                                                              decoration:
-                                                              InputDecoration(
-                                                                hintStyle:
-                                                                TxtStls
-                                                                    .fieldstyle,
-                                                                border: InputBorder
-                                                                    .none,
-                                                              ),
-                                                              validator:
-                                                                  (fullname) {
-                                                                if (fullname!
-                                                                    .isEmpty) {
-                                                                  return "Name can not be empty";
-                                                                } else if (fullname
-                                                                    .length <
-                                                                    3) {
-                                                                  return "Name should be atleast 3 letters";
-                                                                } else {
-                                                                  return null;
-                                                                }
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                color: Color(0xFFE0E0E0),
-                                                height: 80,
-                                                width: 1,
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundColor: btnColor
-                                                    .withOpacity(0.1),
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                      Icons
-                                                          .arrow_back_rounded,
-                                                      color: btnColor),
-                                                  onPressed: () {
-                                                    _controller!.animateTo(
-                                                        _selectedIndex -=
-                                                        1);
-                                                  },
-                                                ),
-                                              ),
-                                              CircleAvatar(
-                                                backgroundColor: btnColor
-                                                    .withOpacity(0.1),
-                                                child: IconButton(
-                                                  icon: Icon(
-                                                      Icons
-                                                          .arrow_forward_rounded,
-                                                      color: btnColor),
-                                                  onPressed: () {
-                                                    _controller!.animateTo(
-                                                        _selectedIndex +=
-                                                        1);
-                                                  },
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    tab3(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                              )
                             : Container(),
                       ),
                     ],
@@ -2593,7 +2612,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                             decoration: BoxDecoration(
                                 color: bgColor,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -2602,19 +2621,19 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                       padding: EdgeInsets.all(9),
                                       child: Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Tooltip(
                                               message: "Agents",
                                               child: widget.assigns.length == 0
                                                   ? CircleAvatar(
-                                                  backgroundColor: btnColor
-                                                      .withOpacity(0.1),
-                                                  child: Lottie.asset(
-                                                    "assets/Lotties/agent.json",
-                                                    fit: BoxFit.fill,
-                                                    animate: _isHover[3],
-                                                  ))
+                                                      backgroundColor: btnColor
+                                                          .withOpacity(0.1),
+                                                      child: Lottie.asset(
+                                                        "assets/Lotties/agent.json",
+                                                        fit: BoxFit.fill,
+                                                        animate: _isHover[3],
+                                                      ))
                                                   : SizedBox()),
                                           ListView.builder(
                                               shrinkWrap: true,
@@ -2624,19 +2643,19 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                               itemBuilder: (_, index) {
                                                 return ClipRRect(
                                                     borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            30.0)),
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                30.0)),
                                                     child: SizedBox(
                                                         width: 35,
                                                         height: 30,
                                                         child: Image.network(
-                                                            widget.assigns[index]
-                                                            ["image"],
+                                                            widget.assigns[
+                                                                index]["image"],
                                                             fit: BoxFit.cover,
                                                             filterQuality:
-                                                            FilterQuality
-                                                                .high)));
+                                                                FilterQuality
+                                                                    .high)));
                                               })
                                         ],
                                       ),
@@ -2653,43 +2672,43 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                 ),
                                 date1 == null && date2 == null
                                     ? InkWell(
-                                    onTap: () {
-                                      dateTimeRangePicker();
-                                      setState(() {});
-                                    },
-                                    child: Tooltip(
-                                      message: "Filters",
-                                      child: Container(
-                                        padding: EdgeInsets.all(9),
-                                        child: CircleAvatar(
-                                            backgroundColor:
-                                            btnColor.withOpacity(0.1),
-                                            child: Lottie.asset(
-                                                "assets/Lotties/filter.json",
-                                                animate: _isHover[4])),
-                                      ),
-                                    ),
-                                    onHover: (value) {
-                                      _isHover[4] = value;
-                                      setState(() {});
-                                    })
+                                        onTap: () {
+                                          dateTimeRangePicker();
+                                          setState(() {});
+                                        },
+                                        child: Tooltip(
+                                          message: "Filters",
+                                          child: Container(
+                                            padding: EdgeInsets.all(9),
+                                            child: CircleAvatar(
+                                                backgroundColor:
+                                                    btnColor.withOpacity(0.1),
+                                                child: Lottie.asset(
+                                                    "assets/Lotties/filter.json",
+                                                    animate: _isHover[4])),
+                                          ),
+                                        ),
+                                        onHover: (value) {
+                                          _isHover[4] = value;
+                                          setState(() {});
+                                        })
                                     : InkWell(
-                                  child: Tooltip(
-                                    message: "Clear Filters",
-                                    child: CircleAvatar(
-                                        backgroundColor:
-                                        btnColor.withOpacity(0.1),
-                                        child: Icon(Icons.cancel,
-                                            color: btnColor)),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      setState(() {
-                                        date1 = date2 = null;
-                                      });
-                                    });
-                                  },
-                                ),
+                                        child: Tooltip(
+                                          message: "Clear Filters",
+                                          child: CircleAvatar(
+                                              backgroundColor:
+                                                  btnColor.withOpacity(0.1),
+                                              child: Icon(Icons.cancel,
+                                                  color: btnColor)),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            setState(() {
+                                              date1 = date2 = null;
+                                            });
+                                          });
+                                        },
+                                      ),
                                 Container(
                                   color: Color(0xFFE0E0E0),
                                   height: 40,
@@ -2701,21 +2720,21 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                     message: "Current Status",
                                     child: CircleAvatar(
                                       backgroundColor:
-                                      btnColor.withOpacity(0.1),
+                                          btnColor.withOpacity(0.1),
                                       child: _isHover[5]
                                           ? Lottie.asset(
-                                          "assets/Lotties/live.json",
-                                          fit: BoxFit.fill,
-                                          reverse: true,
-                                          animate: _isHover[5])
+                                              "assets/Lotties/live.json",
+                                              fit: BoxFit.fill,
+                                              reverse: true,
+                                              animate: _isHover[5])
                                           : SizedBox(
-                                        width: 35,
-                                        height: 20,
-                                        child: Image.asset(
-                                          "assets/Images/live.png",
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
+                                              width: 35,
+                                              height: 20,
+                                              child: Image.asset(
+                                                "assets/Images/live.png",
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
                                     ),
                                   ),
                                   onHover: (value) {
@@ -2726,7 +2745,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                 Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
                                       width: 150,
@@ -2734,8 +2753,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           horizontal: 5, vertical: 3),
                                       decoration: BoxDecoration(
                                           color: StatusUpdateServices.CatColor(
-                                              widget.cat
-                                          ),
+                                              widget.cat),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       alignment: Alignment.center,
@@ -2750,8 +2768,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                           horizontal: 5, vertical: 3),
                                       decoration: BoxDecoration(
                                           color:
-                                          StatusUpdateServices.subcatColor(
-                                              widget.status),
+                                              StatusUpdateServices.subcatColor(
+                                                  widget.status),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       alignment: Alignment.center,
@@ -2772,7 +2790,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                                     message: "Statistics",
                                     child: CircleAvatar(
                                       backgroundColor:
-                                      btnColor.withOpacity(0.1),
+                                          btnColor.withOpacity(0.1),
                                       child: Container(
                                           alignment: Alignment.center,
                                           child: Lottie.asset(
@@ -2807,7 +2825,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                             decoration: BoxDecoration(
                                 color: Colors.green.withOpacity(0.25),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
+                                    BorderRadius.all(Radius.circular(10.0))),
                             width: size.width * 0.85 / 2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -2836,382 +2854,420 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                           flex: 8,
                           child: _isGraph
                               ? Chart(context, s, f)
-                              : widget.list.length<=0?Text("No activity Found"):ListView.separated(
-                            shrinkWrap: true,
-                            separatorBuilder: (_, i) => Divider(
-                              height: 10,
-                              color: Color(0xFFE0E0E0),
-                            ),
-                            itemCount:  date1==null&&date2==null?widget.list.length:activitylist1.length,
-
-                            itemBuilder:
-                                (BuildContext context, int index) {
-                              String statecolor =
-                                  widget.list[index].from;
-                              String statecolor1 = widget.list[index].to;
-                              String date = DateFormat("EEE | MMM dd, yy")
-                                  .format(
-                                  widget.list[index].when.toDate());
-                              String time = DateFormat('hh:mm a').format(
-                                  widget.list[index].when.toDate());
-                              DateTime dt1 = DateTime.parse(
-                                  widget.list[index].lastdate);
-                              String lastDate =
-                              DateFormat("EEE | MMM dd, yy")
-                                  .format(dt1);
-
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  padding: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                      color: bgColor,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor: btnColor
-                                                        .withOpacity(0.1),
-                                                    child: Icon(
-                                                        Icons.fast_forward,
-                                                        color: btnColor),
-                                                  ),
-                                                  Text(
-                                                    date,
-                                                    style: TxtStls.fieldstyle,
-                                                  ),
-                                                ],
-                                              )),
-                                          Container(
-                                            color: Color(0xFFE0E0E0),
-                                            height: 40,
-                                            width: 1,
-                                          ),
-                                          Container(
-                                              alignment: Alignment.center,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                    btnColor
-                                                        .withOpacity(
-                                                        0.1),
-                                                    child: Icon(
-                                                        Icons.timer,
-                                                        color: btnColor),
-                                                  ),
-                                                  Text(time,
-                                                      style: TxtStls
-                                                          .fieldstyle),
-                                                ],
-                                              )),
-                                          Container(
-                                            color: Color(0xFFE0E0E0),
-                                            height: 40,
-                                            width: 1,
-                                          ),
-                                          Container(
-                                              alignment: Alignment.center,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                    btnColor
-                                                        .withOpacity(
-                                                        0.1),
-                                                    child: Icon(
-                                                        Icons.date_range,
-                                                        color: btnColor),
-                                                  ),
-                                                  Text(lastDate,
-                                                      style: TxtStls
-                                                          .fieldstyle),
-                                                ],
-                                              )),
-                                          Container(
-                                            color: Color(0xFFE0E0E0),
-                                            height: 40,
-                                            width: 1,
-                                          ),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: 50,
-                                            child: widget.list[index]
-                                                .yes ==
-                                                true
-                                                ? InkWell(
-                                                onTap: () {},
-                                                onHover: (value) {
-                                                  _isHover[7] = value;
-                                                  setState(() {});
-                                                },
-                                                child: CircleAvatar(
-                                                    backgroundColor:
-                                                    btnColor
-                                                        .withOpacity(
-                                                        0.2),
-                                                    child: _isHover[7]
-                                                        ? Lottie.asset(
-                                                        "assets/Lotties/success.json",
-                                                        reverse:
-                                                        true)
-                                                        : Image.asset(
-                                                        "assets/Images/success.png")))
-                                                : InkWell(
-                                                onTap: () {},
-                                                onHover: (value) {
-                                                  _isHover[8] = value;
-                                                  setState(() {});
-                                                },
-                                                child: CircleAvatar(
-                                                  backgroundColor:
-                                                  btnColor
-                                                      .withOpacity(
-                                                      0.1),
-                                                  child: _isHover[8]
-                                                      ? Lottie.asset(
-                                                      "assets/Lotties/fail.json",
-                                                      reverse:
-                                                      true)
-                                                      : SizedBox(
-                                                    height: 30,
-                                                    width: 30,
-                                                    child: Image
-                                                        .network(
-                                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
-                                                      fit: BoxFit
-                                                          .fill,
-                                                    ),
-                                                  ),
-                                                )),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        height: size.height * 0.001,
+                              : widget.list.length <= 0
+                                  ? Text("No activity Found")
+                                  : ListView.separated(
+                                      shrinkWrap: true,
+                                      separatorBuilder: (_, i) => Divider(
+                                        height: 10,
                                         color: Color(0xFFE0E0E0),
                                       ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Row(
+                                      itemCount: date1 == null && date2 == null
+                                          ? widget.list.length
+                                          : activitylist1.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        String statecolor =
+                                            widget.list[index].from;
+                                        String statecolor1 =
+                                            widget.list[index].to;
+                                        String date =
+                                            DateFormat("EEE | MMM dd, yy")
+                                                .format(widget.list[index].when
+                                                    .toDate());
+                                        String time = DateFormat('hh:mm a')
+                                            .format(widget.list[index].when
+                                                .toDate());
+                                        DateTime dt1 = DateTime.parse(
+                                            widget.list[index].lastdate);
+                                        String lastDate =
+                                            DateFormat("EEE | MMM dd, yy")
+                                                .format(dt1);
+
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                                color: bgColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceEvenly,
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
-                                                Text("From",
-                                                    style: TxtStls
-                                                        .fieldstyle),
-                                                Container(
-                                                  alignment:
-                                                  Alignment.center,
-                                                  width: 120,
-                                                  padding:
-                                                  EdgeInsets.all(4.0),
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius
-                                                            .circular(
-                                                            10.0)),
-                                                    color: FlagService
-                                                        .stateClr(
-                                                        statecolor),
-                                                  ),
-                                                  child: Text(
-                                                      widget.list[index]
-                                                          .from,
-                                                      style: TxtStls
-                                                          .fieldstyle1),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Container(
+                                                        child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundColor:
+                                                              btnColor
+                                                                  .withOpacity(
+                                                                      0.1),
+                                                          child: Icon(
+                                                              Icons
+                                                                  .fast_forward,
+                                                              color: btnColor),
+                                                        ),
+                                                        Text(
+                                                          date,
+                                                          style: TxtStls
+                                                              .fieldstyle,
+                                                        ),
+                                                      ],
+                                                    )),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 40,
+                                                      width: 1,
+                                                    ),
+                                                    Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            CircleAvatar(
+                                                              backgroundColor:
+                                                                  btnColor
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                              child: Icon(
+                                                                  Icons.timer,
+                                                                  color:
+                                                                      btnColor),
+                                                            ),
+                                                            Text(time,
+                                                                style: TxtStls
+                                                                    .fieldstyle),
+                                                          ],
+                                                        )),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 40,
+                                                      width: 1,
+                                                    ),
+                                                    Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            CircleAvatar(
+                                                              backgroundColor:
+                                                                  btnColor
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                              child: Icon(
+                                                                  Icons
+                                                                      .date_range,
+                                                                  color:
+                                                                      btnColor),
+                                                            ),
+                                                            Text(lastDate,
+                                                                style: TxtStls
+                                                                    .fieldstyle),
+                                                          ],
+                                                        )),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 40,
+                                                      width: 1,
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      width: 50,
+                                                      child: widget.list[index]
+                                                                  .yes ==
+                                                              true
+                                                          ? InkWell(
+                                                              onTap: () {},
+                                                              onHover: (value) {
+                                                                _isHover[7] =
+                                                                    value;
+                                                                setState(() {});
+                                                              },
+                                                              child: CircleAvatar(
+                                                                  backgroundColor:
+                                                                      btnColor
+                                                                          .withOpacity(
+                                                                              0.2),
+                                                                  child: _isHover[
+                                                                          7]
+                                                                      ? Lottie.asset(
+                                                                          "assets/Lotties/success.json",
+                                                                          reverse:
+                                                                              true)
+                                                                      : Image.asset(
+                                                                          "assets/Images/success.png")))
+                                                          : InkWell(
+                                                              onTap: () {},
+                                                              onHover: (value) {
+                                                                _isHover[8] =
+                                                                    value;
+                                                                setState(() {});
+                                                              },
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundColor:
+                                                                    btnColor
+                                                                        .withOpacity(
+                                                                            0.1),
+                                                                child: _isHover[
+                                                                        8]
+                                                                    ? Lottie.asset(
+                                                                        "assets/Lotties/fail.json",
+                                                                        reverse:
+                                                                            true)
+                                                                    : SizedBox(
+                                                                        height:
+                                                                            30,
+                                                                        width:
+                                                                            30,
+                                                                        child: Image
+                                                                            .network(
+                                                                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEsuB-R1e4XmwavhpVzH1RxhZPQSj1XcLAA&usqp=CAU",
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        ),
+                                                                      ),
+                                                              )),
+                                                    )
+                                                  ],
                                                 ),
-                                                Text("TO",
-                                                    style: TxtStls
-                                                        .fieldstyle),
                                                 Container(
-                                                  padding:
-                                                  EdgeInsets.all(4.0),
-                                                  width: 120,
+                                                  height: size.height * 0.001,
+                                                  color: Color(0xFFE0E0E0),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          Text("From",
+                                                              style: TxtStls
+                                                                  .fieldstyle),
+                                                          Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            width: 120,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                              color: FlagService
+                                                                  .stateClr(
+                                                                      statecolor),
+                                                            ),
+                                                            child: Text(
+                                                                widget
+                                                                    .list[index]
+                                                                    .from,
+                                                                style: TxtStls
+                                                                    .fieldstyle1),
+                                                          ),
+                                                          Text("TO",
+                                                              style: TxtStls
+                                                                  .fieldstyle),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4.0),
+                                                            width: 120,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                              color: FlagService
+                                                                  .stateClr1(
+                                                                      statecolor1),
+                                                            ),
+                                                            child: Text(
+                                                                widget
+                                                                    .list[index]
+                                                                    .to,
+                                                                style: TxtStls
+                                                                    .fieldstyle1),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      color: Color(0xFFE0E0E0),
+                                                      height: 40,
+                                                      width: 1,
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            CircleAvatar(
+                                                              backgroundColor:
+                                                                  btnColor
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                              child: Icon(
+                                                                  Icons
+                                                                      .videogame_asset,
+                                                                  color:
+                                                                      btnColor),
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(4.0),
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 150,
+                                                              decoration: BoxDecoration(
+                                                                  color: widget
+                                                                              .list[
+                                                                                  index]
+                                                                              .bound ==
+                                                                          "InBound"
+                                                                      ? goodClr
+                                                                      : flwClr,
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              child: Text(
+                                                                widget
+                                                                    .list[index]
+                                                                    .bound,
+                                                                style: TxtStls
+                                                                    .fieldstyle1,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(4.0),
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 100,
+                                                              decoration: BoxDecoration(
+                                                                  color: clr(widget
+                                                                      .list[
+                                                                          index]
+                                                                      .action),
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              child: Text(
+                                                                  widget
+                                                                      .list[
+                                                                          index]
+                                                                      .action,
+                                                                  style: TxtStls
+                                                                      .fieldstyle1),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(8.0),
                                                   alignment:
-                                                  Alignment.center,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius
-                                                            .circular(
-                                                            10.0)),
-                                                    color: FlagService
-                                                        .stateClr1(
-                                                        statecolor1),
+                                                      Alignment.centerLeft,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        child: Row(
+                                                          children: [
+                                                            Text("Notes : ",
+                                                                style: TxtStls
+                                                                    .fieldstyle),
+                                                            Container(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Text(
+                                                                widget
+                                                                    .list[index]
+                                                                    .who,
+                                                                style: TxtStls
+                                                                    .fieldstyle,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                      ),
+                                                      Card(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          10.0)),
+                                                        ),
+                                                        elevation: 10,
+                                                        child: Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 10),
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            height: 100,
+                                                            width: size.width *
+                                                                0.35,
+                                                            child: Text(
+                                                                widget
+                                                                    .list[index]
+                                                                    .note,
+                                                                style: TxtStls
+                                                                    .notestyle)),
+                                                      )
+                                                    ],
                                                   ),
-                                                  child: Text(
-                                                      widget.list[index]
-                                                          .to,
-                                                      style: TxtStls
-                                                          .fieldstyle1),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            color: Color(0xFFE0E0E0),
-                                            height: 40,
-                                            width: 1,
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceEvenly,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                    btnColor
-                                                        .withOpacity(
-                                                        0.1),
-                                                    child: Icon(
-                                                        Icons
-                                                            .videogame_asset,
-                                                        color: btnColor),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                    EdgeInsets.all(
-                                                        4.0),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                        color: widget.list[
-                                                        index]
-                                                            .bound ==
-                                                            "InBound"
-                                                            ? goodClr
-                                                            : flwClr,
-                                                        borderRadius: BorderRadius
-                                                            .all(Radius
-                                                            .circular(
-                                                            10.0))),
-                                                    child: Text(
-                                                      widget.list[index]
-                                                          .bound,
-                                                      style: TxtStls
-                                                          .fieldstyle1,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                    EdgeInsets.all(
-                                                        4.0),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                        color: clr(
-                                                            widget.list[
-                                                            index]
-                                                                .action),
-                                                        borderRadius: BorderRadius
-                                                            .all(Radius
-                                                            .circular(
-                                                            10.0))),
-                                                    child: Text(
-                                                        widget.list[
-                                                        index]
-                                                            .action,
-                                                        style: TxtStls
-                                                            .fieldstyle1),
-                                                  ),
-                                                ]),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        alignment: Alignment.centerLeft,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  Text("Notes : ",
-                                                      style: TxtStls
-                                                          .fieldstyle),
-                                                  Container(
-                                                    alignment: Alignment
-                                                        .centerLeft,
-                                                    child: Text(
-                                                      widget.list[index]
-                                                          .who,
-                                                      style: TxtStls
-                                                          .fieldstyle,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              alignment:
-                                              Alignment.centerLeft,
-                                            ),
-                                            Card(
-                                              shape:
-                                              RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.all(
-                                                    Radius.circular(
-                                                        10.0)),
-                                              ),
-                                              elevation: 10,
-                                              child: Container(
-                                                  padding:
-                                                  EdgeInsets.only(
-                                                      left: 10),
-                                                  alignment: Alignment
-                                                      .centerLeft,
-                                                  height: 100,
-                                                  width:
-                                                  size.width * 0.35,
-                                                  child: Text(
-                                                      widget.list[index]
-                                                          .note,
-                                                      style: TxtStls
-                                                          .notestyle)),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )),
+                                        );
+                                      },
+                                    )),
                     ],
                   ),
                 )
@@ -3234,6 +3290,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       return clsClr;
     }
   }
+
   Widget service(e, id) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -3259,7 +3316,8 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
                 size: 15,
               ),
               onPressed: () {
-                Provider.of<RemoveServiceProvider>(context,listen: false).removeService(id, e);
+                Provider.of<RemoveServiceProvider>(context, listen: false)
+                    .removeService(id, e);
               },
             )
           ],
@@ -3267,6 +3325,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       ),
     );
   }
+
   Widget tab3() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -3333,10 +3392,10 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
     );
   }
 
-  List<ActivityModel> activitylist1 =[] ;
+  List<ActivityModel> activitylist1 = [];
   dateTimeRangePicker() async {
     DateTimeRange? picked = await showDateRangePicker(
-      builder: (BuildContext context, Widget ?child) {
+      builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData(
             primarySwatch: Colors.grey,
@@ -3367,7 +3426,7 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
             ],
           ),
         );
-      }
+      },
       context: context,
       firstDate: DateTime(2022),
       lastDate: DateTime.now(),
@@ -3376,16 +3435,18 @@ class _DeatailsPopBoxState extends State<DeatailsPopBox> {
       date1 = picked.start.toString().split(" ")[0];
       date2 = picked.end.toString().split(" ")[0];
       setState(() {
-        Provider.of<ActivityProvider1>(context,listen: false).getAllActivitys1(widget.Idocid.toString(),picked.start.toString().split(" ")[0],picked.end.toString().split(" ")[0]).then((value) {
-
-
-            setState(() {
-              activitylist1 =
-                  Provider.of<ActivityProvider1>(context,listen: false).activitymodellist1;
-            });
+        Provider.of<ActivityProvider1>(context, listen: false)
+            .getAllActivitys1(
+                widget.Idocid.toString(),
+                picked.start.toString().split(" ")[0],
+                picked.end.toString().split(" ")[0])
+            .then((value) {
+          setState(() {
+            activitylist1 =
+                Provider.of<ActivityProvider1>(context, listen: false)
+                    .activitymodellist1;
           });
-
-
+        });
       });
     }
   }

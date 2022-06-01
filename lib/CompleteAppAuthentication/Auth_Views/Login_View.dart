@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cometchat/main/cometchat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -235,6 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                         ),
                                         onTap: () {
+                                          CometChat.loginWithAuthToken(
+                                              "c2daa85de0992180937c031a8b99450e9e10810f",
+                                              onSuccess: (user) {},
+                                              onError: (e) {});
                                           //generateMsgToken();
                                           getLogin(context);
                                         },

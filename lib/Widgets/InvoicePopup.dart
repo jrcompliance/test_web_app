@@ -68,7 +68,6 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         content: Stack(
-          overflow: Overflow.visible,
           alignment: Alignment.topCenter,
           children: [
             Container(
@@ -117,11 +116,13 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                               ),
                               Expanded(
                                   flex: 2,
-                                  child: FlatButton(
-                                    color: btnColor,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: btnColor,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                    ),
                                     child: Text("Preview",
                                         style: TxtStls.fieldstyle1),
                                     onPressed: () {
@@ -370,13 +371,15 @@ class _AdvanceCustomAlertState extends State<AdvanceCustomAlert> {
                           ),
                           Align(
                             alignment: Alignment.center,
-                            child: RaisedButton(
-                              elevation: 40,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 40,
+                                primary: btnColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                              ),
                               onPressed: () {},
                               child: Text("Save", style: TxtStls.fieldstyle1),
-                              color: btnColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
                             ),
                           )
                         ],

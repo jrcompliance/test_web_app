@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.DashBoard;
+  Tabs active = Tabs.Messages;
   var radioItem;
 
   @override
@@ -232,7 +232,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-  int selectedindex = 0;
+  int selectedindex = 5;
   DrawerListTile(title, image, tab, int index) {
     return Material(
       elevation: selectedindex == index ? 20 : 0,
@@ -505,19 +505,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     ? SizedBox()
                                     : Align(
                                         alignment: Alignment.centerRight,
-                                        child: RaisedButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10))),
-                                            elevation: 0.0,
-                                            onPressed: () {
-                                              completeprofile(name, logoBase64);
-                                            },
-                                            child: Text(
-                                              "Update",
-                                              style: TxtStls.fieldstyle1,
-                                            ),
-                                            color: btnColor),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              elevation: 0.0,
+                                              primary: btnColor),
+                                          onPressed: () {
+                                            completeprofile(name, logoBase64);
+                                          },
+                                          child: Text(
+                                            "Update",
+                                            style: TxtStls.fieldstyle1,
+                                          ),
+                                        ),
                                       )
                               ],
                             ),

@@ -1,8 +1,6 @@
-import 'dart:convert';
-
+import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:test_web_app/Models/GstModel.dart';
 
 class GstProvider with ChangeNotifier {
   //String? doc;
@@ -25,14 +23,24 @@ class GstProvider with ChangeNotifier {
       isLoading = true;
       notifyListeners();
       Future.delayed(Duration(seconds: 1)).then((value) async {
-        final url = Uri.parse(
-            "https://gst-return-status.p.rapidapi.com/gstininfo/$gst");
-        final response = await http.get(url, headers: {
-          'content-type': 'application/json',
-          'x-rapidapi-host': 'gst-return-status.p.rapidapi.com',
-          'x-rapidapi-key': 'f70aa109f5msh8225f751728f8ecp1821c0jsn102526b91ea6'
-        });
-        var extractedResponse = json.decode(response.body);
+        final Uri = "https://gst-return-status.p.rapidapi.com/gstininfo/$gst";
+        // final url = Uri.parse(
+        //     "https://gst-return-status.p.rapidapi.com/gstininfo/$gst");
+        final response = await Dio().get(Uri,
+            options: Options(headers: {
+              'content-type': 'application/json',
+              'x-rapidapi-host': 'gst-return-status.p.rapidapi.com',
+              'x-rapidapi-key':
+                  'f70aa109f5msh8225f751728f8ecp1821c0jsn102526b91ea6'
+            }));
+        // final response = await http.get(url, headers: {
+        //   'content-type': 'application/json',
+        //   'x-rapidapi-host': 'gst-return-status.p.rapidapi.com',
+        //   'x-rapidapi-key': 'f70aa109f5msh8225f751728f8ecp1821c0jsn102526b91ea6'
+        // });
+
+        var extractedResponse = response.data;
+        print(extractedResponse);
         var myData = extractedResponse["data"]["details"];
 
         pincode = myData["pincode"];

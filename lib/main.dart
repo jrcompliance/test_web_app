@@ -13,6 +13,7 @@ import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dar
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
+import 'package:test_web_app/Providers/AddDocumentsProvider2.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
 import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CompleteProfileProvider.dart';
@@ -20,6 +21,7 @@ import 'package:test_web_app/Providers/CreateLeadProvider.dart';
 import 'package:test_web_app/Providers/DuplicatesFinderProvider.dart';
 import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
+import 'package:test_web_app/Providers/GetChatProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/InvoiceSaveProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
@@ -31,18 +33,32 @@ import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
-import 'package:test_web_app/ResponsiveScreens/ResponsiveScreen.dart';
-import 'package:test_web_app/ResponsiveScreens/ResponsiveTablet.dart';
-import 'package:test_web_app/SureshTest.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/firebase_options.dart';
 import 'package:http/http.dart' as http;
+import 'package:cometchat/cometchat_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //
+  // String appID = "2104856d714d767b"; // Replace with your App ID
+  // String region = "us"; // Replace with your App Region ("eu" or "us")
+  //
+  // AppSettings appSettings = (AppSettingsBuilder()
+  //       ..subscriptionType = CometChatSubscriptionType.allUsers
+  //       ..region = region
+  //       ..autoEstablishSocketConnection = true)
+  //     .build();
+  //
+  // CometChat.init(appID, appSettings, onSuccess: (String successMessage) {
+  //   debugPrint("Initialization completed successfully  $successMessage");
+  // }, onError: (CometChatException e) {
+  //   debugPrint("Initialization failed with exception: ${e.message}");
+  // });
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (ctx) => RegisterProvider()),
@@ -66,6 +82,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => AddServiceProvider()),
       ChangeNotifierProvider(create: (ctx) => RemoveServiceProvider()),
       ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider()),
+      ChangeNotifierProvider(create: (ctx) => AddDocumentsProvider2()),
       ChangeNotifierProvider(create: (ctx) => GetInvoiceListProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceSaveProvider()),
       ChangeNotifierProvider(create: (ctx) => InvoiceUpdateProvider()),
@@ -73,8 +90,9 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => DuplicatesFinderProvider()),
       ChangeNotifierProvider(create: (ctx) => LeadIdProviders()),
       ChangeNotifierProvider(create: (ctx) => ChatProvider()),
+      ChangeNotifierProvider(create: (ctx) => GetMessagesListProvider()),
     ],
-    child: const MyApp(),
+    child: MyApp(),
   ));
 }
 
@@ -106,7 +124,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2))
+    Future.delayed(Duration(seconds: 2))
         .then((value) => _checkAuthentication());
     //  success();
   }

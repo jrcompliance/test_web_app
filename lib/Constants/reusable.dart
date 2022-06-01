@@ -162,6 +162,7 @@ class Clrs {
   static const bgColor = Colors.black;
   static const txtColor = Colors.white;
   static const urgent = Colors.red;
+  static const yellowClr = Colors.yellow;
   static const high = Colors.yellowAccent;
   static const normal = Colors.lightBlueAccent;
   static const low = Colors.lightGreen;
