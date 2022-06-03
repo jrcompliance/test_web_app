@@ -78,6 +78,13 @@ dependencies:
   web_socket_channel: ^2.1.0
   websocket: ^0.0.5
   cometchat: ^3.0.0
+  photo_view: ^0.14.0
+  fluttertoast: ^8.0.9
+  firebase_database: ^9.0.15
+  image_picker_for_web: ^2.0.0
+  path: ^1.8.0
+  flutter_linkify: ^4.0.2
+  flutter_native_image: ^0.0.4
 
 
 

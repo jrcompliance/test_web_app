@@ -27,6 +27,7 @@ import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:test_web_app/Providers/GetChatProvider.dart';
 import 'package:dio/dio.dart';
+import 'package:test_web_app/Widgets/FullPhotoPage.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -41,12 +42,13 @@ class _MessageScreenState extends State<MessageScreen> {
   bool isLoading = false;
   List<ChatModel> messages = [];
   bool isLogggedIn = false;
-  ScrollController _scrollController = ScrollController();
+  var _scrollController = ScrollController();
   String? employee;
   String? currentuid;
   String? lastLoggedIn;
   String? lastLoggedOut;
   var messageList = [];
+  List<QueryDocumentSnapshot> listMessage = [];
   Socket? socket;
 
   // var currentUser;
@@ -55,6 +57,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
   var fileName;
   bool show = false;
+  int _limit = 20;
+  int _limitIncrement = 20;
   // late IO.Socket socket;
   //
   bool sendByMe = false;
@@ -62,7 +66,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    initializeSocket();
+    // initializeSocket();
     print("ggggg" + getChatMessage().toString());
     Future.delayed(Duration(seconds: 2)).then((value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
@@ -80,6 +84,10 @@ class _MessageScreenState extends State<MessageScreen> {
             Provider.of<UserDataProvider>(context, listen: false).employeelist;
       });
     });
+
+    // _focusNode.addListener(onFocusChange);
+    _scrollController.addListener(_scrollListener);
+
     // socket = IO.io(
     //     'http://localhost:4000',
     //     IO.OptionBuilder()
@@ -90,6 +98,31 @@ class _MessageScreenState extends State<MessageScreen> {
     // socket.connect();
     // connect();
   }
+
+  _scrollListener() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: 2), curve: Curves.easeInOut);
+    }
+  }
+  //   if (_scrollController.offset >=
+  //           _scrollController.position.maxScrollExtent &&
+  //       !_scrollController.position.outOfRange &&
+  //       _limit <= listMessage.length) {
+  //     setState(() {
+  //       _limit += _limitIncrement;
+  //     });
+  //   }
+  // }
+  //
+  // void onFocusChange() {
+  //   if (_focusNode.hasFocus) {
+  //     // Hide sticker when keyboard appear
+  //     setState(() {
+  //       // isShowSticker = false;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -535,9 +568,8 @@ class _MessageScreenState extends State<MessageScreen> {
                               focusNode: _focusNode,
                               controller: _chatController,
                               onFieldSubmitted: (val) {
-                                submitMsg(val);
-                                sendMessage(val, currentuid.toString(),
-                                    peerUid.toString());
+                                onSendMessage(_chatController.text, "source");
+                                //   submitMsg(val);
                               },
                               keyboardType: TextInputType.text,
                               style: TextStyle(
@@ -1033,70 +1065,97 @@ class _MessageScreenState extends State<MessageScreen> {
   // }
   Widget listview() {
     return Expanded(
-      flex: 1,
-      child: SizedBox(
-        child: Container(
-            child: Provider.of<GetMessagesListProvider>(context, listen: false)
-                        .chatmodellist
-                        .length <=
-                    0
-                ? Expanded(
-                    flex: 1,
-                    child: Center(
-                        child: Lottie.asset("assets/Lotties/empty.json")))
-                : StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection("Chats")
-                        .doc(currentuid)
-                        .collection("messages")
-                        .where("isTo", isEqualTo: peerUid)
-                        .orderBy("time", descending: false)
-                        .snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      var data1 = snapshot.data;
-                      print('dfdtatadd---' + data1.toString());
-                      return ListView.builder(
-                          controller: _scrollController,
-                          itemCount:
-                              //    snapshot.data.length,
-                              Provider.of<GetMessagesListProvider>(context,
-                                      listen: false)
-                                  .chatmodellist
-                                  .length,
-                          scrollDirection: Axis.vertical,
-                          // controller: _scrollController,
-                          itemBuilder: (_, index) {
-                            var data = Provider.of<GetMessagesListProvider>(
-                                    context,
-                                    listen: false)
-                                .chatmodellist[index];
-                            if (data.isFrom == currentuid) {
-                              return OwnMessageCard(
-                                  message: data.content ?? "",
-                                  time: data.time ?? "");
+        flex: 1,
+        child: SizedBox(
+            child: Container(
+                child: Provider.of<GetMessagesListProvider>(context,
+                                listen: false)
+                            .chatmodellist
+                            .length <=
+                        0
+                    ? Expanded(
+                        flex: 1,
+                        child: Center(
+                            child: Lottie.asset("assets/Lotties/empty.json")))
+                    : StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("Chats")
+                            .doc(currentuid)
+                            .collection("messages")
+                            .where("isTo", isEqualTo: peerUid)
+                            .orderBy("time", descending: false)
+                            .snapshots(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            listMessage = snapshot.data!.docs;
+                            print('[' + listMessage.toString());
+                            if (listMessage.length > 0) {
+                              return ListView.builder(
+                                padding: EdgeInsets.all(10),
+                                itemBuilder: (context, index) => buildItem(
+                                    index, snapshot.data?.docs[index]),
+                                itemCount: snapshot.data?.docs.length,
+                                reverse: true,
+                                controller: _scrollController,
+                              );
                             } else {
-                              return ReplyCard(
-                                  message: data.content ?? "",
-                                  time: data.time ?? "");
+                              return Center(
+                                  child: Text("No message here yet..."));
                             }
-                          });
-                    })
-            // :
-            // : Container(
-            //     child: Center(
-            //         child: Text(
-            //       "Say Hi....",
-            //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            //     )),
-            //   ),
-            //     }
-
-            //   Text(snapshot.data.docs[3]['time'].toString());
-            // }),
-            ),
-      ),
-    );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: btnColor,
+                              ),
+                            );
+                          }
+                        },
+                      ))));
   }
+  // listMessage = snapshot.data.docs;
+  // if (listMessage.length > 0) {
+  //   return ListView.builder(
+  //       controller: _scrollController,
+  //       itemCount: snapshot.data.docs.length,
+  //       reverse: true,
+  //       // Provider.of<GetMessagesListProvider>(context,
+  //       //         listen: false)
+  //       //     .chatmodellist
+  //       //     .length,
+  //       scrollDirection: Axis.vertical,
+  //       // controller: _scrollController,
+  //       itemBuilder: (_, index) {
+  //         return buildItem(
+  //             index, snapshot.data?.docs[index]);
+  //         // var data = Provider.of<GetMessagesListProvider>(
+  //         //         context,
+  //         //         listen: false)
+  //         //     .chatmodellist[index];
+  //         // if (data.isFrom == currentuid) {
+  //         //   return OwnMessageCard(
+  //         //       message: data.content ?? "",
+  //         //       time: data.time ?? "");
+  //         // } else {
+  //         //   return ReplyCard(
+  //         //       message: data.content ?? "",
+  //         //       time: data.time ?? "");
+  //         // }
+  //       });
+  // }
+  //  })
+  // :
+  // : Container(
+  //     child: Center(
+  //         child: Text(
+  //       "Say Hi....",
+  //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+  //     )),
+  //   ),
+  //     }
+
+  //   Text(snapshot.data.docs[3]['time'].toString());
+  // }),
 
   Stream getChatMessage() {
     return FirebaseFirestore.instance
@@ -1132,113 +1191,444 @@ class _MessageScreenState extends State<MessageScreen> {
     });
   }
 
-  void sendMessage(String message, String sourceId, String targetId) {
-    setMessage("source", message);
-    socket?.emit("message",
-        {"message": message, "sourceId": sourceId, "targetId": targetId});
-  }
-
-  void initializeSocket() {
-    socket = io("http://127.0.0.1:3000/", <String, dynamic>{
-      "transports": ["websocket"],
-      "autoConnect": false,
-    });
-    socket!.connect(); //connect the Socket.IO Client to the Server
-
-    //SOCKET EVENTS
-    // --> listening for connection
-    socket!.on('connect', (data) {
-      print("connected");
-      print(socket!.connected);
-    });
-
-    //listen for incoming messages from the Server.
-    socket!.on('message', (data) {
-      print(data); //
-    });
-
-    //listens when the client is disconnected from the Server
-    socket!.on('disconnect', (data) {
-      print('disconnect');
-    });
-  }
-
-  // void connect() {
-  //   print("111");
-  //   // MessageModel messageModel = MessageModel(sourceId: widget.sourceChat.id.toString(),targetId: );
-  //   socket = IO.io("http://192.168.1.11:4000", <String, dynamic>{
-  //     "transports": ["websocket"],
-  //     "autoConnect": false,
-  //   });
-  //   print("222");
-  //   socket?.connect();
-  //   print("444");
-  //   socket?.emit("signin", currentuid);
-  //   socket!.onconnect();
-  //   socket?.on("message", (message) {
-  //     print(message);
-  //     // setMessage("destination", msg["message"]);
-  //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-  //         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-  //     print(socket?.connected);
-  //   });
-  //
-  //   // socket?.onConnect((data) {
-  //   //   print("555");
-  //   //   print("Connected");
-  //   //   socket?.on("message", (message) {
-  //   //     print(message);
-  //   //     // setMessage("destination", msg["message"]);
-  //   //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-  //   //         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-  //   //   });
-  //   //   print("333");
-  //   // });
-  // }
-
-  submitMsg(msg) {
-    if (msg == 'exit') {
-      SystemNavigator.pop();
-    } else if (msg != '') {
-      Provider.of<ChatProvider>(context, listen: false).saveChatMessage(
-          _chatController.text,
-          currentuid.toString(),
-          peerUid.toString(),
-          DateTime.now().toString().substring(10, 16),
-          "source");
-      // socketService.sendMessage(msg);
-      // socketService.isTyping(false);
-    }
-    setState(() {
-      _chatController.text = '';
-      chatContent = '';
-      _flagTyping = false;
-    });
-    _focusNode.requestFocus();
-  }
-
-  // void sendMessage() {
-  //   if (_chatController.text.isNotEmpty) {
-  //     channel.sink.add(_chatController.text.toString());
-  //   }
-  // }
   // void sendMessage(String message, String sourceId, String targetId) {
   //   setMessage("source", message);
   //   socket?.emit("message",
   //       {"message": message, "sourceId": sourceId, "targetId": targetId});
   // }
+  void sendMessage(
+      String content, String type, String currentUserId, String peerId) {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection("Chats")
+        .doc(currentuid)
+        .collection("messages")
+        .doc();
 
-  // void setMessage(String type, String message) {
-  //   ChatModel messageModel = ChatModel(
-  //       type: type,
-  //       content: message,
-  //       isTo: peerUid,
-  //       time: DateTime.now().toString().substring(10, 16));
-  //
-  //   print(messages);
-  //
-  //   setState(() {
-  //     messages.add(messageModel);
-  //   });
-  // }
+    ChatModel messageChat = ChatModel(
+      isFrom: currentUserId,
+      isTo: peerId,
+      time: DateTime.now().millisecondsSinceEpoch.toString(),
+      content: content,
+      type: type,
+    );
+
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction.set(
+        documentReference,
+        messageChat.toJson(),
+      );
+    });
+  }
+
+  void onSendMessage(String content, String type) {
+    if (content.trim().isNotEmpty) {
+      _chatController.clear();
+      sendMessage(content, type, currentuid.toString(), peerUid.toString());
+      // _scrollController.animateTo(0,
+      //     duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    } else {
+      toastmessage.warningmessage(context, "nothing to send");
+    }
+  }
+
+  Widget buildItem(int index, DocumentSnapshot? document) {
+    if (document != null) {
+      ChatModel messageChat = ChatModel.fromDocument(document);
+      if (messageChat.isFrom == currentuid) {
+        // Right (my message)
+        return Row(
+          children: <Widget>[
+            messageChat.type == TypeMessage.text
+                // Text
+                ? Container(
+                    child: Text(
+                      messageChat.content,
+                      style: TextStyle(color: primaryColor),
+                    ),
+                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    width: 200,
+                    decoration: BoxDecoration(
+                        color: txtColor,
+                        borderRadius: BorderRadius.circular(8)),
+                    margin: EdgeInsets.only(
+                        bottom: isLastMessageRight(index) ? 20 : 10, right: 10),
+                  )
+                : messageChat.type == TypeMessage.image
+                    // Image
+                    ? Container(
+                        child: OutlinedButton(
+                          child: Material(
+                            child: Image.network(
+                              messageChat.content,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: txtColor,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  width: 200,
+                                  height: 200,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: btnColor,
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, object, stackTrace) {
+                                return Material(
+                                  child: Image.asset(
+                                    'images/img_not_available.jpeg',
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                );
+                              },
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullPhotoPage(
+                                  url: messageChat.content,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.all(0))),
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20 : 10,
+                            right: 10),
+                      )
+                    // Sticker
+                    : Container(
+                        child: Image.asset(
+                          'images/${messageChat.content}.gif',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20 : 10,
+                            right: 10),
+                      ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.end,
+        );
+      } else {
+        // Left (peer message)
+        return Container(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  isLastMessageLeft(index)
+                      ? Material(
+                          child: Image.network(
+                            "peerAvatar",
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: btnColor,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, object, stackTrace) {
+                              return Icon(
+                                Icons.account_circle,
+                                size: 35,
+                                color: txtColor,
+                              );
+                            },
+                            width: 35,
+                            height: 35,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(18),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                        )
+                      : Container(width: 35),
+                  messageChat.type == TypeMessage.text
+                      ? Container(
+                          child: Text(
+                            messageChat.content,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          width: 200,
+                          decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(8)),
+                          margin: EdgeInsets.only(left: 10),
+                        )
+                      : messageChat.type == TypeMessage.image
+                          ? Container(
+                              child: TextButton(
+                                child: Material(
+                                  child: Image.network(
+                                    messageChat.content,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: txtColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                        ),
+                                        width: 200,
+                                        height: 200,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: btnColor,
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, object, stackTrace) =>
+                                            Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200,
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullPhotoPage(
+                                          url: messageChat.content),
+                                    ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            EdgeInsets.all(0))),
+                              ),
+                              margin: EdgeInsets.only(left: 10),
+                            )
+                          : Container(
+                              child: Image.asset(
+                                'images/${messageChat.content}.gif',
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                  bottom: isLastMessageRight(index) ? 20 : 10,
+                                  right: 10),
+                            ),
+                ],
+              ),
+
+              // Time
+              isLastMessageLeft(index)
+                  ? Container(
+                      child: Text(
+                        // messageChat.time,
+                        DateFormat('dd MMM kk:mm').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(messageChat.time.toString()))),
+                        style: TextStyle(
+                            color: txtColor,
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      margin: EdgeInsets.only(left: 50, top: 5, bottom: 5),
+                    )
+                  : SizedBox.shrink()
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          margin: EdgeInsets.only(bottom: 10),
+        );
+      }
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  bool isLastMessageLeft(int index) {
+    if ((index > 0 && listMessage[index - 1].get("isFrom") == currentuid) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isLastMessageRight(int index) {
+    if ((index > 0 && listMessage[index - 1].get("isFrom") != currentuid) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
+
+// void initializeSocket() {
+//   socket = io("http://127.0.0.1:3000/", <String, dynamic>{
+//     "transports": ["websocket"],
+//     "autoConnect": false,
+//   });
+//   socket!.connect(); //connect the Socket.IO Client to the Server
+//
+//   //SOCKET EVENTS
+//   // --> listening for connection
+//   socket!.on('connect', (data) {
+//     print("connected");
+//     print(socket!.connected);
+//   });
+//
+//   //listen for incoming messages from the Server.
+//   socket!.on('message', (data) {
+//     print(data); //
+//   });
+//
+//   //listens when the client is disconnected from the Server
+//   socket!.on('disconnect', (data) {
+//     print('disconnect');
+//   });
+// }
+
+// void connect() {
+//   print("111");
+//   // MessageModel messageModel = MessageModel(sourceId: widget.sourceChat.id.toString(),targetId: );
+//   socket = IO.io("http://192.168.1.11:4000", <String, dynamic>{
+//     "transports": ["websocket"],
+//     "autoConnect": false,
+//   });
+//   print("222");
+//   socket?.connect();
+//   print("444");
+//   socket?.emit("signin", currentuid);
+//   socket!.onconnect();
+//   socket?.on("message", (message) {
+//     print(message);
+//     // setMessage("destination", msg["message"]);
+//     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+//         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+//     print(socket?.connected);
+//   });
+//
+//   // socket?.onConnect((data) {
+//   //   print("555");
+//   //   print("Connected");
+//   //   socket?.on("message", (message) {
+//   //     print(message);
+//   //     // setMessage("destination", msg["message"]);
+//   //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+//   //         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+//   //   });
+//   //   print("333");
+//   // });
+// }
+
+// submitMsg(msg) {
+//   if (msg == 'exit') {
+//     SystemNavigator.pop();
+//   } else if (msg != '') {
+//     Provider.of<ChatProvider>(context, listen: false).saveChatMessage(
+//         _chatController.text,
+//         currentuid.toString(),
+//         peerUid.toString(),
+//         DateTime.now().toString().substring(10, 16),
+//         "source");
+//     // socketService.sendMessage(msg);
+//     // socketService.isTyping(false);
+//   }
+//   setState(() {
+//     _chatController.text = '';
+//     chatContent = '';
+//     _flagTyping = false;
+//   });
+//   _focusNode.requestFocus();
+// }
+
+// void sendMessage() {
+//   if (_chatController.text.isNotEmpty) {
+//     channel.sink.add(_chatController.text.toString());
+//   }
+// }
+// void sendMessage(String message, String sourceId, String targetId) {
+//   setMessage("source", message);
+//   socket?.emit("message",
+//       {"message": message, "sourceId": sourceId, "targetId": targetId});
+// }
+
+// void setMessage(String type, String message) {
+//   ChatModel messageModel = ChatModel(
+//       type: type,
+//       content: message,
+//       isTo: peerUid,
+//       time: DateTime.now().toString().substring(10, 16));
+//
+//   print(messages);
+//
+//   setState(() {
+//     messages.add(messageModel);
+//   });
+// }

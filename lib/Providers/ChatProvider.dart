@@ -50,19 +50,24 @@ class ChatProvider extends ChangeNotifier {
     // });
   }
 
-  // static Stream<QuerySnapshot> getChatMessage(String peerid) {
-  //   return FirebaseFirestore.instance
-  //       .collection("Chats")
-  //       .doc()
-  //       .collection("messages")
-  //       .where("isTo", isEqualTo: peerid)
-  //       .orderBy("time", descending: false)
-  //       .snapshots()
-  //       .transform(Utils.transformer((ChatModel.fromJson)));
-  // }
+  static Stream<QuerySnapshot> getChatMessage(String peerid) {
+    return FirebaseFirestore.instance
+        .collection("Chats")
+        .doc()
+        .collection("messages")
+        .where("isTo", isEqualTo: peerid)
+        .orderBy("time", descending: false)
+        .snapshots();
+  }
 
   Future getuserid() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return userid = pref.getString("uid");
   }
+}
+
+class TypeMessage {
+  static const text = 0;
+  static const image = 1;
+  static const sticker = 2;
 }
