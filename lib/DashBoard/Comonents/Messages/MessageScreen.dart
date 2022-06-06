@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -48,7 +49,7 @@ class _MessageScreenState extends State<MessageScreen> {
   String? lastLoggedIn;
   String? lastLoggedOut;
   var messageList = [];
-  List<QueryDocumentSnapshot> listMessage = [];
+  List<DocumentSnapshot> listMessage = [];
   Socket? socket;
 
   // var currentUser;
@@ -1077,7 +1078,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         flex: 1,
                         child: Center(
                             child: Lottie.asset("assets/Lotties/empty.json")))
-                    : StreamBuilder<QuerySnapshot>(
+                    : StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("Chats")
                             .doc(currentuid)
@@ -1095,7 +1096,7 @@ class _MessageScreenState extends State<MessageScreen> {
                               return ListView.builder(
                                 padding: EdgeInsets.all(10),
                                 itemBuilder: (context, index) =>
-                                    buildItem(index, listMessage[index]),
+                                    buildItem(index, snapshot.data),
                                 itemCount: listMessage.length,
                                 reverse: true,
                                 controller: _scrollController,
@@ -1106,7 +1107,7 @@ class _MessageScreenState extends State<MessageScreen> {
                             }
                           } else {
                             return Center(
-                              child: CircularProgressIndicator(
+                              child: SpinKitFadingCube(
                                 color: btnColor,
                               ),
                             );
@@ -1114,6 +1115,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         },
                       ))));
   }
+
   // listMessage = snapshot.data.docs;
   // if (listMessage.length > 0) {
   //   return ListView.builder(
@@ -1175,7 +1177,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
     var response =
         await Dio().get(url, options: Options(responseType: ResponseType.json));
-    print(response.toString());
+    print('videocallresponse==' + response.toString());
   }
 
   void setMessage(String type, String message) {
@@ -1228,7 +1230,7 @@ class _MessageScreenState extends State<MessageScreen> {
       // _scrollController.animateTo(0,
       //     duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
-      toastmessage.warningmessage(context, "nothing to send");
+      Fluttertoast.showToast(msg: 'NOTHING TO SHOW');
     }
   }
 

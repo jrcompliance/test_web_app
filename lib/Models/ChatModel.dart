@@ -33,14 +33,10 @@ class ChatModel {
     String isFrom = doc.get("isFrom");
     String isTo = doc.get("isTo");
     String time = doc.get("time");
-    String content = doc.get("content");
-    int type = doc.get("type");
+    var content = doc.get("content");
+    String type = doc.get("type");
     return ChatModel(
-        isFrom: isFrom,
-        isTo: isTo,
-        time: time,
-        content: content,
-        type: "source");
+        isFrom: isFrom, isTo: isTo, time: time, content: content, type: type);
   }
 
   // static ChatModel fromJson(Map<String, dynamic> json) => ChatModel(

@@ -2111,6 +2111,12 @@ class _FinanceState extends State<Finance> {
 
   Widget productAddition(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    List productList = [
+      "BIS Certificate",
+      "WPC Approval",
+      "LMPC Approval",
+      "ISI Certificate"
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -2297,7 +2303,17 @@ class _FinanceState extends State<Finance> {
                 child: Container(
                     height: size.width * 0.022,
                     width: size.width * 0.25,
-                    child: field(_serviceSearchController2, "Search", 1, true)),
+                    child: TextField(
+                      controller: _serviceSearchController2,
+                      decoration: InputDecoration(
+                          suffixIcon: productList.isNotEmpty
+                              ? IconButton(
+                                  onPressed: () {
+                                    _serviceSearchController2.clear();
+                                  },
+                                  icon: Icon(Icons.cancel))
+                              : Icon(Icons.search)),
+                    )),
               ),
               Padding(
                 padding: EdgeInsets.all(10.0),
@@ -2330,7 +2346,7 @@ class _FinanceState extends State<Finance> {
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             controller: sc,
-            itemCount: 10,
+            itemCount: productList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.only(
@@ -2417,7 +2433,11 @@ class _FinanceState extends State<Finance> {
               "NEXT",
               style: TxtStls.fieldstyle1,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                isServiceAdded = !isServiceAdded;
+              });
+            },
           ),
         )
       ],
