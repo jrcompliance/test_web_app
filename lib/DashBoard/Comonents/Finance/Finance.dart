@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -13,7 +14,9 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -53,6 +56,7 @@ class _FinanceState extends State<Finance> {
 
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _generatedateController = TextEditingController();
+  final TextEditingController _selectedDateController = TextEditingController();
   final TextEditingController _duedatedateController = TextEditingController();
   final TextEditingController _extrenalController = TextEditingController();
   double _gstamount = 0.00;
@@ -76,6 +80,9 @@ class _FinanceState extends State<Finance> {
   bool isAdded = false;
 
   final TextEditingController _gstController = TextEditingController();
+  final TextEditingController _gstController2 = TextEditingController();
+  final TextEditingController _serviceSearchController2 =
+      TextEditingController();
   final TextEditingController _tradenameController = TextEditingController();
   final TextEditingController _addressControoler = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
@@ -94,8 +101,18 @@ class _FinanceState extends State<Finance> {
 
   List cust = [];
   List<CustomerModel> allCustomers = [];
+
+  var popValue;
+
+  bool isClicked = false;
+
+  final ScrollController sc = ScrollController();
+  var randomNo;
+
   @override
   void initState() {
+    var rng = new Random();
+    randomNo = rng.nextInt(900000) + 100000;
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(seconds: 2)).then((value) {
@@ -135,22 +152,22 @@ class _FinanceState extends State<Finance> {
                         ),
                       ),
                       SizedBox(width: 10),
-                      InkWell(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: btnColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 40,
-                          width: 40,
-                          child: Icon(
-                            Icons.calendar_today_sharp,
-                            color: bgColor,
-                          ),
-                        ),
-                        onTap: () {
-                          dateTimeRangePicker();
-                        },
-                      ),
+                      // InkWell(
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //         color: btnColor,
+                      //         borderRadius: BorderRadius.circular(10)),
+                      //     height: 40,
+                      //     width: 40,
+                      //     child: Icon(
+                      //       Icons.calendar_today_sharp,
+                      //       color: bgColor,
+                      //     ),
+                      //   ),
+                      //   onTap: () {
+                      //     //   dateTimeRangePicker();
+                      //   },
+                      // ),
                       // RaisedButton(
                       //   shape: RoundedRectangleBorder(
                       //       borderRadius:
@@ -272,6 +289,7 @@ class _FinanceState extends State<Finance> {
                                           //  print(2);
 
                                           setState(() {
+                                            isClicked = true;
                                             Idocid = snp.Idocid;
                                             cusname = snp.Customername;
                                             cusphone = snp.Customerphone;
@@ -704,7 +722,8 @@ class _FinanceState extends State<Finance> {
                                 ],
                               )
                     : Container(
-                        child: productAddition(),
+                        child:
+                            isClicked ? productAddition(context) : SizedBox(),
                       ),
               ),
             ),
@@ -1573,6 +1592,7 @@ class _FinanceState extends State<Finance> {
 
   Widget PreviewInvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     DateTime? duedate = DateTime.parse(_duedatedateController.text);
     DateTime? generatedate = DateTime.parse(_generatedateController.text);
     return Container(
@@ -1923,6 +1943,14 @@ class _FinanceState extends State<Finance> {
     "Status",
     "Lead ID"
   ];
+  final _titlelist2 = [
+    "SN ",
+    "Name",
+    "Price",
+    "Tax Slab",
+    "Sample Qty",
+    "SAC Code",
+  ];
 
   Widget titleWidget() {
     Size size = MediaQuery.of(context).size;
@@ -2081,104 +2109,375 @@ class _FinanceState extends State<Finance> {
     }
   }
 
-  Widget productAddition() {
+  Widget productAddition(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Flexible(
                 fit: FlexFit.tight,
                 flex: 2,
                 child: Container(
                   height: size.height * 0.25,
-                  decoration: BoxDecoration(color: Colors.pink),
+                  decoration: BoxDecoration(),
+                  child: Container(
+                    padding: EdgeInsets.only(left: 100, top: 20),
+                    alignment: Alignment.topLeft,
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        "https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=20&m=1223671392&s=612x612&w=0&h=lGpj2vWAI3WUT1JeJWm1PRoHT3V15_1pdcTn2szdwQ0=",
+                        height: 60,
+                        width: 60,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
                 )),
             Flexible(
                 fit: FlexFit.tight,
-                flex: 2,
+                flex: 3,
                 child: Column(children: [
                   Row(
                     children: [
                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
-                        child: Text("Date"),
+                        child: Text(
+                          "Date",
+                          style: TxtStls.fieldtitlestyle11,
+                        ),
                       ),
                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
-                        child: Text("Quotation No"),
+                        child: Text(
+                          "Quotation No",
+                          style: TxtStls.fieldtitlestyle11,
+                        ),
                       ),
                     ],
                   ),
+                  space(),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
-                        child: Text("Date"),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 100),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AbgColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(16.0)),
+                            child: Expanded(
+                              flex: 1,
+                              child: InkWell(
+                                child: field(
+                                    _selectedDateController,
+                                    DateFormat('dd/MM/yyyy')
+                                        .format(DateTime.now()),
+                                    1,
+                                    false,
+                                    Icon(
+                                      Icons.calendar_today_outlined,
+                                      color: btnColor,
+                                    )),
+                                onTap: () {
+                                  MyCalenders.pickEndDate(
+                                      context, _selectedDateController);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
-                        child: Text("Quotation No"),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 100),
+                          child: Container(
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                  color: AbgColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(16.0)),
+                              child: Text(
+                                "#" + randomNo.toString(),
+                                style: TxtStls.fieldstyle,
+                              )),
+                        ),
                       ),
                     ],
                   ),
-
-                  // child: Row(
-                  //   children: [
-                  //     Column(
-                  //       children: [
-                  //         Flexible(
-                  //           fit: FlexFit.tight,
-                  //           flex: 2,
-                  //           child: Text("Date"),
-                  //         ),
-                  //         Flexible(
-                  //           fit: FlexFit.tight,
-                  //           flex: 1,
-                  //           child: Container(
-                  //             height: size.height * 0.1,
-                  //             decoration: BoxDecoration(
-                  //               color: txtColor,
-                  //               borderRadius: BorderRadius.circular(10.0),
-                  //             ),
-                  //             child: Row(children: [
-                  //               Text(DateFormat('dd/MM/yyyy')
-                  //                   .format(DateTime.now())
-                  //                   .toString()),
-                  //               IconButton(
-                  //                   iconSize: 30,
-                  //                   onPressed: () {
-                  //                     showDatePicker(
-                  //                         context: context,
-                  //                         initialDate: DateTime.now(),
-                  //                         firstDate: DateTime(2022),
-                  //                         lastDate: DateTime(3021));
-                  //                   },
-                  //                   icon: Icon(Icons.calendar_today_rounded))
-                  //             ]),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     Flexible(
-                  //       flex: 2,
-                  //       fit: FlexFit.tight,
-                  //       child: Text("Quotation No"),
-                  //     ),
-                  //   ],
-                  // ),
+                  space(),
+                  Row(
+                    children: [
+                      Container(
+                        width: size.width * 0.20,
+                        decoration: BoxDecoration(
+                          color: fieldColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0)),
+                        ),
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(left: 15, right: 0, top: 5),
+                          child: TextField(
+                            controller: _gstController2,
+                            style: TxtStls.fieldstyle,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Enter Gst Number...",
+                                hintStyle: TxtStls.fieldstyle),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          var provider =
+                              Provider.of<GstProvider>(context, listen: false);
+                          provider
+                              .fetchGstData(_gstController2.text.toString())
+                              .whenComplete(() {
+                            Future.delayed(Duration(seconds: 2)).then((value) {
+                              setState(() {
+                                tradename = provider.tradename.toString();
+                                address = provider.principalplace.toString();
+                                pan = provider.pan.toString();
+                                pincode = provider.pincode.toString();
+                              });
+                            });
+                          });
+                        },
+                        child: Container(
+                          width: size.width * 0.025,
+                          padding: EdgeInsets.symmetric(vertical: 12.5),
+                          color: btnColor,
+                          child: Provider.of<GstProvider>(context).isLoading
+                              ? SpinKitFadingCube(
+                                  color: bgColor,
+                                  size: 23,
+                                )
+                              : Icon(
+                                  Icons.search,
+                                  color: bgColor,
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ])),
           ],
         ),
-        Container(),
-        Container(),
-        Container(),
+        Flexible(
+          flex: 1,
+          child: Text(
+            "Choose Service",
+            style: TxtStls.fieldtitlestyle11,
+          ),
+        ),
+        space(),
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                    height: size.width * 0.022,
+                    width: size.width * 0.25,
+                    child: field(_serviceSearchController2, "Search", 1, true)),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: btnColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0))),
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Add",
+                      style: TxtStls.fieldstyle1,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        space(),
+        space(),
+        Container(
+          child: titleWidget2(),
+        ),
+        Container(
+          height: size.height * 0.35,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            controller: sc,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+                child: Container(
+                  height: size.width * 0.025,
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            flex: 1,
+                            child: Text(
+                              "${index + 1}",
+                              style: TxtStls.fieldstyle,
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: productWidget(
+                              "assets/Images/pending.png",
+                              "Product Type",
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 50),
+                              child: Text(
+                                "\$56468",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            )),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: Text(
+                                "GST %",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: Text(
+                                "2 pieces",
+                                style: TxtStls.fieldstyle,
+                              )),
+                        ),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: SACCode(
+                                "894456",
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        space(),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
+                primary: btnColor),
+            child: Text(
+              "NEXT",
+              style: TxtStls.fieldstyle1,
+            ),
+            onPressed: () {},
+          ),
+        )
       ],
+    );
+  }
+
+  Widget titleWidget2() {
+    Size size = MediaQuery.of(context).size;
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: _titlelist2
+            .map((e) => Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      e,
+                      style: TxtStls.fieldstyle,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: AbgColor,
+                    )
+                  ],
+                )))
+            .toList());
+  }
+
+  Widget productWidget(assetImage, text) {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 15,
+          child: Image.asset(
+            assetImage,
+            height: 15,
+            width: 15,
+            fit: BoxFit.fill,
+            filterQuality: FilterQuality.high,
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Text(
+          text,
+          style: TxtStls.fieldstyle111,
+        )
+      ],
+    );
+  }
+
+  Widget SACCode(code) {
+    return Text(
+      code,
+      style: TxtStls.fieldstyle,
     );
   }
 }

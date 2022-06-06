@@ -156,6 +156,7 @@ flutter:
     - assets/Images/fail.png
     - assets/Images/live.png
     - assets/Images/pdf.png
+    - assets/Images/send.png
     - assets/Images/invoicebg.png
     - assets/Images/Authorized_Sign.png
     - assets/Images/disputed.png

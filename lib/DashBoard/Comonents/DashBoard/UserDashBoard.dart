@@ -499,7 +499,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                       Padding(
                                         padding: EdgeInsets.only(left: 20),
                                         child: Container(
-                                          height: size.height * 0.3,
+                                          height: size.height * 0.34,
                                           child: Row(
                                             children: [
                                               Expanded(
@@ -1019,7 +1019,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                               height: 5,
                                             ),
                                             Container(
-                                                height: size.height * 0.3,
+                                                height: size.height * 0.28,
                                                 child: SfCircularChart(
                                                     annotations: <
                                                         CircularChartAnnotation>[

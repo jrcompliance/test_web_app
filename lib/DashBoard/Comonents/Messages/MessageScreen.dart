@@ -1089,13 +1089,14 @@ class _MessageScreenState extends State<MessageScreen> {
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData) {
                             listMessage = snapshot.data!.docs;
-                            print('[' + listMessage.toString());
+                            print('[[[[' + listMessage.toString());
+                            print('[[[[' + listMessage.length.toString());
                             if (listMessage.length > 0) {
                               return ListView.builder(
                                 padding: EdgeInsets.all(10),
-                                itemBuilder: (context, index) => buildItem(
-                                    index, snapshot.data?.docs[index]),
-                                itemCount: snapshot.data?.docs.length,
+                                itemBuilder: (context, index) =>
+                                    buildItem(index, listMessage[index]),
+                                itemCount: listMessage.length,
                                 reverse: true,
                                 controller: _scrollController,
                               );
