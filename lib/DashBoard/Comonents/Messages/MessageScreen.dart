@@ -20,10 +20,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/ChatWidgets/MyOwnCard.dart';
 import 'package:test_web_app/ChatWidgets/ReplyCard.dart';
 import 'package:test_web_app/Constants/reusable.dart';
+import 'package:test_web_app/DashBoard/Comonents/Messages/ChatItem.dart';
 import 'package:test_web_app/Models/ChatModel.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/NewModels/ChattingScreen.dart';
+import 'package:test_web_app/NewModels/MessageModel.dart';
 import 'package:test_web_app/NewModels/RoomModel.dart';
 import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
@@ -50,14 +52,11 @@ class _MessageScreenState extends State<MessageScreen> {
   String? currentuid;
   String? lastLoggedIn;
   String? lastLoggedOut;
-  var messageList = [];
-  List<DocumentSnapshot> listMessage = [];
-  Socket? socket;
-
   User? user = FirebaseAuth.instance.currentUser;
   EmployeesModel? logginUserModel;
   late var employeeModal;
-  late var roomModal;
+  RoomModel roomModel = RoomModel();
+  // late var roomModal;
   getUserData() {
     FirebaseFirestore.instance
         .collection("EmployeeData")
@@ -69,6 +68,8 @@ class _MessageScreenState extends State<MessageScreen> {
     });
   }
 
+  CollectionReference? chatsCollectionReference;
+
   bool filePicked = false;
 
   var fileName;
@@ -79,9 +80,8 @@ class _MessageScreenState extends State<MessageScreen> {
     super.initState();
     getUserData();
     employeeModal = EmployeesModel();
-    roomModal = RoomModel();
+    //  roomModal = RoomModel();
     // initializeSocket();
-    print("ggggg" + getChatMessage().toString());
     Future.delayed(Duration(seconds: 2)).then((value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
       currentuid = pref.getString("uid");
@@ -128,7 +128,6 @@ class _MessageScreenState extends State<MessageScreen> {
 
   @override
   void dispose() {
-    socket!.disconnect();
     _chatController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -278,6 +277,8 @@ class _MessageScreenState extends State<MessageScreen> {
                                     onTap: () {
                                       setState(() {
                                         _isTapped = true;
+                                        peerUid = employeeModel.uid;
+                                        print('peer==' + peerUid.toString());
                                         employeeModal = employeeModel;
                                         checkAndCreateNewRoom(
                                             employeeModel, context);
@@ -304,11 +305,13 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           Expanded(
             flex: 7,
-            child: roomModal == null
-                ? ChattingScreen(
-                    employeesModel: employeeModal,
-                    roomModel: roomModal,
-                  )
+            child: roomModel.roomId != null
+                ? chatScreen()
+                // roomModel.roomId != null
+                //     ? ChattingScreen(
+                //         employeesModel: employeeModal,
+                //         roomModel: roomModel,
+                //       )
                 : Container(),
             // child: Container(
             //   padding: EdgeInsets.all(20),
@@ -702,113 +705,6 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  Widget listview() {
-    return Expanded(
-        flex: 1,
-        child: SizedBox(
-            child: Container(
-                child: Provider.of<GetMessagesListProvider>(context,
-                                listen: false)
-                            .chatmodellist
-                            .length <=
-                        0
-                    ? Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Lottie.asset("assets/Lotties/empty.json")))
-                    : StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("Chats")
-                            .doc(currentuid)
-                            .collection("messages")
-                            .where("isTo", isEqualTo: peerUid)
-                            .orderBy("time", descending: false)
-                            .snapshots(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            listMessage = snapshot.data!.docs;
-                            print('[[[[' + listMessage.toString());
-                            print('[[[[' + listMessage.length.toString());
-                            if (listMessage.length > 0) {
-                              return ListView.builder(
-                                padding: EdgeInsets.all(10),
-                                itemBuilder: (context, index) =>
-                                    buildItem(index, snapshot.data),
-                                itemCount: listMessage.length,
-                                reverse: true,
-                                controller: _scrollController,
-                              );
-                            } else {
-                              return Center(
-                                  child: Text("No message here yet..."));
-                            }
-                          } else {
-                            return Center(
-                              child: SpinKitFadingCube(
-                                color: btnColor,
-                              ),
-                            );
-                          }
-                        },
-                      ))));
-  }
-
-  // listMessage = snapshot.data.docs;
-  // if (listMessage.length > 0) {
-  //   return ListView.builder(
-  //       controller: _scrollController,
-  //       itemCount: snapshot.data.docs.length,
-  //       reverse: true,
-  //       // Provider.of<GetMessagesListProvider>(context,
-  //       //         listen: false)
-  //       //     .chatmodellist
-  //       //     .length,
-  //       scrollDirection: Axis.vertical,
-  //       // controller: _scrollController,
-  //       itemBuilder: (_, index) {
-  //         return buildItem(
-  //             index, snapshot.data?.docs[index]);
-  //         // var data = Provider.of<GetMessagesListProvider>(
-  //         //         context,
-  //         //         listen: false)
-  //         //     .chatmodellist[index];
-  //         // if (data.isFrom == currentuid) {
-  //         //   return OwnMessageCard(
-  //         //       message: data.content ?? "",
-  //         //       time: data.time ?? "");
-  //         // } else {
-  //         //   return ReplyCard(
-  //         //       message: data.content ?? "",
-  //         //       time: data.time ?? "");
-  //         // }
-  //       });
-  // }
-  //  })
-  // :
-  // : Container(
-  //     child: Center(
-  //         child: Text(
-  //       "Say Hi....",
-  //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-  //     )),
-  //   ),
-  //     }
-
-  //   Text(snapshot.data.docs[3]['time'].toString());
-  // }),
-
-  Stream getChatMessage() {
-    return FirebaseFirestore.instance
-        .collection("Chats")
-        .doc(currentuid)
-        .collection("messages")
-        .where("isFrom", isEqualTo: currentuid)
-        .where("isTo", isEqualTo: peerUid)
-        .orderBy("time", descending: true)
-        .snapshots();
-  }
-
   createRoom() async {
     String url =
         "https://yalagala.whereby.com/0af4d394-e401-4409-89fa-54ea8aedf4d8";
@@ -816,357 +712,6 @@ class _MessageScreenState extends State<MessageScreen> {
     var response =
         await Dio().get(url, options: Options(responseType: ResponseType.json));
     print('videocallresponse==' + response.toString());
-  }
-
-  void setMessage(String type, String message) {
-    ChatModel messageModel = ChatModel(
-        type: type,
-        content: message,
-        time: DateTime.now().toString().substring(10, 16),
-        isFrom: currentuid,
-        isTo: peerUid);
-    print(messages);
-
-    setState(() {
-      messages.add(messageModel);
-    });
-  }
-
-  // void sendMessage(String message, String sourceId, String targetId) {
-  //   setMessage("source", message);
-  //   socket?.emit("message",
-  //       {"message": message, "sourceId": sourceId, "targetId": targetId});
-  // }
-  void sendMessage(
-      String content, String type, String currentUserId, String peerId) {
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .collection("Chats")
-        .doc(currentuid)
-        .collection("messages")
-        .doc();
-
-    ChatModel messageChat = ChatModel(
-      isFrom: currentUserId,
-      isTo: peerId,
-      time: DateTime.now().millisecondsSinceEpoch.toString(),
-      content: content,
-      type: type,
-    );
-
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      transaction.set(
-        documentReference,
-        messageChat.toJson(),
-      );
-    });
-  }
-
-  void onSendMessage(String content, String type) {
-    if (content.trim().isNotEmpty) {
-      _chatController.clear();
-      sendMessage(content, type, currentuid.toString(), peerUid.toString());
-      // _scrollController.animateTo(0,
-      //     duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    } else {
-      Fluttertoast.showToast(msg: 'NOTHING TO SHOW');
-    }
-  }
-
-  Widget buildItem(int index, DocumentSnapshot? document) {
-    if (document != null) {
-      ChatModel messageChat = ChatModel.fromDocument(document);
-      if (messageChat.isFrom == currentuid) {
-        // Right (my message)
-        return Row(
-          children: <Widget>[
-            messageChat.type == TypeMessage.text
-                // Text
-                ? Container(
-                    child: Text(
-                      messageChat.content,
-                      style: TextStyle(color: primaryColor),
-                    ),
-                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    width: 200,
-                    decoration: BoxDecoration(
-                        color: txtColor,
-                        borderRadius: BorderRadius.circular(8)),
-                    margin: EdgeInsets.only(
-                        bottom: isLastMessageRight(index) ? 20 : 10, right: 10),
-                  )
-                : messageChat.type == TypeMessage.image
-                    // Image
-                    ? Container(
-                        child: OutlinedButton(
-                          child: Material(
-                            child: Image.network(
-                              messageChat.content,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: txtColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8),
-                                    ),
-                                  ),
-                                  width: 200,
-                                  height: 200,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: btnColor,
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, object, stackTrace) {
-                                return Material(
-                                  child: Image.asset(
-                                    'images/img_not_available.jpeg',
-                                    width: 200,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                );
-                              },
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            clipBehavior: Clip.hardEdge,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FullPhotoPage(
-                                  url: messageChat.content,
-                                ),
-                              ),
-                            );
-                          },
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  EdgeInsets.all(0))),
-                        ),
-                        margin: EdgeInsets.only(
-                            bottom: isLastMessageRight(index) ? 20 : 10,
-                            right: 10),
-                      )
-                    // Sticker
-                    : Container(
-                        child: Image.asset(
-                          'images/${messageChat.content}.gif',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        margin: EdgeInsets.only(
-                            bottom: isLastMessageRight(index) ? 20 : 10,
-                            right: 10),
-                      ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.end,
-        );
-      } else {
-        // Left (peer message)
-        return Container(
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  isLastMessageLeft(index)
-                      ? Material(
-                          child: Image.network(
-                            "peerAvatar",
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  color: btnColor,
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, object, stackTrace) {
-                              return Icon(
-                                Icons.account_circle,
-                                size: 35,
-                                color: txtColor,
-                              );
-                            },
-                            width: 35,
-                            height: 35,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(18),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                        )
-                      : Container(width: 35),
-                  messageChat.type == TypeMessage.text
-                      ? Container(
-                          child: Text(
-                            messageChat.content,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                          width: 200,
-                          decoration: BoxDecoration(
-                              color: primaryColor,
-                              borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.only(left: 10),
-                        )
-                      : messageChat.type == TypeMessage.image
-                          ? Container(
-                              child: TextButton(
-                                child: Material(
-                                  child: Image.network(
-                                    messageChat.content,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          color: txtColor,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(8),
-                                          ),
-                                        ),
-                                        width: 200,
-                                        height: 200,
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: btnColor,
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder:
-                                        (context, object, stackTrace) =>
-                                            Material(
-                                      child: Image.asset(
-                                        'images/img_not_available.jpeg',
-                                        width: 200,
-                                        height: 200,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                    ),
-                                    width: 200,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FullPhotoPage(
-                                          url: messageChat.content),
-                                    ),
-                                  );
-                                },
-                                style: ButtonStyle(
-                                    padding:
-                                        MaterialStateProperty.all<EdgeInsets>(
-                                            EdgeInsets.all(0))),
-                              ),
-                              margin: EdgeInsets.only(left: 10),
-                            )
-                          : Container(
-                              child: Image.asset(
-                                'images/${messageChat.content}.gif',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                              margin: EdgeInsets.only(
-                                  bottom: isLastMessageRight(index) ? 20 : 10,
-                                  right: 10),
-                            ),
-                ],
-              ),
-
-              // Time
-              isLastMessageLeft(index)
-                  ? Container(
-                      child: Text(
-                        // messageChat.time,
-                        DateFormat('dd MMM kk:mm').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(messageChat.time.toString()))),
-                        style: TextStyle(
-                            color: txtColor,
-                            fontSize: 12,
-                            fontStyle: FontStyle.italic),
-                      ),
-                      margin: EdgeInsets.only(left: 50, top: 5, bottom: 5),
-                    )
-                  : SizedBox.shrink()
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
-          margin: EdgeInsets.only(bottom: 10),
-        );
-      }
-    } else {
-      return SizedBox.shrink();
-    }
-  }
-
-  bool isLastMessageLeft(int index) {
-    if ((index > 0 && listMessage[index - 1].get("isFrom") == currentuid) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isLastMessageRight(int index) {
-    if ((index > 0 && listMessage[index - 1].get("isFrom") != currentuid) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   String createRoomId(EmployeesModel toChatUserModel) {
@@ -1191,7 +736,6 @@ class _MessageScreenState extends State<MessageScreen> {
 
   checkAndCreateNewRoom(
       EmployeesModel toChatUserModel, BuildContext context) async {
-    RoomModel roomModel = RoomModel();
     String roomId = createRoomId(toChatUserModel);
 
     CollectionReference roomCollectionReference =
@@ -1215,13 +759,17 @@ class _MessageScreenState extends State<MessageScreen> {
 
     if (roomModel != null) {
       print('room available');
+
+      // setState(() {
+      //   roomModal = roomModel;
+      // });
+      print('roooom' + roomModel.roomId.toString());
       setState(() {
-        roomModal = roomModel;
+        chatScreen(
+          roomModel: roomModel,
+          employeesModel: toChatUserModel,
+        );
       });
-      // ChattingScreen(
-      //   roomModel: roomModel,
-      //   employeesModel: toChatUserModel,
-      // );
 
       // Navigator.push(
       //     context,
@@ -1231,5 +779,98 @@ class _MessageScreenState extends State<MessageScreen> {
       //               employeesModel: toChatUserModel,
       //             )));
     }
+  }
+
+  TextEditingController textEditingController = TextEditingController();
+  Widget chatScreen({RoomModel? roomModel, EmployeesModel? employeesModel}) {
+    return Column(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(employeesModel!.uname ?? "Chat"),
+        ),
+        Expanded(
+            flex: 8,
+            child: StreamBuilder<QuerySnapshot>(
+                stream: chatsCollectionReference!
+                    // .where("senderId", isEqualTo: widget.roomModel.senderId)
+                    // .where('peerId', isEqualTo: widget.roomModel.peerId)
+                    .orderBy("timeStamp")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.docs.length == 0) {
+                      return Center(child: Text("No chats Found"));
+                    }
+
+                    return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (ctx, index) {
+                          MessageModel messageModel = MessageModel.fromMap(
+                              snapshot.data!.docs[index].data()
+                                  as Map<String, dynamic>);
+                          return ChatItem(messageModel);
+                        });
+                  }
+
+                  return Center(child: CircularProgressIndicator());
+                })),
+        Expanded(
+          flex: 1,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 9,
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                      hintText: "Enter message", border: OutlineInputBorder()),
+                ),
+              ),
+              Expanded(
+                  flex: 1,
+                  child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          sendMessage();
+                        });
+                      },
+                      child: Icon(
+                        Icons.send,
+                        color: Theme.of(context).accentColor,
+                      )))
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  sendMessage() async {
+    if (textEditingController.text.length == 0) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Enter message")));
+      return;
+    }
+    String message = textEditingController.text;
+
+    MessageModel messageModel = MessageModel();
+    messageModel.message = message;
+    await chatsCollectionReference!.add(messageModel.toMap());
+
+    Map<String, dynamic> roomMap = Map();
+    roomMap['lastMessage'] = message;
+    roomMap['timeStamp'] = FieldValue.serverTimestamp();
+
+    await FirebaseFirestore.instance
+        .collection("Rooms")
+        .doc(roomModel.roomId)
+        .update(roomMap);
+
+    textEditingController.clear();
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:test_web_app/DashBoard/Comonents/Messages/ChatItem.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/NewModels/MessageModel.dart';
 import 'package:test_web_app/NewModels/RoomModel.dart';
@@ -19,10 +20,10 @@ class _ChattingScreenState extends State<ChattingScreen> {
   TextEditingController textEditingController = TextEditingController();
 
   CollectionReference? chatsCollectionReference;
-
   @override
   void initState() {
     super.initState();
+
     // FirebaseFirestore.instance.collection("Rooms").doc().;
     print('roomid--' + widget.roomModel.roomId.toString());
     chatsCollectionReference = FirebaseFirestore.instance
@@ -43,6 +44,8 @@ class _ChattingScreenState extends State<ChattingScreen> {
               flex: 9,
               child: StreamBuilder<QuerySnapshot>(
                   stream: chatsCollectionReference!
+                      // .where("senderId", isEqualTo: widget.roomModel.senderId)
+                      // .where('peerId', isEqualTo: widget.roomModel.peerId)
                       .orderBy("timeStamp")
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -123,92 +126,92 @@ class _ChattingScreenState extends State<ChattingScreen> {
   }
 }
 
-class ChatItem extends StatelessWidget {
-  MessageModel messageModel;
-  ChatItem(this.messageModel);
-  bool left = false;
-  @override
-  Widget build(BuildContext context) {
-    if (messageModel.senderId == FirebaseAuth.instance.currentUser!.uid) {
-      left = false;
-    } else {
-      left = true;
-    }
-    return Row(
-      mainAxisAlignment: left ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: [
-        Card(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.2,
-            padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: left ? Colors.red[300] : Colors.green[300]),
-            child: Column(
-              crossAxisAlignment:
-                  left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-              children: [
-                Text(
-                  messageModel.message ?? "",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    messageModel.timeStamp != null
-                        ? Utilities.displayTimeAgoFromTimestamp(
-                            messageModel.timeStamp!.toDate().toString())
-                        : "",
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class ChatItem extends StatelessWidget {
+//   MessageModel messageModel;
+//   ChatItem(this.messageModel);
+//   bool left = false;
+//   @override
+//   Widget build(BuildContext context) {
+//     if (messageModel.senderId == FirebaseAuth.instance.currentUser!.uid) {
+//       left = false;
+//     } else {
+//       left = true;
+//     }
+//     return Row(
+//       mainAxisAlignment: left ? MainAxisAlignment.start : MainAxisAlignment.end,
+//       children: [
+//         Card(
+//           child: Container(
+//             width: MediaQuery.of(context).size.width * 0.2,
+//             padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+//             decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.all(Radius.circular(8)),
+//                 color: left ? Colors.red[300] : Colors.green[300]),
+//             child: Column(
+//               crossAxisAlignment:
+//                   left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+//               children: [
+//                 Text(
+//                   messageModel.message ?? "",
+//                   style: TextStyle(color: Colors.white, fontSize: 16),
+//                 ),
+//                 SizedBox(
+//                   height: 6,
+//                 ),
+//                 Align(
+//                   alignment: Alignment.bottomRight,
+//                   child: Text(
+//                     messageModel.timeStamp != null
+//                         ? Utilities.displayTimeAgoFromTimestamp(
+//                             messageModel.timeStamp!.toDate().toString())
+//                         : "",
+//                     style: TextStyle(color: Colors.white, fontSize: 12),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
-class Utilities {
-  static String displayTimeAgoFromTimestamp(String dateString,
-      {bool numericDates = true}) {
-    DateTime date = DateTime.parse(dateString);
-    final date2 = DateTime.now();
-    final difference = date2.difference(date);
-
-    if ((difference.inDays / 365).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} years ';
-    } else if ((difference.inDays / 365).floor() >= 1) {
-      return (numericDates) ? '1 year ' : 'Last year';
-    } else if ((difference.inDays / 30).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} months ';
-    } else if ((difference.inDays / 30).floor() >= 1) {
-      return (numericDates) ? '1 month ' : 'Last month';
-    } else if ((difference.inDays / 7).floor() >= 2) {
-      return '${(difference.inDays / 7).floor()} weeks ';
-    } else if ((difference.inDays / 7).floor() >= 1) {
-      return (numericDates) ? '1 week ' : 'Last week';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days ';
-    } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 day' : 'Yesterday';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours ';
-    } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 hour' : 'An hour';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} min';
-    } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 min' : 'min';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} sec ';
-    } else {
-      return 'Just now';
-    }
-  }
-}
+// class Utilities {
+//   static String displayTimeAgoFromTimestamp(String dateString,
+//       {bool numericDates = true}) {
+//     DateTime date = DateTime.parse(dateString);
+//     final date2 = DateTime.now();
+//     final difference = date2.difference(date);
+//
+//     if ((difference.inDays / 365).floor() >= 2) {
+//       return '${(difference.inDays / 365).floor()} years ';
+//     } else if ((difference.inDays / 365).floor() >= 1) {
+//       return (numericDates) ? '1 year ' : 'Last year';
+//     } else if ((difference.inDays / 30).floor() >= 2) {
+//       return '${(difference.inDays / 365).floor()} months ';
+//     } else if ((difference.inDays / 30).floor() >= 1) {
+//       return (numericDates) ? '1 month ' : 'Last month';
+//     } else if ((difference.inDays / 7).floor() >= 2) {
+//       return '${(difference.inDays / 7).floor()} weeks ';
+//     } else if ((difference.inDays / 7).floor() >= 1) {
+//       return (numericDates) ? '1 week ' : 'Last week';
+//     } else if (difference.inDays >= 2) {
+//       return '${difference.inDays} days ';
+//     } else if (difference.inDays >= 1) {
+//       return (numericDates) ? '1 day' : 'Yesterday';
+//     } else if (difference.inHours >= 2) {
+//       return '${difference.inHours} hours ';
+//     } else if (difference.inHours >= 1) {
+//       return (numericDates) ? '1 hour' : 'An hour';
+//     } else if (difference.inMinutes >= 2) {
+//       return '${difference.inMinutes} min';
+//     } else if (difference.inMinutes >= 1) {
+//       return (numericDates) ? '1 min' : 'min';
+//     } else if (difference.inSeconds >= 3) {
+//       return '${difference.inSeconds} sec ';
+//     } else {
+//       return 'Just now';
+//     }
+//   }
+// }
