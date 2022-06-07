@@ -38,7 +38,7 @@ dependencies:
   fl_chart: ^0.36.1
   firebase_core: ^1.11.0
   firebase_auth: ^3.0.1
-  cloud_firestore: ^3.1.7
+  cloud_firestore: ^3.1.17
   firebase_storage: ^10.0.1
   firebase_messaging: ^11.2.6
   flutter_local_notifications:
