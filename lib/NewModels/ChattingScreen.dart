@@ -38,64 +38,71 @@ class _ChattingScreenState extends State<ChattingScreen> {
       appBar: AppBar(
         title: Text(widget.employeesModel.uname ?? "Chat"),
       ),
-      body: Column(
+      body: Row(
         children: [
-          Expanded(
-              flex: 9,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: chatsCollectionReference!
-                      // .where("senderId", isEqualTo: widget.roomModel.senderId)
-                      // .where('peerId', isEqualTo: widget.roomModel.peerId)
-                      .orderBy("timeStamp")
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    }
-
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.docs.length == 0) {
-                        return Center(child: Text("No chats Found"));
-                      }
-
-                      return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (ctx, index) {
-                            MessageModel messageModel = MessageModel.fromMap(
-                                snapshot.data!.docs[index].data()
-                                    as Map<String, dynamic>);
-                            return ChatItem(messageModel);
-                          });
-                    }
-
-                    return Center(child: CircularProgressIndicator());
-                  })),
-          Expanded(
-            flex: 1,
-            child: Row(
+          Container(
+            child: Column(
               children: [
                 Expanded(
-                  flex: 9,
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                        hintText: "Enter message",
-                        border: OutlineInputBorder()),
-                  ),
-                ),
+                    flex: 9,
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: chatsCollectionReference!
+                            // .where("senderId", isEqualTo: widget.roomModel.senderId)
+                            // .where('peerId', isEqualTo: widget.roomModel.peerId)
+                            .orderBy("timeStamp")
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.docs.length == 0) {
+                              return Center(child: Text("No chats Found"));
+                            }
+
+                            return ListView.builder(
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (ctx, index) {
+                                  MessageModel messageModel =
+                                      MessageModel.fromMap(
+                                          snapshot.data!.docs[index].data()
+                                              as Map<String, dynamic>);
+                                  return ChatItem(messageModel);
+                                });
+                          }
+
+                          return Center(child: CircularProgressIndicator());
+                        })),
                 Expanded(
-                    flex: 1,
-                    child: InkWell(
-                        onTap: () {
-                          sendMessage();
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: Theme.of(context).accentColor,
-                        )))
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 9,
+                        child: TextField(
+                          controller: textEditingController,
+                          decoration: InputDecoration(
+                              hintText: "Enter message",
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: InkWell(
+                              onTap: () {
+                                sendMessage();
+                              },
+                              child: Icon(
+                                Icons.send,
+                                color: Theme.of(context).accentColor,
+                              )))
+                    ],
+                  ),
+                )
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -125,93 +132,3 @@ class _ChattingScreenState extends State<ChattingScreen> {
     textEditingController.clear();
   }
 }
-
-// class ChatItem extends StatelessWidget {
-//   MessageModel messageModel;
-//   ChatItem(this.messageModel);
-//   bool left = false;
-//   @override
-//   Widget build(BuildContext context) {
-//     if (messageModel.senderId == FirebaseAuth.instance.currentUser!.uid) {
-//       left = false;
-//     } else {
-//       left = true;
-//     }
-//     return Row(
-//       mainAxisAlignment: left ? MainAxisAlignment.start : MainAxisAlignment.end,
-//       children: [
-//         Card(
-//           child: Container(
-//             width: MediaQuery.of(context).size.width * 0.2,
-//             padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-//             decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.all(Radius.circular(8)),
-//                 color: left ? Colors.red[300] : Colors.green[300]),
-//             child: Column(
-//               crossAxisAlignment:
-//                   left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-//               children: [
-//                 Text(
-//                   messageModel.message ?? "",
-//                   style: TextStyle(color: Colors.white, fontSize: 16),
-//                 ),
-//                 SizedBox(
-//                   height: 6,
-//                 ),
-//                 Align(
-//                   alignment: Alignment.bottomRight,
-//                   child: Text(
-//                     messageModel.timeStamp != null
-//                         ? Utilities.displayTimeAgoFromTimestamp(
-//                             messageModel.timeStamp!.toDate().toString())
-//                         : "",
-//                     style: TextStyle(color: Colors.white, fontSize: 12),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class Utilities {
-//   static String displayTimeAgoFromTimestamp(String dateString,
-//       {bool numericDates = true}) {
-//     DateTime date = DateTime.parse(dateString);
-//     final date2 = DateTime.now();
-//     final difference = date2.difference(date);
-//
-//     if ((difference.inDays / 365).floor() >= 2) {
-//       return '${(difference.inDays / 365).floor()} years ';
-//     } else if ((difference.inDays / 365).floor() >= 1) {
-//       return (numericDates) ? '1 year ' : 'Last year';
-//     } else if ((difference.inDays / 30).floor() >= 2) {
-//       return '${(difference.inDays / 365).floor()} months ';
-//     } else if ((difference.inDays / 30).floor() >= 1) {
-//       return (numericDates) ? '1 month ' : 'Last month';
-//     } else if ((difference.inDays / 7).floor() >= 2) {
-//       return '${(difference.inDays / 7).floor()} weeks ';
-//     } else if ((difference.inDays / 7).floor() >= 1) {
-//       return (numericDates) ? '1 week ' : 'Last week';
-//     } else if (difference.inDays >= 2) {
-//       return '${difference.inDays} days ';
-//     } else if (difference.inDays >= 1) {
-//       return (numericDates) ? '1 day' : 'Yesterday';
-//     } else if (difference.inHours >= 2) {
-//       return '${difference.inHours} hours ';
-//     } else if (difference.inHours >= 1) {
-//       return (numericDates) ? '1 hour' : 'An hour';
-//     } else if (difference.inMinutes >= 2) {
-//       return '${difference.inMinutes} min';
-//     } else if (difference.inMinutes >= 1) {
-//       return (numericDates) ? '1 min' : 'min';
-//     } else if (difference.inSeconds >= 3) {
-//       return '${difference.inSeconds} sec ';
-//     } else {
-//       return 'Just now';
-//     }
-//   }
-// }

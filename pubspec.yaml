@@ -85,6 +85,12 @@ dependencies:
   path: ^1.8.0
   flutter_linkify: ^4.0.2
   flutter_native_image: ^0.0.4
+  syncfusion_flutter_xlsio: ^19.1.64-beta
+  path_provider: ^2.0.1
+  open_file: ^3.2.1
+  universal_html: ^2.0.8
+  gsheets: ^0.4.2
+  uuid: ^3.0.6
 
 
 

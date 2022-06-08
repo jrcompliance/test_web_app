@@ -49,6 +49,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -68,6 +69,8 @@ import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/Models/UserModels.dart';
+import 'package:test_web_app/NewModels/MessageModel.dart';
+import 'package:test_web_app/NewModels/RoomModel.dart';
 import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -87,6 +90,8 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
   String chatName = '';
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
+  CollectionReference? chatsCollectionReference;
 
   Map<String, String> names = {
     '02m': 'Rishabh',
@@ -128,8 +133,6 @@ class _NotificationsState extends State<Notifications> {
         allEmployees =
             Provider.of<UserDataProvider>(context, listen: false).employeelist;
         print(allEmployees.toList().toString());
-        print(
-            Provider.of<UserDataProvider>(context, listen: false).employeelist);
       });
     });
     super.initState();

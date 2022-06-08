@@ -12,6 +12,7 @@ import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/StoreUserDa
 import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Login_View.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
+import 'package:test_web_app/GoogleSheets/GSheetsApi.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider2.dart';
 import 'package:test_web_app/Providers/AddServicesProvider.dart';
@@ -39,9 +40,12 @@ import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/firebase_options.dart';
 import 'package:http/http.dart' as http;
 import 'package:cometchat/cometchat_sdk.dart';
+import 'package:uuid/uuid.dart';
 
+var uuid = Uuid();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GSheetsApi.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   //
   // String appID = "2104856d714d767b"; // Replace with your App ID

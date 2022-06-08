@@ -14,6 +14,8 @@ import 'package:test_web_app/CompleteAppAuthentication/Auth_Views/Success_View.d
 import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthReuses/Url_launchers.dart';
+import 'package:test_web_app/GoogleSheets/DataFields.dart';
+import 'package:test_web_app/GoogleSheets/GSheetsApi.dart';
 import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -336,19 +338,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                CometChat.createUser(
-                                                    User(
-                                                        name:
-                                                            _usernameController
-                                                                .text,
-                                                        uid: _usernameController
-                                                            .text),
-                                                    "c2daa85de0992180937c031a8b99450e9e10810f",
-                                                    onSuccess: (user) {
-                                                  print("createdUser$user");
-                                                }, onError: (e) {
-                                                  print(e.toString());
-                                                });
                                                 getRegister(context);
                                               },
                                             )
