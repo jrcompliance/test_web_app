@@ -6,29 +6,29 @@ class Utilities {
     final difference = date2.difference(date);
 
     if ((difference.inDays / 365).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} years ';
+      return '${(difference.inDays / 365).floor()} years ago';
     } else if ((difference.inDays / 365).floor() >= 1) {
-      return (numericDates) ? '1 year ' : 'Last year';
+      return (numericDates) ? '1 year ago' : 'Last year';
     } else if ((difference.inDays / 30).floor() >= 2) {
-      return '${(difference.inDays / 365).floor()} months ';
+      return '${(difference.inDays / 365).floor()} months ago';
     } else if ((difference.inDays / 30).floor() >= 1) {
-      return (numericDates) ? '1 month ' : 'Last month';
+      return (numericDates) ? '1 month ago ' : 'Last month';
     } else if ((difference.inDays / 7).floor() >= 2) {
-      return '${(difference.inDays / 7).floor()} weeks ';
+      return '${(difference.inDays / 7).floor()} weeks ago ';
     } else if ((difference.inDays / 7).floor() >= 1) {
-      return (numericDates) ? '1 week ' : 'Last week';
+      return (numericDates) ? '1 week ago' : 'Last week';
     } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days ';
+      return '${difference.inDays} days ago ';
     } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 day' : 'Yesterday';
+      return (numericDates) ? '1 day ago' : 'Yesterday';
     } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours ';
+      return '${difference.inHours} hours ago';
     } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 hour' : 'An hour';
+      return (numericDates) ? '1 hour ago' : 'An hour ago';
     } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} min';
+      return '${difference.inMinutes} mins ago';
     } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 min' : 'min';
+      return (numericDates) ? '1 min' : 'min ago';
     } else if (difference.inSeconds >= 3) {
       return '${difference.inSeconds} sec ';
     } else {

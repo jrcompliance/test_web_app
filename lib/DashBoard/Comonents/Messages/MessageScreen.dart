@@ -1,38 +1,25 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
+import 'package:lottie/lottie%202.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/ChatWidgets/MyOwnCard.dart';
-import 'package:test_web_app/ChatWidgets/ReplyCard.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/DashBoard/Comonents/Messages/ChatItem.dart';
 import 'package:test_web_app/Models/ChatModel.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
-import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/NewModels/ChattingScreen.dart';
 import 'package:test_web_app/NewModels/MessageModel.dart';
 import 'package:test_web_app/NewModels/RoomModel.dart';
-import 'package:test_web_app/Providers/ChatProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
-import 'package:socket_io_client/socket_io_client.dart';
-import 'package:test_web_app/Providers/GetChatProvider.dart';
 import 'package:dio/dio.dart';
-import 'package:test_web_app/Widgets/FullPhotoPage.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -42,12 +29,7 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  File? imageFile;
-  FocusNode _focusNode = new FocusNode();
-  bool isLoading = false;
   List<ChatModel> messages = [];
-  bool isLogggedIn = false;
-  var _scrollController = ScrollController();
   String? employee;
   String? currentuid;
   String? lastLoggedIn;
@@ -57,6 +39,8 @@ class _MessageScreenState extends State<MessageScreen> {
   late var employeeModal;
   RoomModel roomModel = RoomModel();
   late var roomModal;
+
+  String? peerid;
   getUserData() {
     FirebaseFirestore.instance
         .collection("EmployeeData")
@@ -64,17 +48,10 @@ class _MessageScreenState extends State<MessageScreen> {
         .get()
         .then((value) {
       this.logginUserModel = EmployeesModel.fromMap(value.data());
-      setState(() {});
     });
   }
 
   CollectionReference? chatsCollectionReference;
-
-  bool filePicked = false;
-
-  var fileName;
-  bool show = false;
-  bool sendByMe = false;
   @override
   void initState() {
     super.initState();
@@ -82,13 +59,6 @@ class _MessageScreenState extends State<MessageScreen> {
     employeeModal = EmployeesModel();
     roomModal = RoomModel();
     // initializeSocket();
-    Future.delayed(Duration(seconds: 2)).then((value) async {
-      SharedPreferences pref = await SharedPreferences.getInstance();
-      currentuid = pref.getString("uid");
-      lastLoggedIn = pref.getString("lastSeen");
-      lastLoggedOut = pref.getString("logoutTime");
-      print("@" + lastLoggedIn.toString() + "@" + lastLoggedOut.toString());
-    });
 
     Future.delayed(Duration(seconds: 2)).then((value) {
       Provider.of<UserDataProvider>(context, listen: false)
@@ -98,38 +68,12 @@ class _MessageScreenState extends State<MessageScreen> {
             Provider.of<UserDataProvider>(context, listen: false).employeelist;
       });
     });
-    _scrollController.addListener(_scrollListener);
   }
-
-  _scrollListener() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(seconds: 2), curve: Curves.easeInOut);
-    }
-  }
-  //   if (_scrollController.offset >=
-  //           _scrollController.position.maxScrollExtent &&
-  //       !_scrollController.position.outOfRange &&
-  //       _limit <= listMessage.length) {
-  //     setState(() {
-  //       _limit += _limitIncrement;
-  //     });
-  //   }
-  // }
-  //
-  // void onFocusChange() {
-  //   if (_focusNode.hasFocus) {
-  //     // Hide sticker when keyboard appear
-  //     setState(() {
-  //       // isShowSticker = false;
-  //     });
-  //   }
-  // }
 
   @override
   void dispose() {
     _chatController.dispose();
-    _scrollController.dispose();
+    textEditingController.dispose();
     super.dispose();
   }
 
@@ -138,10 +82,9 @@ class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController videoCallEditingController =
       TextEditingController();
   final TextEditingController _chatController = TextEditingController();
-  var chatContent = "";
-
+  final TextEditingController textEditingController = TextEditingController();
   List<EmployeesModel> allEmployees = [];
-  bool _isTapped = false;
+  bool isTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -275,11 +218,13 @@ class _MessageScreenState extends State<MessageScreen> {
                                           btnColor.withOpacity(0.1),
                                     ),
                                     onTap: () {
+                                      checkAndCreateNewRoom(
+                                          employeeModel, context);
                                       setState(() {
-                                        _isTapped = true;
+                                        isTapped = true;
+                                        peerid = employeeModel.uid;
+                                        print('peerid==' + peerid.toString());
                                         employeeModal = employeeModel;
-                                        checkAndCreateNewRoom(
-                                            employeeModel, context);
                                       });
                                     },
                                     shape: RoundedRectangleBorder(
@@ -303,16 +248,26 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           Expanded(
             flex: 7,
-            child:
-                // roomModel.roomId != null
-                //     ? chatScreen()
-                // roomModel.roomId != null
-                //     ? ChattingScreen(
-                //         employeesModel: employeeModal,
-                //         roomModel: roomModel,
-                //       )
-                //     :
-                Container(),
+            child: isTapped
+                ? Container()
+                : Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Expanded(
+                              flex: 5,
+                              child: Lottie.asset("assets/Lotties/empty.json")),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Select any Employee from list to Start Conversation ',
+                                style: TxtStls.fieldBtnStyle,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -353,59 +308,13 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  Future getFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      Uint8List? fileBytes = result.files.first.bytes;
-      fileName = result.files.first.name;
-      setState(() {
-        filePicked = true;
-      });
-    }
-  }
-
-  Future getImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? pickedFile;
-    pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      imageFile = File(pickedFile.path);
-      if (imageFile != null) {
-        setState(() {
-          isLoading = true;
-        });
-        // uploadImageFile();
-      }
-    }
-  }
-
-  Widget buildMessageInput() {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: Row(
-        children: [],
-      ),
-    );
-  }
-
-  createRoom() async {
-    String url =
-        "https://yalagala.whereby.com/0af4d394-e401-4409-89fa-54ea8aedf4d8";
-
-    var response =
-        await Dio().get(url, options: Options(responseType: ResponseType.json));
-    print('videocallresponse==' + response.toString());
-  }
-
-  String createRoomId(EmployeesModel toChatUserModel) {
+  String createRoomId(toChatUserModel) {
     // SmallId_LargeId
     String roomID = "";
 
-    print(
-        "createRoomId ${user!.uid.hashCode} >> ${toChatUserModel.uid.hashCode} ");
-    print("createRoomId ${user!.uid} >> ${toChatUserModel.uid} ");
+    // print(
+    //     "createRoomId ${user!.uid.hashCode} >> ${toChatUserModel.uid.hashCode} ");
+    // print("createRoomId ${user!.uid} >> ${toChatUserModel.uid} ");
     if (user!.uid.hashCode > toChatUserModel.uid.hashCode) {
       roomID = toChatUserModel.uid! + "_" + user!.uid;
     } else if (user!.uid.hashCode < toChatUserModel.uid.hashCode) {
@@ -414,13 +323,12 @@ class _MessageScreenState extends State<MessageScreen> {
       roomID = user!.uid + "_" + toChatUserModel.uid.toString();
     }
 
-    print("createRoomId @$roomID");
+    print("createdRoomId @$roomID");
 
     return roomID;
   }
 
-  checkAndCreateNewRoom(
-      EmployeesModel toChatUserModel, BuildContext context) async {
+  checkAndCreateNewRoom(toChatUserModel, BuildContext context) async {
     String roomId = createRoomId(toChatUserModel);
 
     CollectionReference roomCollectionReference =
@@ -442,98 +350,30 @@ class _MessageScreenState extends State<MessageScreen> {
       await roomCollectionReference.doc(roomId).set(roomModel.toMap());
     }
 
-    if (roomModel != null) {
+    if (roomModel.roomId != null) {
       print('room available');
 
       // setState(() {
       //   roomModal = roomModel;
       // });
-      print('roooom' + roomModel.roomId.toString());
-      // setState(() {
-      //   roomModal = roomModel;
-      //   chatScreen(
-      //     roomModel: roomModel,
-      //     employeesModel: toChatUserModel,
-      //   );
-      // });
+      // print('roooom' + roomModel.roomId.toString());
 
-      Navigator.push(
+      var value = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (ctx) => ChattingScreen(
                     roomModel: roomModel,
                     employeesModel: toChatUserModel,
+                    isTapped: true,
                   )));
+      setState(() {
+        isTapped = value;
+      });
+      // return ChattingScreen(
+      //     roomModel: roomModel, employeesModel: toChatUserModel);
+    } else {
+      return Container();
     }
-  }
-
-  TextEditingController textEditingController = TextEditingController();
-  Widget chatScreen({RoomModel? roomModel, EmployeesModel? employeesModel}) {
-    return Column(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(employeesModel!.uname ?? "Chat"),
-        ),
-        Expanded(
-            flex: 8,
-            child: StreamBuilder<QuerySnapshot>(
-                stream: chatsCollectionReference!
-                    // .where("senderId", isEqualTo: widget.roomModel.senderId)
-                    // .where('peerId', isEqualTo: widget.roomModel.peerId)
-                    .orderBy("timeStamp")
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.docs.length == 0) {
-                      return Center(child: Text("No chats Found"));
-                    }
-
-                    return ListView.builder(
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (ctx, index) {
-                          MessageModel messageModel = MessageModel.fromMap(
-                              snapshot.data!.docs[index].data()
-                                  as Map<String, dynamic>);
-                          return ChatItem(messageModel);
-                        });
-                  }
-
-                  return Center(child: CircularProgressIndicator());
-                })),
-        Expanded(
-          flex: 1,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 9,
-                child: TextField(
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                      hintText: "Enter message", border: OutlineInputBorder()),
-                ),
-              ),
-              Expanded(
-                  flex: 1,
-                  child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          sendMessage();
-                        });
-                      },
-                      child: Icon(
-                        Icons.send,
-                        color: Theme.of(context).accentColor,
-                      )))
-            ],
-          ),
-        )
-      ],
-    );
   }
 
   sendMessage() async {

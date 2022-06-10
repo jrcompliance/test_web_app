@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
 
 class LogOutProvider with ChangeNotifier {
@@ -12,9 +14,10 @@ class LogOutProvider with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
       isLoading = true;
+      isloggedIn = false;
+
       notifyListeners();
       await _auth.signOut().then((value) {
-        isloggedOut = true;
         sharedPreferences.clear();
         Future.delayed(Duration(seconds: 4)).then((value) {
           isLoading = false;

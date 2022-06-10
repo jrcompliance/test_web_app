@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_web_app/AppLifecycleState/AppLifecycleState.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LogOutProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LoginProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/RegisterProvider.dart';
@@ -39,30 +40,11 @@ import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/firebase_options.dart';
 import 'package:http/http.dart' as http;
-import 'package:cometchat/cometchat_sdk.dart';
-import 'package:uuid/uuid.dart';
 
-var uuid = Uuid();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GSheetsApi.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  //
-  // String appID = "2104856d714d767b"; // Replace with your App ID
-  // String region = "us"; // Replace with your App Region ("eu" or "us")
-  //
-  // AppSettings appSettings = (AppSettingsBuilder()
-  //       ..subscriptionType = CometChatSubscriptionType.allUsers
-  //       ..region = region
-  //       ..autoEstablishSocketConnection = true)
-  //     .build();
-  //
-  // CometChat.init(appID, appSettings, onSuccess: (String successMessage) {
-  //   debugPrint("Initialization completed successfully  $successMessage");
-  // }, onError: (CometChatException e) {
-  //   debugPrint("Initialization failed with exception: ${e.message}");
-  // });
-
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (ctx) => RegisterProvider()),

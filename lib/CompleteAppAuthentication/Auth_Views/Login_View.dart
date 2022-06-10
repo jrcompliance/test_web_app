@@ -238,10 +238,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                         ),
                                         onTap: () {
-                                          CometChat.loginWithAuthToken(
-                                              "c2daa85de0992180937c031a8b99450e9e10810f",
-                                              onSuccess: (user) {},
-                                              onError: (e) {});
                                           //generateMsgToken();
                                           getLogin(context);
                                         },
@@ -306,6 +302,9 @@ class _LoginScreenState extends State<LoginScreen> {
           .getLogin(_emailController.text.toString(),
               _passwordController.text.toString())
           .then((value) {
+        setState(() {
+          isloggedIn = true;
+        });
         if (Provider.of<LoginProvider>(context, listen: false).success !=
             null) {
           Navigator.pushAndRemoveUntil(

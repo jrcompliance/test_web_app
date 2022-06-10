@@ -16,6 +16,8 @@ const btnColor = Color(0xFF5551F1);
 const bt = Colors.indigoAccent;
 const ibgclr = Color(0xFFB71C1C);
 const bluColor = Colors.blueAccent;
+bool isloggedIn = false;
+var logoutTime;
 
 const deco = BoxDecoration(
   color: fieldColor,
@@ -36,12 +38,12 @@ class TxtStls {
       fontSize: 13,
       color: AbgColor,
       fontWeight: FontWeight.bold);
-  // static TextStyle fieldtitlestyle13 = GoogleFonts.nunito(
-  //     textStyle:
-  //         TextStyle(fontSize: 13, color: bgColor, fontWeight: FontWeight.bold),
-  //     fontSize: 13,
-  //     color: bgColor,
-  //     fontWeight: FontWeight.bold);
+  static TextStyle fieldBtnStyle = GoogleFonts.nunito(
+      textStyle:
+          TextStyle(fontSize: 20, color: btnColor, fontWeight: FontWeight.bold),
+      fontSize: 20,
+      color: btnColor,
+      fontWeight: FontWeight.bold);
   static TextStyle titlesstyle = GoogleFonts.nunito(
       textStyle:
           TextStyle(fontSize: 13, color: bgColor, fontWeight: FontWeight.bold),
@@ -84,6 +86,16 @@ class TxtStls {
   static TextStyle fieldstyle = GoogleFonts.nunito(
       textStyle: TextStyle(color: txtColor, fontSize: 12.5, letterSpacing: 0.2),
       color: txtColor,
+      letterSpacing: 0.2,
+      fontSize: 12.5);
+  static TextStyle fieldstatusstyle = GoogleFonts.nunito(
+      textStyle: TextStyle(color: wonClr, fontSize: 12.5, letterSpacing: 0.2),
+      color: wonClr,
+      letterSpacing: 0.2,
+      fontSize: 12.5);
+  static TextStyle messagestyle = GoogleFonts.nunito(
+      textStyle: TextStyle(color: bgColor, fontSize: 12.5, letterSpacing: 0.2),
+      color: bgColor,
       letterSpacing: 0.2,
       fontSize: 12.5);
   static TextStyle fieldstyle111 = GoogleFonts.nunito(

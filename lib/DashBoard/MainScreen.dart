@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:test_web_app/AppLifecycleState/AppLifecycleState.dart';
 import 'package:test_web_app/Constants/endDrawer.dart';
 import 'package:test_web_app/DashBoard/Comonents/Analytics/Analytics.dart';
 import 'package:test_web_app/DashBoard/Comonents/Calendar/Calendar.dart';
@@ -63,25 +64,27 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawerEnableOpenDragGesture: false,
-      drawerEnableOpenDragGesture: false,
-      drawer: SideDrawer(context),
-      endDrawer: MoveDrawer(),
-      body: SafeArea(
-        child: Responsive.isSmallScreen(context)
-            ? Center(
-                child: Text(
-                    "Mobile View is not Supported😔,Experiance it in Tab and Desktop",
-                    style: TxtStls.titlestyle))
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (Responsive.isLargeScreen(context))
-                    Expanded(flex: 2, child: SideDrawer(context)),
-                  Expanded(flex: 10, child: DashboardBody(context)),
-                ],
-              ),
+    return AppLifeCycleManager(
+      child: Scaffold(
+        endDrawerEnableOpenDragGesture: false,
+        drawerEnableOpenDragGesture: false,
+        drawer: SideDrawer(context),
+        endDrawer: MoveDrawer(),
+        body: SafeArea(
+          child: Responsive.isSmallScreen(context)
+              ? Center(
+                  child: Text(
+                      "Mobile View is not Supported😔,Experiance it in Tab and Desktop",
+                      style: TxtStls.titlestyle))
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (Responsive.isLargeScreen(context))
+                      Expanded(flex: 2, child: SideDrawer(context)),
+                    Expanded(flex: 10, child: DashboardBody(context)),
+                  ],
+                ),
+        ),
       ),
     );
   }
