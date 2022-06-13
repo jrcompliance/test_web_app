@@ -429,7 +429,10 @@ class _ChattingScreenState extends State<ChattingScreen> {
                 ],
               ),
             ),
-            sizedBox(),
+            Expanded(
+              flex: 1,
+              child: SizedBox(),
+            ),
             Row(
               children: [
                 ElevatedButton(
@@ -449,6 +452,25 @@ class _ChattingScreenState extends State<ChattingScreen> {
                     setState(() {});
                   },
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add roomId
+                    signaling.joinRoom(
+                      roomId.toString(),
+                      _remoteRenderer,
+                    );
+                  },
+                  child: Text("Join room"),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    signaling.hangUp(_localRenderer);
+                  },
+                  child: Text("Hangup"),
+                )
               ],
             ),
           ],
