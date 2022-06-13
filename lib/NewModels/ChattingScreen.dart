@@ -464,6 +464,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                 ),
                 SizedBox(
                   width: 10,
+                  //testing
                 ),
                 ElevatedButton(
                   onPressed: () {
