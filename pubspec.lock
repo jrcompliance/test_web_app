@@ -128,7 +128,7 @@ packages:
     source: hosted
     version: "5.5.7"
   cloud_firestore_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
@@ -471,6 +471,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webrtc:
+    dependency: "direct main"
+    description:
+      name: flutter_webrtc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.10+hotfix.1"
   fluttertoast:
     dependency: "direct main"
     description:

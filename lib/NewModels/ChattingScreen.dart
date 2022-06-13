@@ -1,15 +1,15 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/Comonents/Messages/ChatItem.dart';
+import 'package:test_web_app/DashBoard/Comonents/Messages/Signaling.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/NewModels/MessageModel.dart';
 import 'package:test_web_app/NewModels/RoomModel.dart';
@@ -37,12 +37,23 @@ class _ChattingScreenState extends State<ChattingScreen> {
 
   TextEditingController textEditingController = TextEditingController();
   final ScrollController _sc = ScrollController();
+  Signaling signaling = Signaling();
+  RTCVideoRenderer _localRenderer = RTCVideoRenderer();
+  RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
+  String? roomId;
 
   CollectionReference? chatsCollectionReference;
   String? time;
   @override
   void initState() {
     super.initState();
+    _localRenderer.initialize();
+    _remoteRenderer.initialize();
+
+    signaling.onAddRemoteStream = ((stream) {
+      _remoteRenderer.srcObject = stream;
+      setState(() {});
+    });
     print('roomid--' + widget.roomModel.roomId.toString());
     chatsCollectionReference = FirebaseFirestore.instance
         .collection("Chats")
@@ -67,6 +78,8 @@ class _ChattingScreenState extends State<ChattingScreen> {
   @override
   void dispose() {
     _sc.dispose();
+    _localRenderer.dispose();
+    _remoteRenderer.dispose();
     super.dispose();
   }
 
@@ -147,8 +160,14 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                 ),
                                 circleAvatar(Icon(Icons.call), () {}),
                                 sizedBox(),
-                                circleAvatar(
-                                    Icon(Icons.videocam_rounded), () {}),
+                                circleAvatar(Icon(Icons.videocam_rounded), () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return alertDialog();
+                                    },
+                                  );
+                                }),
                                 sizedBox(),
                                 circleAvatar(Icon(Icons.more_vert), () {})
                               ],
@@ -368,6 +387,108 @@ class _ChattingScreenState extends State<ChattingScreen> {
   Widget sizedBox() {
     return SizedBox(
       width: 10,
+    );
+  }
+
+  Widget alertDialog() {
+    Size size = MediaQuery.of(context).size;
+    return AlertDialog(
+      contentPadding: EdgeInsets.all(0.0),
+      titlePadding: EdgeInsets.all(0.0),
+      backgroundColor: bgColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            'VideoCall',
+            style: TxtStls.fieldstyle,
+          )),
+      content: Container(
+        height: size.height * 0.7,
+        width: size.width * 0.6,
+        color: bgColor,
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: size.height * 0.3,
+                    width: size.width * 0.2,
+                    child: RTCVideoView(
+                      _localRenderer,
+                      mirror: false,
+                    ),
+                  ),
+                  Container(
+                    height: size.height * 0.3,
+                    width: size.width * 0.2,
+                    child: RTCVideoView(_remoteRenderer),
+                  ),
+                ],
+              ),
+            ),
+            sizedBox(),
+            Row(
+              children: [
+                ElevatedButton(
+                  child: Text("Open Camera"),
+                  onPressed: () {
+                    signaling.openUserMedia(_localRenderer, _remoteRenderer);
+                  },
+                ),
+                ElevatedButton(
+                  child: Text("Create Room"),
+                  onPressed: () {
+                    // signaling.openUserMedia(_localRenderer, _remoteRenderer);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      // Container(
+      //   height: size.height * 0.7,
+      //   width: size.width * 0.5,
+      //   child: Column(
+      //     children: [
+      //       Container(
+      //         child: Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //           children: [
+      //             Expanded(
+      //               child: RTCVideoView(
+      //                 _localRenderer,
+      //                 mirror: false,
+      //               ),
+      //             ),
+      //             Expanded(
+      //               child: RTCVideoView(_remoteRenderer),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       Container(
+      //         child: TextButton(
+      //           onPressed: () {
+      //             signaling.openUserMedia(_localRenderer, _remoteRenderer);
+      //           },
+      //           child: Text("Open Camera"),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      // actions: [
+      //   CupertinoDialogAction(
+      //     child: Text("Yes"),
+      //   ),
+      //   CupertinoDialogAction(
+      //     child: Text("No"),
+      //   ),
+      // ],
     );
   }
 }
