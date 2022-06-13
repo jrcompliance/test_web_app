@@ -438,10 +438,15 @@ class _ChattingScreenState extends State<ChattingScreen> {
                     signaling.openUserMedia(_localRenderer, _remoteRenderer);
                   },
                 ),
+                SizedBox(
+                  width: 10,
+                ),
                 ElevatedButton(
                   child: Text("Create Room"),
-                  onPressed: () {
-                    // signaling.openUserMedia(_localRenderer, _remoteRenderer);
+                  onPressed: () async {
+                    roomId = await signaling.createRoom(_remoteRenderer);
+                    print('video-roomId---' + roomId.toString());
+                    setState(() {});
                   },
                 ),
               ],
