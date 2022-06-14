@@ -7,11 +7,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:im_stepper/stepper.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:status_change/status_change.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
@@ -26,6 +28,7 @@ import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
+import 'package:test_web_app/Widgets/Stepper.dart';
 import '../../../Providers/CustomerProvider.dart';
 
 class Finance extends StatefulWidget {
@@ -780,743 +783,749 @@ class _FinanceState extends State<Finance> {
 
   Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CircleAvatar(
-                backgroundColor: btnColor,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: bgColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isCreate = false;
-                    });
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: size.width * 0.225,
-                    decoration: BoxDecoration(
-                      color: fieldColor,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          bottomLeft: Radius.circular(10.0)),
+    return Container(
+      height: size.height * 0.86,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundColor: btnColor,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: bgColor,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 15, right: 0, top: 2),
-                      child: TextField(
-                        controller: _gstController,
-                        style: TxtStls.fieldstyle,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Enter Gst Number...",
-                            hintStyle: TxtStls.fieldstyle),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      var provider =
-                          Provider.of<GstProvider>(context, listen: false);
-                      provider
-                          .fetchGstData(_gstController.text.toString())
-                          .whenComplete(() {
-                        Future.delayed(Duration(seconds: 2)).then((value) {
-                          setState(() {
-                            tradename = provider.tradename.toString();
-                            address = provider.principalplace.toString();
-                            pan = provider.pan.toString();
-                            pincode = provider.pincode.toString();
-                          });
-                        });
+                    onPressed: () {
+                      setState(() {
+                        _isCreate = false;
                       });
                     },
-                    child: Container(
-                      width: size.width * 0.025,
-                      padding: EdgeInsets.symmetric(vertical: 12.5),
-                      color: btnColor,
-                      child: Provider.of<GstProvider>(context).isLoading
-                          ? SpinKitFadingCube(
-                              color: bgColor,
-                              size: 23,
-                            )
-                          : Icon(
-                              Icons.search,
-                              color: bgColor,
-                            ),
-                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-              onPressed: () {
-                isgst = true;
-                setState(() {});
-              },
-              child: Text(
-                "Don't have Gst Number? Click Here",
-                style: ClrStls.tnClr,
-              )),
-        ),
-        Row(
-          children: [
-            Expanded(
-              flex: 6,
-              child: Row(
-                children: [
-                  Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: grClr.withOpacity(0.25),
-                      ),
-                      child: Text(
-                        "ReferenceID :",
-                        style: TxtStls.fieldtitlestyle,
-                      )),
-                  SizedBox(width: 7.5),
-                  Expanded(
-                    flex: 2,
-                    child: field(
-                        _referenceController, "Enter Reference ID", 1, true),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 6,
-              child: SizedBox(),
-            ),
-            Expanded(
-              flex: 2,
-              child: SizedBox(
-                height: size.height * 0.05,
-                width: size.width * 0.05,
-                child: DropdownButtonFormField2(
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  isExpanded: true,
-                  hint: Text(
-                    selectedValue,
-                    style: TxtStls.fieldtitlestyle,
-                  ),
-                  icon: Icon(
-                    Icons.arrow_drop_down,
-                    color: btnColor,
-                  ),
-                  iconSize: 30,
-                  buttonHeight: 60,
-                  buttonPadding: EdgeInsets.only(left: 20, right: 10),
-                  dropdownDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  items: currencieslist
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item, style: TxtStls.fieldtitlestyle),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedValue = value.toString();
-                    });
-                  },
                 ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: size.height * 0.025),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: tradename == null
-              ? SizedBox()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
                   children: [
-                    Text(
-                      tradename.toString(),
-                      style: TxtStls.fieldstyle,
+                    Container(
+                      width: size.width * 0.225,
+                      decoration: BoxDecoration(
+                        color: fieldColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            bottomLeft: Radius.circular(10.0)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 15, right: 0, top: 2),
+                        child: TextField(
+                          controller: _gstController,
+                          style: TxtStls.fieldstyle,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Enter Gst Number...",
+                              hintStyle: TxtStls.fieldstyle),
+                        ),
+                      ),
                     ),
-                    Text(address.toString(), style: TxtStls.fieldstyle),
-                    Text(pincode.toString(), style: TxtStls.fieldstyle),
-                    Text(pan.toString(), style: TxtStls.fieldstyle),
+                    InkWell(
+                      onTap: () {
+                        var provider =
+                            Provider.of<GstProvider>(context, listen: false);
+                        provider
+                            .fetchGstData(_gstController.text.toString())
+                            .whenComplete(() {
+                          Future.delayed(Duration(seconds: 2)).then((value) {
+                            setState(() {
+                              tradename = provider.tradename.toString();
+                              address = provider.principalplace.toString();
+                              pan = provider.pan.toString();
+                              pincode = provider.pincode.toString();
+                            });
+                          });
+                        });
+                      },
+                      child: Container(
+                        width: size.width * 0.025,
+                        padding: EdgeInsets.symmetric(vertical: 12.5),
+                        color: btnColor,
+                        child: Provider.of<GstProvider>(context).isLoading
+                            ? SpinKitFadingCube(
+                                color: bgColor,
+                                size: 23,
+                              )
+                            : Icon(
+                                Icons.search,
+                                color: bgColor,
+                              ),
+                      ),
+                    ),
                   ],
                 ),
-        ),
-        SizedBox(height: size.height * 0.025),
-        Expanded(
-          child: isgst
-              ? ScaleAnimatedWidget.tween(
-                  duration: Duration(milliseconds: 500),
-                  child: Column(
-                    children: [
-                      formfield("TradeName", _tradenameController, true),
-                      space(),
-                      formfield(
-                          "Address",
-                          _addressControoler,
-                          true,
-                          Icon(
-                            Icons.location_on_rounded,
-                            color: btnColor,
-                          )),
-                      space(),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 20),
-                              child: formfield(
-                                  "PanNumber", _panController, true, null, 10),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: formfield(
-                                  "PinCode", _pincodeController, true, null, 6),
-                            ),
-                          ),
-                        ],
-                      ),
-                      space(),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: CircleAvatar(
-                          backgroundColor: btnColor,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: bgColor,
-                            ),
-                            onPressed: () async {
-                              print("Hey Yalagala Srinivas");
-                              tradename = _tradenameController.text.toString();
-                              pan = _panController.text.toString();
-                              pincode = _pincodeController.text.toString();
-                              address = _addressControoler.text.toString();
-                              isgst = false;
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+                onPressed: () {
+                  isgst = true;
+                  setState(() {});
+                },
+                child: Text(
+                  "Don't have Gst Number? Click Here",
+                  style: ClrStls.tnClr,
+                )),
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Row(
                   children: [
                     Container(
-                      height: size.height * 0.05,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: grClr.withOpacity(0.25),
+                        ),
+                        child: Text(
+                          "ReferenceID :",
+                          style: TxtStls.fieldtitlestyle,
+                        )),
+                    SizedBox(width: 7.5),
+                    Expanded(
+                      flex: 2,
+                      child: field(
+                          _referenceController, "Enter Reference ID", 1, true),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: SizedBox(),
+              ),
+              Expanded(
+                flex: 2,
+                child: SizedBox(
+                  height: size.height * 0.05,
+                  width: size.width * 0.05,
+                  child: DropdownButtonFormField2(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    isExpanded: true,
+                    hint: Text(
+                      selectedValue,
+                      style: TxtStls.fieldtitlestyle,
+                    ),
+                    icon: Icon(
+                      Icons.arrow_drop_down,
                       color: btnColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "ITEM DETAILS",
-                                  style: TxtStls.titlesstyle,
-                                )),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "RATE",
-                                  style: TxtStls.titlesstyle,
-                                )),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text("QUANTITY",
-                                      style: TxtStls.titlesstyle))),
-                          myverticalDivider(),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "DISC(%)",
-                                  style: TxtStls.titlesstyle,
-                                )),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                              flex: 2,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "PRICE",
-                                    style: TxtStls.titlesstyle,
-                                  ))),
-                        ],
+                    ),
+                    iconSize: 30,
+                    buttonHeight: 60,
+                    buttonPadding: EdgeInsets.only(left: 20, right: 10),
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    items: currencieslist
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item, style: TxtStls.fieldtitlestyle),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue = value.toString();
+                      });
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: size.height * 0.025),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: tradename == null
+                ? SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        tradename.toString(),
+                        style: TxtStls.fieldstyle,
                       ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    servicelist.length > 0
-                        ? ConstrainedBox(
-                            constraints:
-                                BoxConstraints(maxHeight: size.height * 0.22),
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: servicelist.length,
-                                itemBuilder: (context, index) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        flex: 4,
-                                        child: Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text("${index + 1}. ",
-                                                    style: TxtStls
-                                                        .fieldtitlestyle),
-                                                Flexible(
-                                                  child: Text(
-                                                    "${servicelist[index]["item"].toString()}\n",
-                                                    style:
-                                                        TxtStls.fieldtitlestyle,
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                      myverticalDivider(),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              servicelist[index]["rate"]
-                                                  .toString(),
-                                              style: TxtStls.fieldtitlestyle,
-                                            )),
-                                      ),
-                                      myverticalDivider(),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                  servicelist[index]["qty"]
-                                                      .toString(),
-                                                  style: TxtStls
-                                                      .fieldtitlestyle))),
-                                      myverticalDivider(),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                                servicelist[index]["disc"]
-                                                    .toString(),
-                                                style:
-                                                    TxtStls.fieldtitlestyle)),
-                                      ),
-                                      myverticalDivider(),
-                                      Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                  servicelist[index]["price"]
-                                                      .toString(),
-                                                  style: TxtStls
-                                                      .fieldtitlestyle))),
-                                    ],
-                                  );
-                                }),
-                          )
-                        : SizedBox(),
-                    Container(
-                      height: size.height * 0.06,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: field(
-                                _selectController, "Item Description", 1, true),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                            flex: 2,
-                            child: field(_rateController,
-                                "${symbol(selectedValue)} 0", 1, true),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                              flex: 1,
-                              child: field(_qtyController2, "1", 1, true)),
-                          myverticalDivider(),
-                          Expanded(
-                            flex: 1,
-                            child: field(_discController, "0 %", 1, true),
-                          ),
-                          myverticalDivider(),
-                          Expanded(
-                              flex: 2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: InkWell(
-                                    autofocus: false,
-                                    onTap: () {
-                                      setState(() {
-                                        var _customer =
-                                            Provider.of<CustmerProvider>(
-                                                context,
-                                                listen: false);
-                                        cust.forEach((element) => _customer);
-                                      });
-
-                                      print('custom cust' + cust.toString());
-                                      addingData();
-                                      total = tbal + getval();
-                                      Future.delayed(
-                                              Duration(milliseconds: 100))
-                                          .then((value) {
-                                        _rateController.clear();
-                                        _qtyController2.clear();
-                                        _priceController.clear();
-                                        _discController.clear();
-                                        _selectController.clear();
-                                        _descripController.clear();
-                                      });
-                                    },
-                                    child: Text(
-                                      " ADD ITEM + ",
-                                      style: TxtStls.btnstyle,
-                                    )),
-                              )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Text(address.toString(), style: TxtStls.fieldstyle),
+                      Text(pincode.toString(), style: TxtStls.fieldstyle),
+                      Text(pan.toString(), style: TxtStls.fieldstyle),
+                    ],
+                  ),
+          ),
+          SizedBox(height: size.height * 0.025),
+          Expanded(
+            child: isgst
+                ? ScaleAnimatedWidget.tween(
+                    duration: Duration(milliseconds: 500),
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: 4,
-                          child: isSwitched
-                              ? field(_internalController, "Internal Notes", 3,
-                                  true, null, null, 200)
-                              : SizedBox(),
+                        formfield("TradeName", _tradenameController, true),
+                        space(),
+                        formfield(
+                            "Address",
+                            _addressControoler,
+                            true,
+                            Icon(
+                              Icons.location_on_rounded,
+                              color: btnColor,
+                            )),
+                        space(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 20),
+                                child: formfield("PanNumber", _panController,
+                                    true, null, 10),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: formfield("PinCode", _pincodeController,
+                                    true, null, 6),
+                              ),
+                            ),
+                          ],
                         ),
-                        for (int i = 1; i <= 2; i++)
-                          VerticalDivider(
-                            thickness: 2,
-                            color: bgColor,
-                          ),
-                        Expanded(flex: 2, child: SizedBox()),
-                        for (int i = 1; i <= 2; i++)
-                          VerticalDivider(
-                            thickness: 2,
-                            color: bgColor,
-                          ),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Sub Total (${selectedValue}) : " +
-                                        symbol(selectedValue),
-                                    style: TxtStls.fieldtitlestyle,
-                                  ),
-                                  Text(
-                                    tbal == null
-                                        ? "0.00"
-                                        : tbal.toStringAsFixed(2),
-                                    style: TxtStls.fieldtitlestyle,
-                                  ),
-                                ],
-                              ),
-                              selectedValue == "INR"
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "IGST/CGST/SGST(${selectedValue}) : " +
-                                              symbol(selectedValue),
-                                          style: TxtStls.fieldtitlestyle,
-                                        ),
-                                        Text(
-                                          selectedValue == "INR"
-                                              ? _gstamount.toStringAsFixed(2)
-                                              : "0.00",
-                                          style: TxtStls.fieldtitlestyle,
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox(),
-                              Divider(
-                                thickness: 0.5,
-                                color: Colors.grey.withOpacity(0.5),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total (${selectedValue}) : " +
-                                        symbol(selectedValue),
-                                    style: TxtStls.fieldtitlestyle,
-                                  ),
-                                  Text(
-                                    total.toStringAsFixed(2),
-                                    style: TxtStls.fieldtitlestyle,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: isSwitched1
-                              ? field(_extrenalController, "External Notes", 3,
-                                  true, null, null, 200)
-                              : SizedBox(),
-                        ),
-                        for (int i = 1; i <= 2; i++)
-                          VerticalDivider(
-                            thickness: 2,
-                            color: bgColor,
-                          ),
-                        // Expanded(
-                        //   flex: 2,
-                        //   child: isSwitched2
-                        //       ? field(_leadController, "Lead ID", 1, true, null,
-                        //           null, null)
-                        //       : SizedBox(),
-                        // ),
-                        Expanded(
-                          flex: 2,
-                          child: SizedBox(
-                            height: size.height * 0.05,
-                            width: size.width * 0.05,
-                            child: DropdownButtonFormField2(
-                              decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: EdgeInsets.zero,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              isExpanded: true,
-                              hint: Text(
-                                "Select LeadID",
-                                style: TxtStls.fieldtitlestyle,
-                              ),
+                        space(),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: CircleAvatar(
+                            backgroundColor: btnColor,
+                            child: IconButton(
                               icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: btnColor,
+                                Icons.arrow_forward_ios_rounded,
+                                color: bgColor,
                               ),
-                              iconSize: 30,
-                              buttonHeight: 60,
-                              buttonPadding:
-                                  EdgeInsets.only(left: 20, right: 10),
-                              dropdownDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              items: Provider.of<LeadIdProviders>(context,
-                                      listen: false)
-                                  .leadidslist
-                                  .map((item) => DropdownMenuItem(
-                                        value: item,
-                                        child: Text(item,
-                                            style: TxtStls.fieldtitlestyle),
-                                      ))
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedleadid = int.parse(value.toString());
-                                });
+                              onPressed: () async {
+                                print("Hey Yalagala Srinivas");
+                                tradename =
+                                    _tradenameController.text.toString();
+                                pan = _panController.text.toString();
+                                pincode = _pincodeController.text.toString();
+                                address = _addressControoler.text.toString();
+                                isgst = false;
+                                setState(() {});
                               },
                             ),
                           ),
                         ),
-
-                        for (int i = 1; i <= 2; i++)
-                          VerticalDivider(
-                            thickness: 2,
-                            color: bgColor,
-                          ),
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            children: [
-                              InkWell(
-                                child: field(
-                                    _generatedateController,
-                                    "Select Generate Date",
-                                    1,
-                                    false,
-                                    Icon(
-                                      Icons.calendar_today_outlined,
-                                      color: btnColor,
-                                    )),
-                                onTap: () {
-                                  MyCalenders.pickEndDate(
-                                      context, _generatedateController);
-                                },
-                              ),
-                              SizedBox(height: size.height * 0.005),
-                              InkWell(
-                                child: field(
-                                    _duedatedateController,
-                                    "Select Due Date",
-                                    1,
-                                    false,
-                                    Icon(
-                                      Icons.calendar_today_outlined,
-                                      color: btnColor,
-                                    )),
-                                onTap: () {
-                                  MyCalenders.pickEndDate(
-                                      context, _duedatedateController);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
-                  ],
-                ),
-        ),
-        Row(
-          children: [
-            Row(
-              children: [
-                Text("LeadId", style: TxtStls.fieldtitlestyle),
-                Switch(
-                  value: isSwitched2,
-                  onChanged: (value) {
-                    setState(() {
-                      isSwitched2 = value;
-                      print(isSwitched2);
-                    });
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: size.height * 0.05,
+                        color: btnColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "ITEM DETAILS",
+                                    style: TxtStls.titlesstyle,
+                                  )),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "RATE",
+                                    style: TxtStls.titlesstyle,
+                                  )),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text("QUANTITY",
+                                        style: TxtStls.titlesstyle))),
+                            myverticalDivider(),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "DISC(%)",
+                                    style: TxtStls.titlesstyle,
+                                  )),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "PRICE",
+                                      style: TxtStls.titlesstyle,
+                                    ))),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                      servicelist.length > 0
+                          ? ConstrainedBox(
+                              constraints:
+                                  BoxConstraints(maxHeight: size.height * 0.22),
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: servicelist.length,
+                                  itemBuilder: (context, index) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("${index + 1}. ",
+                                                      style: TxtStls
+                                                          .fieldtitlestyle),
+                                                  Flexible(
+                                                    child: Text(
+                                                      "${servicelist[index]["item"].toString()}\n",
+                                                      style: TxtStls
+                                                          .fieldtitlestyle,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        myverticalDivider(),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                servicelist[index]["rate"]
+                                                    .toString(),
+                                                style: TxtStls.fieldtitlestyle,
+                                              )),
+                                        ),
+                                        myverticalDivider(),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                    servicelist[index]["qty"]
+                                                        .toString(),
+                                                    style: TxtStls
+                                                        .fieldtitlestyle))),
+                                        myverticalDivider(),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  servicelist[index]["disc"]
+                                                      .toString(),
+                                                  style:
+                                                      TxtStls.fieldtitlestyle)),
+                                        ),
+                                        myverticalDivider(),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                    servicelist[index]["price"]
+                                                        .toString(),
+                                                    style: TxtStls
+                                                        .fieldtitlestyle))),
+                                      ],
+                                    );
+                                  }),
+                            )
+                          : SizedBox(),
+                      Container(
+                        height: size.height * 0.06,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: field(_selectController,
+                                  "Item Description", 1, true),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                              flex: 2,
+                              child: field(_rateController,
+                                  "${symbol(selectedValue)} 0", 1, true),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                                flex: 1,
+                                child: field(_qtyController2, "1", 1, true)),
+                            myverticalDivider(),
+                            Expanded(
+                              flex: 1,
+                              child: field(_discController, "0 %", 1, true),
+                            ),
+                            myverticalDivider(),
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: InkWell(
+                                      autofocus: false,
+                                      onTap: () {
+                                        setState(() {
+                                          var _customer =
+                                              Provider.of<CustmerProvider>(
+                                                  context,
+                                                  listen: false);
+                                          cust.forEach((element) => _customer);
+                                        });
+
+                                        print('custom cust' + cust.toString());
+                                        addingData();
+                                        total = tbal + getval();
+                                        Future.delayed(
+                                                Duration(milliseconds: 100))
+                                            .then((value) {
+                                          _rateController.clear();
+                                          _qtyController2.clear();
+                                          _priceController.clear();
+                                          _discController.clear();
+                                          _selectController.clear();
+                                          _descripController.clear();
+                                        });
+                                      },
+                                      child: Text(
+                                        " ADD ITEM + ",
+                                        style: TxtStls.btnstyle,
+                                      )),
+                                )),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: isSwitched
+                                ? field(_internalController, "Internal Notes",
+                                    3, true, null, null, 200)
+                                : SizedBox(),
+                          ),
+                          for (int i = 1; i <= 2; i++)
+                            VerticalDivider(
+                              thickness: 2,
+                              color: bgColor,
+                            ),
+                          Expanded(flex: 2, child: SizedBox()),
+                          for (int i = 1; i <= 2; i++)
+                            VerticalDivider(
+                              thickness: 2,
+                              color: bgColor,
+                            ),
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Sub Total (${selectedValue}) : " +
+                                          symbol(selectedValue),
+                                      style: TxtStls.fieldtitlestyle,
+                                    ),
+                                    Text(
+                                      tbal == null
+                                          ? "0.00"
+                                          : tbal.toStringAsFixed(2),
+                                      style: TxtStls.fieldtitlestyle,
+                                    ),
+                                  ],
+                                ),
+                                selectedValue == "INR"
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "IGST/CGST/SGST(${selectedValue}) : " +
+                                                symbol(selectedValue),
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                          Text(
+                                            selectedValue == "INR"
+                                                ? _gstamount.toStringAsFixed(2)
+                                                : "0.00",
+                                            style: TxtStls.fieldtitlestyle,
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                                Divider(
+                                  thickness: 0.5,
+                                  color: Colors.grey.withOpacity(0.5),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Total (${selectedValue}) : " +
+                                          symbol(selectedValue),
+                                      style: TxtStls.fieldtitlestyle,
+                                    ),
+                                    Text(
+                                      total.toStringAsFixed(2),
+                                      style: TxtStls.fieldtitlestyle,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: isSwitched1
+                                ? field(_extrenalController, "External Notes",
+                                    3, true, null, null, 200)
+                                : SizedBox(),
+                          ),
+                          for (int i = 1; i <= 2; i++)
+                            VerticalDivider(
+                              thickness: 2,
+                              color: bgColor,
+                            ),
+                          // Expanded(
+                          //   flex: 2,
+                          //   child: isSwitched2
+                          //       ? field(_leadController, "Lead ID", 1, true, null,
+                          //           null, null)
+                          //       : SizedBox(),
+                          // ),
+                          Expanded(
+                            flex: 2,
+                            child: SizedBox(
+                              height: size.height * 0.05,
+                              width: size.width * 0.05,
+                              child: DropdownButtonFormField2(
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                isExpanded: true,
+                                hint: Text(
+                                  "Select LeadID",
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: btnColor,
+                                ),
+                                iconSize: 30,
+                                buttonHeight: 60,
+                                buttonPadding:
+                                    EdgeInsets.only(left: 20, right: 10),
+                                dropdownDecoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                items: Provider.of<LeadIdProviders>(context,
+                                        listen: false)
+                                    .leadidslist
+                                    .map((item) => DropdownMenuItem(
+                                          value: item,
+                                          child: Text(item,
+                                              style: TxtStls.fieldtitlestyle),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedleadid =
+                                        int.parse(value.toString());
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+
+                          for (int i = 1; i <= 2; i++)
+                            VerticalDivider(
+                              thickness: 2,
+                              color: bgColor,
+                            ),
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  child: field(
+                                      _generatedateController,
+                                      "Select Generate Date",
+                                      1,
+                                      false,
+                                      Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: btnColor,
+                                      )),
+                                  onTap: () {
+                                    MyCalenders.pickEndDate(
+                                        context, _generatedateController);
+                                  },
+                                ),
+                                SizedBox(height: size.height * 0.005),
+                                InkWell(
+                                  child: field(
+                                      _duedatedateController,
+                                      "Select Due Date",
+                                      1,
+                                      false,
+                                      Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: btnColor,
+                                      )),
+                                  onTap: () {
+                                    MyCalenders.pickEndDate(
+                                        context, _duedatedateController);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+          ),
+          Row(
+            children: [
+              Row(
+                children: [
+                  Text("LeadId", style: TxtStls.fieldtitlestyle),
+                  Switch(
+                    value: isSwitched2,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched2 = value;
+                        print(isSwitched2);
+                      });
+                    },
+                    activeTrackColor: btnColor.withOpacity(0.2),
+                    activeColor: btnColor,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text("Internal Notes", style: TxtStls.fieldtitlestyle),
+                  Switch(
+                    value: isSwitched,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                        print(isSwitched);
+                      });
+                    },
+                    activeTrackColor: btnColor.withOpacity(0.2),
+                    activeColor: btnColor,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text("External Notes", style: TxtStls.fieldtitlestyle),
+                  Switch(
+                    value: isSwitched1,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched1 = value;
+                        print(isSwitched1);
+                      });
+                    },
+                    activeTrackColor: btnColor.withOpacity(0.2),
+                    activeColor: btnColor,
+                  ),
+                ],
+              ),
+              ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: btnColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  onPressed: () {
+                    if (servicelist.length <= 0 ||
+                        selectedleadid == null ||
+                        tradename == null ||
+                        address == null ||
+                        pincode == null ||
+                        pan == null ||
+                        _generatedateController.text.isEmpty ||
+                        _duedatedateController.text.isEmpty ||
+                        _internalController.text.isEmpty ||
+                        _extrenalController.text.isEmpty) {
+                      toastmessage.warningmessage(context, showmessage());
+                    } else {
+                      isPreview = true;
+                      setState(() {});
+                      Provider.of<RecentFetchCXIDProvider>(context,
+                              listen: false)
+                          .fetchRecentInvoiceid();
+                    }
                   },
-                  activeTrackColor: btnColor.withOpacity(0.2),
-                  activeColor: btnColor,
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text("Internal Notes", style: TxtStls.fieldtitlestyle),
-                Switch(
-                  value: isSwitched,
-                  onChanged: (value) {
-                    setState(() {
-                      isSwitched = value;
-                      print(isSwitched);
-                    });
-                  },
-                  activeTrackColor: btnColor.withOpacity(0.2),
-                  activeColor: btnColor,
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text("External Notes", style: TxtStls.fieldtitlestyle),
-                Switch(
-                  value: isSwitched1,
-                  onChanged: (value) {
-                    setState(() {
-                      isSwitched1 = value;
-                      print(isSwitched1);
-                    });
-                  },
-                  activeTrackColor: btnColor.withOpacity(0.2),
-                  activeColor: btnColor,
-                ),
-              ],
-            ),
-            ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  primary: btnColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                onPressed: () {
-                  if (servicelist.length <= 0 ||
-                      selectedleadid == null ||
-                      tradename == null ||
-                      address == null ||
-                      pincode == null ||
-                      pan == null ||
-                      _generatedateController.text.isEmpty ||
-                      _duedatedateController.text.isEmpty ||
-                      _internalController.text.isEmpty ||
-                      _extrenalController.text.isEmpty) {
-                    toastmessage.warningmessage(context, showmessage());
-                  } else {
-                    isPreview = true;
-                    setState(() {});
-                    Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                        .fetchRecentInvoiceid();
-                  }
-                },
-                icon: Icon(Icons.copy, size: 10, color: bgColor),
-                label: Text(
-                  "Preview",
-                  style: TxtStls.fieldstyle1,
-                )),
-          ],
-        ),
-      ],
+                  icon: Icon(Icons.copy, size: 10, color: bgColor),
+                  label: Text(
+                    "Preview",
+                    style: TxtStls.fieldstyle1,
+                  )),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -2109,341 +2118,31 @@ class _FinanceState extends State<Finance> {
     }
   }
 
+  List productList = [
+    "BIS Certificate",
+    "WPC Approval",
+    "LMPC Approval",
+    "ISI Certificate"
+  ];
   Widget productAddition(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List productList = [
-      "BIS Certificate",
-      "WPC Approval",
-      "LMPC Approval",
-      "ISI Certificate"
-    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Flexible(
-                fit: FlexFit.tight,
-                flex: 2,
-                child: Container(
-                  height: size.height * 0.25,
-                  decoration: BoxDecoration(),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 100, top: 20),
-                    alignment: Alignment.topLeft,
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      child: Image.network(
-                        "https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=20&m=1223671392&s=612x612&w=0&h=lGpj2vWAI3WUT1JeJWm1PRoHT3V15_1pdcTn2szdwQ0=",
-                        height: 60,
-                        width: 60,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                )),
-            Flexible(
-                fit: FlexFit.tight,
-                flex: 3,
-                child: Column(children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Text(
-                          "Date",
-                          style: TxtStls.fieldtitlestyle11,
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Text(
-                          "Quotation No",
-                          style: TxtStls.fieldtitlestyle11,
-                        ),
-                      ),
-                    ],
-                  ),
-                  space(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 100),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AbgColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(16.0)),
-                            child: Expanded(
-                              flex: 1,
-                              child: InkWell(
-                                child: field(
-                                    _selectedDateController,
-                                    DateFormat('dd/MM/yyyy')
-                                        .format(DateTime.now()),
-                                    1,
-                                    false,
-                                    Icon(
-                                      Icons.calendar_today_outlined,
-                                      color: btnColor,
-                                    )),
-                                onTap: () {
-                                  MyCalenders.pickEndDate(
-                                      context, _selectedDateController);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 100),
-                          child: Container(
-                              padding: EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                  color: AbgColor.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(16.0)),
-                              child: Text(
-                                "#" + randomNo.toString(),
-                                style: TxtStls.fieldstyle,
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-                  space(),
-                  Row(
-                    children: [
-                      Container(
-                        width: size.width * 0.20,
-                        decoration: BoxDecoration(
-                          color: fieldColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0)),
-                        ),
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(left: 15, right: 0, top: 5),
-                          child: TextField(
-                            controller: _gstController2,
-                            style: TxtStls.fieldstyle,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Enter Gst Number...",
-                                hintStyle: TxtStls.fieldstyle),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          var provider =
-                              Provider.of<GstProvider>(context, listen: false);
-                          provider
-                              .fetchGstData(_gstController2.text.toString())
-                              .whenComplete(() {
-                            Future.delayed(Duration(seconds: 2)).then((value) {
-                              setState(() {
-                                tradename = provider.tradename.toString();
-                                address = provider.principalplace.toString();
-                                pan = provider.pan.toString();
-                                pincode = provider.pincode.toString();
-                              });
-                            });
-                          });
-                        },
-                        child: Container(
-                          width: size.width * 0.025,
-                          padding: EdgeInsets.symmetric(vertical: 12.5),
-                          color: btnColor,
-                          child: Provider.of<GstProvider>(context).isLoading
-                              ? SpinKitFadingCube(
-                                  color: bgColor,
-                                  size: 23,
-                                )
-                              : Icon(
-                                  Icons.search,
-                                  color: bgColor,
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ])),
-          ],
-        ),
-        Flexible(
-          flex: 1,
-          child: Text(
-            "Choose Service",
-            style: TxtStls.fieldtitlestyle11,
-          ),
-        ),
-        space(),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                    height: size.width * 0.022,
-                    width: size.width * 0.25,
-                    child: TextField(
-                      controller: _serviceSearchController2,
-                      decoration: InputDecoration(
-                          suffixIcon: productList.isNotEmpty
-                              ? IconButton(
-                                  onPressed: () {
-                                    _serviceSearchController2.clear();
-                                  },
-                                  icon: Icon(Icons.cancel))
-                              : Icon(Icons.search)),
-                    )),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: btnColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0))),
-                  onPressed: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Add",
-                      style: TxtStls.fieldstyle1,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        space(),
-        space(),
-        Container(
-          child: titleWidget2(),
-        ),
-        Container(
-          height: size.height * 0.35,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            controller: sc,
-            itemCount: productList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                ),
-                child: Container(
-                  height: size.width * 0.025,
-                  padding: EdgeInsets.only(left: 50, right: 50),
-                  color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: Text(
-                              "${index + 1}",
-                              style: TxtStls.fieldstyle,
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: productWidget(
-                              "assets/Images/pending.png",
-                              "Product Type",
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 50),
-                              child: Text(
-                                "\$56468",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            )),
-                        Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: Text(
-                                "GST %",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: Text(
-                                "2 pieces",
-                                style: TxtStls.fieldstyle,
-                              )),
-                        ),
-                        Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: SACCode(
-                                "894456",
-                              ),
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        space(),
         Align(
-          alignment: Alignment.bottomRight,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)),
-                primary: btnColor),
-            child: Text(
-              "NEXT",
-              style: TxtStls.fieldstyle1,
-            ),
-            onPressed: () {
-              setState(() {
-                isServiceAdded = !isServiceAdded;
-              });
-            },
+          alignment: Alignment.topRight,
+          child: Container(
+            height: size.height * 0.06,
+            child: iconStepper(),
           ),
-        )
+        ),
+        showScreen(activeStep),
       ],
     );
   }
 
+  bool searching = false;
   Widget titleWidget2() {
     Size size = MediaQuery.of(context).size;
     return Row(
@@ -2499,5 +2198,528 @@ class _FinanceState extends State<Finance> {
       code,
       style: TxtStls.fieldstyle,
     );
+  }
+
+  List resultFound = [];
+  void searchProduct(String query) {
+    if (_serviceSearchController2.text != null) {
+      productList.forEach((element) {
+        if (element.toString().toLowerCase().contains(query.toLowerCase())) {
+          resultFound.add(element);
+        } else {
+          resultFound = [];
+        }
+      });
+      // for (int i = 0; i <= productList.length; i++) {
+      //   String data = productList[i];
+      //
+      //   if (data.toLowerCase().contains(query.toLowerCase())) {
+      //     setState(() {
+      //       resultFound.add(data);
+      //     });
+      //   }
+      // }
+    }
+  }
+
+  int activeStep = 0;
+  int upperBound = 6;
+  List filteredValue = [];
+  Widget iconStepper() {
+    return IconStepper(
+      stepRadius: 16.0,
+      icons: [
+        Icon(Icons.supervised_user_circle),
+        Icon(Icons.flag),
+        Icon(Icons.access_alarm),
+        Icon(Icons.supervised_user_circle),
+        Icon(Icons.flag),
+        Icon(Icons.access_alarm),
+        Icon(Icons.supervised_user_circle),
+      ],
+
+      // activeStep property set to activeStep variable defined above.
+      activeStep: activeStep,
+
+      // This ensures step-tapping updates the activeStep.
+      onStepReached: (index) {
+        setState(() {
+          activeStep = index;
+        });
+      },
+    );
+  }
+
+  // showTitle(activeStep) {
+  //   if (activeStep == 0) {
+  //     return
+  //   } else if (activeStep == 1) {
+  //     return titleWidget();
+  //   }
+  // }
+
+  showScreen(activeStep) {
+    Size size = MediaQuery.of(context).size;
+    if (activeStep == 0) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                  fit: FlexFit.tight,
+                  flex: 2,
+                  child: Container(
+                    height: size.height * 0.25,
+                    decoration: BoxDecoration(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 100),
+                          child: Container(
+                            height: size.height * 0.08,
+                            child: Material(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: bgColor,
+                              child: ListTile(
+                                tileColor: grClr.withOpacity(0.1),
+                                hoverColor: btnColor.withOpacity(0.2),
+                                selectedColor: btnColor.withOpacity(0.2),
+                                selectedTileColor: btnColor.withOpacity(0.2),
+                                leading: CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.1),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: btnColor,
+                                    )),
+                                title: Text(
+                                  cusname.toString(),
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      cusemail.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                    Text(
+                                      cusphone.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ],
+                                ),
+                                trailing: CircleAvatar(
+                                  backgroundColor: btnColor.withOpacity(0.1),
+                                ),
+                                onTap: () {},
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: size.height * 0.12,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  "Choose Service",
+                                  style: TxtStls.fieldtitlestyle11,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Container(
+                                          height: size.width * 0.022,
+                                          width: size.width * 0.25,
+                                          decoration: BoxDecoration(
+                                            color: fieldColor,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10.0),
+                                                bottomLeft:
+                                                    Radius.circular(10.0)),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15, right: 0, top: 0),
+                                            child: TextField(
+                                              controller:
+                                                  _serviceSearchController2,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Search...",
+                                                  hintStyle: TxtStls.fieldstyle,
+                                                  suffixIcon:
+                                                      _serviceSearchController2
+                                                              .text.isNotEmpty
+                                                          ? IconButton(
+                                                              onPressed: () {
+                                                                _serviceSearchController2
+                                                                    .clear();
+                                                              },
+                                                              icon: Icon(
+                                                                  Icons.cancel))
+                                                          : Icon(Icons.search)),
+                                              onChanged: (text) {
+                                                setState(() {});
+                                                if (text.length > 0) {
+                                                  searching = true;
+                                                  filteredValue = [];
+                                                  productList
+                                                      .forEach((product) {
+                                                    if (product
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(text
+                                                            .toLowerCase())) {
+                                                      filteredValue
+                                                          .add(product);
+                                                    }
+                                                  });
+                                                } else {
+                                                  searching = false;
+                                                  filteredValue = [];
+                                                }
+                                              },
+                                            ),
+                                          )),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: btnColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0))),
+                                        onPressed: () {},
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Add",
+                                            style: TxtStls.fieldstyle1,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Date",
+                                style: TxtStls.fieldtitlestyle11,
+                              ),
+                              Text(
+                                "Quotation No",
+                                style: TxtStls.fieldtitlestyle11,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              flex: 2,
+                              fit: FlexFit.tight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: AbgColor.withOpacity(0.1),
+                                      borderRadius:
+                                          BorderRadius.circular(16.0)),
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: InkWell(
+                                      child: field(
+                                          _selectedDateController,
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(DateTime.now()),
+                                          1,
+                                          false,
+                                          Icon(
+                                            Icons.calendar_today_outlined,
+                                            color: btnColor,
+                                          )),
+                                      onTap: () {
+                                        MyCalenders.pickEndDate(
+                                            context, _selectedDateController);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 2,
+                              fit: FlexFit.tight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 40),
+                                child: Container(
+                                    padding: EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                        color: AbgColor.withOpacity(0.1),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    child: Text(
+                                      "#" + randomNo.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: size.width * 0.15,
+                              decoration: BoxDecoration(
+                                color: fieldColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 0, top: 5),
+                                child: TextField(
+                                  controller: _gstController2,
+                                  style: TxtStls.fieldstyle,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Enter Gst Number...",
+                                      hintStyle: TxtStls.fieldstyle),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                var provider = Provider.of<GstProvider>(context,
+                                    listen: false);
+                                provider
+                                    .fetchGstData(
+                                        _gstController2.text.toString())
+                                    .whenComplete(() {
+                                  Future.delayed(Duration(seconds: 2))
+                                      .then((value) {
+                                    setState(() {
+                                      tradename = provider.tradename.toString();
+                                      address =
+                                          provider.principalplace.toString();
+                                      pan = provider.pan.toString();
+                                      pincode = provider.pincode.toString();
+                                    });
+                                  });
+                                });
+                              },
+                              child: Container(
+                                width: size.width * 0.025,
+                                padding: EdgeInsets.symmetric(vertical: 12.5),
+                                color: btnColor,
+                                child:
+                                    Provider.of<GstProvider>(context).isLoading
+                                        ? SpinKitFadingCube(
+                                            color: bgColor,
+                                            size: 23,
+                                          )
+                                        : Icon(
+                                            Icons.search,
+                                            color: bgColor,
+                                          ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ])),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          titleWidget2(),
+          Container(
+            height: size.height * 0.4,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              controller: sc,
+              itemCount: searching ? filteredValue.length : productList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Container(
+                    height: size.width * 0.025,
+                    padding: EdgeInsets.only(left: 50, right: 50),
+                    color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Text(
+                                "${index + 1}",
+                                style: TxtStls.fieldstyle,
+                              )),
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: productWidget(
+                                "assets/Images/pending.png",
+                                productList[index],
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 50),
+                                child: Text(
+                                  "\$56468",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              )),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: Text(
+                                  "GST %",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              )),
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: Text(
+                                  "2 pieces",
+                                  style: TxtStls.fieldstyle,
+                                )),
+                          ),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: SACCode(
+                                  "894456",
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      primary: btnColor),
+                  child: Text(
+                    "PREV",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                  onPressed: () {
+                    showScreen(activeStep);
+                    if (activeStep < upperBound) {
+                      setState(() {
+                        activeStep++;
+                      });
+                    }
+
+                    if (activeStep == 7) {
+                      setState(() {
+                        isServiceAdded = !isServiceAdded;
+                      });
+                    }
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      primary: btnColor),
+                  child: Text(
+                    "NEXT",
+                    style: TxtStls.fieldstyle1,
+                  ),
+                  onPressed: () {
+                    showScreen(activeStep);
+                    if (activeStep < upperBound) {
+                      setState(() {
+                        activeStep++;
+                      });
+                    }
+
+                    if (activeStep == 7) {
+                      setState(() {
+                        isServiceAdded = !isServiceAdded;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else if (activeStep == 1) {
+      return Createinvoice(context);
+    }
   }
 }

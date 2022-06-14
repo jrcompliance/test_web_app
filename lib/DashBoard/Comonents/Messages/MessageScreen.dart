@@ -218,8 +218,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                           btnColor.withOpacity(0.1),
                                     ),
                                     onTap: () {
-                                      checkAndCreateNewRoom(
-                                          employeeModel, context);
+                                      checkAndCreateNewRoom(employeeModel);
                                       setState(() {
                                         isTapped = true;
                                         peerid = employeeModel.uid;
@@ -247,28 +246,36 @@ class _MessageScreenState extends State<MessageScreen> {
             width: 10,
           ),
           Expanded(
-            flex: 7,
-            child: isTapped
-                ? Container()
-                : Container(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          Expanded(
-                              flex: 5,
-                              child: Lottie.asset("assets/Lotties/empty.json")),
-                          Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Select any Employee from list to Start Conversation ',
-                                style: TxtStls.fieldBtnStyle,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-          ),
+              flex: 7,
+              child: isTapped
+                  ? roomModel.roomId != null
+                      ? chatWidget(context)
+                      : Container(
+                          child: Text('noData'),
+                        )
+                  : Container(
+                      child: Text("nt tapped"),
+                    )
+
+              // Container(
+              //         child: Align(
+              //           alignment: Alignment.center,
+              //           child: Column(
+              //             children: [
+              //               Expanded(
+              //                   flex: 5,
+              //                   child: Lottie.asset("assets/Lotties/empty.json")),
+              //               Expanded(
+              //                   flex: 1,
+              //                   child: Text(
+              //                     'Select any Employee from list to Start Conversation ',
+              //                     style: TxtStls.fieldBtnStyle,
+              //                   )),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              ),
         ],
       ),
     );
@@ -328,7 +335,14 @@ class _MessageScreenState extends State<MessageScreen> {
     return roomID;
   }
 
-  checkAndCreateNewRoom(toChatUserModel, BuildContext context) async {
+  Widget chatWidget(BuildContext context) {
+    return ChattingScreen(
+      roomModel: roomModel,
+      employeesModel: employeeModal,
+    );
+  }
+
+  checkAndCreateNewRoom(toChatUserModel) async {
     String roomId = createRoomId(toChatUserModel);
 
     CollectionReference roomCollectionReference =
@@ -349,30 +363,81 @@ class _MessageScreenState extends State<MessageScreen> {
       roomModel.participantsList!.add(user!.uid);
       await roomCollectionReference.doc(roomId).set(roomModel.toMap());
     }
-
     if (roomModel.roomId != null) {
       print('room available');
+
+      //   return ChattingScree
+      //       roomModel: roomModel, employeesModel: toChatUserModel);
 
       // setState(() {
       //   roomModal = roomModel;
       // });
       // print('roooom' + roomModel.roomId.toString());
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       Size size = MediaQuery.of(context).size;
+      //       return AlertDialog(
+      //         content: Container(
+      //           height: size.height * 0.2,
+      //           width: size.width * 0.2,
+      //           child: Column(
+      //             children: [
+      //               Text('Do you want to proceed'),
+      //               SizedBox(
+      //                 height: 10,
+      //               ),
+      //               Row(
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       ElevatedButton(
+      //                         child: Text("Yes"),
+      //                         onPressed: () {
+      //                           Future.delayed(Duration(seconds: 1))
+      //                               .then((value) {
+      //                             Navigator.pop(context);
+      //                           }).then((value) => ChattingScreen(
+      //                                     roomModel: roomModel,
+      //                                     employeesModel: toChatUserModel,
+      //                                   ));
+      //                         },
+      //                       ),
+      //                       SizedBox(
+      //                         width: 10,
+      //                       ),
+      //                       ElevatedButton(
+      //                         child: Text("No"),
+      //                         onPressed: () {
+      //                           Navigator.pop(context);
+      //                         },
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ],
+      //               )
+      //             ],
+      //           ),
+      //         ),
+      //       );
+      //     });
 
-      var value = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (ctx) => ChattingScreen(
-                    roomModel: roomModel,
-                    employeesModel: toChatUserModel,
-                    isTapped: true,
-                  )));
-      setState(() {
-        isTapped = value;
-      });
+      // var value = await Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (ctx) => ChattingScreen(
+      //               roomModel: roomModel,
+      //               employeesModel: toChatUserModel,
+      //               // isTapped: true,
+      //             )));
+      // setState(() {
+      //   isTapped = value;
+      // });
       // return ChattingScreen(
       //     roomModel: roomModel, employeesModel: toChatUserModel);
-    } else {
-      return Container();
+      // } else {
+      //   print('room not available');
+      //   return Container();
     }
   }
 
@@ -399,4 +464,14 @@ class _MessageScreenState extends State<MessageScreen> {
 
     textEditingController.clear();
   }
+  // Widget dialogAction(text,roomModel,employeesModel,tru){
+  //   return  ElevatedButton(
+  //     child: Text(text),
+  //     onPressed: ()  {
+  //       if(text == "yes"){
+  //         return ChattingScreen(roomModel: roomModel, employeesModel: employeesModel, isTapped: tru,);
+  //       } else return null;
+  //     },
+  //   );
+  // }
 }

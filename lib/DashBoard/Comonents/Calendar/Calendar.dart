@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stream_chat/stream_chat.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
@@ -42,8 +43,9 @@ class _CalendarState extends State<Calendar> {
   final TextEditingController _customersearchController =
       TextEditingController();
   List<EmployeesModel> allEmployees = [];
-  User? user = FirebaseAuth.instance.currentUser;
-
+  var user = FirebaseAuth.instance.currentUser;
+  StreamChatClient? client;
+  Channel? channel;
   String bnature = "Active";
 
   bool visible = false;

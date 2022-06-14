@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_web_app/AppLifecycleState/AppLifecycleState.dart';
+import 'package:stream_chat/stream_chat.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LogOutProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LoginProvider.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/RegisterProvider.dart';
@@ -45,6 +45,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GSheetsApi.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // /// Create a new instance of [StreamChatClient] passing the apikey obtained from your
+  // /// project dashboard.
+  // final client = StreamChatClient(
+  //   'wtuy4by8fpf2',
+  //   logLevel: Level.INFO,
+  // );
+  // await client.connectUser(
+  //   User(id: 'tutorial-flutter'),
+  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZmx1dHRlciJ9.S-MJpoSwDiqyXpUURgO5wVqJ4vKlIVFLSEyrFYCOE1c',
+  // );
+  //
+  // final channel = client.channel('messaging', id: 'flutterdevs');
+  // await channel.watch();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (ctx) => RegisterProvider()),

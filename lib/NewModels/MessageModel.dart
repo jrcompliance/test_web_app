@@ -22,7 +22,7 @@ class MessageModel {
       'message': message,
       'timeStamp': FieldValue.serverTimestamp(),
       'senderId': FirebaseAuth.instance.currentUser!.uid,
-      'peerId': peerid,
+      'peerId': peerId,
     };
   }
 }

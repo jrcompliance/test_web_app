@@ -30,26 +30,6 @@ class ChatProvider extends ChangeNotifier {
   //   return firestore.collection("Chats").doc(docPath).update(dataUpdate);
   // }
 
-  Future<void> saveChatMessage(String content, String isFrom, String isTo,
-      String time, String type) async {
-    var refMessages = FirebaseFirestore.instance
-        .collection("Chats")
-        .doc(isFrom)
-        .collection("messages");
-    var newMessage = ChatModel(
-        time: time, isFrom: isFrom, isTo: isTo, content: content, type: type);
-
-    refMessages.add(newMessage.toJson());
-    //     .doc()
-    //     .set({
-    //   "time": time,
-    //   "isFrom": isFrom,
-    //   "isTo": isTo,
-    //   "content": content,
-    //   "type": type
-    // });
-  }
-
   static Stream<QuerySnapshot> getChatMessage(String peerid) {
     return FirebaseFirestore.instance
         .collection("Chats")

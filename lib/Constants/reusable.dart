@@ -150,6 +150,9 @@ const primaryColor = Color(0xFF2697FF);
 const secondaryColor = Color(0xFF2A2D3E);
 const grClr = Colors.grey;
 const defaultPadding = 16.0;
+const kTileHeight = 50.0;
+const inProgressColor = Colors.black87;
+const todoColor = Color(0xffd1d2d7);
 
 // clr for headers
 const clsClr = Color(0xFFF44336);

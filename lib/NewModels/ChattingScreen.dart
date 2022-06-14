@@ -18,11 +18,8 @@ import 'package:universal_html/html.dart';
 class ChattingScreen extends StatefulWidget {
   RoomModel roomModel;
   EmployeesModel employeesModel;
-  bool isTapped;
-  ChattingScreen(
-      {required this.roomModel,
-      required this.employeesModel,
-      required this.isTapped});
+  // bool isTapped;
+  ChattingScreen({required this.roomModel, required this.employeesModel});
 
   @override
   _ChattingScreenState createState() => _ChattingScreenState();
@@ -178,7 +175,8 @@ class _ChattingScreenState extends State<ChattingScreen> {
                           child: StreamBuilder<QuerySnapshot>(
                               stream: chatsCollectionReference!
                                   // .where('senderId', isEqualTo: widget.roomModel.senderId)
-                                  // .where("peerId", isEqualTo: widget.roomModel.peerId)
+                                  // .where("peerId",
+                                  //     isEqualTo: widget.roomModel.peerId)
                                   .orderBy("timeStamp")
                                   .snapshots(),
                               builder: (context, snapshot) {
@@ -210,7 +208,9 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                                     .data!.docs[index]
                                                     .data()
                                                 as Map<String, dynamic>);
-                                        return ChatItem(messageModel);
+                                        return Builder(builder: (context) {
+                                          return ChatItem(messageModel);
+                                        });
                                         ;
                                       });
                                 }
@@ -262,8 +262,8 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                         hintStyle: TxtStls.fieldstyle,
                                         border: InputBorder.none),
                                     onSubmitted: (_) {
-                                      _scrollListener();
                                       sendMessage();
+                                      _scrollListener();
                                     },
                                   ),
                                 ),
@@ -281,8 +281,8 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                   flex: 1,
                                   child: InkWell(
                                       onTap: () {
-                                        _scrollListener();
                                         sendMessage();
+                                        _scrollListener();
                                       },
                                       child: Image.asset(
                                         "assets/Images/send.png",
