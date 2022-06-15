@@ -41,20 +41,6 @@ class _MyStepper extends State<MyStepper> {
     );
   }
 
-  /// Returns the previous button.
-  // Widget previousButton() {
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       if (activeStep > upperBound) {
-  //         setState(() {
-  //           activeStep--;
-  //         });
-  //       }
-  //     },
-  //     child: Text('Prev'),
-  //   );
-  // }
-
   /// Returns the header wrapping the header text.
   Widget header() {
     return Container(

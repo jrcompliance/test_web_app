@@ -332,756 +332,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                     ),
                   ],
                 )
-              : Container(
-                  child: Column(
-                    children: [
-                      space(),
-                      Container(
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 7,
-                                child: Container(
-                                  height: size.height * 0.85,
-                                  decoration: BoxDecoration(
-                                      color: bgColor,
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.all(15.0),
-                                              child: Text(
-                                                "Service List",
-                                                style:
-                                                    TxtStls.fieldtitlestyle11,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Container(
-                                                  height: size.width * 0.03,
-                                                  width: size.width * 0.2,
-                                                  child: field(
-                                                      _serviceSearchController,
-                                                      "Search",
-                                                      1,
-                                                      true)),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Text(
-                                                "See More",
-                                                style: TxtStls.titlestyle14,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      space(),
-                                      Column(
-                                        children: [
-                                          titleWidget(),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            height: size.height * 0.35,
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.vertical,
-                                              itemCount: 10,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                  ),
-                                                  child: Container(
-                                                    height: size.width * 0.025,
-                                                    padding: EdgeInsets.only(
-                                                        left: 50, right: 50),
-                                                    color: index % 2 == 0
-                                                        ? AbgColor.withOpacity(
-                                                            0.1)
-                                                        : bgColor,
-                                                    child: Center(
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Flexible(
-                                                              flex: 1,
-                                                              child: Text(
-                                                                "${index + 1}",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              )),
-                                                          Flexible(
-                                                            flex: 1,
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 40),
-                                                              child:
-                                                                  productWidget(
-                                                                "assets/Images/pending.png",
-                                                                "Product Type",
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Flexible(
-                                                              flex: 1,
-                                                              child: SACCode(
-                                                                "89445656",
-                                                              )),
-                                                          Flexible(
-                                                              flex: 1,
-                                                              child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            50,
-                                                                        right:
-                                                                            50),
-                                                                child: Text(
-                                                                  "GST %",
-                                                                  style: TxtStls
-                                                                      .fieldstyle,
-                                                                ),
-                                                              )),
-                                                          Flexible(
-                                                              flex: 1,
-                                                              child: Text(
-                                                                "\$56468",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              )),
-                                                          Flexible(
-                                                            flex: 1,
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 50,
-                                                                      right:
-                                                                          50),
-                                                              child: popupMenu(
-                                                                "EDIT",
-                                                                "DELETE",
-                                                                _clrslist[0],
-                                                                _clrslist[2],
-                                                                Icons.edit,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      space(),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 20),
-                                        child: Container(
-                                          height: size.height * 0.34,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                  flex: 2,
-                                                  child: Column(
-                                                    children: [
-                                                      space2(),
-                                                      CircleAvatar(
-                                                        backgroundColor:
-                                                            AbgColor
-                                                                .withOpacity(
-                                                                    0.1),
-                                                        radius: 50,
-                                                        child: Container(
-                                                          height: 40,
-                                                          width: 40,
-                                                          child: IconButton(
-                                                            icon: Icon(Icons
-                                                                .camera_alt),
-                                                            onPressed: () {
-                                                              CameraDevice
-                                                                  .front;
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      space2(),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Text("Image"),
-                                                      ),
-                                                    ],
-                                                  )),
-                                              Expanded(
-                                                  flex: 6,
-                                                  child: Container(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 2.5),
-                                                          child: Text(
-                                                            "Product Name",
-                                                            style: TxtStls
-                                                                .fieldstyle,
-                                                          ),
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Flexible(
-                                                              flex: 1,
-                                                              child: field(
-                                                                  _productNameController,
-                                                                  "",
-                                                                  1,
-                                                                  true),
-                                                            ),
-                                                            Flexible(
-                                                                flex: 1,
-                                                                child:
-                                                                    Text("")),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left:
-                                                                          2.5),
-                                                              child: Text(
-                                                                "SAC Code",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                "Tax Slab",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                "",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Flexible(
-                                                              flex: 1,
-                                                              child: field(
-                                                                  _sacCodeController,
-                                                                  "",
-                                                                  1,
-                                                                  true),
-                                                            ),
-                                                            Flexible(
-                                                              flex: 1,
-                                                              child: field(
-                                                                  _taxSlabController,
-                                                                  "",
-                                                                  1,
-                                                                  true),
-                                                            ),
-                                                            Flexible(
-                                                              flex: 1,
-                                                              child: Container(
-                                                                alignment: Alignment
-                                                                    .centerLeft,
-                                                                width:
-                                                                    size.width *
-                                                                        0.001,
-                                                                child: Text(""),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left:
-                                                                          7.5),
-                                                              child: Text(
-                                                                "Price",
-                                                                style: TxtStls
-                                                                    .fieldstyle,
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              child: Text(""),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Flexible(
-                                                                flex: 1,
-                                                                child: field(
-                                                                    _priceController,
-                                                                    "",
-                                                                    1,
-                                                                    true)),
-                                                            Flexible(
-                                                                flex: 1,
-                                                                child: Text(""))
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 20,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Flexible(
-                                                              flex: 1,
-                                                              child:
-                                                                  ElevatedButton(
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  primary:
-                                                                      bgColor,
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8.0)),
-                                                                ),
-                                                                child: Text(
-                                                                  "Close",
-                                                                  style: TextStyle(
-                                                                      color: btnColor
-                                                                          .withOpacity(
-                                                                              0.6)),
-                                                                ),
-                                                                onPressed:
-                                                                    () {},
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 20,
-                                                            ),
-                                                            ElevatedButton(
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                primary:
-                                                                    btnColor,
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            8.0)),
-                                                              ),
-                                                              child: Text(
-                                                                "Save",
-                                                                style: TxtStls
-                                                                    .fieldstyle1,
-                                                              ),
-                                                              onPressed: () {},
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )),
-                                              Expanded(
-                                                flex: 4,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Description",
-                                                      style: TxtStls.fieldstyle,
-                                                    ),
-                                                    SizedBox(height: 10),
-                                                    Flexible(
-                                                      flex: 2,
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        child: field(
-                                                            _descriptionController,
-                                                            "",
-                                                            3,
-                                                            true),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                        alignment: Alignment
-                                                            .center,
-                                                        decoration: BoxDecoration(
-                                                            color: bgColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0)),
-                                                        height:
-                                                            size.height * 0.15,
-                                                        child: StreamBuilder(
-                                                            stream: FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    "EmployeeData")
-                                                                .where("uid",
-                                                                    isEqualTo:
-                                                                        docid)
-                                                                .snapshots(),
-                                                            builder: (BuildContext
-                                                                    context,
-                                                                AsyncSnapshot<
-                                                                        QuerySnapshot>
-                                                                    snapshot) {
-                                                              if (!snapshot
-                                                                  .hasData) {
-                                                                return IconButton(
-                                                                  icon: Icon(Icons
-                                                                      .cloud_upload),
-                                                                  onPressed:
-                                                                      () {},
-                                                                  iconSize: 80,
-                                                                  color: btnColor
-                                                                      .withOpacity(
-                                                                          0.5),
-                                                                );
-                                                              }
-                                                              return ListView
-                                                                  .separated(
-                                                                separatorBuilder: (_,
-                                                                        index) =>
-                                                                    SizedBox(
-                                                                        height:
-                                                                            1),
-                                                                shrinkWrap:
-                                                                    true,
-                                                                scrollDirection:
-                                                                    Axis.vertical,
-                                                                physics:
-                                                                    AlwaysScrollableScrollPhysics(),
-                                                                itemCount:
-                                                                    snapshot
-                                                                        .data!
-                                                                        .docs
-                                                                        .length,
-                                                                itemBuilder:
-                                                                    (BuildContext
-                                                                            context,
-                                                                        int index) {
-                                                                  List attachments1 = snapshot
-                                                                          .data!
-                                                                          .docs[index]
-                                                                      [
-                                                                      "Attachments1"];
-                                                                  // print(attachments1
-                                                                  //     .toString());
-                                                                  // print(docid);
-                                                                  return ListView
-                                                                      .separated(
-                                                                    controller:
-                                                                        _scrollController,
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    itemCount:
-                                                                        attachments1
-                                                                            .length,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context,
-                                                                            i) {
-                                                                      return ListTile(
-                                                                        leading:
-                                                                            SizedBox(
-                                                                          height:
-                                                                              30,
-                                                                          child: Image.asset(
-                                                                              "assets/Images/pdf.png",
-                                                                              filterQuality: FilterQuality.high,
-                                                                              fit: BoxFit.cover),
-                                                                        ),
-                                                                        title:
-                                                                            Text(
-                                                                          attachments1[i]['name']
-                                                                              .toString(),
-                                                                          style:
-                                                                              TxtStls.fieldstyle,
-                                                                        ),
-                                                                        onTap:
-                                                                            () {
-                                                                          fileview1(
-                                                                              context,
-                                                                              attachments1[i]["name"].toString(),
-                                                                              attachments1[i]["url"].toString());
-                                                                        },
-                                                                      );
-                                                                    },
-                                                                    separatorBuilder: (BuildContext
-                                                                                context,
-                                                                            int
-                                                                                index) =>
-                                                                        Divider(
-                                                                            color:
-                                                                                grClr),
-                                                                  );
-                                                                },
-                                                              );
-                                                            })),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 2.5),
-                                                      child: Divider(),
-                                                    ),
-                                                    Flexible(
-                                                      child: Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: ElevatedButton(
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              primary: btnColor,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0)),
-                                                            ),
-                                                            child: Text(
-                                                              "Upload",
-                                                              style: TxtStls
-                                                                  .fieldstyle1,
-                                                            ),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                _isClicked =
-                                                                    true;
-                                                              });
-                                                              Provider.of<AddDocumentsProvider2>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .addDocument(
-                                                                      docid);
-                                                            },
-                                                          )),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Expanded(
-                                flex: 3,
-                                child: SizedBox(
-                                    child: Column(
-                                  children: [
-                                    Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 40.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: bgColor),
-                                        height: size.height * 0.4,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            space2(),
-                                            container2("Product Add by Month",
-                                                "First Half", "Second Half"),
-                                            space2(),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "Jan"
-                                                  : "Jul",
-                                              "23,400",
-                                              0.8,
-                                            ),
-                                            space2(),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "Feb"
-                                                  : "Aug",
-                                              "15,000",
-                                              0.4,
-                                            ),
-                                            space2(),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "Mar"
-                                                  : "Sep",
-                                              "30,000",
-                                              0.9,
-                                            ),
-                                            space2(),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "Apr"
-                                                  : "Oct",
-                                              "22,000",
-                                              0.7,
-                                            ),
-                                            space(),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "May"
-                                                  : "Nov",
-                                              "10,000",
-                                              1.0,
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            row1(
-                                              popValue == "First Half"
-                                                  ? "Jun"
-                                                  : "Dec",
-                                              "23,400",
-                                              0.1,
-                                            ),
-                                          ],
-                                        )),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 40.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: bgColor),
-                                        height: size.height * 0.4,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            space(),
-                                            container2(
-                                                "Product Sales Analytics",
-                                                "FirstHalf",
-                                                "SecondHalf"),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Container(
-                                                height: size.height * 0.28,
-                                                child: SfCircularChart(
-                                                    annotations: <
-                                                        CircularChartAnnotation>[
-                                                      CircularChartAnnotation(
-                                                          widget: Container(
-                                                              child: PhysicalModel(
-                                                                  child:
-                                                                      Container(),
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  elevation: 10,
-                                                                  shadowColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                          230,
-                                                                          230,
-                                                                          230,
-                                                                          1)))),
-                                                      CircularChartAnnotation(
-                                                          widget: CircleAvatar(
-                                                        radius: 120,
-                                                        backgroundImage: AssetImage(
-                                                            "Images/innerCircle.png"),
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        // child: Image.asset(
-                                                        //     ),
-                                                      ))
-                                                    ],
-                                                    series: <CircularSeries>[
-                                                      // Renders doughnut chart
-                                                      DoughnutSeries<ChartData,
-                                                          String>(
-                                                        dataSource: chartData,
-                                                        pointColorMapper:
-                                                            (ChartData data,
-                                                                    _) =>
-                                                                data.color,
-                                                        xValueMapper:
-                                                            (ChartData data,
-                                                                    _) =>
-                                                                data.x,
-                                                        yValueMapper:
-                                                            (ChartData data,
-                                                                    _) =>
-                                                                data.y,
-                                                        innerRadius: "70",
-                                                      )
-                                                    ])),
-                                            showbottomofPieChart3(),
-                                          ],
-                                        ))
-                                  ],
-                                ))),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              : serviceList(),
         ],
       ),
     );
@@ -1156,10 +407,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
               style: TxtStls.fieldtitlestyle11,
             ),
           ),
-          Flexible(
-            flex: 1,
-            child: popupMenu(value1, value2),
-          )
+          // Flexible(
+          //   flex: 1,
+          //   child: popupMenu(value1, value2),
+          // )
         ],
       ),
     );
@@ -1173,6 +424,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
   Widget space2() {
     Size size = MediaQuery.of(context).size;
     return SizedBox(height: size.height * 0.02);
+  }
+
+  Widget space3() {
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(height: size.height * 0.03);
   }
 
   Widget cover(imageUrl, datalength, title) {
@@ -1639,11 +895,11 @@ class _UserDashBoardState extends State<UserDashBoard> {
     return Padding(
       padding: EdgeInsets.all(0.0),
       child: Container(
-        decoration: deco,
+        decoration: deco2,
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: size.width * 0.01,
-            // vertical: size.width * 0.008,
+          padding: const EdgeInsets.only(
+            left: 20,
+            bottom: 5,
           ),
           child: TextFormField(
             maxLength: maxlength,
@@ -1925,6 +1181,746 @@ class _UserDashBoardState extends State<UserDashBoard> {
   getEmployeeId() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     docid = pref.getString("uid");
+  }
+
+  Widget serviceList() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      child: Column(
+        children: [
+          space(),
+          Container(
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 7,
+                    child: Container(
+                      height: size.height * 0.86,
+                      decoration: BoxDecoration(
+                          color: bgColor,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(15.0),
+                                  child: Text(
+                                    "Service List",
+                                    style: TxtStls.fieldtitlestyle11,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Container(
+                                      height: size.width * 0.015,
+                                      width: size.width * 0.2,
+                                      child: field(_serviceSearchController,
+                                          "Search", 1, true)),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "See More",
+                                    style: TxtStls.titlestyle14,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          space(),
+                          Column(
+                            children: [
+                              titleWidget(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                height: size.height * 0.35,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: 10,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: index % 2 == 0
+                                                ? AbgColor.withOpacity(0.1)
+                                                : bgColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        height: size.width * 0.025,
+                                        padding: EdgeInsets.only(
+                                            left: 50, right: 50),
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                  flex: 1,
+                                                  child: Text(
+                                                    "${index + 1}",
+                                                    style: TxtStls.fieldstyle,
+                                                  )),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 40),
+                                                  child: productWidget(
+                                                    "assets/Images/pending.png",
+                                                    "Product Type",
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                  flex: 1,
+                                                  child: SACCode(
+                                                    "89445656",
+                                                  )),
+                                              Flexible(
+                                                  flex: 1,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 50, right: 50),
+                                                    child: Text(
+                                                      "GST %",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                  )),
+                                              Flexible(
+                                                  flex: 1,
+                                                  child: Text(
+                                                    "\$56468",
+                                                    style: TxtStls.fieldstyle,
+                                                  )),
+                                              Flexible(
+                                                flex: 1,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 50, right: 50),
+                                                  child: popupMenu(
+                                                    "EDIT",
+                                                    "DELETE",
+                                                    _clrslist[0],
+                                                    _clrslist[2],
+                                                    Icons.edit,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          space(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Material(
+                              borderRadius: BorderRadius.circular(10.0),
+                              elevation: 12.0,
+                              child: Container(
+                                height: size.height * 0.35,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          children: [
+                                            space2(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    AbgColor.withOpacity(0.1),
+                                                radius: 50,
+                                                child: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  child: IconButton(
+                                                    icon:
+                                                        Icon(Icons.camera_alt),
+                                                    onPressed: () {
+                                                      CameraDevice.front;
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            space2(),
+                                            Flexible(
+                                              flex: 1,
+                                              child: Text(
+                                                "Image",
+                                                style: TxtStls.fieldstyle,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                    Expanded(
+                                        flex: 5,
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 2.5, top: 10),
+                                                child: Text(
+                                                  "Product Name",
+                                                  style: TxtStls.fieldstyle,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: size.width * 0.015,
+                                                    width: size.width * 0.2,
+                                                    child: field(
+                                                        _productNameController,
+                                                        "",
+                                                        1,
+                                                        true),
+                                                  ),
+                                                  Flexible(
+                                                      flex: 1, child: Text("")),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 2.5),
+                                                    child: Text(
+                                                      "SAC Code",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Tax Slab",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    height: size.width * 0.015,
+                                                    width: size.width * 0.06,
+                                                    child: field(
+                                                        _sacCodeController,
+                                                        "",
+                                                        1,
+                                                        true),
+                                                  ),
+                                                  Container(
+                                                    height: size.width * 0.015,
+                                                    width: size.width * 0.06,
+                                                    child: field(
+                                                        _taxSlabController,
+                                                        "",
+                                                        1,
+                                                        true),
+                                                  ),
+                                                  Flexible(
+                                                    flex: 1,
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      width: size.width * 0.001,
+                                                      child: Text(""),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 7.5),
+                                                    child: Text(
+                                                      "Price",
+                                                      style: TxtStls.fieldstyle,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text(""),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                      height:
+                                                          size.width * 0.015,
+                                                      width: size.width * 0.06,
+                                                      child: field(
+                                                          _priceController,
+                                                          "",
+                                                          1,
+                                                          true)),
+                                                  Flexible(
+                                                      flex: 1, child: Text(""))
+                                                ],
+                                              ),
+                                              Expanded(
+                                                  flex: 1, child: SizedBox()),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 20.0),
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          primary: bgColor,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0)),
+                                                        ),
+                                                        child: Text(
+                                                          "Close",
+                                                          style: TextStyle(
+                                                              color: btnColor
+                                                                  .withOpacity(
+                                                                      0.6)),
+                                                        ),
+                                                        onPressed: () {},
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary: btnColor,
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0)),
+                                                      ),
+                                                      child: Text(
+                                                        "Save",
+                                                        style:
+                                                            TxtStls.fieldstyle1,
+                                                      ),
+                                                      onPressed: () {},
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Description",
+                                              style: TxtStls.fieldstyle,
+                                            ),
+                                            SizedBox(height: 5),
+                                            Flexible(
+                                              flex: 2,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5.0),
+                                                child: field(
+                                                    _descriptionController,
+                                                    "",
+                                                    3,
+                                                    true),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Material(
+                                                elevation: 8.0,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                child: Container(
+                                                  height: size.height * 0.2,
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color:
+                                                                      bgColor,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0)),
+                                                          height: size.height *
+                                                              0.12,
+                                                          child: StreamBuilder(
+                                                              stream: FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "EmployeeData")
+                                                                  .where("uid",
+                                                                      isEqualTo:
+                                                                          docid)
+                                                                  .snapshots(),
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  AsyncSnapshot<
+                                                                          QuerySnapshot>
+                                                                      snapshot) {
+                                                                if (!snapshot
+                                                                    .hasData) {
+                                                                  return IconButton(
+                                                                    icon: Icon(Icons
+                                                                        .cloud_upload),
+                                                                    onPressed:
+                                                                        () {},
+                                                                    iconSize:
+                                                                        80,
+                                                                    color: btnColor
+                                                                        .withOpacity(
+                                                                            0.5),
+                                                                  );
+                                                                }
+                                                                return ListView
+                                                                    .separated(
+                                                                  separatorBuilder: (_,
+                                                                          index) =>
+                                                                      SizedBox(
+                                                                          height:
+                                                                              1),
+                                                                  shrinkWrap:
+                                                                      true,
+                                                                  scrollDirection:
+                                                                      Axis.vertical,
+                                                                  physics:
+                                                                      AlwaysScrollableScrollPhysics(),
+                                                                  itemCount:
+                                                                      snapshot
+                                                                          .data!
+                                                                          .docs
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (BuildContext
+                                                                              context,
+                                                                          int index) {
+                                                                    List
+                                                                        attachments1 =
+                                                                        snapshot
+                                                                            .data!
+                                                                            .docs[index]["Attachments1"];
+                                                                    // print(attachments1
+                                                                    //     .toString());
+                                                                    // print(docid);
+                                                                    return ListView
+                                                                        .separated(
+                                                                      controller:
+                                                                          _scrollController,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemCount:
+                                                                          attachments1
+                                                                              .length,
+                                                                      itemBuilder:
+                                                                          (BuildContext context,
+                                                                              i) {
+                                                                        return Material(
+                                                                          elevation:
+                                                                              8.0,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(5.0),
+                                                                          child:
+                                                                              ListTile(
+                                                                            leading:
+                                                                                SizedBox(
+                                                                              height: 30,
+                                                                              child: Image.asset("assets/Images/pdf.png", filterQuality: FilterQuality.high, fit: BoxFit.cover),
+                                                                            ),
+                                                                            title:
+                                                                                Text(
+                                                                              attachments1[i]['name'].toString(),
+                                                                              style: TxtStls.fieldstyle,
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              fileview1(context, attachments1[i]["name"].toString(), attachments1[i]["url"].toString());
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                      separatorBuilder:
+                                                                          (BuildContext context,
+                                                                              int index) {
+                                                                        return Padding(
+                                                                            padding:
+                                                                                EdgeInsets.all(8.0));
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                );
+                                                              })),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 2.5,
+                                                                right: 2.5),
+                                                        child: Divider(),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 15.0),
+                                                        child: Flexible(
+                                                          child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child:
+                                                                  ElevatedButton(
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  primary:
+                                                                      btnColor,
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0)),
+                                                                ),
+                                                                child: Text(
+                                                                  "Upload",
+                                                                  style: TxtStls
+                                                                      .fieldstyle1,
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    _isClicked =
+                                                                        true;
+                                                                  });
+                                                                  Provider.of<AddDocumentsProvider2>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .addDocument(
+                                                                          docid);
+                                                                },
+                                                              )),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                SizedBox(
+                  width: 30,
+                ),
+                Expanded(
+                    flex: 3,
+                    child: SizedBox(
+                        child: Column(
+                      children: [
+                        Container(
+                            padding: EdgeInsets.symmetric(horizontal: 40.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: bgColor),
+                            height: size.height * 0.42,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                space3(),
+                                container2("Product Add by Month", "First Half",
+                                    "Second Half"),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "Jan" : "Jul",
+                                  // popValue == "Second Half"
+                                  "23,400",
+                                  0.8,
+                                ),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "Feb" : "Aug",
+                                  //   popValue == "First Half" ?
+                                  "15,000",
+                                  0.4,
+                                ),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "Mar" : "Sep",
+                                  // popValue == "First Half" ?
+                                  "30,000",
+                                  0.9,
+                                ),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "Apr" : "Oct",
+                                  // popValue == "First Half" ?
+                                  "22,000",
+                                  0.7,
+                                ),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "May" : "Nov",
+                                  // popValue == "First Half" ?
+                                  "10,000",
+                                  1.0,
+                                ),
+                                space3(),
+                                row1(
+                                  DateTime.now().month <= 6 ? "Jun" : "Dec",
+                                  // popValue == "First Half" ?
+                                  "23,400",
+                                  0.1,
+                                ),
+                              ],
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                            padding: EdgeInsets.symmetric(horizontal: 40.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: bgColor),
+                            height: size.height * 0.42,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                space(),
+                                container2("Product Sales Analytics",
+                                    "FirstHalf", "SecondHalf"),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                    height: size.height * 0.28,
+                                    child: SfCircularChart(
+                                        annotations: <CircularChartAnnotation>[
+                                          CircularChartAnnotation(
+                                              widget: Container(
+                                                  child: PhysicalModel(
+                                                      child: Container(),
+                                                      shape: BoxShape.circle,
+                                                      elevation: 10,
+                                                      shadowColor: Colors.black,
+                                                      color: Color.fromRGBO(
+                                                          230, 230, 230, 1)))),
+                                          CircularChartAnnotation(
+                                              widget: CircleAvatar(
+                                            radius: 100,
+                                            backgroundImage: AssetImage(
+                                                "Images/innerCircle.png"),
+                                            backgroundColor: Colors.transparent,
+                                            // child: Image.asset(
+                                            //     ),
+                                          ))
+                                        ],
+                                        series: <CircularSeries>[
+                                          // Renders doughnut chart
+                                          DoughnutSeries<ChartData, String>(
+                                            dataSource: chartData,
+                                            pointColorMapper:
+                                                (ChartData data, _) =>
+                                                    data.color,
+                                            xValueMapper: (ChartData data, _) =>
+                                                data.x,
+                                            yValueMapper: (ChartData data, _) =>
+                                                data.y,
+                                            innerRadius: "60",
+                                          )
+                                        ])),
+                                showbottomofPieChart3(),
+                              ],
+                            ))
+                      ],
+                    ))),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

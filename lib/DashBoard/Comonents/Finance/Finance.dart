@@ -784,87 +784,66 @@ class _FinanceState extends State<Finance> {
   Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.86,
+      height: size.height * 0.76,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CircleAvatar(
-                  backgroundColor: btnColor,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: bgColor,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isCreate = false;
-                      });
-                    },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: size.width * 0.225,
+                decoration: BoxDecoration(
+                  color: fieldColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0)),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 0, top: 2),
+                  child: TextField(
+                    controller: _gstController,
+                    style: TxtStls.fieldstyle,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Enter Gst Number...",
+                        hintStyle: TxtStls.fieldstyle),
                   ),
                 ),
-                Row(
-                  children: [
-                    Container(
-                      width: size.width * 0.225,
-                      decoration: BoxDecoration(
-                        color: fieldColor,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            bottomLeft: Radius.circular(10.0)),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 15, right: 0, top: 2),
-                        child: TextField(
-                          controller: _gstController,
-                          style: TxtStls.fieldstyle,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Enter Gst Number...",
-                              hintStyle: TxtStls.fieldstyle),
+              ),
+              InkWell(
+                onTap: () {
+                  var provider =
+                      Provider.of<GstProvider>(context, listen: false);
+                  provider
+                      .fetchGstData(_gstController.text.toString())
+                      .whenComplete(() {
+                    Future.delayed(Duration(seconds: 2)).then((value) {
+                      setState(() {
+                        tradename = provider.tradename.toString();
+                        address = provider.principalplace.toString();
+                        pan = provider.pan.toString();
+                        pincode = provider.pincode.toString();
+                      });
+                    });
+                  });
+                },
+                child: Container(
+                  width: size.width * 0.02,
+                  padding: EdgeInsets.symmetric(vertical: 12.5),
+                  color: btnColor,
+                  child: Provider.of<GstProvider>(context).isLoading
+                      ? SpinKitFadingCube(
+                          color: bgColor,
+                          size: 23,
+                        )
+                      : Icon(
+                          Icons.search,
+                          color: bgColor,
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        var provider =
-                            Provider.of<GstProvider>(context, listen: false);
-                        provider
-                            .fetchGstData(_gstController.text.toString())
-                            .whenComplete(() {
-                          Future.delayed(Duration(seconds: 2)).then((value) {
-                            setState(() {
-                              tradename = provider.tradename.toString();
-                              address = provider.principalplace.toString();
-                              pan = provider.pan.toString();
-                              pincode = provider.pincode.toString();
-                            });
-                          });
-                        });
-                      },
-                      child: Container(
-                        width: size.width * 0.025,
-                        padding: EdgeInsets.symmetric(vertical: 12.5),
-                        color: btnColor,
-                        child: Provider.of<GstProvider>(context).isLoading
-                            ? SpinKitFadingCube(
-                                color: bgColor,
-                                size: 23,
-                              )
-                            : Icon(
-                                Icons.search,
-                                color: bgColor,
-                              ),
-                      ),
-                    ),
-                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -881,7 +860,7 @@ class _FinanceState extends State<Finance> {
           Row(
             children: [
               Expanded(
-                flex: 6,
+                flex: 4,
                 child: Row(
                   children: [
                     Container(
@@ -905,7 +884,7 @@ class _FinanceState extends State<Finance> {
                 ),
               ),
               Expanded(
-                flex: 6,
+                flex: 1,
                 child: SizedBox(),
               ),
               Expanded(
@@ -952,7 +931,7 @@ class _FinanceState extends State<Finance> {
               )
             ],
           ),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: size.height * 0.01),
           Container(
             alignment: Alignment.centerLeft,
             child: tradename == null
@@ -970,7 +949,7 @@ class _FinanceState extends State<Finance> {
                     ],
                   ),
           ),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: size.height * 0.06),
           Expanded(
             child: isgst
                 ? ScaleAnimatedWidget.tween(
@@ -1091,7 +1070,7 @@ class _FinanceState extends State<Finance> {
                           ],
                         ),
                       ),
-                      SizedBox(height: size.height * 0.01),
+                      SizedBox(height: size.height * 0.06),
                       servicelist.length > 0
                           ? ConstrainedBox(
                               constraints:
@@ -1531,7 +1510,12 @@ class _FinanceState extends State<Finance> {
 
   Widget space() {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(height: size.height * 0.025);
+    return SizedBox(height: size.height * 0.02);
+  }
+
+  Widget space2() {
+    Size size = MediaQuery.of(context).size;
+    return SizedBox(height: size.height * 0.01);
   }
 
   Widget formfield(title, _controller, bool enabled, [icn, maxchars]) {
@@ -2138,6 +2122,69 @@ class _FinanceState extends State<Finance> {
           ),
         ),
         showScreen(activeStep),
+        Expanded(
+          flex: 1,
+          child: SizedBox(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    primary: btnColor),
+                child: Text(
+                  "PREV",
+                  style: TxtStls.fieldstyle1,
+                ),
+                onPressed: () {
+                  // showScreen(activeStep);
+                  if (activeStep > 0) {
+                    setState(() {
+                      activeStep--;
+                    });
+                  }
+
+                  // if (activeStep == 7) {
+                  //   setState(() {
+                  //     isServiceAdded = !isServiceAdded;
+                  //   });
+                  // }
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    primary: btnColor),
+                child: Text(
+                  "NEXT",
+                  style: TxtStls.fieldstyle1,
+                ),
+                onPressed: () {
+                  // showScreen(activeStep);
+                  if (activeStep < upperBound) {
+                    setState(() {
+                      activeStep++;
+                    });
+                  }
+
+                  // if (activeStep == 7) {
+                  //   setState(() {
+                  //     isServiceAdded = !isServiceAdded;
+                  //   });
+                  // }
+                },
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -2229,8 +2276,8 @@ class _FinanceState extends State<Finance> {
     return IconStepper(
       stepRadius: 16.0,
       icons: [
-        Icon(Icons.supervised_user_circle),
-        Icon(Icons.flag),
+        Icon(Icons.shopping_cart),
+        Icon(Icons.picture_as_pdf),
         Icon(Icons.access_alarm),
         Icon(Icons.supervised_user_circle),
         Icon(Icons.flag),
@@ -2250,19 +2297,14 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  // showTitle(activeStep) {
-  //   if (activeStep == 0) {
-  //     return
-  //   } else if (activeStep == 1) {
-  //     return titleWidget();
-  //   }
-  // }
-
   showScreen(activeStep) {
     Size size = MediaQuery.of(context).size;
     if (activeStep == 0) {
       return Column(
         children: [
+          SizedBox(
+            height: size.height * 0.06,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2570,11 +2612,11 @@ class _FinanceState extends State<Finance> {
             ],
           ),
           SizedBox(
-            height: 10,
+            height: 50,
           ),
           titleWidget2(),
           Container(
-            height: size.height * 0.4,
+            height: size.height * 0.35,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
@@ -2657,69 +2699,260 @@ class _FinanceState extends State<Finance> {
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      primary: btnColor),
-                  child: Text(
-                    "PREV",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                  onPressed: () {
-                    showScreen(activeStep);
-                    if (activeStep < upperBound) {
-                      setState(() {
-                        activeStep++;
-                      });
-                    }
-
-                    if (activeStep == 7) {
-                      setState(() {
-                        isServiceAdded = !isServiceAdded;
-                      });
-                    }
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      primary: btnColor),
-                  child: Text(
-                    "NEXT",
-                    style: TxtStls.fieldstyle1,
-                  ),
-                  onPressed: () {
-                    showScreen(activeStep);
-                    if (activeStep < upperBound) {
-                      setState(() {
-                        activeStep++;
-                      });
-                    }
-
-                    if (activeStep == 7) {
-                      setState(() {
-                        isServiceAdded = !isServiceAdded;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
         ],
       );
     } else if (activeStep == 1) {
       return Createinvoice(context);
+    } else if (activeStep == 2) {
+      return serviceIntro(context);
+    } else if (activeStep == 3) {
+      return serviceWelcome(context);
+    } else if (activeStep == 4) {
+      return Container(
+        child: Center(
+          child: Text('HIIII$activeStep'),
+        ),
+      );
+    } else if (activeStep == 5) {
+      return Container(
+        child: Center(
+          child: Text('HIIII$activeStep'),
+        ),
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: Text('HIIII$activeStep'),
+        ),
+      );
     }
+  }
+
+  Widget serviceIntro(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: size.height * 0.1,
+        right: size.height * 0.1,
+      ),
+      child: Container(
+        padding: EdgeInsets.only(
+          left: size.height * 0.1,
+          right: size.height * 0.1,
+        ),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                  'assets/Images/invoicebg.png',
+                ),
+                fit: BoxFit.fill)),
+        height: size.height * 0.76,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            space2(),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: size.height * 0.065,
+                width: size.width * 0.12,
+                child: Image.asset(
+                  'assets/Logos/jrlogo.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+            space2(),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: Text(
+                  "COMPLIANCE PROPOSAL",
+                  style: TxtStls.fieldtitlestylelarge,
+                ),
+              ),
+            ),
+            space(),
+            Text(
+              "To,",
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              cusname.toString(),
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              "Place",
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              "District",
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              "State",
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              "Country",
+              style: TxtStls.fieldstyle22,
+            ),
+            Text(
+              "Pincode",
+              style: TxtStls.fieldstyle22,
+            ),
+            for (int i = 0; i <= 1; i++) space(),
+            Text(
+              cusemail.toString(),
+              style: TxtStls.fieldstyle22,
+            ),
+            for (int i = 0; i <= 1; i++) space(),
+            Text(
+              "Date ${DateFormat('dd MMMM ,yyyy').format(DateTime.now())}"
+                  .toUpperCase(),
+              style: TxtStls.fieldtitlestyle11,
+            ),
+            for (int i = 0; i <= 1; i++) space(),
+            Text(
+              "Quotation No:",
+              style: TxtStls.fieldstyle22bold,
+            ),
+            Text(
+              "487256484",
+              style: TxtStls.fieldstyle22,
+            ),
+            for (int i = 0; i <= 1; i++) space(),
+            Text(
+              "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of \nNew and Renewable Energy",
+              style: TxtStls.fieldstyle22,
+            ),
+            for (int i = 0; i <= 1; i++) space(),
+            Text(
+              "Prepared By : Mr.Tarun Sadana",
+              style: TxtStls.fieldstyle22,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget serviceWelcome(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: EdgeInsets.only(
+        left: size.height * 0.05,
+        right: size.height * 0.2,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(
+                  'assets/Images/invoicebg.png',
+                ),
+                fit: BoxFit.fill)),
+        padding: EdgeInsets.only(
+          left: size.height * 0.05,
+          right: size.height * 0.05,
+        ),
+        height: size.height * 0.78,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            space2(),
+            Text(
+              cusname.toString(),
+              style: TxtStls.fieldstyle222,
+            ),
+            Text(
+              "Place",
+              style: TxtStls.fieldstyle222,
+            ),
+            Text(
+              "District",
+              style: TxtStls.fieldstyle222,
+            ),
+            Text(
+              "State",
+              style: TxtStls.fieldstyle222,
+            ),
+            Text(
+              "Country",
+              style: TxtStls.fieldstyle222,
+            ),
+            Text(
+              "Pincode",
+              style: TxtStls.fieldstyle222,
+            ),
+            space(),
+            Text(
+              "Hello,",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "Thank you for choosing JR Compliance",
+              style: TxtStls.fieldstyle,
+            ),
+            space(),
+            Text(
+              "Thank you for choosing JR Compliance as your compliance partner, we admire the opportunity to provide you with the best compliance services and are sincerely welcoming you to our family.",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "JR Compliance - Indian’s #1 compliance service provider was established in 2013 with the fundamental motive to make compliance seamless worldwide. We are proud to admit that we stand proudly among a few compliance service providers, who provide Indian and Global certification services under one roof. Till date, we have served more than 10,000 + Indian and Global brands such as Softbank, Troy, and Bombay Dyeing. With that, we pride ourselves that we have been awarded by Future Business Awards 2020 AS “Best Diversified Compliance Legal Service provider in India",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "Moreover, we are pleased to inform you that we are the first Technical Compliance Company in India to receive this prestigious award and are also ISO 9001:2015 Certified company and featured in many National and International news platforms such as Deccan Chronicle, Hindustan Times, Zee News, and more.",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "We are constantly working to provide superior regulatory and certification services to our clients to strive for excellence within defined time constraints, that too without compromising the accuracy of test methods and results. Additionally, at JR Compliance we are committed to provide responsive and competitive services to our clients by maintaining flexibility, adaptability, and a positive attitude while handling your project.",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "Our clients are important to us and we assure to work promptly to ensure high customer satisfaction, now, and as long as you are our customer.",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "Looking forward to taking this opportunity to work or associate with you to commence a valuable project.",
+              style: TxtStls.fieldstyle,
+            ),
+            space2(),
+            Text(
+              "Thank you!",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "Regards",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "Mr.Tarun Sadana",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "Sales & Marketing - BDE",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "tarun@jrompliance.com",
+              style: TxtStls.fieldstyle,
+            ),
+            Text(
+              "www.jrompliance.com",
+              style: TxtStls.fieldstyle,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -23,6 +23,10 @@ const deco = BoxDecoration(
   color: fieldColor,
   borderRadius: BorderRadius.all(Radius.circular(5.0)),
 );
+const deco2 = BoxDecoration(
+  color: fieldColor,
+  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+);
 
 class TxtStls {
   static const titlestyle = TextStyle(fontSize: 30, color: txtColor);
@@ -68,11 +72,22 @@ class TxtStls {
       fontSize: 13,
       color: bluColor,
       fontWeight: FontWeight.bold);
-
+  static TextStyle fieldtitlestylelarge = GoogleFonts.alata(
+      textStyle:
+          TextStyle(fontSize: 25, color: txtColor, fontWeight: FontWeight.bold),
+      fontSize: 25,
+      color: txtColor,
+      fontWeight: FontWeight.bold);
+  static TextStyle fieldtitlestylelarge2 = GoogleFonts.alata(
+      textStyle:
+          TextStyle(fontSize: 20, color: txtColor, fontWeight: FontWeight.bold),
+      fontSize: 20,
+      color: txtColor,
+      fontWeight: FontWeight.bold);
   static TextStyle fieldtitlestyle11 = GoogleFonts.nunito(
       textStyle:
-          TextStyle(fontSize: 21, color: txtColor, fontWeight: FontWeight.bold),
-      fontSize: 17,
+          TextStyle(fontSize: 20, color: txtColor, fontWeight: FontWeight.bold),
+      fontSize: 20,
       color: txtColor,
       fontWeight: FontWeight.bold);
   static TextStyle notestyle = GoogleFonts.nunito(
@@ -88,6 +103,24 @@ class TxtStls {
       color: txtColor,
       letterSpacing: 0.2,
       fontSize: 12.5);
+  static TextStyle fieldstyle22 = GoogleFonts.nunito(
+    textStyle: TextStyle(color: txtColor, fontSize: 15, letterSpacing: 0.2),
+    color: txtColor,
+    letterSpacing: 0.2,
+    fontSize: 15,
+  );
+  static TextStyle fieldstyle222 = GoogleFonts.nunito(
+      textStyle: TextStyle(color: txtColor, fontSize: 12.5, letterSpacing: 0.2),
+      color: txtColor,
+      letterSpacing: 0.2,
+      fontSize: 12.5,
+      fontWeight: FontWeight.bold);
+  static TextStyle fieldstyle22bold = GoogleFonts.nunito(
+      textStyle: TextStyle(color: txtColor, fontSize: 15, letterSpacing: 0.2),
+      color: txtColor,
+      letterSpacing: 0.2,
+      fontSize: 15,
+      fontWeight: FontWeight.bold);
   static TextStyle fieldstatusstyle = GoogleFonts.nunito(
       textStyle: TextStyle(color: wonClr, fontSize: 12.5, letterSpacing: 0.2),
       color: wonClr,
