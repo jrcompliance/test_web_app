@@ -18,8 +18,11 @@ import 'package:universal_html/html.dart';
 class ChattingScreen extends StatefulWidget {
   RoomModel roomModel;
   EmployeesModel employeesModel;
-  // bool isTapped;
-  ChattingScreen({required this.roomModel, required this.employeesModel});
+  bool isTapped;
+  ChattingScreen(
+      {required this.roomModel,
+      required this.employeesModel,
+      required this.isTapped});
 
   @override
   _ChattingScreenState createState() => _ChattingScreenState();
@@ -211,7 +214,6 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                         return Builder(builder: (context) {
                                           return ChatItem(messageModel);
                                         });
-                                        ;
                                       });
                                 }
 

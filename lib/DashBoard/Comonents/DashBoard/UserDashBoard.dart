@@ -1,27 +1,21 @@
 import 'dart:html' show ImageElement;
-import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:camera_web/camera_web.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:test_web_app/Constants/CountUp.dart';
 import 'package:test_web_app/Constants/Fileview.dart';
-import 'package:test_web_app/Constants/Responsive.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
-import 'package:test_web_app/Models/UserModels.dart';
+import 'package:test_web_app/Models/ProductModel.dart';
 import 'package:test_web_app/Models/tasklength.dart';
 import 'package:test_web_app/Providers/AddDocumentsProvider2.dart';
 import 'package:test_web_app/Providers/EmergencyTaskProvider.dart';
-import 'package:test_web_app/Widgets/InvoicePopup.dart';
 
 class UserDashBoard extends StatefulWidget {
   const UserDashBoard({Key? key}) : super(key: key);
@@ -35,20 +29,29 @@ class _UserDashBoardState extends State<UserDashBoard> {
   int graphval = 1;
   int duelistval = 1;
 
-  TextEditingController _serviceSearchController = TextEditingController();
-  TextEditingController _productNameController = TextEditingController();
-  TextEditingController _taxSlabController = TextEditingController();
-  TextEditingController _sacCodeController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
+  final TextEditingController _serviceSearchController =
+      TextEditingController();
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _taxSlabController = TextEditingController();
+  final TextEditingController _sacCodeController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
 
   var popValue;
 
   String? docid;
 
-  bool _isClicked = false;
-
   ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController2 = ScrollController();
+
+  bool searching = false;
+  late List<ProductModel> allProducts;
+
+  bool isDelete = false;
+
+  var newList;
+  final GlobalKey<FormState> _productFormKey = GlobalKey<FormState>();
+
   showLead() {
     if (duelistval == 1) {
       return DateTime.now().toString().split(" ")[0];
@@ -79,6 +82,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
   @override
   void initState() {
     super.initState();
+    allProducts = products;
     getEmployeeId();
   }
 
@@ -349,7 +353,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
   }
 
   Widget row1(text1, text2, value) {
-    Size size = MediaQuery.of(context).size;
     return Row(
       children: [
         Flexible(
@@ -889,9 +892,15 @@ class _UserDashBoardState extends State<UserDashBoard> {
     );
   }
 
-  Widget field(_controller, hintText, maxlines, bool isenable,
-      [icn, icn1, maxlength]) {
-    Size size = MediaQuery.of(context).size;
+  Widget field(
+    _controller,
+    hintText,
+    maxlines,
+    bool isenable, [
+    icn,
+    icn1,
+    maxlength,
+  ]) {
     return Padding(
       padding: EdgeInsets.all(0.0),
       child: Container(
@@ -916,6 +925,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
               border: InputBorder.none,
             ),
             maxLines: maxlines,
+            onChanged: (text) {},
           ),
         ),
       ),
@@ -923,7 +933,6 @@ class _UserDashBoardState extends State<UserDashBoard> {
   }
 
   Widget titleWidget() {
-    Size size = MediaQuery.of(context).size;
     return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -962,11 +971,14 @@ class _UserDashBoardState extends State<UserDashBoard> {
           ),
         ),
         SizedBox(
-          width: 10,
+          width: 5,
         ),
-        Text(
-          text,
-          style: TxtStls.fieldstyle111,
+        Flexible(
+          flex: 1,
+          child: Text(
+            text,
+            style: TxtStls.fieldstyle111,
+          ),
         )
       ],
     );
@@ -1023,8 +1035,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
     );
   }
 
-  Widget popupMenu(value1, value2, [Color? clr1, Color? clr2, IconData? icon]) {
-    Size size = MediaQuery.of(context).size;
+  Widget popupMenu(value1, value2, index,
+      [Color? clr1, Color? clr2, IconData? icon, IconData? icon2]) {
     return Container(
       child: PopupMenuButton(
         shape: TooltipShape(),
@@ -1035,6 +1047,18 @@ class _UserDashBoardState extends State<UserDashBoard> {
         ),
         onSelected: (value) {
           setState(() {
+            if (value == value2) {
+              var item = allProducts.removeAt(index);
+              newList = List.from(
+                  allProducts.where((x) => allProducts.indexOf(x) != item));
+              print("list--" +
+                  newList.toString() +
+                  "item--" +
+                  item.toJson().toString());
+              isDelete = true;
+            } else if (value == value1) {
+              print(allProducts.length);
+            }
             popValue = value;
           });
           print(value);
@@ -1048,7 +1072,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
             PopupMenuItem(
               value: value2,
               onTap: () {},
-              child: dropdecor(value2, clr2, icon),
+              child: dropdecor(value2, clr2, icon2),
             ),
           ];
         },
@@ -1216,10 +1240,45 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                 Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Container(
-                                      height: size.width * 0.015,
-                                      width: size.width * 0.2,
-                                      child: field(_serviceSearchController,
-                                          "Search", 1, true)),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        color: AbgColor.withOpacity(0.2)),
+                                    height: size.width * 0.016,
+                                    width: size.width * 0.2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 20,
+                                        bottom: 10,
+                                      ),
+                                      child: TextField(
+                                        controller: _serviceSearchController,
+                                        decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: "Search...",
+                                            hintStyle: TxtStls.fieldstyle,
+                                            suffixIcon: _serviceSearchController
+                                                    .text.isNotEmpty
+                                                ? IconButton(
+                                                    onPressed: () {
+                                                      _serviceSearchController
+                                                          .clear();
+                                                      productSearch("");
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              FocusNode());
+                                                    },
+                                                    icon: Icon(Icons.cancel))
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5),
+                                                    child: Icon(Icons.search),
+                                                  )),
+                                        onChanged: productSearch,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(10.0),
@@ -1241,9 +1300,10 @@ class _UserDashBoardState extends State<UserDashBoard> {
                               Container(
                                 height: size.height * 0.35,
                                 child: ListView.builder(
+                                  controller: _scrollController2,
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
-                                  itemCount: 10,
+                                  itemCount: allProducts.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: EdgeInsets.only(
@@ -1280,7 +1340,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                       EdgeInsets.only(left: 40),
                                                   child: productWidget(
                                                     "assets/Images/pending.png",
-                                                    "Product Type",
+                                                    // isDelete ? newList[index].name  :
+                                                    allProducts[index].name,
                                                   ),
                                                 ),
                                               ),
@@ -1293,7 +1354,7 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                   flex: 1,
                                                   child: Padding(
                                                     padding: EdgeInsets.only(
-                                                        left: 50, right: 50),
+                                                        left: 0, right: 50),
                                                     child: Text(
                                                       "GST %",
                                                       style: TxtStls.fieldstyle,
@@ -1311,12 +1372,13 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                   padding: EdgeInsets.only(
                                                       left: 50, right: 50),
                                                   child: popupMenu(
-                                                    "EDIT",
-                                                    "DELETE",
-                                                    _clrslist[0],
-                                                    _clrslist[2],
-                                                    Icons.edit,
-                                                  ),
+                                                      "EDIT",
+                                                      "DELETE",
+                                                      index,
+                                                      _clrslist[0],
+                                                      _clrslist[2],
+                                                      Icons.edit,
+                                                      Icons.delete),
                                                 ),
                                               )
                                             ],
@@ -1358,7 +1420,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                     icon:
                                                         Icon(Icons.camera_alt),
                                                     onPressed: () {
-                                                      CameraDevice.front;
+                                                      print(
+                                                          "camera opened!!!!");
                                                     },
                                                   ),
                                                 ),
@@ -1565,7 +1628,69 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                         style:
                                                             TxtStls.fieldstyle1,
                                                       ),
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        setState(() {});
+                                                        if (_productNameController
+                                                                    .text
+                                                                    .length ==
+                                                                0 ||
+                                                            _taxSlabController
+                                                                    .text
+                                                                    .length ==
+                                                                0 ||
+                                                            _sacCodeController
+                                                                    .text
+                                                                    .length ==
+                                                                0 ||
+                                                            _priceController
+                                                                    .text
+                                                                    .length ==
+                                                                0 ||
+                                                            _descriptionController
+                                                                    .text
+                                                                    .length ==
+                                                                0) {
+                                                          addingProductData();
+                                                          print("productlist---" +
+                                                              productList
+                                                                  .toString());
+                                                          _productNameController
+                                                              .clear();
+                                                          _taxSlabController
+                                                              .clear();
+                                                          _priceController
+                                                              .clear();
+                                                          _sacCodeController
+                                                              .clear();
+                                                          _descriptionController
+                                                              .clear();
+                                                          return toastmessage
+                                                              .sucesstoast(
+                                                                  context,
+                                                                  "saved details successfully");
+                                                        } else {
+                                                          return toastmessage
+                                                              .warningmessage(
+                                                                  context,
+                                                                  "Please Enter all the fiels details");
+                                                        }
+                                                        // print("productname--" +
+                                                        //     _productNameController
+                                                        //         .text
+                                                        //         .toString());
+                                                        // print("taxslab--" +
+                                                        //     _taxSlabController
+                                                        //         .text
+                                                        //         .toString());
+                                                        // print("saccode--" +
+                                                        //     _sacCodeController
+                                                        //         .text
+                                                        //         .toString());
+                                                        // print("price--" +
+                                                        //     _priceController
+                                                        //         .text
+                                                        //         .toString());
+                                                      },
                                                     ),
                                                   ],
                                                 ),
@@ -1635,19 +1760,22 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                                   AsyncSnapshot<
                                                                           QuerySnapshot>
                                                                       snapshot) {
-                                                                if (!snapshot
-                                                                    .hasData) {
-                                                                  return IconButton(
-                                                                    icon: Icon(Icons
-                                                                        .cloud_upload),
-                                                                    onPressed:
-                                                                        () {},
-                                                                    iconSize:
-                                                                        80,
-                                                                    color: btnColor
-                                                                        .withOpacity(
-                                                                            0.5),
-                                                                  );
+                                                                if (snapshot
+                                                                        .data!
+                                                                        .docs
+                                                                        .length ==
+                                                                    0) {
+                                                                  Text(
+                                                                      "no data available");
+                                                                  // return IconButton(
+                                                                  //   icon: Icon(Icons
+                                                                  //       .cloud_upload),
+                                                                  //   onPressed:
+                                                                  //       () {},
+                                                                  //   color: btnColor
+                                                                  //       .withOpacity(
+                                                                  //           0.5),
+                                                                  // );
                                                                 }
                                                                 return ListView
                                                                     .separated(
@@ -1760,10 +1888,8 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                                                       .fieldstyle1,
                                                                 ),
                                                                 onPressed: () {
-                                                                  setState(() {
-                                                                    _isClicked =
-                                                                        true;
-                                                                  });
+                                                                  setState(
+                                                                      () {});
                                                                   Provider.of<AddDocumentsProvider2>(
                                                                           context,
                                                                           listen:
@@ -1921,6 +2047,50 @@ class _UserDashBoardState extends State<UserDashBoard> {
         ],
       ),
     );
+  }
+
+  final products = <ProductModel>[
+    ProductModel(
+      name: "Bluetooth Devices",
+    ),
+    ProductModel(
+      name: "Airpods",
+    ),
+    ProductModel(
+      name: "Shoes",
+    ),
+    ProductModel(
+      name: "Kids T-Shirt",
+    ),
+    ProductModel(
+      name: "Girls Top",
+    ),
+    ProductModel(
+      name: "Smart Watch",
+    ),
+  ];
+  List<ProductModel> suggestions = [];
+  productSearch(String query) {
+    final allProducts = products.where((product) {
+      final searchedProduct = product.name!.toLowerCase();
+      final input = query.toLowerCase();
+      return searchedProduct.contains(input);
+    }).toList();
+    setState(() {
+      query = query;
+      this.allProducts = allProducts;
+    });
+  }
+
+  List productList = [];
+  addingProductData() {
+    productList.add(ProductModel(
+            name: _productNameController.text,
+            sacCode: _sacCodeController.text,
+            gst: _taxSlabController.text,
+            price: _priceController.text,
+            image: "")
+        .toJson());
   }
 }
 

@@ -1,17 +1,12 @@
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie%202.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/ChatModel.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
@@ -19,7 +14,6 @@ import 'package:test_web_app/NewModels/ChattingScreen.dart';
 import 'package:test_web_app/NewModels/MessageModel.dart';
 import 'package:test_web_app/NewModels/RoomModel.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
-import 'package:dio/dio.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -246,36 +240,36 @@ class _MessageScreenState extends State<MessageScreen> {
             width: 10,
           ),
           Expanded(
-              flex: 7,
-              child: isTapped
-                  ? roomModel.roomId != null
-                      ? chatWidget(context)
-                      : Container(
-                          child: Text('noData'),
-                        )
-                  : Container(
-                      child: Text("nt tapped"),
-                    )
+            flex: 7,
+            child: isTapped && roomModel.roomId != null
+                //     ? chatWidget(context)
+                //     : Container(
+                //         child: Text('noData'),
+                //       )
+                // : Container(
+                //     child: Text("nt tapped"),
+                //   )
 
-              // Container(
-              //         child: Align(
-              //           alignment: Alignment.center,
-              //           child: Column(
-              //             children: [
-              //               Expanded(
-              //                   flex: 5,
-              //                   child: Lottie.asset("assets/Lotties/empty.json")),
-              //               Expanded(
-              //                   flex: 1,
-              //                   child: Text(
-              //                     'Select any Employee from list to Start Conversation ',
-              //                     style: TxtStls.fieldBtnStyle,
-              //                   )),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              ),
+                ? Container(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Expanded(
+                              flex: 5,
+                              child: Lottie.asset("assets/Lotties/empty.json")),
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Select any Employee from list to Start Conversation ',
+                                style: TxtStls.fieldBtnStyle,
+                              )),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+          ),
         ],
       ),
     );
@@ -337,9 +331,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget chatWidget(BuildContext context) {
     return ChattingScreen(
-      roomModel: roomModel,
-      employeesModel: employeeModal,
-    );
+        roomModel: roomModel, employeesModel: employeeModal, isTapped: true);
   }
 
   checkAndCreateNewRoom(toChatUserModel) async {
@@ -422,17 +414,18 @@ class _MessageScreenState extends State<MessageScreen> {
       //       );
       //     });
 
-      // var value = await Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (ctx) => ChattingScreen(
-      //               roomModel: roomModel,
-      //               employeesModel: toChatUserModel,
-      //               // isTapped: true,
-      //             )));
-      // setState(() {
-      //   isTapped = value;
-      // });
+      var value = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => ChattingScreen(
+                    roomModel: roomModel,
+                    employeesModel: toChatUserModel,
+                    isTapped: true,
+                  )));
+
+      setState(() {
+        isTapped = value;
+      });
       // return ChattingScreen(
       //     roomModel: roomModel, employeesModel: toChatUserModel);
       // } else {

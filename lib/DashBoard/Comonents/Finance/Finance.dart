@@ -13,12 +13,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:status_change/status_change.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
-import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
-import 'package:test_web_app/Models/UserModel2.dart';
+import 'package:test_web_app/Models/ServicesModel.dart';
+import 'package:test_web_app/PdfFiles/GetServicePdf.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -28,7 +27,6 @@ import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
-import 'package:test_web_app/Widgets/Stepper.dart';
 import '../../../Providers/CustomerProvider.dart';
 
 class Finance extends StatefulWidget {
@@ -111,12 +109,15 @@ class _FinanceState extends State<Finance> {
 
   final ScrollController sc = ScrollController();
   var randomNo;
+  late List<ServicesModel> allServices;
+
+  String? selectedSamples;
 
   @override
   void initState() {
     var rng = new Random();
     randomNo = rng.nextInt(900000) + 100000;
-    // TODO: implement initState
+    allServices = services;
     super.initState();
     Future.delayed(Duration(seconds: 2)).then((value) {
       Provider.of<CustmerProvider>(context, listen: false)
@@ -314,6 +315,10 @@ class _FinanceState extends State<Finance> {
                                                     context,
                                                     listen: false)
                                                 .getInvoiceList(snp.CxID);
+                                            Provider.of<LeadIdProviders>(
+                                                    context,
+                                                    listen: false)
+                                                .getLeadIds(cusID);
                                           });
                                         },
                                         shape: RoundedRectangleBorder(
@@ -1946,7 +1951,6 @@ class _FinanceState extends State<Finance> {
   ];
 
   Widget titleWidget() {
-    Size size = MediaQuery.of(context).size;
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: _titlelist
@@ -2102,12 +2106,6 @@ class _FinanceState extends State<Finance> {
     }
   }
 
-  List productList = [
-    "BIS Certificate",
-    "WPC Approval",
-    "LMPC Approval",
-    "ISI Certificate"
-  ];
   Widget productAddition(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
@@ -2191,7 +2189,6 @@ class _FinanceState extends State<Finance> {
 
   bool searching = false;
   Widget titleWidget2() {
-    Size size = MediaQuery.of(context).size;
     return Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2248,25 +2245,16 @@ class _FinanceState extends State<Finance> {
   }
 
   List resultFound = [];
-  void searchProduct(String query) {
-    if (_serviceSearchController2.text != null) {
-      productList.forEach((element) {
-        if (element.toString().toLowerCase().contains(query.toLowerCase())) {
-          resultFound.add(element);
-        } else {
-          resultFound = [];
-        }
-      });
-      // for (int i = 0; i <= productList.length; i++) {
-      //   String data = productList[i];
-      //
-      //   if (data.toLowerCase().contains(query.toLowerCase())) {
-      //     setState(() {
-      //       resultFound.add(data);
-      //     });
-      //   }
-      // }
-    }
+  void searchService(String query) {
+    final allServices = services.where((service) {
+      final searchedService = service.name!.toLowerCase();
+      final input = query.toLowerCase();
+      return searchedService.contains(input);
+    }).toList();
+    setState(() {
+      query = query;
+      this.allServices = allServices;
+    });
   }
 
   int activeStep = 0;
@@ -2298,409 +2286,8 @@ class _FinanceState extends State<Finance> {
   }
 
   showScreen(activeStep) {
-    Size size = MediaQuery.of(context).size;
     if (activeStep == 0) {
-      return Column(
-        children: [
-          SizedBox(
-            height: size.height * 0.06,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                  fit: FlexFit.tight,
-                  flex: 2,
-                  child: Container(
-                    height: size.height * 0.25,
-                    decoration: BoxDecoration(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 100),
-                          child: Container(
-                            height: size.height * 0.08,
-                            child: Material(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              color: bgColor,
-                              child: ListTile(
-                                tileColor: grClr.withOpacity(0.1),
-                                hoverColor: btnColor.withOpacity(0.2),
-                                selectedColor: btnColor.withOpacity(0.2),
-                                selectedTileColor: btnColor.withOpacity(0.2),
-                                leading: CircleAvatar(
-                                    backgroundColor: btnColor.withOpacity(0.1),
-                                    child: Icon(
-                                      Icons.person,
-                                      color: btnColor,
-                                    )),
-                                title: Text(
-                                  cusname.toString(),
-                                  style: TxtStls.fieldtitlestyle,
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      cusemail.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                    Text(
-                                      cusphone.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    ),
-                                  ],
-                                ),
-                                trailing: CircleAvatar(
-                                  backgroundColor: btnColor.withOpacity(0.1),
-                                ),
-                                onTap: () {},
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0))),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: size.height * 0.12,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: Text(
-                                  "Choose Service",
-                                  style: TxtStls.fieldtitlestyle11,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Container(
-                                          height: size.width * 0.022,
-                                          width: size.width * 0.25,
-                                          decoration: BoxDecoration(
-                                            color: fieldColor,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10.0),
-                                                bottomLeft:
-                                                    Radius.circular(10.0)),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 15, right: 0, top: 0),
-                                            child: TextField(
-                                              controller:
-                                                  _serviceSearchController2,
-                                              decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Search...",
-                                                  hintStyle: TxtStls.fieldstyle,
-                                                  suffixIcon:
-                                                      _serviceSearchController2
-                                                              .text.isNotEmpty
-                                                          ? IconButton(
-                                                              onPressed: () {
-                                                                _serviceSearchController2
-                                                                    .clear();
-                                                              },
-                                                              icon: Icon(
-                                                                  Icons.cancel))
-                                                          : Icon(Icons.search)),
-                                              onChanged: (text) {
-                                                setState(() {});
-                                                if (text.length > 0) {
-                                                  searching = true;
-                                                  filteredValue = [];
-                                                  productList
-                                                      .forEach((product) {
-                                                    if (product
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(text
-                                                            .toLowerCase())) {
-                                                      filteredValue
-                                                          .add(product);
-                                                    }
-                                                  });
-                                                } else {
-                                                  searching = false;
-                                                  filteredValue = [];
-                                                }
-                                              },
-                                            ),
-                                          )),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            primary: btnColor,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0))),
-                                        onPressed: () {},
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            "Add",
-                                            style: TxtStls.fieldstyle1,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-              Flexible(
-                  fit: FlexFit.tight,
-                  flex: 1,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 60),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Date",
-                                style: TxtStls.fieldtitlestyle11,
-                              ),
-                              Text(
-                                "Quotation No",
-                                style: TxtStls.fieldtitlestyle11,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: AbgColor.withOpacity(0.1),
-                                      borderRadius:
-                                          BorderRadius.circular(16.0)),
-                                  child: Expanded(
-                                    flex: 2,
-                                    child: InkWell(
-                                      child: field(
-                                          _selectedDateController,
-                                          DateFormat('dd/MM/yyyy')
-                                              .format(DateTime.now()),
-                                          1,
-                                          false,
-                                          Icon(
-                                            Icons.calendar_today_outlined,
-                                            color: btnColor,
-                                          )),
-                                      onTap: () {
-                                        MyCalenders.pickEndDate(
-                                            context, _selectedDateController);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.tight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 40),
-                                child: Container(
-                                    padding: EdgeInsets.all(16.0),
-                                    decoration: BoxDecoration(
-                                        color: AbgColor.withOpacity(0.1),
-                                        borderRadius:
-                                            BorderRadius.circular(12.0)),
-                                    child: Text(
-                                      "#" + randomNo.toString(),
-                                      style: TxtStls.fieldstyle,
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: size.width * 0.15,
-                              decoration: BoxDecoration(
-                                color: fieldColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(10.0)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 0, top: 5),
-                                child: TextField(
-                                  controller: _gstController2,
-                                  style: TxtStls.fieldstyle,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Enter Gst Number...",
-                                      hintStyle: TxtStls.fieldstyle),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                var provider = Provider.of<GstProvider>(context,
-                                    listen: false);
-                                provider
-                                    .fetchGstData(
-                                        _gstController2.text.toString())
-                                    .whenComplete(() {
-                                  Future.delayed(Duration(seconds: 2))
-                                      .then((value) {
-                                    setState(() {
-                                      tradename = provider.tradename.toString();
-                                      address =
-                                          provider.principalplace.toString();
-                                      pan = provider.pan.toString();
-                                      pincode = provider.pincode.toString();
-                                    });
-                                  });
-                                });
-                              },
-                              child: Container(
-                                width: size.width * 0.025,
-                                padding: EdgeInsets.symmetric(vertical: 12.5),
-                                color: btnColor,
-                                child:
-                                    Provider.of<GstProvider>(context).isLoading
-                                        ? SpinKitFadingCube(
-                                            color: bgColor,
-                                            size: 23,
-                                          )
-                                        : Icon(
-                                            Icons.search,
-                                            color: bgColor,
-                                          ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ])),
-            ],
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          titleWidget2(),
-          Container(
-            height: size.height * 0.35,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              controller: sc,
-              itemCount: searching ? filteredValue.length : productList.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Container(
-                    height: size.width * 0.025,
-                    padding: EdgeInsets.only(left: 50, right: 50),
-                    color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                              flex: 1,
-                              child: Text(
-                                "${index + 1}",
-                                style: TxtStls.fieldstyle,
-                              )),
-                          Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: productWidget(
-                                "assets/Images/pending.png",
-                                productList[index],
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 0, right: 50),
-                                child: Text(
-                                  "\$56468",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                              )),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 0, right: 30),
-                                child: Text(
-                                  "GST %",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                              )),
-                          Flexible(
-                            flex: 1,
-                            child: Padding(
-                                padding: EdgeInsets.only(left: 0, right: 30),
-                                child: Text(
-                                  "2 pieces",
-                                  style: TxtStls.fieldstyle,
-                                )),
-                          ),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 0, right: 30),
-                                child: SACCode(
-                                  "894456",
-                                ),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-        ],
-      );
+      return serviceWidget(context);
     } else if (activeStep == 1) {
       return Createinvoice(context);
     } else if (activeStep == 2) {
@@ -2728,114 +2315,500 @@ class _FinanceState extends State<Finance> {
     }
   }
 
-  Widget serviceIntro(BuildContext context) {
+  Widget serviceWidget(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: EdgeInsets.only(
-        left: size.height * 0.1,
-        right: size.height * 0.1,
-      ),
-      child: Container(
-        padding: EdgeInsets.only(
-          left: size.height * 0.1,
-          right: size.height * 0.1,
+    return Column(
+      children: [
+        SizedBox(
+          height: size.height * 0.06,
         ),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  'assets/Images/invoicebg.png',
-                ),
-                fit: BoxFit.fill)),
-        height: size.height * 0.76,
-        child: Column(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            space2(),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: size.height * 0.065,
-                width: size.width * 0.12,
-                child: Image.asset(
-                  'assets/Logos/jrlogo.png',
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
-            space2(),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Flexible(
-                flex: 1,
+            Flexible(
                 fit: FlexFit.tight,
-                child: Text(
-                  "COMPLIANCE PROPOSAL",
-                  style: TxtStls.fieldtitlestylelarge,
-                ),
-              ),
-            ),
-            space(),
-            Text(
-              "To,",
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              cusname.toString(),
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              "Place",
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              "District",
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              "State",
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              "Country",
-              style: TxtStls.fieldstyle22,
-            ),
-            Text(
-              "Pincode",
-              style: TxtStls.fieldstyle22,
-            ),
-            for (int i = 0; i <= 1; i++) space(),
-            Text(
-              cusemail.toString(),
-              style: TxtStls.fieldstyle22,
-            ),
-            for (int i = 0; i <= 1; i++) space(),
-            Text(
-              "Date ${DateFormat('dd MMMM ,yyyy').format(DateTime.now())}"
-                  .toUpperCase(),
-              style: TxtStls.fieldtitlestyle11,
-            ),
-            for (int i = 0; i <= 1; i++) space(),
-            Text(
-              "Quotation No:",
-              style: TxtStls.fieldstyle22bold,
-            ),
-            Text(
-              "487256484",
-              style: TxtStls.fieldstyle22,
-            ),
-            for (int i = 0; i <= 1; i++) space(),
-            Text(
-              "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of \nNew and Renewable Energy",
-              style: TxtStls.fieldstyle22,
-            ),
-            for (int i = 0; i <= 1; i++) space(),
-            Text(
-              "Prepared By : Mr.Tarun Sadana",
-              style: TxtStls.fieldstyle22,
-            )
+                flex: 2,
+                child: Container(
+                  height: size.height * 0.25,
+                  decoration: BoxDecoration(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 100),
+                        child: Container(
+                          height: size.height * 0.08,
+                          child: Material(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            color: bgColor,
+                            child: ListTile(
+                              tileColor: grClr.withOpacity(0.1),
+                              hoverColor: btnColor.withOpacity(0.2),
+                              selectedColor: btnColor.withOpacity(0.2),
+                              selectedTileColor: btnColor.withOpacity(0.2),
+                              leading: CircleAvatar(
+                                  backgroundColor: btnColor.withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.person,
+                                    color: btnColor,
+                                  )),
+                              title: Text(
+                                cusname.toString(),
+                                style: TxtStls.fieldtitlestyle,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    cusemail.toString(),
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                  Text(
+                                    cusphone.toString(),
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                ],
+                              ),
+                              trailing: CircleAvatar(
+                                backgroundColor: btnColor.withOpacity(0.1),
+                              ),
+                              onTap: () {},
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: size.height * 0.12,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Text(
+                                "Choose Service",
+                                style: TxtStls.fieldtitlestyle11,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Container(
+                                        height: size.width * 0.022,
+                                        width: size.width * 0.25,
+                                        decoration: BoxDecoration(
+                                          color: fieldColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10.0),
+                                              bottomLeft:
+                                                  Radius.circular(10.0)),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 0, top: 0),
+                                          child: TextField(
+                                              controller:
+                                                  _serviceSearchController2,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Search...",
+                                                  hintStyle: TxtStls.fieldstyle,
+                                                  suffixIcon:
+                                                      _serviceSearchController2
+                                                              .text.isNotEmpty
+                                                          ? IconButton(
+                                                              onPressed: () {
+                                                                _serviceSearchController2
+                                                                    .clear();
+                                                                searchService(
+                                                                    "");
+                                                                FocusScope.of(
+                                                                        context)
+                                                                    .requestFocus(
+                                                                        FocusNode());
+                                                              },
+                                                              icon: Icon(
+                                                                  Icons.cancel))
+                                                          : Icon(Icons.search)),
+                                              onChanged: searchService),
+                                        )),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: btnColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0))),
+                                      onPressed: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Add",
+                                          style: TxtStls.fieldstyle1,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            Flexible(
+                fit: FlexFit.tight,
+                flex: 1,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 60),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Date",
+                              style: TxtStls.fieldtitlestyle11,
+                            ),
+                            Text(
+                              "Quotation No",
+                              style: TxtStls.fieldtitlestyle11,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.tight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: AbgColor.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                child: Expanded(
+                                  flex: 2,
+                                  child: InkWell(
+                                    child: field(
+                                        _selectedDateController,
+                                        DateFormat('dd/MM/yyyy')
+                                            .format(DateTime.now()),
+                                        1,
+                                        false,
+                                        Icon(
+                                          Icons.calendar_today_outlined,
+                                          color: btnColor,
+                                        )),
+                                    onTap: () {
+                                      MyCalenders.pickEndDate(
+                                          context, _selectedDateController);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            fit: FlexFit.tight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 40),
+                              child: Container(
+                                  padding: EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                      color: AbgColor.withOpacity(0.1),
+                                      borderRadius:
+                                          BorderRadius.circular(12.0)),
+                                  child: Text(
+                                    "#" + randomNo.toString(),
+                                    style: TxtStls.fieldstyle,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: size.width * 0.15,
+                            decoration: BoxDecoration(
+                              color: fieldColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 0, top: 5),
+                              child: TextField(
+                                controller: _gstController2,
+                                style: TxtStls.fieldstyle,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Enter Gst Number...",
+                                    hintStyle: TxtStls.fieldstyle),
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              var provider = Provider.of<GstProvider>(context,
+                                  listen: false);
+                              provider
+                                  .fetchGstData(_gstController2.text.toString())
+                                  .whenComplete(() {
+                                Future.delayed(Duration(seconds: 2))
+                                    .then((value) {
+                                  setState(() {
+                                    tradename = provider.tradename.toString();
+                                    address =
+                                        provider.principalplace.toString();
+                                    pan = provider.pan.toString();
+                                    pincode = provider.pincode.toString();
+                                  });
+                                });
+                              });
+                            },
+                            child: Container(
+                              width: size.width * 0.025,
+                              padding: EdgeInsets.symmetric(vertical: 12.5),
+                              color: btnColor,
+                              child: Provider.of<GstProvider>(context).isLoading
+                                  ? SpinKitFadingCube(
+                                      color: bgColor,
+                                      size: 23,
+                                    )
+                                  : Icon(
+                                      Icons.search,
+                                      color: bgColor,
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ])),
           ],
         ),
-      ),
+        SizedBox(
+          height: 50,
+        ),
+        titleWidget2(),
+        Container(
+          height: size.height * 0.26,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            controller: sc,
+            itemCount: allServices.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
+                  ),
+                  height: size.width * 0.025,
+                  padding: EdgeInsets.only(left: 50, right: 50),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            flex: 1,
+                            child: Text(
+                              "${index + 1}",
+                              style: TxtStls.fieldstyle,
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: productWidget(
+                              "assets/Images/pending.png",
+                              allServices[index].name,
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 50),
+                              child: Text(
+                                "\$56468",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            )),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: Text(
+                                "GST %",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: Text(
+                                "2 pieces",
+                                style: TxtStls.fieldstyle,
+                              )),
+                        ),
+                        Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 0, right: 30),
+                              child: SACCode(
+                                "894456",
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: [
+            Text("Samples Required??"),
+            textButton("Yes"),
+            textButton("No"),
+            SizedBox(
+              width: 50,
+            ),
+            isChoosed
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownButton2<String>(
+                        iconEnabledColor: btnColor,
+                        iconDisabledColor: AbgColor,
+                        itemPadding: EdgeInsets.only(left: 5),
+                        buttonHeight: 30,
+                        buttonPadding: null,
+                        hint: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Samples",
+                            style: TxtStls.fieldstyle,
+                          ),
+                        ),
+
+                        // selectedItemBuilder: (BuildContext context) {
+                        //   return items.map((String value) {
+                        //     return Text(value.toString(),
+                        //         style: TextStyle(
+                        //             fontSize: 13,
+                        //             color: bgColor,
+                        //             fontWeight: FontWeight.bold));
+                        //   }).toList();
+                        // },
+                        selectedItemHighlightColor: bgColor,
+                        buttonDecoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: btnColor.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        items: items
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      item,
+                                      style: TxtStls.fieldstyle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: selectedSamples,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSamples = value as String;
+                          });
+                        },
+                      ),
+                    ))
+                : SizedBox(),
+          ],
+        )
+      ],
+    );
+  }
+
+  final List<String> items = [
+    "2 pieces",
+    "3 pieces",
+    "4 pieces",
+    "5 pieces",
+    "6 pieces",
+    "7 pieces",
+    "8 pieces",
+    "9 pieces",
+    "10 pieces"
+  ];
+
+  bool isChoosed = false;
+  Widget textButton(text) {
+    return TextButton(
+        onPressed: () {
+          if (text == "Yes") {
+            setState(() {
+              isChoosed = true;
+            });
+          } else {
+            setState(() {
+              isChoosed = false;
+            });
+          }
+        },
+        child: Text(text));
+  }
+
+  Widget serviceIntro(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Center(
+      child: TextButton(
+          onPressed: () async {
+            await PdfISIService.generatePdf(
+              context,
+            );
+          },
+          child: Text("CreatePdf")),
     );
   }
 
@@ -2955,4 +2928,19 @@ class _FinanceState extends State<Finance> {
       ),
     );
   }
+
+  final services = <ServicesModel>[
+    ServicesModel(
+      name: "BIS Certificate",
+    ),
+    ServicesModel(
+      name: "WPC Approval",
+    ),
+    ServicesModel(
+      name: "LMPC Approval",
+    ),
+    ServicesModel(
+      name: "ISI Certificate",
+    ),
+  ];
 }

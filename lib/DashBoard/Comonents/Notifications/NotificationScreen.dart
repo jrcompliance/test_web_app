@@ -149,62 +149,62 @@ class _NotificationsState extends State<Notifications> {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.93,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: bgColor,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: bgColor),
-                    width: size.width * 0.2,
-                    height: 50,
-                    padding: const EdgeInsets.only(left: 15, top: 15),
-                    child: Center(
-                      child: TextField(
-                        style: TextStyle(
-                            fontSize: 14, color: Colors.white.withOpacity(0.6)),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          hintText: 'Search',
-                          hintStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.6)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: size.height * 0.7,
-                    color: bgColor,
-                    child: chatRoomsList(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          Expanded(
-              flex: 7,
-              child: Chat(
-                chatRoomId: 'id',
-                chatUsername: chatName,
-              ))
-        ],
-      ),
+      // child: Row(
+      //   children: [
+      //     Expanded(
+      //       flex: 3,
+      //       child: Container(
+      //         color: bgColor,
+      //         child: Column(
+      //           children: [
+      //             const SizedBox(
+      //               height: 30,
+      //             ),
+      //             Container(
+      //               decoration: BoxDecoration(
+      //                   borderRadius: BorderRadius.circular(10),
+      //                   color: bgColor),
+      //               width: size.width * 0.2,
+      //               height: 50,
+      //               padding: const EdgeInsets.only(left: 15, top: 15),
+      //               child: Center(
+      //                 child: TextField(
+      //                   style: TextStyle(
+      //                       fontSize: 14, color: Colors.white.withOpacity(0.6)),
+      //                   decoration: InputDecoration(
+      //                     border: InputBorder.none,
+      //                     focusedBorder: InputBorder.none,
+      //                     enabledBorder: InputBorder.none,
+      //                     errorBorder: InputBorder.none,
+      //                     disabledBorder: InputBorder.none,
+      //                     hintText: 'Search',
+      //                     hintStyle: TextStyle(
+      //                         fontSize: 14,
+      //                         color: Colors.white.withOpacity(0.6)),
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //             Container(
+      //               height: size.height * 0.7,
+      //               color: bgColor,
+      //               child: chatRoomsList(),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //     const SizedBox(
+      //       width: 30,
+      //     ),
+      //     Expanded(
+      //         flex: 7,
+      //         child: Chat(
+      //           chatRoomId: 'id',
+      //           chatUsername: chatName,
+      //         ))
+      //   ],
+      // ),
     );
   }
 
