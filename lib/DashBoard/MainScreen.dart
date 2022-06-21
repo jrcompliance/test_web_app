@@ -40,7 +40,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   final ScrollController _controller = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  Tabs active = Tabs.DashBoard;
+  Tabs active = Tabs.Finance;
   var radioItem;
 
   @override
@@ -235,7 +235,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
-  int selectedindex = 0;
+  int selectedindex = 3;
   DrawerListTile(title, image, tab, int index) {
     return Material(
       elevation: selectedindex == index ? 20 : 0,
