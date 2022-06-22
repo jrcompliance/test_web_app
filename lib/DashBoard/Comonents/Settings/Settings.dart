@@ -29,6 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var data;
   @override
   void initState() {
+    fetchServiceID();
     super.initState();
   }
 
@@ -144,6 +145,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     FirebaseFirestore _firestore = FirebaseFirestore.instance;
     _firestore.collection("GenerateId's").doc("CashMemoID").set({
       "cashmemoid": 0,
+    });
+  }
+
+  Future<void> fetchServiceID() async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    _firestore.collection("GenerateId's").doc("ISIServiceId").set({
+      "isiserviceid": 0,
     });
   }
 

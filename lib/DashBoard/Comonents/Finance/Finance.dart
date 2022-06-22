@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -17,7 +18,9 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
+import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/PdfFiles/GetServicePdf.dart';
+import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
 import 'package:test_web_app/Models/UserModels.dart';
@@ -127,6 +130,21 @@ class _FinanceState extends State<Finance> {
           .then((value) {
         allCustomers =
             Provider.of<CustmerProvider>(context, listen: false).customerlist;
+      });
+    });
+    Future.delayed(Duration(seconds: 2)).then((value) {
+      var userid = FirebaseAuth.instance.currentUser;
+      Provider.of<UserDataProvider>(context, listen: false)
+          .getEmployeesList(userid)
+          .then((value) {
+        employeeDesig =
+            Provider.of<UserDataProvider>(context, listen: false).udesignation;
+        employeePhone =
+            Provider.of<UserDataProvider>(context, listen: false).phone;
+        employeeemail =
+            Provider.of<UserDataProvider>(context, listen: false).email;
+        employeename =
+            Provider.of<UserDataProvider>(context, listen: false).username;
       });
     });
   }
@@ -2804,9 +2822,17 @@ class _FinanceState extends State<Finance> {
     return Center(
       child: TextButton(
           onPressed: () async {
-            await PdfISIService.generatePdf(
-              context,
-            );
+            int? isiserviceid;
+            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                .fetchServiceId()
+                .then((value) {
+              isiserviceid =
+                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                      .isiserviceid;
+            });
+            Future.delayed(Duration(seconds: 2)).then((value) async {
+              await PdfISIService.generatePdf(context, isiserviceid!);
+            });
           },
           child: const Text("CreatePdf")),
     );

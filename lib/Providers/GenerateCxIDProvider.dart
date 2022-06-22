@@ -10,6 +10,7 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
   String? actualinid;
   int? leadId;
   int? creditid;
+  int? isiserviceid;
   int? debitid;
   int? deliveryid;
 
@@ -194,6 +195,25 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
             .get()
             .then((value) {
           leadId = value.get("leadId");
+          notifyListeners();
+        });
+      });
+      notifyListeners();
+    } on Exception catch (e, s) {
+      print("${s}" + "${e.toString()}");
+    }
+  }
+
+  Future<void> fetchServiceId() async {
+    try {
+      await _firestore.collection("GenerateId's").doc("ISIServiceId").update(
+          {"isiserviceid": FieldValue.increment(1)}).then((value) async {
+        await _firestore
+            .collection("GenerateId's")
+            .doc("ISIServiceId")
+            .get()
+            .then((value) {
+          isiserviceid = value.get("isiserviceid");
           notifyListeners();
         });
       });
