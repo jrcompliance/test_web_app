@@ -138,7 +138,7 @@ flutter:
     - assets/Logos/upload.png
     - assets/Logos/jrlogo.png
     - assets/Logos/BIS_logo.png
-    - assets/Logos/CRS_logo.png
+    - assets/Logos/CRS_logo1.png
     - assets/Logos/FMCS_logo.png
     - assets/Logos/ISI_logo1.png
     - assets/Logos/attachLogo.png
@@ -172,7 +172,7 @@ flutter:
     - assets/Images/pdf.png
     - assets/Images/send.png
     - assets/Images/invoicebg.png
-    - assets/Images/servicebg.png
+    - assets/Images/servicebg2.png
     - assets/Images/Authorized_Sign.png
     - assets/Images/disputed.png
     - assets/Images/received.png
@@ -194,17 +194,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+#  fonts:
+#      - family: Schyler
+#        fonts:
+#         - asset: fonts/Schyler-Bold.ttf
+#           style: italic
+#     - family: Trajan Pro
+#       fonts:
+#         - asset: fonts/TrajanPro.ttf
+#         - asset: fonts/TrajanPro_Bold.ttf
+#           weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

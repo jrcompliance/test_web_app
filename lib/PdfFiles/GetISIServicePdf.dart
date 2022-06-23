@@ -1,18 +1,13 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing%202.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 
 class PdfISIService {
@@ -24,12 +19,6 @@ class PdfISIService {
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
-        .buffer
-        .asUint8List();
-    final crslogo = (await rootBundle.load("assets/Logos/CRS_logo.png"))
-        .buffer
-        .asUint8List();
-    final fmcslogo = (await rootBundle.load("assets/Logos/FMCS_logo.png"))
         .buffer
         .asUint8List();
     final isilogo = (await rootBundle.load("assets/Logos/ISI_logo1.png"))
@@ -272,7 +261,7 @@ class PdfISIService {
     }
 
     String? myUrl;
-    final bgImage = (await rootBundle.load("assets/Images/servicebg.png"))
+    final bgImage = (await rootBundle.load("assets/Images/servicebg2.png"))
         .buffer
         .asUint8List();
     final pageTheme = pw.PageTheme(
@@ -1493,8 +1482,9 @@ class PdfISIService {
       print(1);
       FirebaseStorage storage = FirebaseStorage.instance;
       print(2);
-      TaskSnapshot upload =
-          await storage.ref("Services/${isiserviceid}").putData(bytes);
+      TaskSnapshot upload = await storage
+          .ref("Services/ISIServices/${isiserviceid}")
+          .putData(bytes);
       print(3);
       myUrl = await upload.ref.getDownloadURL();
       print(4);
