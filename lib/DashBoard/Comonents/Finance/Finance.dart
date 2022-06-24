@@ -19,6 +19,8 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
 import 'package:test_web_app/PdfFiles/GetCRSServicePdf.dart';
+import 'package:test_web_app/PdfFiles/GetFMCSServicePdf.dart';
+import 'package:test_web_app/PdfFiles/GetISIServicePdf.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Models/InvoiceDescriptionModel.dart';
@@ -2823,15 +2825,37 @@ class _FinanceState extends State<Finance> {
           onPressed: () async {
             int? isiserviceid;
             Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                .fetchServiceId()
+                .fetchISIServiceId()
                 .then((value) {
               isiserviceid =
                   Provider.of<RecentFetchCXIDProvider>(context, listen: false)
                       .isiserviceid;
             });
-            Future.delayed(Duration(seconds: 2)).then((value) async {
-              await PdfCRSService.generatePdf(context, isiserviceid!);
+            int? fmcsserviceid;
+            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                .fetchFMCSServiceId()
+                .then((value) {
+              fmcsserviceid =
+                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                      .fmcsserviceid;
             });
+            int? crsserviceid;
+            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                .fetchCRSServiceId()
+                .then((value) {
+              crsserviceid =
+                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                      .crsserviceid;
+            });
+            Future.delayed(Duration(seconds: 2)).then((value) async {
+              await PdfISIService.generatePdf(context, isiserviceid!);
+            });
+            // Future.delayed(Duration(seconds: 2)).then((value) async {
+            //   await PdfFMCSService.generatePdf(context, fmcsserviceid!);
+            // });
+            // Future.delayed(Duration(seconds: 2)).then((value) async {
+            //   await PdfCRSService.generatePdf(context, crsserviceid!);
+            // });
           },
           child: const Text("CreatePdf")),
     );

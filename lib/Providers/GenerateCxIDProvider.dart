@@ -11,6 +11,8 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
   int? leadId;
   int? creditid;
   int? isiserviceid;
+  int? fmcsserviceid;
+  int? crsserviceid;
   int? debitid;
   int? deliveryid;
 
@@ -204,7 +206,7 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchServiceId() async {
+  Future<void> fetchISIServiceId() async {
     try {
       await _firestore.collection("GenerateId's").doc("ISIServiceId").update(
           {"isiserviceid": FieldValue.increment(1)}).then((value) async {
@@ -214,6 +216,44 @@ class RecentFetchCXIDProvider extends ChangeNotifier {
             .get()
             .then((value) {
           isiserviceid = value.get("isiserviceid");
+          notifyListeners();
+        });
+      });
+      notifyListeners();
+    } on Exception catch (e, s) {
+      print("${s}" + "${e.toString()}");
+    }
+  }
+
+  Future<void> fetchFMCSServiceId() async {
+    try {
+      await _firestore.collection("GenerateId's").doc("FMCSServiceId").update(
+          {"fmcsserviceid": FieldValue.increment(1)}).then((value) async {
+        await _firestore
+            .collection("GenerateId's")
+            .doc("FMCSServiceId")
+            .get()
+            .then((value) {
+          fmcsserviceid = value.get("fmcsserviceid");
+          notifyListeners();
+        });
+      });
+      notifyListeners();
+    } on Exception catch (e, s) {
+      print("${s}" + "${e.toString()}");
+    }
+  }
+
+  Future<void> fetchCRSServiceId() async {
+    try {
+      await _firestore.collection("GenerateId's").doc("CRSServiceId").update(
+          {"crsserviceid": FieldValue.increment(1)}).then((value) async {
+        await _firestore
+            .collection("GenerateId's")
+            .doc("CRSServiceId")
+            .get()
+            .then((value) {
+          crsserviceid = value.get("crsserviceid");
           notifyListeners();
         });
       });

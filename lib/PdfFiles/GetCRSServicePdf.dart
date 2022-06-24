@@ -15,7 +15,7 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 
 class PdfCRSService {
-  static generatePdf(BuildContext context, int isiserviceid) async {
+  static generatePdf(BuildContext context, int crsserviceid) async {
     Size size = MediaQuery.of(context).size;
     // DateTime? invoicedate1 = DateTime.parse(invoicedate);
     // DateTime? duedate1 = DateTime.parse(duedate);
@@ -25,7 +25,7 @@ class PdfCRSService {
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
         .buffer
         .asUint8List();
-    final crslogo = (await rootBundle.load("assets/Logos/CRS_logo1.png"))
+    final crslogo = (await rootBundle.load("assets/Logos/CRS_logo6.png"))
         .buffer
         .asUint8List();
     final signImage =
@@ -36,17 +36,15 @@ class PdfCRSService {
     final latobold2 = await PdfGoogleFonts.latoBlack();
     final latoitalic = await PdfGoogleFonts.latoLightItalic();
 
-    final nunitolight = await PdfGoogleFonts.nunitoLight();
-    final nunitobold = await PdfGoogleFonts.nunitoBold();
     //  final fonts = await PdfStandardFont(PdfFontFamily.helvetica, 50);
-    // final textStlbold = pw.TextStyle(
-    //     // height: 1.5,
-    //     fontSize: 12,
-    //     letterSpacing: 1.0,
-    //     lineSpacing: 2.0,
-    //     color: PdfColors.black,
-    //     fontStyle: pw.FontStyle.normal,
-    //     font: gifontlight);
+    final textStl8bold = pw.TextStyle(
+        // height: 1.5,
+        fontSize: 8,
+        letterSpacing: 1.0,
+        lineSpacing: 2.0,
+        color: PdfColors.black,
+        fontWeight: pw.FontWeight.bold,
+        font: latobold);
     final textStl12Italic = pw.TextStyle(
         // height: 1.5,
         fontSize: 12,
@@ -63,13 +61,14 @@ class PdfCRSService {
         lineSpacing: 2.0,
         color: PdfColors.black,
         font: latobold);
-    // final textStl15 = pw.TextStyle(
-    //     // height: 1.5,
-    //     fontSize: 15,
-    //     letterSpacing: 1.0,
-    //     lineSpacing: 2.0,
-    //     color: PdfColors.black,
-    //     font: latobold);
+    final textStl12bold2 = pw.TextStyle(
+        // height: 1.5,
+        fontSize: 12,
+        fontWeight: pw.FontWeight.bold,
+        letterSpacing: 1.0,
+        lineSpacing: 2.0,
+        color: PdfColors.black,
+        font: latobold2);
     final textStl15bold = pw.TextStyle(
         // height: 1.5,
         fontSize: 15,
@@ -238,7 +237,7 @@ class PdfCRSService {
                 pw.Flexible(
                   flex: 1,
                   child: pw.Padding(
-                    padding: pw.EdgeInsets.only(bottom: 10),
+                    padding: pw.EdgeInsets.only(top: 20.0),
                     child: pw.Container(
                         // color: PdfColors.pink,
                         height: 80,
@@ -297,7 +296,7 @@ class PdfCRSService {
                 pw.Flexible(
                   flex: 1,
                   child: pw.Padding(
-                    padding: pw.EdgeInsets.only(bottom: 10),
+                    padding: pw.EdgeInsets.only(top: 20.0),
                     child: pw.Container(
                         // color: PdfColors.pink,
                         height: 80,
@@ -468,23 +467,26 @@ class PdfCRSService {
 
                         for (int i = 1; i <= 3; i++) space2(),
                         //   pw.Flexible(flex: 1,child: ),
-                        pw.Flexible(
-                          flex: 1,
-                          child: pw.Text(
-                            "Quotation No:",
-                            style: textStl12bold,
-                          ),
-                        ),
-
-                        space(),
-                        pw.Flexible(
-                          flex: 1,
-                          child: pw.Text(
-                            "487256484",
-                            style: textStl12bold,
-                          ),
-                        ),
-                        for (int i = 1; i <= 3; i++) space2(),
+                        pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Flexible(
+                                flex: 1,
+                                child: pw.Text(
+                                  "Quotation No:",
+                                  style: textStl12bold,
+                                ),
+                              ),
+                              pw.SizedBox(width: 10),
+                              pw.Flexible(
+                                flex: 1,
+                                child: pw.Text(
+                                  "487256484",
+                                  style: textStl12bold,
+                                ),
+                              ),
+                            ]),
+                        for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -492,7 +494,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
-                        for (int i = 1; i <= 3; i++) space2(),
+                        for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -502,14 +504,13 @@ class PdfCRSService {
                         ),
                       ]),
                 ),
-
                 pw.Container(
                     height: size.height - 70,
                     width: size.width - 100,
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        space2(),
+                        space(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -565,6 +566,14 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
+                        pw.Flexible(
+                          flex: 1,
+                          child: pw.Text(
+                            "Mr/Mrs  ${cusname.toString()}",
+                            style: textStl12bold,
+                          ),
+                        ),
                         space2(),
                         pw.RichText(
                             text: pw.TextSpan(children: [
@@ -593,7 +602,7 @@ class PdfCRSService {
                               style: textStl12Italic),
                           pw.TextSpan(
                               text:
-                                  "such as Softbank, Troy, and Bombay Dyeing. With that, we pride ourselves that we have been awarded by Future Business Awards 2020 AS ",
+                                  "such as Softbank, Troy, and Bombay Dyeing. With that, we pride ourselves that we have been awarded by Future Business Awards 2020 as ",
                               style: textStl12bold),
                           pw.TextSpan(
                               text:
@@ -624,7 +633,7 @@ class PdfCRSService {
                           r"Looking forward to working with you & be associated with your organization so that we can start this valuable project.",
                           style: textStl12bold,
                         ),
-                        space3(),
+                        space2(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -632,6 +641,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        pw.SizedBox(height: 5),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -639,6 +649,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        pw.SizedBox(height: 5),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -646,6 +657,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        pw.SizedBox(height: 5),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -653,6 +665,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        pw.SizedBox(height: 5),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -660,6 +673,7 @@ class PdfCRSService {
                             style: textStl12bold,
                           ),
                         ),
+                        pw.SizedBox(height: 5),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -725,7 +739,7 @@ class PdfCRSService {
                                   style: textStl12bold)),
                           space3(),
                           pw.Padding(
-                              padding: pw.EdgeInsets.only(left: 20),
+                              padding: pw.EdgeInsets.only(left: 0),
                               child: pw.Flexible(
                                 flex: 1,
                                 child: pw.Text(
@@ -753,13 +767,9 @@ class PdfCRSService {
                           pw.Flexible(
                               flex: 1,
                               child: pw.Text(
-                                  "Since your products fall under purview of the CRS certification scheme, we will emphasize on that, in the next section.",
+                                  "Since your products fall under purview of the CRS registration scheme, we will emphasize on that, in the next section.",
                                   style: textStl12bold)),
-                        ])
-
-                    // child: pw.Text(
-                    //     "COMPLIANCE AUTHORITY INTRODUCTION",style: textStl25),
-                    ),
+                        ])),
                 pw.Container(
                     height: size.height - 70,
                     width: size.width - 100,
@@ -814,13 +824,13 @@ class PdfCRSService {
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
-                                "Easy market access. Builds",
+                                "Easy market access.",
                               )),
                           space(),
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
-                                r'''Brand's credibility.''',
+                                r'''Builds Brand's credibility.''',
                               )),
                           space(),
                           pw.Flexible(
@@ -851,8 +861,7 @@ class PdfCRSService {
                           space(),
                           pw.Flexible(
                               flex: 1,
-                              child:
-                                  steps("Step 2", " Document verification.")),
+                              child: steps("Step 2", "Document verification.")),
                           space(),
                           pw.Flexible(
                               flex: 1,
@@ -865,7 +874,7 @@ class PdfCRSService {
                           pw.Flexible(
                               flex: 1,
                               child: steps(
-                                  "Step 5", " Issuance of CRS certificate.")),
+                                  "Step 5", "Issuance of CRS certificate.")),
                           space3(),
                           pw.Flexible(
                             flex: 2,
@@ -889,8 +898,6 @@ class PdfCRSService {
                 pw.Container(
                   height: size.height - 70,
                   width: size.width - 100,
-                  // height: size.height,
-                  // width: size.width,
                   child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
@@ -981,7 +988,7 @@ class PdfCRSService {
                                       flex: 4,
                                       child: pw.Column(
                                           mainAxisAlignment:
-                                              pw.MainAxisAlignment.spaceEvenly,
+                                              pw.MainAxisAlignment.start,
                                           crossAxisAlignment:
                                               pw.CrossAxisAlignment.start,
                                           children: [
@@ -990,23 +997,28 @@ class PdfCRSService {
                                                 child: pw.Text(
                                                     cusname.toString(),
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text(
                                                     "customer address",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text("district",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text("state",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text("country",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text(
@@ -1023,7 +1035,7 @@ class PdfCRSService {
                                       flex: 4,
                                       child: pw.Column(
                                           mainAxisAlignment:
-                                              pw.MainAxisAlignment.spaceEvenly,
+                                              pw.MainAxisAlignment.start,
                                           crossAxisAlignment:
                                               pw.CrossAxisAlignment.start,
                                           children: [
@@ -1032,38 +1044,44 @@ class PdfCRSService {
                                                 child: pw.Text(
                                                     "JR Compliance & Testing Labs",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 2,
                                                 child: pw.Text(
                                                     "705,7th Floor,Krisha Apra Tower",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text(
                                                     "Netaji Subhash Place",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text("Pitampura",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text(
                                                     "New Delhi-110034",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text("India",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
                                                 child: pw.Text(
                                                     "tarun@jrcompliance.com",
                                                     style: textStl12bold)),
+                                            pw.SizedBox(height: 5),
                                             pw.Flexible(
                                                 flex: 1,
-                                                child: pw.Text(
-                                                    "+91 9599550680".toString(),
+                                                child: pw.Text("+91 9599550680",
                                                     style: textStl12bold)),
                                           ])),
                                 ])),
@@ -1233,10 +1251,10 @@ class PdfCRSService {
                         space3(),
                         rowWidget2(
                             "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
-                        space2(),
+                        space3(),
                         rowWidget2(
                             "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
-                        space2(),
+                        space3(),
                         rowWidget2(
                             "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
                         space3(),
@@ -1281,32 +1299,33 @@ class PdfCRSService {
                             pw.Expanded(
                                 flex: 1,
                                 child: pw.Container(
-                                  child: pw.Text("#", style: textStl12bold),
+                                  child: pw.Text("#", style: textStl12bold2),
                                   alignment: pw.Alignment.centerLeft,
                                 )),
                             pw.Expanded(
                                 flex: 4,
                                 child: pw.Container(
-                                  child: pw.Text("Item", style: textStl12bold),
+                                  child: pw.Text("Item", style: textStl12bold2),
                                   alignment: pw.Alignment.centerLeft,
                                 )),
                             pw.Expanded(
                                 flex: 1,
                                 child: pw.Container(
-                                    child: pw.Text("Qty", style: textStl12bold),
+                                    child:
+                                        pw.Text("Qty", style: textStl12bold2),
                                     alignment: pw.Alignment.center)),
                             pw.Expanded(
                                 flex: 2,
                                 child: pw.Container(
                                     alignment: pw.Alignment.center,
-                                    child:
-                                        pw.Text("Rate", style: textStl12bold))),
+                                    child: pw.Text("Rate",
+                                        style: textStl12bold2))),
                             pw.Expanded(
                                 flex: 2,
                                 child: pw.Container(
                                   alignment: pw.Alignment.centerRight,
                                   child: pw.Text("Amount(USD)",
-                                      style: textStl12bold),
+                                      style: textStl12bold2),
                                 )),
                           ]),
                         ),
@@ -1363,19 +1382,24 @@ class PdfCRSService {
                             pw.Expanded(
                                 flex: 2,
                                 child: pw.Column(children: [
+                                  pw.Flexible(
+                                    flex: 1,
+                                    child:
+                                        pw.Divider(height: 0.2, thickness: 0.5),
+                                  ),
                                   pw.Expanded(
                                       flex: 2,
                                       child: pw.Container(
                                           alignment: pw.Alignment.centerRight,
                                           child: pw.Text("TOTAL",
-                                              style: textStl12bold))),
+                                              style: textStl12bold2))),
                                   pw.Expanded(
                                       flex: 2,
                                       child: pw.Container(
                                           alignment: pw.Alignment.centerRight,
                                           child: pw.Text(
                                               5000.toStringAsFixed(2),
-                                              style: textStl12bold))),
+                                              style: textStl12bold2))),
                                 ]))
                           ]),
                         )
@@ -1488,6 +1512,7 @@ class PdfCRSService {
                               flex: 1,
                               child: pw.Text("IFSC Code: IDFB0040101",
                                   style: textStl12bold)),
+                          space(),
                           pw.Flexible(
                               flex: 1,
                               child: pw.Text("SWIFT Code: IDFBINBBMUM",
@@ -1568,25 +1593,13 @@ class PdfCRSService {
                               flex: 1,
                               child:
                                   pw.Text("Signature :", style: textStl12bold)),
-                          space2(),
+                          space3(),
                           pw.Flexible(
                               flex: 1,
                               child: pw.Text(
                                   "Thank you for choosing us as your Compliance Partner!!",
                                   style: textStl12Italic)),
                         ])),
-                // pw.Container(
-                //     height: size.height - 70,
-                //     width: size.width - 100,
-                //     child: pw.Column(
-                //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-                //         children: [])),
-
-                //
-                //
-                //
-                //
-                //
               ]),
             ];
           },
@@ -1596,7 +1609,7 @@ class PdfCRSService {
                 alignment: pw.Alignment.bottomRight,
                 child: pw.Flexible(
                   flex: 1,
-                  child: pw.Text(text.toString()),
+                  child: pw.Text(text.toString(), style: textStl8bold),
                 ));
           }),
     );
@@ -1607,7 +1620,7 @@ class PdfCRSService {
       FirebaseStorage storage = FirebaseStorage.instance;
       print(2);
       TaskSnapshot upload = await storage
-          .ref("Services/CRSServices/${isiserviceid}")
+          .ref("Services/CRSServices/${crsserviceid}")
           .putData(bytes);
       print(3);
       myUrl = await upload.ref.getDownloadURL();
