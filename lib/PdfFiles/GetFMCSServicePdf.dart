@@ -11,10 +11,29 @@ import 'package:printing/printing%202.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 
 class PdfFMCSService {
-  static generatePdf(BuildContext context, int fmcsserviceid) async {
+  static generatePdf(
+      {required BuildContext context,
+      required int fmcsserviceid,
+      required List Servicelist,
+      required String cusname,
+      required double tbal,
+      required String actualinid,
+      required String gstNo,
+      required String docid,
+      required String activeid,
+      required double gstAmount,
+      required double total,
+      required String invoicedate,
+      required String duedate,
+      required String selectedValue,
+      required String cxID,
+      required String externalNotes,
+      required String internalNotes,
+      required String referenceID,
+      required String LeadId}) async {
     Size size = MediaQuery.of(context).size;
-    // DateTime? invoicedate1 = DateTime.parse(invoicedate);
-    // DateTime? duedate1 = DateTime.parse(duedate);
+    DateTime? invoicedate1 = DateTime.parse(invoicedate);
+    DateTime? duedate1 = DateTime.parse(duedate);
 
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
@@ -33,6 +52,12 @@ class PdfFMCSService {
     final latoitalic = await PdfGoogleFonts.latoLightItalic();
 
     //  final fonts = await PdfStandardFont(PdfFontFamily.helvetica, 50);
+    final textStl12 =
+        pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold);
+    final textStl12Line = pw.TextStyle(
+        fontSize: 12,
+        fontWeight: pw.FontWeight.bold,
+        decoration: pw.TextDecoration.underline);
     final textStl8bold = pw.TextStyle(
         // height: 1.5,
         fontSize: 8,
@@ -65,6 +90,9 @@ class PdfFMCSService {
         lineSpacing: 2.0,
         color: PdfColors.black,
         font: latobold2);
+    final textStl10 =
+        pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold);
+
     final textStl15bold = pw.TextStyle(
         // height: 1.5,
         fontSize: 15,
@@ -119,6 +147,10 @@ class PdfFMCSService {
 
     pw.SizedBox space3() {
       return pw.SizedBox(height: size.height * 0.03);
+    }
+
+    pw.SizedBox space4() {
+      return pw.SizedBox(height: size.height * 0.04);
     }
 
     pw.VerticalDivider verticalDivider() {
@@ -281,7 +313,7 @@ class PdfFMCSService {
     pw.Flexible servicerow(servicetext1, servicetext2, image1, desc1,
         [desc2, desc3, desc4, desc5]) {
       return pw.Flexible(
-          flex: 4,
+          flex: 5,
           child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.start,
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -299,7 +331,7 @@ class PdfFMCSService {
                   ),
                 ),
                 pw.Flexible(
-                  flex: 3,
+                  flex: 4,
                   child: pw.Column(
                       mainAxisAlignment: pw.MainAxisAlignment.start,
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -319,7 +351,7 @@ class PdfFMCSService {
                         ),
                         pw.SizedBox(height: 10),
                         pw.Flexible(
-                          flex: 2,
+                          flex: 3,
                           child: pw.RichText(
                               softWrap: true,
                               text: pw.TextSpan(children: [
@@ -338,7 +370,7 @@ class PdfFMCSService {
     }
 
     String? myUrl;
-    final bgImage = (await rootBundle.load("assets/Images/servicebg2.png"))
+    final bgImage = (await rootBundle.load("assets/Images/servicebg3.png"))
         .buffer
         .asUint8List();
     final pageTheme = pw.PageTheme(
@@ -390,6 +422,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
 
                         pw.Flexible(
                           flex: 1,
@@ -406,6 +439,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
 
                         pw.Flexible(
                           flex: 1,
@@ -414,6 +448,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
 
                         pw.Flexible(
                           flex: 1,
@@ -422,6 +457,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
 
                         pw.Flexible(
                           flex: 1,
@@ -430,6 +466,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
+                        space(),
 
                         pw.Flexible(
                           flex: 1,
@@ -439,7 +476,7 @@ class PdfFMCSService {
                           ),
                         ),
 
-                        for (int i = 0; i <= 1; i++) space2(),
+                        for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -460,25 +497,13 @@ class PdfFMCSService {
 
                         for (int i = 1; i <= 3; i++) space2(),
                         //   pw.Flexible(flex: 1,child: ),
-                        pw.Row(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Flexible(
-                                flex: 1,
-                                child: pw.Text(
-                                  "Quotation No:",
-                                  style: textStl12bold,
-                                ),
-                              ),
-                              pw.SizedBox(width: 10),
-                              pw.Flexible(
-                                flex: 1,
-                                child: pw.Text(
-                                  "487256484",
-                                  style: textStl12bold,
-                                ),
-                              ),
-                            ]),
+                        pw.Flexible(
+                          flex: 1,
+                          child: pw.Text(
+                            "Quotation No: 487256484",
+                            style: textStl12bold,
+                          ),
+                        ),
                         for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
@@ -555,18 +580,18 @@ class PdfFMCSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Hello,",
+                            "Hello Mr/Mrs ${cusname.toString()}",
                             style: textStl12bold,
                           ),
                         ),
-                        space(),
-                        pw.Flexible(
-                          flex: 1,
-                          child: pw.Text(
-                            "Mr/Mrs  ${cusname.toString()}",
-                            style: textStl12bold,
-                          ),
-                        ),
+                        // space(),
+                        // pw.Flexible(
+                        //   flex: 1,
+                        //   child: pw.Text(
+                        //     ,
+                        //     style: textStl12bold,
+                        //   ),
+                        // ),
                         space2(),
                         pw.RichText(
                             text: pw.TextSpan(children: [
@@ -670,7 +695,7 @@ class PdfFMCSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "www.jrompliance.com",
+                            "www.jrcompliance.com",
                             style: textStl12bold,
                           ),
                         ),
@@ -685,7 +710,7 @@ class PdfFMCSService {
                         mainAxisAlignment: pw.MainAxisAlignment.start,
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          space2(),
+                          space3(),
                           pw.Align(
                             alignment: pw.Alignment.topCenter,
                             child: pw.Flexible(
@@ -702,35 +727,36 @@ class PdfFMCSService {
                               ),
                             ),
                           ),
-                          space2(),
+                          space3(),
                           pw.Align(
                               alignment: pw.Alignment.topCenter,
                               child: pw.Text("INTRODUCTION", style: textStl25)),
-                          space2(),
+                          space3(),
                           bisservicerow(
                             "BIS",
                             "OVERVIEW",
                             bislogo,
                             "BIS is an acronym for Bureau of Indian Standard, it is a certification body that impart the product's quality, safety, and credibility of the brands, manufacturers, and producers to the customers. It came into existence through an act of parliament dated 26 November 1986, on 1 April 1987.",
                           ),
+                          space(),
                           pw.Flexible(
                               flex: 2,
                               child: pw.Text(
                                   "The mentioned act has been revised as BIS Act, 2016 and establishes BIS as the National Standards Body authorizes to undertake conformity assessment of products, services, systems and processes.",
                                   style: textStl12bold)),
-                          space3(),
+                          space4(),
                           pw.Flexible(
                               flex: 2,
                               child: pw.Text(
                                   "The product certification of BIS aims at providing Third Party assurance of quality, safety and reliability of products to the customer. Presence of BIS certification mark, known as Standard Mark, on a product is an assurance of conformity to the specifications.",
                                   style: textStl12bold)),
-                          space3(),
+                          space4(),
                           pw.Flexible(
                               flex: 2,
                               child: pw.Text(
                                   "Moreover, to maintain a close vigil on quality of the products, BIS conducts surveillance operations or regular surveillance of the licensee's performance by surprise inspections and testing of samples, drawn both from the market/factory.",
                                   style: textStl12bold)),
-                          space3(),
+                          space4(),
                           pw.Padding(
                               padding: pw.EdgeInsets.only(left: 0),
                               child: pw.Flexible(
@@ -739,23 +765,23 @@ class PdfFMCSService {
                                     "BIS certification includes three certification schemes -",
                                     style: textStl12bold),
                               )),
-                          space3(),
+                          space4(),
                           pw.Padding(
                               padding: pw.EdgeInsets.only(left: 30),
                               child: rowWidget('ISI certification scheme',
                                   'applicabe on Indian manufacturers')),
-                          space2(),
+                          space3(),
                           pw.Padding(
                             padding: pw.EdgeInsets.only(left: 30),
                             child: rowWidget('FMCS certification scheme',
                                 'applicabe on foreign manufacturers'),
                           ),
-                          space2(),
+                          space3(),
                           pw.Padding(
                               padding: pw.EdgeInsets.only(left: 30),
                               child: rowWidget('CRS registration scheme',
                                   'applicabe on electric and electronic appliances')),
-                          space2(),
+                          space4(),
                           //Since your products fall under purview of the FMCS certification scheme, we will emphasize on that, in the next section.
                           pw.Flexible(
                               flex: 1,
@@ -782,7 +808,7 @@ class PdfFMCSService {
                               "and ",
                               "BIS(Conformity Assessment), 2018. ",
                               "To obtain an FMCS certificate, it is necessary to comply with all the requirements of the applicable Indian standards."),
-                          space2(),
+                          space3(),
                           pw.Align(
                             alignment: pw.Alignment.center,
                             child: pw.Flexible(
@@ -806,31 +832,31 @@ class PdfFMCSService {
                               child: rowWidget2(
                                 "Prevent from imposition of penalty",
                               )),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
                                 "Edge over competitors.",
                               )),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
                                 "Easy market access.",
                               )),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
                                 "Builds Brand’s credibility.",
                               )),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: rowWidget2(
                                 "Confirms impeccable quality standards.",
                               )),
-                          space3(),
+                          space4(),
                           pw.Align(
                             alignment: pw.Alignment.center,
                             child: pw.Flexible(
@@ -850,27 +876,27 @@ class PdfFMCSService {
                               flex: 1,
                               child: steps("Step 1",
                                   "An Applicaton form will be duly filed.")),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: steps("Step 2",
                                   "Factory inspection will be conducted.")),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: steps("Step 3",
                                   "Product samples will be withdrawn.")),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: steps("Step 4",
                                   "Payment of \$10,000 Performance Bank Guarantee and signing of Indemnity Bond.")),
-                          space(),
+                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: steps(
                                   "Step 5", "Issuance of FMCS certificate.")),
-                          space3(),
+                          space4(),
                           pw.Flexible(
                             flex: 2,
                             child: pw.RichText(
@@ -896,7 +922,7 @@ class PdfFMCSService {
                   child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        space2(),
+                        space3(),
                         pw.Flexible(
                             flex: 1,
                             child: pw.Text(
@@ -955,29 +981,32 @@ class PdfFMCSService {
                                                     style: textStl15bold)),
                                           ])),
                                 ])),
-                        space2(),
+                        space4(),
                         pw.Flexible(
                             flex: 1,
                             child: pw.Text("3771PRO-003771",
                                 style: textStl18bold)),
-                        space(),
+                        for (int i = 1; i <= 2; i++) space4(),
                         pw.Flexible(
                             flex: 1,
                             child: pw.Text("Details:", style: textStl15bold)),
-                        space(),
+                        space2(),
                         pw.Container(
                             height: size.height * 0.2,
                             decoration: pw.BoxDecoration(
-                              borderRadius: pw.BorderRadius.circular(5.0),
+                              borderRadius: pw.BorderRadius.circular(0.0),
                               border: pw.Border.all(color: PdfColors.grey300),
                             ),
                             child: pw.Row(
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
-                                  pw.Expanded(
-                                      flex: 2,
-                                      child: pw.Text("Prepared For",
-                                          style: textStl12bold)),
+                                  pw.Padding(
+                                    padding: pw.EdgeInsets.only(left: 5.0),
+                                    child: pw.Expanded(
+                                        flex: 2,
+                                        child: pw.Text("Prepared For",
+                                            style: textStl12bold)),
+                                  ),
                                   verticalDivider(),
                                   pw.Expanded(
                                       flex: 4,
@@ -987,44 +1016,71 @@ class PdfFMCSService {
                                           crossAxisAlignment:
                                               pw.CrossAxisAlignment.start,
                                           children: [
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    cusname.toString(),
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      cusname.toString(),
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    "customer address",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      "customer address",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text("district",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text("district",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text("state",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text("state",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text("country",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text("country",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    cusemail.toString(),
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5.0),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      cusemail.toString(),
+                                                      style: textStl12bold)),
+                                            ),
                                           ])),
                                   verticalDivider(),
-                                  pw.Expanded(
-                                      flex: 1,
-                                      child: pw.Text("Issued By",
-                                          style: textStl12bold)),
+                                  pw.Padding(
+                                    padding: pw.EdgeInsets.only(left: 5.0),
+                                    child: pw.Expanded(
+                                        flex: 1,
+                                        child: pw.Text("Issued By",
+                                            style: textStl12bold)),
+                                  ),
                                   verticalDivider(),
                                   pw.Expanded(
                                       flex: 4,
@@ -1034,59 +1090,92 @@ class PdfFMCSService {
                                           crossAxisAlignment:
                                               pw.CrossAxisAlignment.start,
                                           children: [
-                                            pw.Flexible(
-                                                flex: 2,
-                                                child: pw.Text(
-                                                    "JR Compliance & Testing Labs",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 2,
+                                                  child: pw.Text(
+                                                      "JR Compliance & Testing Labs",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 2,
-                                                child: pw.Text(
-                                                    "705,7th Floor,Krisha Apra Tower",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 2,
+                                                  child: pw.Text(
+                                                      "705,7th Floor,Krisha Apra Tower",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    "Netaji Subhash Place",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      "Netaji Subhash Place",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text("Pitampura",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text("Pitampura",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    "New Delhi-110034",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      "New Delhi-110034",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text("India",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text("India",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    "tarun@jrcompliance.com",
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      "tarun@jrcompliance.com",
+                                                      style: textStl12bold)),
+                                            ),
                                             pw.SizedBox(height: 5),
-                                            pw.Flexible(
-                                                flex: 1,
-                                                child: pw.Text(
-                                                    "+91 9599550680".toString(),
-                                                    style: textStl12bold)),
+                                            pw.Padding(
+                                              padding:
+                                                  pw.EdgeInsets.only(left: 5),
+                                              child: pw.Flexible(
+                                                  flex: 1,
+                                                  child: pw.Text(
+                                                      "+91 9599550680"
+                                                          .toString(),
+                                                      style: textStl12bold)),
+                                            ),
                                           ])),
                                 ])),
-                        space2(),
+                        for (int i = 1; i <= 2; i++) space4(),
                         pw.Flexible(
                             flex: 1,
                             child: pw.Text("Project Escalation Levels",
                                 style: textStl12bold)),
-                        space2(),
+                        space3(),
                         pw.Container(
                           height: size.height * 0.2,
                           child: pw.Table(
@@ -1109,9 +1198,13 @@ class PdfFMCSService {
                                         crossAxisAlignment:
                                             pw.CrossAxisAlignment.start,
                                         children: [
-                                          pw.Text(
-                                            "BDE - Mr.Tarun Sadana",
-                                            style: textStl12bold,
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.only(
+                                                left: 5.0, top: 5.0),
+                                            child: pw.Text(
+                                              "BDE - Mr.Tarun Sadana",
+                                              style: textStl12bold,
+                                            ),
                                           ),
                                           pw.Text(""),
                                         ],
@@ -1120,18 +1213,22 @@ class PdfFMCSService {
                                         crossAxisAlignment:
                                             pw.CrossAxisAlignment.start,
                                         children: [
-                                          pw.Column(
-                                              crossAxisAlignment:
-                                                  pw.CrossAxisAlignment.start,
-                                              children: [
-                                                pw.Text(
-                                                  "Primary Level",
-                                                  style: textStl12bold,
-                                                ),
-                                                pw.Text(
-                                                    "tarun@jrcompliance.com",
-                                                    style: textStl12bold),
-                                              ]),
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.only(
+                                                left: 5.0, top: 5.0),
+                                            child: pw.Column(
+                                                crossAxisAlignment:
+                                                    pw.CrossAxisAlignment.start,
+                                                children: [
+                                                  pw.Text(
+                                                    "Primary Level",
+                                                    style: textStl12bold,
+                                                  ),
+                                                  pw.Text(
+                                                      "tarun@jrcompliance.com",
+                                                      style: textStl12bold),
+                                                ]),
+                                          ),
                                         ],
                                       ),
                                       pw.Padding(
@@ -1148,8 +1245,13 @@ class PdfFMCSService {
                                                     "",
                                                     style: textStl12bold,
                                                   ),
-                                                  pw.Text("+91 9599550680",
-                                                      style: textStl12bold),
+                                                  pw.Padding(
+                                                    padding: pw.EdgeInsets.only(
+                                                        left: 5.0, top: 5.0),
+                                                    child: pw.Text(
+                                                        "+91 9599550680",
+                                                        style: textStl12bold),
+                                                  ),
                                                 ]),
                                           ],
                                         ),
@@ -1160,23 +1262,31 @@ class PdfFMCSService {
                                       crossAxisAlignment:
                                           pw.CrossAxisAlignment.start,
                                       children: [
-                                        pw.Text(
-                                          "VP - Mr.Lalit Gupta",
-                                          style: textStl12bold,
+                                        pw.Padding(
+                                          padding: pw.EdgeInsets.only(
+                                              left: 5.0, top: 5.0),
+                                          child: pw.Text(
+                                            "VP - Mr.Lalit Gupta",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                         pw.Text("", style: textStl12bold),
                                       ]),
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Text(
-                                          "Priority",
-                                          style: textStl12bold,
-                                        ),
-                                        pw.Text("lalit@jrcompliance.com",
-                                            style: textStl12bold),
-                                      ]),
+                                  pw.Padding(
+                                    padding:
+                                        pw.EdgeInsets.only(left: 5.0, top: 5.0),
+                                    child: pw.Column(
+                                        crossAxisAlignment:
+                                            pw.CrossAxisAlignment.start,
+                                        children: [
+                                          pw.Text(
+                                            "Priority",
+                                            style: textStl12bold,
+                                          ),
+                                          pw.Text("lalit@jrcompliance.com",
+                                              style: textStl12bold),
+                                        ]),
+                                  ),
                                   pw.Column(
                                       crossAxisAlignment:
                                           pw.CrossAxisAlignment.start,
@@ -1185,8 +1295,12 @@ class PdfFMCSService {
                                           "",
                                           style: textStl12bold,
                                         ),
-                                        pw.Text("+91 9873060689",
-                                            style: textStl12bold),
+                                        pw.Padding(
+                                          padding: pw.EdgeInsets.only(
+                                              left: 5.0, top: 5.0),
+                                          child: pw.Text("+91 9873060689",
+                                              style: textStl12bold),
+                                        ),
                                       ]),
                                 ]),
                                 pw.TableRow(children: [
@@ -1194,23 +1308,31 @@ class PdfFMCSService {
                                       crossAxisAlignment:
                                           pw.CrossAxisAlignment.start,
                                       children: [
-                                        pw.Text(
-                                          "CEO - Mr.Rishikesh Mishra",
-                                          style: textStl12bold,
+                                        pw.Padding(
+                                          padding: pw.EdgeInsets.only(
+                                              left: 5.0, top: 5.0, bottom: 5.0),
+                                          child: pw.Text(
+                                            "CEO - Mr.Rishikesh Mishra",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                         pw.Text("", style: textStl12bold),
                                       ]),
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Text(
-                                          "Urgent",
-                                          style: textStl12bold,
-                                        ),
-                                        pw.Text("rishi@jrcompliance.com",
-                                            style: textStl12bold),
-                                      ]),
+                                  pw.Padding(
+                                    padding: pw.EdgeInsets.only(
+                                        left: 5.0, top: 5.0, bottom: 5.0),
+                                    child: pw.Column(
+                                        crossAxisAlignment:
+                                            pw.CrossAxisAlignment.start,
+                                        children: [
+                                          pw.Text(
+                                            "Urgent",
+                                            style: textStl12bold,
+                                          ),
+                                          pw.Text("rishi@jrcompliance.com",
+                                              style: textStl12bold),
+                                        ]),
+                                  ),
                                   pw.Column(
                                       crossAxisAlignment:
                                           pw.CrossAxisAlignment.start,
@@ -1219,8 +1341,12 @@ class PdfFMCSService {
                                           "",
                                           style: textStl12bold,
                                         ),
-                                        pw.Text("+91 9266450125",
-                                            style: textStl12bold),
+                                        pw.Padding(
+                                          padding: pw.EdgeInsets.only(
+                                              left: 5.0, top: 5.0, bottom: 5.0),
+                                          child: pw.Text("+91 9266450125",
+                                              style: textStl12bold),
+                                        ),
                                       ]),
                                 ]),
                               ]),
@@ -1268,141 +1394,635 @@ class PdfFMCSService {
                       ]),
                 ),
                 pw.Container(
-                  height: size.height - 70,
-                  width: size.width - 100,
-                  // height: size.height,
-                  // width: size.width,
-                  child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Align(
-                            alignment: pw.Alignment.topCenter,
-                            child: pw.Flexible(
-                                flex: 1,
-                                child: pw.Text("Commercials",
-                                    style: textStl15bold))),
-                        space2(),
-                        pw.Flexible(
-                            flex: 2,
-                            child: pw.Text(
-                                "Project Fees: The fees below are based on the information provided on your request, assumptions as noted previously and are valid for 90 days from date of issuance.",
-                                style: textStl12bold)),
-                        space2(),
-                        pw.Container(
-                          decoration: pw.BoxDecoration(
-                              border: pw.Border.all(color: PdfColors.grey300)),
-                          child: pw.Row(children: [
+                    height: size.height - 70,
+                    width: size.width - 100,
+                    // height: size.height,
+                    // width: size.width,
+                    child: pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.start,
+                        children: [
+                          pw.Flexible(
+                            flex: 1,
+                            child: pw.Align(
+                                alignment: pw.Alignment.topCenter,
+                                child: pw.Text(
+                                  "Tax Invoice",
+                                  style: textStl15bold,
+                                )),
+                          ),
+                          pw.Row(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.SizedBox(
+                                    width: 200,
+                                    height: 100,
+                                    child: pw.Image(pw.MemoryImage(image),
+                                        fit: pw.BoxFit.fill)),
+                                pw.Expanded(flex: 2, child: pw.SizedBox()),
+                                pw.Column(
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.end,
+                                    children: [
+                                      pw.Text("JR Compliance and Testing Labs",
+                                          style: textStl10
+                                          // style: pw.TextStyle(fontWeight: pw.FontWeight.bold)
+                                          ),
+                                      pw.Text(
+                                          "Office: 705, 7th Floor,Krishna Apra Tower",
+                                          style: textStl10),
+                                      pw.Text("Netaji Subhash Place, Pitampura",
+                                          style: textStl10),
+                                      pw.Text("New Delhi 110034,India",
+                                          style: textStl10),
+                                      pw.Text("PAN: AALFJ0070E",
+                                          style: textStl10),
+                                      pw.Text("TAN: DELJ10631F",
+                                          style: textStl10),
+                                      pw.Text("GST REGN NO: 07AALFJ0070E1ZO",
+                                          style: textStl10),
+                                    ])
+                              ]),
+                          pw.Divider(),
+                          pw.Row(
+                              mainAxisAlignment:
+                                  pw.MainAxisAlignment.spaceBetween,
+                              children: [
+                                pw.Column(
+                                    mainAxisAlignment:
+                                        pw.MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Text("To,", style: textStl12),
+                                      pw.Text("$address\n$pincode",
+                                          style: textStl10),
+                                      pw.Text("GSTNumber : " + gstNo.toString(),
+                                          style: textStl10),
+                                      pw.Text(""),
+                                    ]),
+                                pw.Text("Invoice No. JR" + actualinid,
+                                    style: textStl12)
+                              ]),
+                          pw.SizedBox(height: 10),
+                          pw.Text(
+                              "Thank You for your consideration!!.\n\r\n\r\nWe admire the opportunity to provide you with the best compliance services, hope we have earned your trust to take this opportunity forward. For more information contact your designated representative or email us at support@jrcompliance.com\n\r\n\r\nTo enhance your convenience, you can make payment either throw Post or electronic remitances",
+                              style: textStl10),
+                          pw.Divider(color: PdfColors.black, thickness: 0.5),
+                          pw.SizedBox(height: 10),
+                          pw.Row(
+                              mainAxisAlignment:
+                                  pw.MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text(
+                                    "Kind Atten. Mr/Mr's" +
+                                        " " +
+                                        cusname.toString(),
+                                    style: textStl12),
+                                pw.Column(
+                                    mainAxisAlignment: pw.MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.end,
+                                    children: [
+                                      pw.Text(
+                                          "Issued On : " +
+                                              "" +
+                                              DateFormat("dd MMM,yyyy")
+                                                  .format(invoicedate1),
+                                          style: textStl10),
+                                      pw.Text(
+                                          "Due Date : " +
+                                              "" +
+                                              DateFormat("dd MMM,yyyy")
+                                                  .format(duedate1),
+                                          style: textStl10)
+                                    ])
+                              ]),
+                          pw.SizedBox(height: 10),
+                          //   click(),
+                          pw.Row(children: [
                             pw.Expanded(
-                                flex: 1,
+                                flex: 5,
                                 child: pw.Container(
-                                  child: pw.Text("#", style: textStl12bold2),
+                                  child:
+                                      pw.Text("#Description", style: textStl12),
                                   alignment: pw.Alignment.centerLeft,
                                 )),
                             pw.Expanded(
-                                flex: 4,
+                                flex: 2,
                                 child: pw.Container(
-                                  child: pw.Text("Item", style: textStl12bold2),
-                                  alignment: pw.Alignment.centerLeft,
+                                  child: pw.Text("SAC Code", style: textStl12),
+                                  alignment: pw.Alignment.center,
                                 )),
                             pw.Expanded(
-                                flex: 1,
+                                flex: 2,
                                 child: pw.Container(
                                     child:
-                                        pw.Text("Qty", style: textStl12bold2),
-                                    alignment: pw.Alignment.center)),
+                                        pw.Text("Unit Cost", style: textStl12),
+                                    alignment: pw.Alignment.centerRight)),
+                            pw.Expanded(
+                                flex: 2,
+                                child: pw.Container(
+                                  alignment: pw.Alignment.center,
+                                  child: pw.Text("Qty", style: textStl12),
+                                )),
                             pw.Expanded(
                                 flex: 2,
                                 child: pw.Container(
                                     alignment: pw.Alignment.center,
-                                    child: pw.Text("Rate",
-                                        style: textStl12bold2))),
+                                    child:
+                                        pw.Text("Disc(%)", style: textStl12))),
                             pw.Expanded(
                                 flex: 2,
                                 child: pw.Container(
                                   alignment: pw.Alignment.centerRight,
-                                  child: pw.Text("Amount(USD)",
-                                      style: textStl12bold2),
+                                  child: pw.Text("Amount", style: textStl12),
                                 )),
                           ]),
-                        ),
-                        pw.ConstrainedBox(
-                          constraints: pw.BoxConstraints(
-                              minHeight: size.height * 0.5,
-                              maxHeight: size.height * 0.70),
-                          child: pw.ListView.builder(
-                            itemCount: 10,
-                            itemBuilder: (_, i) {
-                              return pw.Row(children: [
+                          pw.Divider(),
+                          pw.ConstrainedBox(
+                            constraints: pw.BoxConstraints(),
+                            child: pw.ListView.builder(
+                              itemCount: Servicelist.length,
+                              itemBuilder: (_, i) {
+                                return pw.Row(children: [
+                                  pw.Expanded(
+                                      flex: 5,
+                                      child: pw.Container(
+                                        child: pw.Text(
+                                            Servicelist[i]["item"].toString(),
+                                            style: textStl10),
+                                        alignment: pw.Alignment.centerLeft,
+                                      )),
+                                  pw.Expanded(
+                                      flex: 2,
+                                      child: pw.Container(
+                                        child:
+                                            pw.Text("9983", style: textStl10),
+                                        alignment: pw.Alignment.center,
+                                      )),
+                                  pw.Expanded(
+                                      flex: 2,
+                                      child: pw.Container(
+                                          child: pw.Text(
+                                              Servicelist[i]["rate"]
+                                                  .toStringAsFixed(2),
+                                              style: textStl10),
+                                          alignment: pw.Alignment.centerRight)),
+                                  pw.Expanded(
+                                      flex: 2,
+                                      child: pw.Container(
+                                        alignment: pw.Alignment.center,
+                                        child: pw.Text(
+                                            Servicelist[i]["qty"].toString(),
+                                            style: textStl10),
+                                      )),
+                                  pw.Expanded(
+                                      flex: 2,
+                                      child: pw.Container(
+                                          alignment: pw.Alignment.center,
+                                          child: pw.Text(
+                                              Servicelist[i]["disc"]
+                                                  .toStringAsFixed(2),
+                                              style: textStl10))),
+                                  pw.Expanded(
+                                      flex: 2,
+                                      child: pw.Container(
+                                        alignment: pw.Alignment.centerRight,
+                                        child: pw.Text(
+                                            Servicelist[i]["price"]
+                                                .toStringAsFixed(2),
+                                            style: textStl10),
+                                      )),
+                                ]);
+                              },
+                            ),
+                          ),
+
+                          pw.Expanded(child: pw.SizedBox()),
+                          pw.Container(
+                              child: pw.Row(
+                                  mainAxisAlignment:
+                                      pw.MainAxisAlignment.spaceBetween,
+                                  children: [
+                                selectedValue == "INR"
+                                    ? pw.Expanded(
+                                        flex: 5,
+                                        child: pw.Container(
+                                          child: pw.Text("IGST/CGST/SGST 18%",
+                                              style: textStl10),
+                                          alignment: pw.Alignment.centerLeft,
+                                        ))
+                                    : pw.SizedBox(),
                                 pw.Expanded(
-                                    flex: 1,
+                                    flex: 5,
                                     child: pw.Container(
-                                      child: pw.Text("${i + 1}",
-                                          style: textStl12bold),
-                                      alignment: pw.Alignment.centerLeft,
+                                      child: pw.Text(
+                                          selectedValue == "INR"
+                                              ? gstAmount.toStringAsFixed(2)
+                                              : "",
+                                          style: textStl10),
+                                      alignment: pw.Alignment.centerRight,
                                     )),
+                              ])),
+                          pw.SizedBox(height: 10),
+                          pw.Container(
+                            child: pw.Column(
+                              mainAxisAlignment: pw.MainAxisAlignment.end,
+                              children: [
+                                pw.Row(
+                                  mainAxisAlignment:
+                                      pw.MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                                  children: [
+                                    pw.Expanded(
+                                      flex: 6,
+                                      child: pw.Text(""),
+                                    ),
+                                    pw.Expanded(
+                                        flex: 4,
+                                        child: pw.Column(children: [
+                                          pw.Divider(
+                                              color: PdfColors.grey,
+                                              thickness: 0.5),
+                                          pw.Row(children: [
+                                            pw.Expanded(
+                                                flex: 1,
+                                                child: pw.Container(
+                                                  alignment:
+                                                      pw.Alignment.centerLeft,
+                                                  child: pw.Text(
+                                                      "Total(${selectedValue}) :",
+                                                      style: textStl10),
+                                                )),
+                                            pw.Expanded(
+                                                flex: 1,
+                                                child: pw.Container(
+                                                  alignment:
+                                                      pw.Alignment.centerRight,
+                                                  child: pw.Text(
+                                                      total == null
+                                                          ? "0.00"
+                                                          : total
+                                                              .toStringAsFixed(
+                                                                  2),
+                                                      style: textStl10),
+                                                )),
+                                          ]),
+                                          // pw.Row(children: [
+                                          //   pw.Expanded(
+                                          //       flex: 1,
+                                          //       child: pw.Container(
+                                          //         alignment: pw.Alignment.centerLeft,
+                                          //         child: pw.Text(
+                                          //             "Amount Paid(${selectedValue}) :",
+                                          //             style: textStl10),
+                                          //       )),
+                                          //   pw.Expanded(
+                                          //       flex: 1,
+                                          //       child: pw.Container(
+                                          //         alignment: pw.Alignment.centerRight,
+                                          //         child: pw.Text(
+                                          //             tbal == null
+                                          //                 ? "0.00"
+                                          //                 : tbal.toStringAsFixed(2),
+                                          //             style: textStl10),
+                                          //       )),
+                                          // ]),
+                                          // pw.Row(children: [
+                                          //   pw.Expanded(
+                                          //     flex: 1,
+                                          //     child: pw.Container(
+                                          //         alignment: pw.Alignment.centerLeft,
+                                          //         child: pw.Text(
+                                          //             "Balance(${selectedValue}) :",
+                                          //             style: textStl10)),
+                                          //   ),
+                                          //   pw.Expanded(
+                                          //       flex: 1,
+                                          //       child: pw.Container(
+                                          //         alignment: pw.Alignment.centerRight,
+                                          //         child: pw.Text("0.00", style: textStl10),
+                                          //       )),
+                                          // ]),
+                                        ])),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          pw.Divider(color: PdfColors.black, thickness: 0.5),
+                          pw.Container(
+                            alignment: pw.Alignment.centerLeft,
+                            child: pw.Flexible(
+                                flex: 1,
+                                child: pw.Text(
+                                    r"Note : " + externalNotes.toString(),
+                                    style: textStl10)),
+                          ),
+                          pw.SizedBox(height: 7.5),
+                          pw.Container(
+                              child: pw.Row(
+                                  mainAxisAlignment:
+                                      pw.MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                pw.Expanded(
+                                  flex: 4,
+                                  child: pw.Container(
+                                      decoration: pw.BoxDecoration(
+                                          border: pw.Border.all()),
+                                      child: pw.Column(
+                                          mainAxisAlignment:
+                                              pw.MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              pw.CrossAxisAlignment.start,
+                                          children: [
+                                            pw.Container(
+                                              child: pw.Text(
+                                                  "For JR Compliance and Testing Labs",
+                                                  style: textStl12Line),
+                                              padding: pw.EdgeInsets.only(
+                                                  left: 5, bottom: 7),
+                                            ),
+                                            pw.SizedBox(
+                                                height: 50,
+                                                width: 100,
+                                                child: pw.Image(
+                                                  pw.MemoryImage(signImage),
+                                                  fit: pw.BoxFit.fill,
+                                                )),
+                                            pw.Container(
+                                                child: pw.Text(
+                                                    "  Authorized Signatory",
+                                                    style: textStl10),
+                                                padding: pw.EdgeInsets.only(
+                                                    left: 5, bottom: 2))
+                                          ])),
+                                ),
                                 pw.Expanded(
                                     flex: 4,
                                     child: pw.Container(
-                                      child: pw.Text("Items${i}",
-                                          style: textStl12bold),
-                                      alignment: pw.Alignment.centerLeft,
-                                    )),
+                                        decoration: pw.BoxDecoration(
+                                            border: pw.Border.all()),
+                                        child: pw.Column(
+                                            mainAxisAlignment: pw
+                                                .MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                pw.CrossAxisAlignment.start,
+                                            children: [
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Project Reference Code",
+                                                      style: textStl12Line),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.SizedBox(height: 47),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Currency : ${selectedValue}",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Customer ID : $cxID",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Project ID : 00000",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5, bottom: 2))
+                                            ]))),
                                 pw.Expanded(
-                                    flex: 1,
+                                    //kmikjmnkimki
+                                    flex: 4,
                                     child: pw.Container(
-                                        child: pw.Text("5*${i}",
-                                            style: textStl12bold),
-                                        alignment: pw.Alignment.center)),
-                                pw.Expanded(
-                                    flex: 2,
-                                    child: pw.Container(
-                                      alignment: pw.Alignment.center,
-                                      child: pw.Text("100*${i}",
-                                          style: textStl12bold),
-                                    )),
-                                pw.Expanded(
-                                    flex: 2,
-                                    child: pw.Container(
-                                      alignment: pw.Alignment.centerRight,
-                                      child: pw.Text(5000.toStringAsFixed(2),
-                                          style: textStl12bold),
-                                    )),
-                              ]);
-                            },
-                          ),
-                        ),
-                        pw.Expanded(
-                          flex: 2,
-                          child: pw.Row(children: [
-                            pw.Expanded(flex: 8, child: pw.Text("")),
-                            pw.Expanded(
-                                flex: 2,
-                                child: pw.Column(children: [
-                                  pw.Flexible(
-                                    flex: 1,
-                                    child:
-                                        pw.Divider(height: 0.2, thickness: 0.5),
-                                  ),
-                                  pw.Expanded(
-                                      flex: 2,
-                                      child: pw.Container(
-                                          alignment: pw.Alignment.centerRight,
-                                          child: pw.Text("TOTAL",
-                                              style: textStl12bold2))),
-                                  pw.Expanded(
-                                      flex: 2,
-                                      child: pw.Container(
-                                          alignment: pw.Alignment.centerRight,
-                                          child: pw.Text(
-                                              5000.toStringAsFixed(2),
-                                              style: textStl12bold2))),
-                                ]))
-                          ]),
-                        )
-
-                        ///
-                      ]),
-                ),
+                                        decoration: pw.BoxDecoration(
+                                            border: pw.Border.all()),
+                                        child: pw.Column(
+                                            mainAxisAlignment: pw
+                                                .MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                pw.CrossAxisAlignment.start,
+                                            children: [
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      " Electronic Remittance",
+                                                      style: textStl12Line),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.SizedBox(height: 11),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Bank Name: IDFC FIRST BANK",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Account Number: 10041186185",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "IFSC Code: IDFB0040101",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "SWIFT Code: IDFBINBBMUM",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5)),
+                                              pw.Container(
+                                                  child: pw.Text(
+                                                      "Bank Address: Rohini, New Delhi-110085",
+                                                      style: textStl10),
+                                                  padding: pw.EdgeInsets.only(
+                                                      left: 5, bottom: 2)),
+                                            ]))),
+                              ])),
+                          pw.SizedBox(height: 5),
+                          pw.Column(
+                              mainAxisAlignment: pw.MainAxisAlignment.start,
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Row(
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.only(top: 5.0),
+                                        child: pw.Container(
+                                          decoration: pw.BoxDecoration(
+                                              borderRadius:
+                                                  pw.BorderRadius.circular(2.0),
+                                              color: PdfColors.black),
+                                          height: 3,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      pw.SizedBox(width: 10),
+                                      pw.Flexible(
+                                        flex: 2,
+                                        child: pw.Container(
+                                          child: pw.RichText(
+                                            text: pw.TextSpan(
+                                              text: "",
+                                              style: pw.TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                      pw.FontWeight.bold),
+                                              children: [
+                                                pw.TextSpan(
+                                                    text:
+                                                        "The services provided by JR Compliance are governed by our",
+                                                    style: pw.TextStyle(
+                                                      fontSize: 7,
+                                                    )),
+                                                pw.TextSpan(
+                                                    text:
+                                                        "Terms and conditions.",
+                                                    style: pw.TextStyle(
+                                                      decoration: pw
+                                                          .TextDecoration
+                                                          .underline,
+                                                      color: PdfColors.blue,
+                                                      fontSize:
+                                                          7, /*color:PdfColor.fromHex(Colors.blue)*/
+                                                    )),
+                                                pw.TextSpan(
+                                                  text:
+                                                      "In case you face difficulty in obtaining our Terms and conditions from our official website, contact your designated representative immediately to receive a copy of the same.",
+                                                  style: pw.TextStyle(
+                                                    fontSize: 7,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                pw.Row(
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.only(top: 5.0),
+                                        child: pw.Container(
+                                          decoration: pw.BoxDecoration(
+                                              borderRadius:
+                                                  pw.BorderRadius.circular(2.0),
+                                              color: PdfColors.black),
+                                          height: 3,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      pw.SizedBox(width: 10),
+                                      pw.Flexible(
+                                        flex: 2,
+                                        child: pw.Container(
+                                          child: pw.RichText(
+                                            text: pw.TextSpan(
+                                              text: "",
+                                              style: pw.TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                      pw.FontWeight.bold),
+                                              children: [
+                                                pw.TextSpan(
+                                                    text:
+                                                        "To know the information regarding purchase and billing.",
+                                                    style: pw.TextStyle(
+                                                      fontSize: 7,
+                                                    )),
+                                                pw.TextSpan(
+                                                    text:
+                                                        "visit https://www.jrcompliance.com/purchase-and-billing",
+                                                    style: pw.TextStyle(
+                                                      decoration: pw
+                                                          .TextDecoration
+                                                          .underline,
+                                                      color: PdfColors.blue,
+                                                      fontSize: 7,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                pw.Row(
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
+                                    children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.only(top: 5.0),
+                                        child: pw.Container(
+                                          decoration: pw.BoxDecoration(
+                                              borderRadius:
+                                                  pw.BorderRadius.circular(2.0),
+                                              color: PdfColors.black),
+                                          height: 3,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      pw.SizedBox(width: 10),
+                                      pw.Flexible(
+                                        flex: 2,
+                                        child: pw.Container(
+                                          child: pw.RichText(
+                                            text: pw.TextSpan(
+                                              text: "",
+                                              style: pw.TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                      pw.FontWeight.bold),
+                                              children: [
+                                                pw.TextSpan(
+                                                    text:
+                                                        "This invoice is due in accordance with the agreed credit terms.",
+                                                    style: pw.TextStyle(
+                                                      fontSize: 7,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                              ]),
+                          // pw.Footer(
+                          //   trailing: pw.Column(
+                          //       mainAxisAlignment: pw.MainAxisAlignment.start,
+                          //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          //       children: [
+                          //         pw.SizedBox(),
+                          //         pw.Padding(
+                          //           padding: pw.EdgeInsets.only(
+                          //               left: 400, top: 20, right: 20),
+                          //           child: pw.Column(
+                          //               mainAxisAlignment:
+                          //                   pw.MainAxisAlignment.center,
+                          //               children: [
+                          //                 pw.Text(
+                          //                     'JR' +
+                          //                         actualinid.toString() +
+                          //                         " | Page 1 of 1",
+                          //                     style: textStl10),
+                          //                 pw.Text("www.jrcompliance.com",
+                          //                     style: textStl10),
+                          //               ]),
+                          //         )
+                          //       ]),
+                          // ),
+                        ])),
                 pw.Container(
                     height: size.height - 70,
                     width: size.width - 100,
@@ -1563,11 +2183,9 @@ class PdfFMCSService {
                                   "Moreover, a copy of the signed purchase order is required before moving forward with other requirements of projects. With that, if a project will take place at premises of JR Compliance please make sure to provide sample disposition instructions.",
                               style: textStl12bold),
                           space2(),
-                          pw.Text(
-                              "By signing this proposal, you confirm that you have read and accepted our terms and conditions",
-                              style: textStl12bold),
-                          pw.Text(
-                              "to proceed with the work as outlined in this document.",
+                          pw.Paragraph(
+                              text:
+                                  "By signing this proposal, you confirm that you have read and accepted our terms and conditions to proceed with the work as outlined in this document.",
                               style: textStl12bold),
                           space2(),
                           pw.Flexible(
@@ -1607,6 +2225,12 @@ class PdfFMCSService {
                   flex: 1,
                   child: pw.Text(text.toString(), style: textStl8bold),
                 ));
+            //   pw.Row(children: [
+            //   pw.Column(children: [
+            //     pw.Row(children: [pw.Icon(pw.IconData(0xe126))])
+            //   ]),
+            //
+            // ]);
           }),
     );
     Uint8List bytes = await pdf.save();

@@ -18,7 +18,7 @@ class PdfProvider {
       Recievername,
       tbal,
       actualinid,
-      _gst,
+      gst,
       docid,
       activeid,
       gstAmount,
@@ -109,7 +109,7 @@ class PdfProvider {
                       children: [
                         pw.Text("To,", style: textStl12),
                         pw.Text("$address\n$pincode", style: textStl10),
-                        pw.Text("GSTNumber : " + _gst.toString(),
+                        pw.Text("GSTNumber : " + gst.toString(),
                             style: textStl10),
                         pw.Text(""),
                       ]),

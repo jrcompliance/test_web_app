@@ -462,25 +462,13 @@ class PdfISIService {
 
                         for (int i = 1; i <= 3; i++) space2(),
                         //   pw.Flexible(flex: 1,child: ),
-                        pw.Row(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Flexible(
-                                flex: 1,
-                                child: pw.Text(
-                                  "Quotation No:",
-                                  style: textStl12bold,
-                                ),
-                              ),
-                              pw.SizedBox(width: 10),
-                              pw.Flexible(
-                                flex: 1,
-                                child: pw.Text(
-                                  "487256484",
-                                  style: textStl12bold,
-                                ),
-                              ),
-                            ]),
+                        pw.Flexible(
+                          flex: 1,
+                          child: pw.Text(
+                            "Quotation No:487256484",
+                            style: textStl12bold,
+                          ),
+                        ),
                         for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
@@ -558,18 +546,18 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Hello,",
+                            "Hello Mr/Mrs ${cusname.toString()}",
                             style: textStl12bold,
                           ),
                         ),
-                        space(),
-                        pw.Flexible(
-                          flex: 1,
-                          child: pw.Text(
-                            "Mr/Mrs  ${cusname.toString()}",
-                            style: textStl12bold,
-                          ),
-                        ),
+                        // space(),
+                        // pw.Flexible(
+                        //   flex: 1,
+                        //   child: pw.Text(
+                        //     "",
+                        //     style: textStl12bold,
+                        //   ),
+                        // ),
                         space2(),
                         pw.RichText(
                             text: pw.TextSpan(children: [
@@ -1330,8 +1318,9 @@ class PdfISIService {
                         ),
                         pw.ConstrainedBox(
                           constraints: pw.BoxConstraints(
-                              minHeight: size.height * 0.5,
-                              maxHeight: size.height * 0.70),
+                              // minHeight: size.height * 0.5,
+                              // maxHeight: size.height * 0.70
+                              ),
                           child: pw.ListView.builder(
                             itemCount: 10,
                             itemBuilder: (_, i) {
@@ -1384,7 +1373,7 @@ class PdfISIService {
                                   pw.Flexible(
                                     flex: 1,
                                     child:
-                                        pw.Divider(height: 0.2, thickness: 0.5),
+                                        pw.Divider(height: 0.1, thickness: 0.5),
                                   ),
                                   pw.Expanded(
                                       flex: 2,
@@ -1392,6 +1381,11 @@ class PdfISIService {
                                           alignment: pw.Alignment.centerRight,
                                           child: pw.Text("TOTAL",
                                               style: textStl12bold2))),
+                                  pw.Flexible(
+                                    flex: 1,
+                                    child:
+                                        pw.Divider(height: 0.1, thickness: 0.5),
+                                  ),
                                   pw.Expanded(
                                       flex: 2,
                                       child: pw.Container(
@@ -1566,11 +1560,9 @@ class PdfISIService {
                                   "Moreover, a copy of the signed purchase order is required before moving forward with other requirements of projects. With that, if a project will take place at premises of JR Compliance please make sure to provide sample disposition instructions.",
                               style: textStl12bold),
                           space2(),
-                          pw.Text(
-                              "By signing this proposal, you confirm that you have read and accepted our terms and conditions",
-                              style: textStl12bold),
-                          pw.Text(
-                              "to proceed with the work as outlined in this document.",
+                          pw.Paragraph(
+                              text:
+                                  "By signing this proposal, you confirm that you have read and accepted our terms and conditions to proceed with the work as outlined in this document.",
                               style: textStl12bold),
                           space2(),
                           pw.Flexible(

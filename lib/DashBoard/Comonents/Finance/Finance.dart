@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
 import 'package:test_web_app/PdfFiles/GetCRSServicePdf.dart';
 import 'package:test_web_app/PdfFiles/GetFMCSServicePdf.dart';
@@ -45,6 +46,7 @@ class _FinanceState extends State<Finance> {
   bool isgst = false;
   var date1;
   var date2;
+  var invoiceid;
 
   bool isPreview = false;
   bool isServiceAdded = false;
@@ -63,7 +65,7 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _generatedateController = TextEditingController();
   final TextEditingController _selectedDateController = TextEditingController();
   final TextEditingController _duedatedateController = TextEditingController();
-  final TextEditingController _extrenalController = TextEditingController();
+  final TextEditingController _externalController = TextEditingController();
   double _gstamount = 0.00;
 
   var radioItem;
@@ -88,6 +90,7 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _gstController2 = TextEditingController();
   final TextEditingController _serviceSearchController2 =
       TextEditingController();
+  final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _tradenameController = TextEditingController();
   final TextEditingController _addressControoler = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
@@ -808,7 +811,7 @@ class _FinanceState extends State<Finance> {
   Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.76,
+      height: size.height * 0.78,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1332,7 +1335,7 @@ class _FinanceState extends State<Finance> {
                           Expanded(
                             flex: 4,
                             child: isSwitched1
-                                ? field(_extrenalController, "External Notes",
+                                ? field(_externalController, "External Notes",
                                     3, true, null, null, 200)
                                 : SizedBox(),
                           ),
@@ -1510,7 +1513,7 @@ class _FinanceState extends State<Finance> {
                         _generatedateController.text.isEmpty ||
                         _duedatedateController.text.isEmpty ||
                         _internalController.text.isEmpty ||
-                        _extrenalController.text.isEmpty) {
+                        _externalController.text.isEmpty) {
                       toastmessage.warningmessage(context, showmessage());
                     } else {
                       isPreview = true;
@@ -1651,24 +1654,25 @@ class _FinanceState extends State<Finance> {
                             : _gstController.text.toString();
                         setState(() {
                           PdfProvider.generatePdf(
-                              context,
-                              servicelist,
-                              cusname,
-                              tbal,
-                              inid,
-                              gstno,
-                              Idocid,
-                              activeid,
-                              selectedValue == "INR" ? _gstamount : 0.00,
-                              total,
-                              _generatedateController.text.toString(),
-                              _duedatedateController.text.toString(),
-                              selectedValue,
-                              cusID,
-                              _extrenalController.text,
-                              _internalController.text,
-                              _referenceController.text,
-                              selectedleadid);
+                            context,
+                            servicelist,
+                            cusname,
+                            tbal,
+                            inid,
+                            gstno,
+                            Idocid,
+                            activeid,
+                            selectedValue == "INR" ? _gstamount : 0.00,
+                            total,
+                            _generatedateController.text.toString(),
+                            _duedatedateController.text.toString(),
+                            selectedValue,
+                            cusID,
+                            _externalController.text,
+                            _internalController.text,
+                            _referenceController.text,
+                            selectedleadid,
+                          );
                           isPreview = false;
                           _isCreate = false;
                         });
@@ -2061,7 +2065,7 @@ class _FinanceState extends State<Finance> {
       return "Add the service descrption";
     } else if (_internalController.text.isEmpty) {
       return "Enter the InternalNote";
-    } else if (_extrenalController.text.isEmpty) {
+    } else if (_externalController.text.isEmpty) {
       return "Enter the ExternalNote";
     } else if (_generatedateController.text.isEmpty) {
       return "Select the Genarated Date";
@@ -2310,6 +2314,13 @@ class _FinanceState extends State<Finance> {
     } else if (activeStep == 1) {
       return Createinvoice(context);
     } else if (activeStep == 2) {
+      Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+          .fetchRecentInvoiceid()
+          .then((value) {
+        invoiceid = Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+            .actualinid
+            .toString();
+      });
       return serviceIntro(context);
     } else if (activeStep == 3) {
       return serviceWelcome(context);
@@ -2337,6 +2348,7 @@ class _FinanceState extends State<Finance> {
   Widget serviceWidget(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           height: size.height * 0.06,
@@ -2349,15 +2361,17 @@ class _FinanceState extends State<Finance> {
                 fit: FlexFit.tight,
                 flex: 2,
                 child: Container(
-                  height: size.height * 0.25,
+                  height: size.height * 0.3,
                   decoration: BoxDecoration(),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 100),
+                        padding: const EdgeInsets.all(8.0),
                         child: Container(
                           height: size.height * 0.08,
+                          width: size.width * 0.25,
                           child: Material(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
@@ -2401,6 +2415,36 @@ class _FinanceState extends State<Finance> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Container(
+                            height: size.width * 0.022,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                              color: fieldColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 0, top: 0),
+                              child: TextField(
+                                controller: _subjectController,
+                                style: TxtStls.fieldstyle,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Subject...",
+                                  hintStyle: TxtStls.fieldstyle,
+                                ),
+                                // onChanged: (value) {
+                                //   setState(() {
+                                //     _subjectController.text = value;
+                                //   });
+                                // }
+                              ),
+                            )),
+                      ),
                       Container(
                         height: size.height * 0.12,
                         child: Column(
@@ -2436,6 +2480,7 @@ class _FinanceState extends State<Finance> {
                                           child: TextField(
                                               controller:
                                                   _serviceSearchController2,
+                                              style: TxtStls.fieldstyle,
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText: "Search...",
@@ -2471,9 +2516,12 @@ class _FinanceState extends State<Finance> {
                                       onPressed: () {},
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Add",
-                                          style: TxtStls.fieldstyle1,
+                                        child: InkWell(
+                                          child: Text(
+                                            "Add",
+                                            style: TxtStls.fieldstyle1,
+                                          ),
+                                          onTap: () {},
                                         ),
                                       ),
                                     ),
@@ -2569,7 +2617,7 @@ class _FinanceState extends State<Finance> {
                       Row(
                         children: [
                           Container(
-                            width: size.width * 0.15,
+                            width: size.width * 0.132,
                             decoration: BoxDecoration(
                               color: fieldColor,
                               borderRadius: BorderRadius.only(
@@ -2640,78 +2688,84 @@ class _FinanceState extends State<Finance> {
             controller: sc,
             itemCount: allServices.length,
             itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
+              return InkWell(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
                   ),
-                  height: size.width * 0.025,
-                  padding: EdgeInsets.only(left: 50, right: 50),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: Text(
-                              "${index + 1}",
-                              style: TxtStls.fieldstyle,
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: productWidget(
-                              "assets/Images/pending.png",
-                              allServices[index].name,
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color:
+                          index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
+                    ),
+                    height: size.width * 0.025,
+                    padding: EdgeInsets.only(left: 50, right: 50),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Flexible(
+                              flex: 1,
                               child: Text(
-                                "\$56468",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            )),
-                        Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: Text(
-                                "GST %",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: Text(
-                                "2 pieces",
+                                "${index + 1}",
                                 style: TxtStls.fieldstyle,
                               )),
-                        ),
-                        Flexible(
+                          Flexible(
                             flex: 1,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 0, right: 30),
-                              child: SACCode(
-                                "894456",
+                              padding: EdgeInsets.only(left: 10),
+                              child: productWidget(
+                                "assets/Images/pending.png",
+                                allServices[index].name,
                               ),
-                            )),
-                      ],
+                            ),
+                          ),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 50),
+                                child: Text(
+                                  "\$56468",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              )),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: Text(
+                                  "GST %",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              )),
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: Text(
+                                  "2 pieces",
+                                  style: TxtStls.fieldstyle,
+                                )),
+                          ),
+                          Flexible(
+                              flex: 1,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 0, right: 30),
+                                child: SACCode(
+                                  "894456",
+                                ),
+                              )),
+                        ],
+                      ),
                     ),
                   ),
                 ),
+                onTap: () {
+                  print(allServices[index].name);
+                },
               );
             },
           ),
@@ -2823,6 +2877,10 @@ class _FinanceState extends State<Finance> {
     return Center(
       child: TextButton(
           onPressed: () async {
+            var gstno = _gstController.text == null
+                ? ""
+                : _gstController.text.toString();
+            print(invoiceid.toString());
             int? isiserviceid;
             Provider.of<RecentFetchCXIDProvider>(context, listen: false)
                 .fetchISIServiceId()
@@ -2847,12 +2905,31 @@ class _FinanceState extends State<Finance> {
                   Provider.of<RecentFetchCXIDProvider>(context, listen: false)
                       .crsserviceid;
             });
-            Future.delayed(Duration(seconds: 2)).then((value) async {
-              await PdfISIService.generatePdf(context, isiserviceid!);
-            });
             // Future.delayed(Duration(seconds: 2)).then((value) async {
-            //   await PdfFMCSService.generatePdf(context, fmcsserviceid!);
+            //   await PdfISIService.generatePdf(context, isiserviceid!);
             // });
+            Future.delayed(Duration(seconds: 2)).then((value) async {
+              await PdfFMCSService.generatePdf(
+                  context: context,
+                  cusname: cusname.toString(),
+                  tbal: tbal,
+                  total: total,
+                  gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                  selectedValue: selectedValue,
+                  fmcsserviceid: fmcsserviceid!,
+                  Servicelist: servicelist,
+                  activeid: activeid.toString(),
+                  actualinid: invoiceid.toString(),
+                  cxID: cusID.toString(),
+                  docid: Idocid.toString(),
+                  duedate: _duedatedateController.text,
+                  externalNotes: _externalController.text,
+                  gstNo: gstno,
+                  internalNotes: _internalController.text.toString(),
+                  invoicedate: _generatedateController.text.toString(),
+                  LeadId: leadID.toString(),
+                  referenceID: _referenceController.text);
+            });
             // Future.delayed(Duration(seconds: 2)).then((value) async {
             //   await PdfCRSService.generatePdf(context, crsserviceid!);
             // });

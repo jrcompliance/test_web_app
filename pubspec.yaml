@@ -173,6 +173,7 @@ flutter:
     - assets/Images/send.png
     - assets/Images/invoicebg.png
     - assets/Images/servicebg2.png
+    - assets/Images/servicebg3.png
     - assets/Images/Authorized_Sign.png
     - assets/Images/disputed.png
     - assets/Images/received.png
