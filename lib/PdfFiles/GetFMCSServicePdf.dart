@@ -189,6 +189,7 @@ class PdfFMCSService {
               border: pw.Border.all(color: PdfColors.grey300)),
           child: pw.Row(children: [
             pw.Container(
+                //
                 height: 80,
                 width: 80,
                 decoration: const pw.BoxDecoration(
