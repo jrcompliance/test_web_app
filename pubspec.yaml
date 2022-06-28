@@ -174,9 +174,14 @@ flutter:
     - assets/Images/invoicebg.png
     - assets/Images/servicebg2.png
     - assets/Images/servicebg3.png
+    - assets/Images/servicebg4.png
     - assets/Images/Authorized_Sign.png
     - assets/Images/disputed.png
     - assets/Images/received.png
+    - assets/Images/ceoimage.png
+    - assets/Images/vpimage.jpg
+    - assets/Images/bde2image.jpg
+    - assets/Images/bdeimage.jpg
     - assets/Images/pending.png
     - assets/Images/cancelled.png
     - assets/Images/innerCircle.png

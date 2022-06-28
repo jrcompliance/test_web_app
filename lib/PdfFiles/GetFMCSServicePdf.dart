@@ -11,26 +11,27 @@ import 'package:printing/printing%202.dart';
 import 'package:test_web_app/Models/UserModels.dart';
 
 class PdfFMCSService {
-  static generatePdf(
-      {required BuildContext context,
-      required int fmcsserviceid,
-      required List Servicelist,
-      required String cusname,
-      required double tbal,
-      required String actualinid,
-      required String gstNo,
-      required String docid,
-      required String activeid,
-      required double gstAmount,
-      required double total,
-      required String invoicedate,
-      required String duedate,
-      required String selectedValue,
-      required String cxID,
-      required String externalNotes,
-      required String internalNotes,
-      required String referenceID,
-      required String LeadId}) async {
+  static generatePdf({
+    required BuildContext context,
+    required int fmcsserviceid,
+    required List Servicelist,
+    required String cusname,
+    required double tbal,
+    required String actualinid,
+    required String gstNo,
+    required String docid,
+    required String activeid,
+    required double gstAmount,
+    required double total,
+    required String invoicedate,
+    required String duedate,
+    required String selectedValue,
+    required String cxID,
+    required String externalNotes,
+    required String internalNotes,
+    required String referenceID,
+    required String LeadId,
+  }) async {
     Size size = MediaQuery.of(context).size;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
@@ -38,6 +39,18 @@ class PdfFMCSService {
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
+        .buffer
+        .asUint8List();
+    final bdeimage = (await rootBundle.load("assets/Images/bdeimage.jpg"))
+        .buffer
+        .asUint8List();
+    final vpimage = (await rootBundle.load("assets/Images/vpimage.jpg"))
+        .buffer
+        .asUint8List();
+    final ceoimage = (await rootBundle.load("assets/Images/ceoimage.png"))
+        .buffer
+        .asUint8List();
+    final bde2image = (await rootBundle.load("assets/Images/bde2image.jpg"))
         .buffer
         .asUint8List();
     final fmcslogo = (await rootBundle.load("assets/Logos/FMCS_logo3.png"))
@@ -52,8 +65,13 @@ class PdfFMCSService {
     final latoitalic = await PdfGoogleFonts.latoLightItalic();
 
     //  final fonts = await PdfStandardFont(PdfFontFamily.helvetica, 50);
-    final textStl12 =
-        pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold);
+    final textStl12 = pw.TextStyle(
+        fontSize: 12,
+        fontWeight: pw.FontWeight.bold,
+        letterSpacing: 1.0,
+        lineSpacing: 2.0,
+        color: PdfColors.black,
+        font: latobold);
     final textStl12Line = pw.TextStyle(
         fontSize: 12,
         fontWeight: pw.FontWeight.bold,
@@ -90,8 +108,13 @@ class PdfFMCSService {
         lineSpacing: 2.0,
         color: PdfColors.black,
         font: latobold2);
-    final textStl10 =
-        pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold);
+    final textStl10 = pw.TextStyle(
+        fontSize: 10,
+        fontWeight: pw.FontWeight.bold,
+        letterSpacing: 1.0,
+        lineSpacing: 2.0,
+        color: PdfColors.black,
+        font: latobold);
 
     final textStl15bold = pw.TextStyle(
         // height: 1.5,
@@ -156,6 +179,45 @@ class PdfFMCSService {
     pw.VerticalDivider verticalDivider() {
       return pw.VerticalDivider(
           width: 1.0, thickness: 1.0, color: PdfColors.grey300);
+    }
+
+    pw.Container listTile(image, name, email, phone) {
+      return pw.Container(
+          height: size.height * 0.07,
+          decoration: pw.BoxDecoration(
+              borderRadius: pw.BorderRadius.circular(20.0),
+              border: pw.Border.all(color: PdfColors.grey300)),
+          child: pw.Row(children: [
+            pw.Container(
+                height: 80,
+                width: 80,
+                decoration: const pw.BoxDecoration(
+                  borderRadius: pw.BorderRadius.only(
+                      topLeft: pw.Radius.circular(20.0),
+                      bottomLeft: pw.Radius.circular(20.0),
+                      topRight: pw.Radius.zero,
+                      bottomRight: pw.Radius.zero),
+                ),
+                child: pw.Image(pw.MemoryImage(image), fit: pw.BoxFit.fill)),
+            pw.SizedBox(width: 10),
+            pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Flexible(
+                      flex: 1, child: pw.Text(name, style: textStl12bold)),
+                  pw.SizedBox(height: 10),
+                  pw.Flexible(
+                      flex: 1, child: pw.Text(email, style: textStl12bold)),
+                  pw.SizedBox(height: 10),
+                  pw.Flexible(
+                      flex: 1, child: pw.Text(phone, style: textStl12bold)),
+                  pw.SizedBox(height: 10),
+                ])
+          ]));
+    }
+
+    pw.Divider divider() {
+      return pw.Divider(color: PdfColors.grey300, height: 2.5, thickness: 1.0);
     }
 
     pw.Row steps(step, text) {
@@ -254,65 +316,6 @@ class PdfFMCSService {
     pw.Flexible bisservicerow(servicetext1, servicetext2, image1, desc1,
         [desc2, desc3, desc4, desc5]) {
       return pw.Flexible(
-          flex: 3,
-          child: pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.start,
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Flexible(
-                  flex: 1,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.only(top: 20.0),
-                    child: pw.Container(
-                        // color: PdfColors.pink,
-                        height: 80,
-                        width: 150,
-                        child: pw.Image(pw.MemoryImage(image1),
-                            fit: pw.BoxFit.cover)),
-                  ),
-                ),
-                pw.Flexible(
-                  flex: 2,
-                  child: pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Flexible(
-                          flex: 1,
-                          child: pw.RichText(
-                              softWrap: true,
-                              text: pw.TextSpan(children: [
-                                pw.TextSpan(
-                                    text: servicetext1,
-                                    style: textStl15boldblu),
-                                pw.TextSpan(text: " ", style: textStl15bold),
-                                pw.TextSpan(
-                                    text: servicetext2, style: textStl15bold),
-                              ])),
-                        ),
-                        pw.SizedBox(height: 10),
-                        pw.Flexible(
-                          flex: 2,
-                          child: pw.RichText(
-                              softWrap: true,
-                              text: pw.TextSpan(children: [
-                                pw.TextSpan(text: desc1, style: textStl12bold),
-                                pw.TextSpan(
-                                    text: desc2, style: textStl12Italic),
-                                pw.TextSpan(text: desc3, style: textStl12bold),
-                                pw.TextSpan(
-                                    text: desc4, style: textStl12Italic),
-                                pw.TextSpan(text: desc5, style: textStl12bold),
-                              ])),
-                        )
-                      ]),
-                )
-              ]));
-    }
-
-    pw.Flexible servicerow(servicetext1, servicetext2, image1, desc1,
-        [desc2, desc3, desc4, desc5]) {
-      return pw.Flexible(
           flex: 5,
           child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.start,
@@ -369,8 +372,67 @@ class PdfFMCSService {
               ]));
     }
 
+    pw.Flexible servicerow(servicetext1, servicetext2, image1, desc1,
+        [desc2, desc3, desc4, desc5]) {
+      return pw.Flexible(
+          flex: 6,
+          child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Flexible(
+                  flex: 1,
+                  child: pw.Padding(
+                    padding: pw.EdgeInsets.only(top: 20.0),
+                    child: pw.Container(
+                        // color: PdfColors.pink,
+                        height: 80,
+                        width: 150,
+                        child: pw.Image(pw.MemoryImage(image1),
+                            fit: pw.BoxFit.cover)),
+                  ),
+                ),
+                pw.Flexible(
+                  flex: 5,
+                  child: pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Flexible(
+                          flex: 1,
+                          child: pw.RichText(
+                              softWrap: true,
+                              text: pw.TextSpan(children: [
+                                pw.TextSpan(
+                                    text: servicetext1,
+                                    style: textStl15boldblu),
+                                pw.TextSpan(text: " ", style: textStl15bold),
+                                pw.TextSpan(
+                                    text: servicetext2, style: textStl15bold),
+                              ])),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Flexible(
+                          flex: 4,
+                          child: pw.RichText(
+                              softWrap: true,
+                              text: pw.TextSpan(children: [
+                                pw.TextSpan(text: desc1, style: textStl12bold),
+                                pw.TextSpan(
+                                    text: desc2, style: textStl12Italic),
+                                pw.TextSpan(text: desc3, style: textStl12bold),
+                                pw.TextSpan(
+                                    text: desc4, style: textStl12Italic),
+                                pw.TextSpan(text: desc5, style: textStl12bold),
+                              ])),
+                        )
+                      ]),
+                )
+              ]));
+    }
+
     String? myUrl;
-    final bgImage = (await rootBundle.load("assets/Images/servicebg3.png"))
+    final bgImage = (await rootBundle.load("assets/Images/servicebg4.png"))
         .buffer
         .asUint8List();
     final pageTheme = pw.PageTheme(
@@ -423,7 +485,6 @@ class PdfFMCSService {
                           ),
                         ),
                         space(),
-
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -431,7 +492,7 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
-
+                        space(),
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -440,7 +501,6 @@ class PdfFMCSService {
                           ),
                         ),
                         space(),
-
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -449,7 +509,6 @@ class PdfFMCSService {
                           ),
                         ),
                         space(),
-
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -458,7 +517,6 @@ class PdfFMCSService {
                           ),
                         ),
                         space(),
-
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -467,7 +525,6 @@ class PdfFMCSService {
                           ),
                         ),
                         space(),
-
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
@@ -475,7 +532,6 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
-
                         for (int i = 1; i <= 2; i++) space2(),
                         pw.Flexible(
                           flex: 1,
@@ -489,7 +545,7 @@ class PdfFMCSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Date : ${DateFormat('dd MMMM ,yyyy').format(DateTime.now())}"
+                            "Date: ${DateFormat('dd MMMM ,yyyy').format(DateTime.now())}"
                                 .toUpperCase(),
                             style: textStl18bold,
                           ),
@@ -516,7 +572,7 @@ class PdfFMCSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Prepared By : Mr.Tarun Sadana",
+                            "Prepared By: Mr.Tarun Sadana",
                             style: textStl12bold,
                           ),
                         ),
@@ -580,7 +636,7 @@ class PdfFMCSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Hello Mr/Mrs ${cusname.toString()}",
+                            "Hello ${cusname.toString()}",
                             style: textStl12bold,
                           ),
                         ),
@@ -957,6 +1013,8 @@ class PdfFMCSService {
                                                 child: pw.Text("(IS) No :${""}",
                                                     style: textStl15bold)),
                                           ])),
+                                  verticalDivider(),
+                                  pw.SizedBox(width: 10),
                                   pw.Expanded(
                                       flex: 1,
                                       child: pw.Column(
@@ -981,18 +1039,27 @@ class PdfFMCSService {
                                                     style: textStl15bold)),
                                           ])),
                                 ])),
-                        space4(),
+                        space3(),
+                        pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Flexible(
+                                  flex: 1,
+                                  child: pw.Text("Quotation",
+                                      style: textStl12bold)),
+                              pw.SizedBox(width: 10),
+                              pw.Flexible(
+                                  flex: 1,
+                                  child: pw.Text("487256484",
+                                      style: textStl18bold)),
+                            ]),
+                        space3(),
                         pw.Flexible(
                             flex: 1,
-                            child: pw.Text("3771PRO-003771",
-                                style: textStl18bold)),
-                        for (int i = 1; i <= 2; i++) space4(),
-                        pw.Flexible(
-                            flex: 1,
-                            child: pw.Text("Details:", style: textStl15bold)),
+                            child: pw.Text("Details:", style: textStl18bold)),
                         space2(),
                         pw.Container(
-                            height: size.height * 0.2,
+                            height: size.height * 0.26,
                             decoration: pw.BoxDecoration(
                               borderRadius: pw.BorderRadius.circular(0.0),
                               border: pw.Border.all(color: PdfColors.grey300),
@@ -1001,7 +1068,8 @@ class PdfFMCSService {
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
                                   pw.Padding(
-                                    padding: pw.EdgeInsets.only(left: 5.0),
+                                    padding:
+                                        pw.EdgeInsets.only(left: 5.0, top: 20),
                                     child: pw.Expanded(
                                         flex: 2,
                                         child: pw.Text("Prepared For",
@@ -1017,8 +1085,8 @@ class PdfFMCSService {
                                               pw.CrossAxisAlignment.start,
                                           children: [
                                             pw.Padding(
-                                              padding:
-                                                  pw.EdgeInsets.only(left: 5.0),
+                                              padding: pw.EdgeInsets.only(
+                                                  left: 5.0, top: 20),
                                               child: pw.Flexible(
                                                   flex: 1,
                                                   child: pw.Text(
@@ -1075,7 +1143,8 @@ class PdfFMCSService {
                                           ])),
                                   verticalDivider(),
                                   pw.Padding(
-                                    padding: pw.EdgeInsets.only(left: 5.0),
+                                    padding:
+                                        pw.EdgeInsets.only(left: 5.0, top: 20),
                                     child: pw.Expanded(
                                         flex: 1,
                                         child: pw.Text("Issued By",
@@ -1091,8 +1160,8 @@ class PdfFMCSService {
                                               pw.CrossAxisAlignment.start,
                                           children: [
                                             pw.Padding(
-                                              padding:
-                                                  pw.EdgeInsets.only(left: 5),
+                                              padding: pw.EdgeInsets.only(
+                                                  left: 5.0, top: 20),
                                               child: pw.Flexible(
                                                   flex: 2,
                                                   child: pw.Text(
@@ -1170,187 +1239,201 @@ class PdfFMCSService {
                                             ),
                                           ])),
                                 ])),
-                        for (int i = 1; i <= 2; i++) space4(),
+                        space3(),
                         pw.Flexible(
                             flex: 1,
                             child: pw.Text("Project Escalation Levels",
-                                style: textStl12bold)),
+                                style: textStl15bold)),
                         space3(),
-                        pw.Container(
-                          height: size.height * 0.2,
-                          child: pw.Table(
-                              border: pw.TableBorder(
-                                  left: pw.BorderSide(color: PdfColors.grey300),
-                                  right:
-                                      pw.BorderSide(color: PdfColors.grey300),
-                                  top: pw.BorderSide(color: PdfColors.grey300),
-                                  bottom:
-                                      pw.BorderSide(color: PdfColors.grey300),
-                                  horizontalInside:
-                                      pw.BorderSide(color: PdfColors.grey300),
-                                  verticalInside:
-                                      pw.BorderSide(color: PdfColors.grey300)),
-                              children: [
-                                pw.TableRow(
-                                    // This is the third row for the table
-                                    children: [
-                                      pw.Column(
-                                        crossAxisAlignment:
-                                            pw.CrossAxisAlignment.start,
-                                        children: [
-                                          pw.Padding(
-                                            padding: pw.EdgeInsets.only(
-                                                left: 5.0, top: 5.0),
-                                            child: pw.Text(
-                                              "BDE - Mr.Tarun Sadana",
-                                              style: textStl12bold,
-                                            ),
-                                          ),
-                                          pw.Text(""),
-                                        ],
-                                      ),
-                                      pw.Column(
-                                        crossAxisAlignment:
-                                            pw.CrossAxisAlignment.start,
-                                        children: [
-                                          pw.Padding(
-                                            padding: pw.EdgeInsets.only(
-                                                left: 5.0, top: 5.0),
-                                            child: pw.Column(
-                                                crossAxisAlignment:
-                                                    pw.CrossAxisAlignment.start,
-                                                children: [
-                                                  pw.Text(
-                                                    "Primary Level",
-                                                    style: textStl12bold,
-                                                  ),
-                                                  pw.Text(
-                                                      "tarun@jrcompliance.com",
-                                                      style: textStl12bold),
-                                                ]),
-                                          ),
-                                        ],
-                                      ),
-                                      pw.Padding(
-                                        padding: pw.EdgeInsets.all(4),
-                                        child: pw.Column(
-                                          crossAxisAlignment:
-                                              pw.CrossAxisAlignment.start,
-                                          children: [
-                                            pw.Column(
-                                                crossAxisAlignment:
-                                                    pw.CrossAxisAlignment.start,
-                                                children: [
-                                                  pw.Text(
-                                                    "",
-                                                    style: textStl12bold,
-                                                  ),
-                                                  pw.Padding(
-                                                    padding: pw.EdgeInsets.only(
-                                                        left: 5.0, top: 5.0),
-                                                    child: pw.Text(
-                                                        "+91 9599550680",
-                                                        style: textStl12bold),
-                                                  ),
-                                                ]),
-                                          ],
-                                        ),
-                                      ),
-                                    ]),
-                                pw.TableRow(children: [
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Padding(
-                                          padding: pw.EdgeInsets.only(
-                                              left: 5.0, top: 5.0),
-                                          child: pw.Text(
-                                            "VP - Mr.Lalit Gupta",
-                                            style: textStl12bold,
-                                          ),
-                                        ),
-                                        pw.Text("", style: textStl12bold),
-                                      ]),
-                                  pw.Padding(
-                                    padding:
-                                        pw.EdgeInsets.only(left: 5.0, top: 5.0),
-                                    child: pw.Column(
-                                        crossAxisAlignment:
-                                            pw.CrossAxisAlignment.start,
-                                        children: [
-                                          pw.Text(
-                                            "Priority",
-                                            style: textStl12bold,
-                                          ),
-                                          pw.Text("lalit@jrcompliance.com",
-                                              style: textStl12bold),
-                                        ]),
-                                  ),
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Text(
-                                          "",
-                                          style: textStl12bold,
-                                        ),
-                                        pw.Padding(
-                                          padding: pw.EdgeInsets.only(
-                                              left: 5.0, top: 5.0),
-                                          child: pw.Text("+91 9873060689",
-                                              style: textStl12bold),
-                                        ),
-                                      ]),
-                                ]),
-                                pw.TableRow(children: [
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Padding(
-                                          padding: pw.EdgeInsets.only(
-                                              left: 5.0, top: 5.0, bottom: 5.0),
-                                          child: pw.Text(
-                                            "CEO - Mr.Rishikesh Mishra",
-                                            style: textStl12bold,
-                                          ),
-                                        ),
-                                        pw.Text("", style: textStl12bold),
-                                      ]),
-                                  pw.Padding(
-                                    padding: pw.EdgeInsets.only(
-                                        left: 5.0, top: 5.0, bottom: 5.0),
-                                    child: pw.Column(
-                                        crossAxisAlignment:
-                                            pw.CrossAxisAlignment.start,
-                                        children: [
-                                          pw.Text(
-                                            "Urgent",
-                                            style: textStl12bold,
-                                          ),
-                                          pw.Text("rishi@jrcompliance.com",
-                                              style: textStl12bold),
-                                        ]),
-                                  ),
-                                  pw.Column(
-                                      crossAxisAlignment:
-                                          pw.CrossAxisAlignment.start,
-                                      children: [
-                                        pw.Text(
-                                          "",
-                                          style: textStl12bold,
-                                        ),
-                                        pw.Padding(
-                                          padding: pw.EdgeInsets.only(
-                                              left: 5.0, top: 5.0, bottom: 5.0),
-                                          child: pw.Text("+91 9266450125",
-                                              style: textStl12bold),
-                                        ),
-                                      ]),
-                                ]),
-                              ]),
-                        ),
+                        listTile(bdeimage, "Mr.Tarun Sadana - BDE",
+                            "tarun@jrcompliance.com", "+91 9599550680"),
+                        space(),
+                        listTile(vpimage, "Mr.Lalit Gupta - VP",
+                            "lalit@jrcompliance.com", "+91 9873060689"),
+                        space(),
+                        listTile(ceoimage, "Mr.Rishikesh Mishra - CEO",
+                            "rishi@jrcompliance.com", "+91 9266450125"),
+                        space(),
+                        // pw.Container(
+                        //   height: size.height * 0.2,
+                        //   child: pw.Table(
+                        //       border: pw.TableBorder(
+                        //           left: pw.BorderSide(color: PdfColors.grey300),
+                        //           right:
+                        //               pw.BorderSide(color: PdfColors.grey300),
+                        //           top: pw.BorderSide(color: PdfColors.grey300),
+                        //           bottom:
+                        //               pw.BorderSide(color: PdfColors.grey300),
+                        //           horizontalInside:
+                        //               pw.BorderSide(color: PdfColors.grey300),
+                        //           verticalInside:
+                        //               pw.BorderSide(color: PdfColors.grey300)),
+                        //       children: [
+                        //         pw.TableRow(
+                        //             // This is the third row for the table
+                        //             children: [
+                        //               pw.Column(
+                        //                 crossAxisAlignment:
+                        //                     pw.CrossAxisAlignment.start,
+                        //                 children: [
+                        //                   pw.Padding(
+                        //                     padding: pw.EdgeInsets.only(
+                        //                         left: 5.0, top: 5.0),
+                        //                     child: pw.Text(
+                        //                       "BDE - Mr.Tarun Sadana",
+                        //                       style: textStl12bold,
+                        //                     ),
+                        //                   ),
+                        //                   pw.Text(""),
+                        //                 ],
+                        //               ),
+                        //               pw.Column(
+                        //                 crossAxisAlignment:
+                        //                     pw.CrossAxisAlignment.start,
+                        //                 children: [
+                        //                   pw.Padding(
+                        //                     padding: pw.EdgeInsets.only(
+                        //                         left: 5.0,
+                        //                         top: 5.0,
+                        //                         bottom: 5.0),
+                        //                     child: pw.Column(
+                        //                         crossAxisAlignment:
+                        //                             pw.CrossAxisAlignment.start,
+                        //                         children: [
+                        //                           pw.Text(
+                        //                             "Primary Level",
+                        //                             style: textStl12bold,
+                        //                           ),
+                        //                           pw.Text(
+                        //                               "tarun@jrcompliance.com",
+                        //                               style: textStl12bold),
+                        //                         ]),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //               pw.Padding(
+                        //                 padding: pw.EdgeInsets.all(4),
+                        //                 child: pw.Column(
+                        //                   crossAxisAlignment:
+                        //                       pw.CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     pw.Column(
+                        //                         crossAxisAlignment:
+                        //                             pw.CrossAxisAlignment.start,
+                        //                         children: [
+                        //                           pw.Text(
+                        //                             "",
+                        //                             style: textStl12bold,
+                        //                           ),
+                        //                           pw.Padding(
+                        //                             padding: pw.EdgeInsets.only(
+                        //                                 left: 5.0, top: 5.0),
+                        //                             child: pw.Text(
+                        //                                 "+91 9599550680",
+                        //                                 style: textStl12bold),
+                        //                           ),
+                        //                         ]),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //             ]),
+                        //         pw.TableRow(children: [
+                        //           pw.Column(
+                        //               crossAxisAlignment:
+                        //                   pw.CrossAxisAlignment.start,
+                        //               children: [
+                        //                 pw.Padding(
+                        //                   padding: pw.EdgeInsets.only(
+                        //                       left: 5.0, top: 5.0),
+                        //                   child: pw.Text(
+                        //                     "VP - Mr.Lalit Gupta",
+                        //                     style: textStl12bold,
+                        //                   ),
+                        //                 ),
+                        //                 pw.Text("", style: textStl12bold),
+                        //               ]),
+                        //           pw.Padding(
+                        //             padding: pw.EdgeInsets.only(
+                        //                 left: 5.0, top: 5.0, bottom: 5.0),
+                        //             child: pw.Column(
+                        //                 crossAxisAlignment:
+                        //                     pw.CrossAxisAlignment.start,
+                        //                 children: [
+                        //                   pw.Text(
+                        //                     "Priority",
+                        //                     style: textStl12bold,
+                        //                   ),
+                        //                   pw.Text("lalit@jrcompliance.com",
+                        //                       style: textStl12bold),
+                        //                 ]),
+                        //           ),
+                        //           pw.Column(
+                        //               crossAxisAlignment:
+                        //                   pw.CrossAxisAlignment.start,
+                        //               children: [
+                        //                 pw.Text(
+                        //                   "",
+                        //                   style: textStl12bold,
+                        //                 ),
+                        //                 pw.Padding(
+                        //                   padding: pw.EdgeInsets.only(
+                        //                       left: 5.0, top: 5.0),
+                        //                   child: pw.Text("+91 9873060689",
+                        //                       style: textStl12bold),
+                        //                 ),
+                        //               ]),
+                        //         ]),
+                        //         pw.TableRow(children: [
+                        //           pw.Column(
+                        //               crossAxisAlignment:
+                        //                   pw.CrossAxisAlignment.start,
+                        //               children: [
+                        //                 pw.Padding(
+                        //                   padding: pw.EdgeInsets.only(
+                        //                       left: 5.0, top: 5.0, bottom: 5.0),
+                        //                   child: pw.Text(
+                        //                     "CEO - Mr.Rishikesh Mishra",
+                        //                     style: textStl12bold,
+                        //                   ),
+                        //                 ),
+                        //                 pw.Text("", style: textStl12bold),
+                        //               ]),
+                        //           pw.Padding(
+                        //             padding: pw.EdgeInsets.only(
+                        //               left: 5.0,
+                        //               top: 5.0,
+                        //               bottom: 5.0,
+                        //             ),
+                        //             child: pw.Column(
+                        //                 crossAxisAlignment:
+                        //                     pw.CrossAxisAlignment.start,
+                        //                 children: [
+                        //                   pw.Text(
+                        //                     "Urgent",
+                        //                     style: textStl12bold,
+                        //                   ),
+                        //                   pw.Text("rishi@jrcompliance.com",
+                        //                       style: textStl12bold),
+                        //                 ]),
+                        //           ),
+                        //           pw.Column(
+                        //               crossAxisAlignment:
+                        //                   pw.CrossAxisAlignment.start,
+                        //               children: [
+                        //                 pw.Text(
+                        //                   "",
+                        //                   style: textStl12bold,
+                        //                 ),
+                        //                 pw.Padding(
+                        //                   padding: pw.EdgeInsets.only(
+                        //                       left: 5.0, top: 5.0, bottom: 5.0),
+                        //                   child: pw.Text("+91 9266450125",
+                        //                       style: textStl12bold),
+                        //                 ),
+                        //               ]),
+                        //         ]),
+                        //       ]),
+                        // ),
                       ]),
                 ),
                 pw.Container(
@@ -1362,33 +1445,42 @@ class PdfFMCSService {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         space2(),
-                        pw.Flexible(
-                            flex: 1,
-                            child:
-                                pw.Text("Scope of Work", style: textStl15bold)),
+                        pw.Align(
+                          alignment: pw.Alignment.topCenter,
+                          child: pw.Flexible(
+                              flex: 1,
+                              child:
+                                  pw.Text("Scope of Work", style: textStl25)),
+                        ),
                         space3(),
                         rowWidget2(
                           "We assist you to know whether a product falls under the purview of concerned authority.",
                         ),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
-                        space3(),
+                        space4(),
                         rowWidget2(
                             "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
-                        space3(),
+                        space4(),
+                        rowWidget2(
+                            "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
+                        space4(),
+                        rowWidget2(
+                            "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
+                        space4(),
                         rowWidget2(
                             "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
                       ]),
@@ -1407,7 +1499,7 @@ class PdfFMCSService {
                                 alignment: pw.Alignment.topCenter,
                                 child: pw.Text(
                                   "Tax Invoice",
-                                  style: textStl15bold,
+                                  style: textStl25,
                                 )),
                           ),
                           pw.Row(
@@ -1742,7 +1834,7 @@ class PdfFMCSService {
                                                   "For JR Compliance and Testing Labs",
                                                   style: textStl12Line),
                                               padding: pw.EdgeInsets.only(
-                                                  left: 5, bottom: 7),
+                                                  left: 5, bottom: 22),
                                             ),
                                             pw.SizedBox(
                                                 height: 50,
@@ -1776,7 +1868,7 @@ class PdfFMCSService {
                                                       style: textStl12Line),
                                                   padding: pw.EdgeInsets.only(
                                                       left: 5)),
-                                              pw.SizedBox(height: 47),
+                                              pw.SizedBox(height: 62),
                                               pw.Container(
                                                   child: pw.Text(
                                                       "Currency : ${selectedValue}",
@@ -1814,7 +1906,7 @@ class PdfFMCSService {
                                                       style: textStl12Line),
                                                   padding: pw.EdgeInsets.only(
                                                       left: 5)),
-                                              pw.SizedBox(height: 11),
+                                              pw.SizedBox(height: 9),
                                               pw.Container(
                                                   child: pw.Text(
                                                       "Bank Name: IDFC FIRST BANK",
@@ -1998,30 +2090,6 @@ class PdfFMCSService {
                                       )
                                     ]),
                               ]),
-                          // pw.Footer(
-                          //   trailing: pw.Column(
-                          //       mainAxisAlignment: pw.MainAxisAlignment.start,
-                          //       crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          //       children: [
-                          //         pw.SizedBox(),
-                          //         pw.Padding(
-                          //           padding: pw.EdgeInsets.only(
-                          //               left: 400, top: 20, right: 20),
-                          //           child: pw.Column(
-                          //               mainAxisAlignment:
-                          //                   pw.MainAxisAlignment.center,
-                          //               children: [
-                          //                 pw.Text(
-                          //                     'JR' +
-                          //                         actualinid.toString() +
-                          //                         " | Page 1 of 1",
-                          //                     style: textStl10),
-                          //                 pw.Text("www.jrcompliance.com",
-                          //                     style: textStl10),
-                          //               ]),
-                          //         )
-                          //       ]),
-                          // ),
                         ])),
                 pw.Container(
                     height: size.height - 70,
@@ -2030,10 +2098,10 @@ class PdfFMCSService {
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
                           space2(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Payments Terms :",
-                                  style: textStl15bold)),
+                          pw.Align(
+                              alignment: pw.Alignment.topLeft,
+                              child: pw.Text("Payment Terms:",
+                                  style: textStl18bold)),
                           space2(),
                           pw.Padding(
                             padding: pw.EdgeInsets.only(right: 50),
@@ -2057,50 +2125,68 @@ class PdfFMCSService {
                                     pw.TableRow(
                                         // This is the third row for the table
                                         children: [
-                                          pw.Flexible(
-                                            flex: 1,
-                                            child: pw.Text(
-                                              "50% Advance",
-                                              style: textStl12bold,
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "50% Advance",
+                                                style: textStl12bold,
+                                              ),
                                             ),
                                           ),
-                                          pw.Flexible(
-                                            flex: 1,
-                                            child: pw.Text(
-                                              "At the time of starting up the project",
-                                              style: textStl12bold,
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "At the time of starting up the project",
+                                                style: textStl12bold,
+                                              ),
                                             ),
                                           ),
                                         ]),
                                     pw.TableRow(children: [
-                                      pw.Flexible(
-                                        flex: 1,
-                                        child: pw.Text(
-                                          "30%",
-                                          style: textStl12bold,
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "30%",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                       ),
-                                      pw.Flexible(
-                                        flex: 1,
-                                        child: pw.Text(
-                                          "At the time of sharing Draft report",
-                                          style: textStl12bold,
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "At the time of sharing Draft report",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                       ),
                                     ]),
                                     pw.TableRow(children: [
-                                      pw.Flexible(
-                                        flex: 1,
-                                        child: pw.Text(
-                                          "20%",
-                                          style: textStl12bold,
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "20%",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                       ),
-                                      pw.Flexible(
-                                        flex: 1,
-                                        child: pw.Text(
-                                          "At the time of Project Competition",
-                                          style: textStl12bold,
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "At the time of Project Competition",
+                                            style: textStl12bold,
+                                          ),
                                         ),
                                       ),
                                     ]),
@@ -2114,37 +2200,145 @@ class PdfFMCSService {
                                   r'''All Payments will be made to "JR Compliance & Testing Labs"''',
                                   style: textStl12bold)),
                           space(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Bank Name: IDFC FIRST BANK",
-                                  style: textStl12bold)),
-                          space(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Account Number: 10041186185",
-                                  style: textStl12bold)),
-                          space(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("IFSC Code: IDFB0040101",
-                                  style: textStl12bold)),
-                          space(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("SWIFT Code: IDFBINBBMUM",
-                                  style: textStl12bold)),
-                          space(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text(
-                                  "Bank Address: Rohini New Delhi-110085",
-                                  style: textStl12bold)),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.only(right: 50),
+                            child: pw.Container(
+                              height: size.height * 0.3,
+                              child: pw.Table(
+                                  border: pw.TableBorder(
+                                      left: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      right: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      top: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      bottom: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      horizontalInside: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      verticalInside: pw.BorderSide(
+                                          color: PdfColors.grey300)),
+                                  children: [
+                                    pw.TableRow(
+                                        // This is the third row for the table
+                                        children: [
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "Bank Name",
+                                                style: textStl12bold,
+                                              ),
+                                            ),
+                                          ),
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "IDFC FIRST BANK",
+                                                style: textStl12bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Account Number",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "10041186185",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "IFSC Code",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "IDFB0040101",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "SWIFT Code",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "IDFBINBBMUM",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Bank Address",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Rohini New Delhi-110085",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                  ]),
+                            ),
+                          ),
                           space3(),
-                          space2(),
                           pw.Flexible(
                               flex: 1,
                               child: pw.Text("Terms & Condition :",
-                                  style: textStl15bold)),
+                                  style: textStl18bold)),
                           space2(),
                           rowWidget2link(
                               "The services provided by JR Compliance are governed by our ",
@@ -2170,9 +2364,8 @@ class PdfFMCSService {
                               child: pw.Flexible(
                                   flex: 1,
                                   child: pw.Text("Proposal Authorization",
-                                      style: textStl15bold))),
-                          space2(),
-                          space2(),
+                                      style: textStl25))),
+                          space4(),
                           pw.Paragraph(
                               text:
                                   "To show your acceptance to the proposal, please have an Authorized Representative fill the required information in this document. Once done, please return the proposal and completed Sample Submission Form to the attention of your JR Compliance Representative.",
@@ -2188,25 +2381,118 @@ class PdfFMCSService {
                                   "By signing this proposal, you confirm that you have read and accepted our terms and conditions to proceed with the work as outlined in this document.",
                               style: textStl12bold),
                           space2(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Accepted by : ",
-                                  style: textStl12bold)),
-                          space2(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Name of Person: ",
-                                  style: textStl12bold)),
-                          space2(),
-                          pw.Flexible(
-                              flex: 1,
-                              child: pw.Text("Entity Name :",
-                                  style: textStl12bold)),
-                          space2(),
-                          pw.Flexible(
-                              flex: 1,
-                              child:
-                                  pw.Text("Signature :", style: textStl12bold)),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.only(right: 50),
+                            child: pw.Container(
+                              height: size.height * 0.25,
+                              child: pw.Table(
+                                  border: pw.TableBorder(
+                                      left: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      right: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      top: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      bottom: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      horizontalInside: pw.BorderSide(
+                                          color: PdfColors.grey300),
+                                      verticalInside: pw.BorderSide(
+                                          color: PdfColors.grey300)),
+                                  children: [
+                                    pw.TableRow(
+                                        // This is the third row for the table
+                                        children: [
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "Accepted by",
+                                                style: textStl12bold,
+                                              ),
+                                            ),
+                                          ),
+                                          pw.Padding(
+                                            padding: pw.EdgeInsets.all(8.0),
+                                            child: pw.Flexible(
+                                              flex: 1,
+                                              child: pw.Text(
+                                                "dynamic Accepted by",
+                                                style: textStl12bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Name of Person",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "dynamic Name of Person",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Entity Name",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "dynamic Entity Name",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                    pw.TableRow(children: [
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "Signature",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                      pw.Padding(
+                                        padding: pw.EdgeInsets.all(8.0),
+                                        child: pw.Flexible(
+                                          flex: 1,
+                                          child: pw.Text(
+                                            "dynamic Signature",
+                                            style: textStl12bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                  ]),
+                            ),
+                          ),
                           space3(),
                           pw.Flexible(
                               flex: 1,
