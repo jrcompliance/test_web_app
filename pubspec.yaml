@@ -178,10 +178,10 @@ flutter:
     - assets/Images/Authorized_Sign.png
     - assets/Images/disputed.png
     - assets/Images/received.png
-    - assets/Images/ceoimage.png
-    - assets/Images/vpimage.jpg
-    - assets/Images/bde2image.jpg
-    - assets/Images/bdeimage.jpg
+    - assets/Images/ceoimage3.png
+    - assets/Images/vpimage3.png
+    - assets/Images/bde2image3.png
+    - assets/Images/bdeimage3.png
     - assets/Images/pending.png
     - assets/Images/cancelled.png
     - assets/Images/innerCircle.png

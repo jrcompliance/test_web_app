@@ -42,6 +42,7 @@ import 'package:test_web_app/firebase_options.dart';
 import 'package:http/http.dart' as http;
 
 void main() async {
+  // developer phone number-8794562301
   WidgetsFlutterBinding.ensureInitialized();
   await GSheetsApi.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

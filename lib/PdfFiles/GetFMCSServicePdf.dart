@@ -41,16 +41,16 @@ class PdfFMCSService {
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
         .buffer
         .asUint8List();
-    final bdeimage = (await rootBundle.load("assets/Images/bdeimage.jpg"))
+    final bdeimage = (await rootBundle.load("assets/Images/bdeimage2.png"))
         .buffer
         .asUint8List();
-    final vpimage = (await rootBundle.load("assets/Images/vpimage.jpg"))
+    final vpimage = (await rootBundle.load("assets/Images/vpimage2.png"))
         .buffer
         .asUint8List();
-    final ceoimage = (await rootBundle.load("assets/Images/ceoimage.png"))
+    final ceoimage = (await rootBundle.load("assets/Images/ceoimage2.png"))
         .buffer
         .asUint8List();
-    final bde2image = (await rootBundle.load("assets/Images/bde2image.jpg"))
+    final bde2image = (await rootBundle.load("assets/Images/bde2image2.png"))
         .buffer
         .asUint8List();
     final fmcslogo = (await rootBundle.load("assets/Logos/FMCS_logo3.png"))
@@ -63,8 +63,6 @@ class PdfFMCSService {
     final latobold = await PdfGoogleFonts.latoRegular();
     final latobold2 = await PdfGoogleFonts.latoBlack();
     final latoitalic = await PdfGoogleFonts.latoLightItalic();
-
-    //  final fonts = await PdfStandardFont(PdfFontFamily.helvetica, 50);
     final textStl12 = pw.TextStyle(
         fontSize: 12,
         fontWeight: pw.FontWeight.bold,
@@ -192,13 +190,6 @@ class PdfFMCSService {
                 //
                 height: 80,
                 width: 80,
-                decoration: const pw.BoxDecoration(
-                  borderRadius: pw.BorderRadius.only(
-                      topLeft: pw.Radius.circular(20.0),
-                      bottomLeft: pw.Radius.circular(20.0),
-                      topRight: pw.Radius.zero,
-                      bottomRight: pw.Radius.zero),
-                ),
                 child: pw.Image(pw.MemoryImage(image), fit: pw.BoxFit.fill)),
             pw.SizedBox(width: 10),
             pw.Column(
@@ -641,14 +632,6 @@ class PdfFMCSService {
                             style: textStl12bold,
                           ),
                         ),
-                        // space(),
-                        // pw.Flexible(
-                        //   flex: 1,
-                        //   child: pw.Text(
-                        //     ,
-                        //     style: textStl12bold,
-                        //   ),
-                        // ),
                         space2(),
                         pw.RichText(
                             text: pw.TextSpan(children: [
@@ -1568,9 +1551,7 @@ class PdfFMCSService {
                               crossAxisAlignment: pw.CrossAxisAlignment.start,
                               children: [
                                 pw.Text(
-                                    "Kind Atten. Mr/Mr's" +
-                                        " " +
-                                        cusname.toString(),
+                                    "Kind Atten. " + " " + cusname.toString(),
                                     style: textStl12),
                                 pw.Column(
                                     mainAxisAlignment: pw.MainAxisAlignment.end,
