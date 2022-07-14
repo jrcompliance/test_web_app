@@ -412,6 +412,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.0"
+  flutter_dropdown:
+    dependency: "direct main"
+    description:
+      name: flutter_dropdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+hotfix.1"
   flutter_linkify:
     dependency: "direct main"
     description:
@@ -461,6 +468,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  flutter_quill:
+    dependency: "direct main"
+    description:
+      name: flutter_quill
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -926,6 +940,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  react:
+    dependency: "direct main"
+    description:
+      name: react
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.6"
   rxdart:
     dependency: "direct main"
     description:
