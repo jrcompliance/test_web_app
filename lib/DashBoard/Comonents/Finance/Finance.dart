@@ -2923,7 +2923,29 @@ class _FinanceState extends State<Finance> {
   }
 
   // final QuillController _quillController = QuillController.basic();
-  String? indexValue;
+  double fontSelected = 12.5;
+  List<double> fontSizeList = [
+    12.0,
+    12.5,
+    14.0,
+    16.0,
+    18.0,
+    20.0,
+    22.0,
+    24.0,
+    26.0,
+    28.0,
+    30.0,
+    32.0,
+    34.0,
+    36.0,
+  ];
+  String imageDropValue = "1";
+  var imageDropList = [
+    Image.asset("assets/Logos/BIS_logo.png"),
+    Image.asset("assets/Logos/CRS_logo6.png"),
+    Image.asset("assets/Logos/FMCS_logo3.png"),
+  ];
   Widget scopeandTerms(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double rightpad = size.width * 0.3;
@@ -3068,15 +3090,18 @@ class _FinanceState extends State<Finance> {
                           width: 10,
                         ),
                         Container(
-                          height: 20,
-                          width: 50,
-                          child: DropdownButton<String>(
+                          height: 30,
+                          width: 65,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: AbgColor)),
+                          child: DropdownButton<double>(
                             underline: Container(),
                             hint: Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
                                 "A",
-                                style: TxtStls.tapstyleunderline,
+                                style: TxtStls.tapstylebold,
                               ),
                             ),
                             // Initial Value
@@ -3086,63 +3111,100 @@ class _FinanceState extends State<Finance> {
                               padding: EdgeInsets.only(right: 8.0),
                               child: Icon(
                                 Icons.arrow_drop_down_rounded,
-                                size: 12.0,
+                                size: 14.0,
                               ),
                             ),
 
                             // Array list of items
-                            items: List<DropdownMenuItem<String>>.generate(10,
-                                (index) {
-                              indexValue = "${index + 1}";
-                              return DropdownMenuItem(
-                                  value: indexValue,
-                                  child: SizedBox(
-                                    height: 30,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              color: AbgColor),
-                                          child: ListView.builder(
-                                            itemCount: 10,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Center(
-                                                  child: Text("${index + 1}"));
-                                            },
-                                          ),
-                                        ),
-                                        Text("${index + 1}"),
-                                      ],
-                                    ),
-                                  ));
-                            }).toList(),
+                            items: fontSizeList
+                                .map((item) => DropdownMenuItem<double>(
+                                      value: item,
+                                      child: Text(
+                                        item.toString(),
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                    ))
+                                .toList(),
+                            //  value: dropdownfonts,
 
-                            // After selecting the desired option,it will
-                            // change button value to selected value
-                            onChanged: (newValue) {
+                            onChanged: (double? newValue) {
                               setState(() {
-                                indexValue = newValue;
-                                print(indexValue);
+                                fontSelected = newValue!;
+                                // fontSelection(fontSelected);
+                                print(fontSelected);
                               });
                             },
                           ),
                         ),
-                        // InkWell(
-                        //   child: Text(
-                        //     "A",
-                        //     style: TxtStls.tapstyleunderline,
-                        //   ),
-                        //   onTap: () {
-                        //     setState(() {
-                        //       //  underlinepressed = !underlinepressed;
-                        //     });
-                        //   },
-                        // ),
+                        Container(
+                          height: 30,
+                          width: 65,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: AbgColor)),
+                          child: DropdownButton<String>(
+                            underline: Container(),
+                            hint: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child:
+                                    Image.asset("assets/Logos/BIS_logo.png")),
+                            // Initial Value
+
+                            // Down Arrow Icon
+                            icon: const Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.arrow_drop_down_rounded,
+                                size: 14.0,
+                              ),
+                            ),
+
+                            // Array list of items
+                            items: List.generate(3, (index) {
+                              imageDropValue = "${index + 1}";
+                              return DropdownMenuItem(
+                                  value: imageDropValue,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "${index + 1}",
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                      const SizedBox(
+                                        width: 2.5,
+                                      ),
+                                      Container(
+                                        height: 30,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0)),
+                                        child: imageDropList[index],
+                                      ),
+                                    ],
+                                  ));
+                            }),
+                            //  value: dropdownfonts,
+
+                            onChanged: (newValue) {
+                              setState(() {
+                                imageDropValue = newValue.toString();
+                                print(imageDropValue);
+                              });
+                            },
+                          ),
+                        ),
+                        InkWell(
+                          child: Text(
+                            "A",
+                            style: TxtStls.tapstyleunderline,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              //  underlinepressed = !underlinepressed;
+                            });
+                          },
+                        ),
                       ],
                     ),
                     // child: QuillToolbar.basic(controller: _quillController),
@@ -3415,7 +3477,100 @@ class _FinanceState extends State<Finance> {
   bool boldpressed = false;
   bool underlinepressed = false;
   bool italicpressed = false;
-  String colordropdownvalue = "black";
+  // String fontSelection(fontSelected) {
+  //   switch (fontSelected) {
+  //     case "12":
+  //       {
+  //         return "12";
+  //       }
+  //     case "14":
+  //       {
+  //         return "14";
+  //       }
+  //     case "16":
+  //       {
+  //         return "16";
+  //       }
+  //     case "18":
+  //       {
+  //         return "18";
+  //       }
+  //     case "20":
+  //       {
+  //         return "20";
+  //       }
+  //     case "22":
+  //       {
+  //         return "22";
+  //       }
+  //     case "24":
+  //       {
+  //         return "24";
+  //       }
+  //     case "26":
+  //       {
+  //         return "26";
+  //       }
+  //     case "28":
+  //       {
+  //         return "28";
+  //       }
+  //     case "30":
+  //       {
+  //         return "30";
+  //       }
+  //     case "32":
+  //       {
+  //         return "32";
+  //       }
+  //     case "34":
+  //       {
+  //         return "34";
+  //       }
+  //     case "36":
+  //       {
+  //         return "36";
+  //       }
+  //
+  //     default:
+  //       {
+  //         return "12";
+  //       }
+  //   }
+  // }
+  TextAlign _align = TextAlign.left;
+  TextAlign textAlignment(imageDropValue) {
+    switch (imageDropValue) {
+      case "1":
+        {
+          return TextAlign.left;
+        }
+      case "2":
+        {
+          return TextAlign.center;
+        }
+      case "3":
+        {
+          return TextAlign.right;
+        }
+      default:
+        {
+          return TextAlign.left;
+        }
+    }
+    // if (imageDropValue == 2) {
+    //   setState(() {
+    //     _align = TextAlign.center;
+    //   });
+    // } else if (imageDropValue == 3) {
+    //   setState(() {
+    //     _align = TextAlign.right;
+    //   });
+    // } else {
+    //   _align = TextAlign.left;
+    // }
+  }
+
   Widget _editableTextField1() {
     if (_isEditingText) {
       return TextField(
@@ -3425,7 +3580,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3453,7 +3616,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3466,7 +3637,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3494,7 +3673,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3507,7 +3694,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3535,7 +3730,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3548,7 +3751,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3576,7 +3787,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3589,7 +3808,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3617,7 +3844,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3630,7 +3865,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3658,7 +3901,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3671,7 +3922,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3699,7 +3958,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3712,7 +3979,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3740,7 +4015,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3753,7 +4036,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3781,7 +4072,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
@@ -3794,7 +4093,15 @@ class _FinanceState extends State<Finance> {
                 ? TxtStls.tapstyleunderline
                 : italicpressed
                     ? TxtStls.tapstyleitalic
-                    : TxtStls.fieldstyle,
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -3822,7 +4129,15 @@ class _FinanceState extends State<Finance> {
                   ? TxtStls.tapstyleunderline
                   : italicpressed
                       ? TxtStls.tapstyleitalic
-                      : TxtStls.fieldstyle,
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
         ));
   }
 
