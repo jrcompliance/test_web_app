@@ -30,6 +30,7 @@ import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
+import 'package:zefyrka/zefyrka.dart';
 import '../../../PdfFiles/GetISIServicePdf.dart';
 import '../../../Providers/CustomerProvider.dart';
 
@@ -42,6 +43,7 @@ class Finance extends StatefulWidget {
 
 class _FinanceState extends State<Finance> {
   Map<String, TextEditingController> _controllerMap = Map();
+  Map<int, TextEditingController> _controllerMap2 = Map();
   bool _isCreate = false;
   bool isgst = false;
   var date1;
@@ -75,6 +77,7 @@ class _FinanceState extends State<Finance> {
     "Cancelled",
     "Disputed"
   ];
+  final ZefyrController zefyrController = ZefyrController();
 
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _generatedateController = TextEditingController();
@@ -152,6 +155,8 @@ class _FinanceState extends State<Finance> {
 
   String? selectedSamples;
   String selectedPerson = "Select";
+
+  bool isImageDropSelected = false;
 
   @override
   void initState() {
@@ -1649,7 +1654,10 @@ class _FinanceState extends State<Finance> {
             border: InputBorder.none,
           ),
           maxLines: maxlines,
-          onFieldSubmitted: onchanged,
+          onFieldSubmitted: (_) {
+            setState(() {});
+          },
+          onChanged: onchanged,
         ),
       ),
     );
@@ -2651,7 +2659,7 @@ class _FinanceState extends State<Finance> {
                                     flex: 4,
                                     child: Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 40.0, top: 10.0),
+                                            left: 20.0, top: 5.0),
                                         child: Material(
                                             shadowColor:
                                                 AbgColor.withOpacity(0.2),
@@ -2674,7 +2682,7 @@ class _FinanceState extends State<Finance> {
                                                   )
                                                 ],
                                               ),
-                                              height: size.width * 0.016,
+                                              height: size.width * 0.015,
                                               child: field3(
                                                   _getController(
                                                       allServices[index]
@@ -2685,13 +2693,13 @@ class _FinanceState extends State<Finance> {
                                                   true),
                                             )))),
                                 const SizedBox(
-                                  width: 10.0,
+                                  width: 15.0,
                                 ),
                                 Expanded(
                                     flex: 1,
                                     child: Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 0, right: 30),
+                                            left: 5.0, right: 20.0),
                                         child: popupMenu(
                                             "EDIT",
                                             "DELETE",
@@ -2923,10 +2931,9 @@ class _FinanceState extends State<Finance> {
   }
 
   // final QuillController _quillController = QuillController.basic();
-  double fontSelected = 12.5;
+  double fontSelected = 12.0;
   List<double> fontSizeList = [
     12.0,
-    12.5,
     14.0,
     16.0,
     18.0,
@@ -2950,6 +2957,7 @@ class _FinanceState extends State<Finance> {
     Size size = MediaQuery.of(context).size;
     double rightpad = size.width * 0.3;
     ScrollController scopeListController = ScrollController();
+    ScrollController scopeListController2 = ScrollController();
     return Column(
       children: [
         // const SizedBox(height: 30,),
@@ -2985,232 +2993,252 @@ class _FinanceState extends State<Finance> {
                   color: AbgColor.withOpacity(0.2),
                   //       // elevation: 1.0,
                   //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: ListView(
-                    controller: scopeListController,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField1(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField2(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField3(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField4(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField5(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField6(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField7(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField8(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField9(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _editableTextField10(),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ZefyrEditor(
+                      controller: zefyrController,
+                    ),
                   ),
+
+                  // child: ListView.builder(
+                  //     controller: scopeListController,
+                  //     itemCount: scopeofwork.length,
+                  //     itemBuilder: (context, index) {
+                  //       return Padding(
+                  //         padding: const EdgeInsets.all(8.0),
+                  //         child: HtmlEditor(
+                  //           controller: htmlController,
+                  //           hint: scopeofwork[index],
+                  //           options: const HtmlEditorOptions(),
+                  //         ),
+                  //       );
+                  //     }),
+                  // child: ListView(
+                  //   controller: scopeListController,
+                  //   children: [
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField1(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField2(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField3(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField4(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField5(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField6(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField7(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField8(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField9(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField10(),
+                  //     ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: ListView.builder(
+                  //       controller: scopeListController2,
+                  //       itemCount: value.length,
+                  //       itemBuilder: (context, index) {
+                  //         return _editableTextField(index);
+                  //       }),
+                  // ),
+                  //   ],
+                  // ),
                 ),
               ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
-                child: Material(
-                  color: AbgColor.withOpacity(0.2),
-                  //       // elevation: 1.0,
-                  //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: Container(
-                    height: size.height * 0.04,
-                    decoration: BoxDecoration(color: bgColor),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            'B',
-                            style: TxtStls.tapstylebold,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              boldpressed = !boldpressed;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            "U",
-                            style: TxtStls.tapstyleunderline,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              underlinepressed = !underlinepressed;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            'I',
-                            style: TxtStls.tapstyleitalic,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              italicpressed = !italicpressed;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: AbgColor)),
-                          child: DropdownButton<double>(
-                            underline: Container(),
-                            hint: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "A",
-                                style: TxtStls.tapstylebold,
-                              ),
-                            ),
-                            // Initial Value
 
-                            // Down Arrow Icon
-                            icon: const Padding(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                size: 14.0,
-                              ),
-                            ),
-
-                            // Array list of items
-                            items: fontSizeList
-                                .map((item) => DropdownMenuItem<double>(
-                                      value: item,
-                                      child: Text(
-                                        item.toString(),
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                    ))
-                                .toList(),
-                            //  value: dropdownfonts,
-
-                            onChanged: (double? newValue) {
-                              setState(() {
-                                fontSelected = newValue!;
-                                // fontSelection(fontSelected);
-                                print(fontSelected);
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: AbgColor)),
-                          child: DropdownButton<String>(
-                            underline: Container(),
-                            hint: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child:
-                                    Image.asset("assets/Logos/BIS_logo.png")),
-                            // Initial Value
-
-                            // Down Arrow Icon
-                            icon: const Padding(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                size: 14.0,
-                              ),
-                            ),
-
-                            // Array list of items
-                            items: List.generate(3, (index) {
-                              imageDropValue = "${index + 1}";
-                              return DropdownMenuItem(
-                                  value: imageDropValue,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "${index + 1}",
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                      const SizedBox(
-                                        width: 2.5,
-                                      ),
-                                      Container(
-                                        height: 30,
-                                        width: 30,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0)),
-                                        child: imageDropList[index],
-                                      ),
-                                    ],
-                                  ));
-                            }),
-                            //  value: dropdownfonts,
-
-                            onChanged: (newValue) {
-                              setState(() {
-                                imageDropValue = newValue.toString();
-                                print(imageDropValue);
-                              });
-                            },
-                          ),
-                        ),
-                        InkWell(
-                          child: Text(
-                            "A",
-                            style: TxtStls.tapstyleunderline,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              //  underlinepressed = !underlinepressed;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    // child: QuillToolbar.basic(controller: _quillController),
-                  ),
-                ),
-              )
+              // Padding(
+              //   padding:
+              //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+              //   child: Material(
+              //     color: AbgColor.withOpacity(0.2),
+              //     //       // elevation: 1.0,
+              //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              //     child: Container(
+              //       height: size.height * 0.04,
+              //       decoration: BoxDecoration(color: bgColor),
+              //       child: Row(
+              //         children: [
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'B',
+              //               style: TxtStls.tapstylebold,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 boldpressed = !boldpressed;
+              //               });
+              //             },
+              //           ),
+              //           SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               "U",
+              //               style: TxtStls.tapstyleunderline,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 underlinepressed = !underlinepressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'I',
+              //               style: TxtStls.tapstyleitalic,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 italicpressed = !italicpressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<double>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                 padding: const EdgeInsets.only(left: 8.0),
+              //                 child: Text(
+              //                   "A",
+              //                   style: TxtStls.tapstylebold,
+              //                 ),
+              //               ),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: fontSizeList
+              //                   .map((item) => DropdownMenuItem<double>(
+              //                         value: item,
+              //                         child: Text(
+              //                           item.toString(),
+              //                           style: TxtStls.fieldstyle,
+              //                         ),
+              //                       ))
+              //                   .toList(),
+              //               //  value: dropdownfonts,
+              //
+              //               onChanged: (double? newValue) {
+              //                 setState(() {
+              //                   fontSelected = newValue!;
+              //
+              //                   print(fontSelected);
+              //                   print(imageDropValue);
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<String>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                   padding: const EdgeInsets.only(left: 8.0),
+              //                   child:
+              //                       Image.asset("assets/Logos/BIS_logo.png")),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: [
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[0]),
+              //                   value: "1",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[1]),
+              //                   value: "2",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[2]),
+              //                   value: "3",
+              //                 ),
+              //               ],
+              //               value: imageDropValue,
+              //
+              //               onChanged: (newValue) {
+              //                 setState(() {
+              //                   imageDropValue = newValue.toString();
+              //                   print(imageDropValue);
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               "A",
+              //               style: TxtStls.tapstyleunderline,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 //  underlinepressed = !underlinepressed;
+              //               });
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),
@@ -3221,6 +3249,26 @@ class _FinanceState extends State<Finance> {
         ),
         space2(),
         //  listview(terms),
+      ],
+    );
+  }
+
+  Widget imageDropItems(String text, var image) {
+    return Row(
+      children: [
+        Text(
+          text,
+          style: TxtStls.fieldstyle,
+        ),
+        const SizedBox(
+          width: 2.0,
+        ),
+        Container(
+          height: 30,
+          width: 30,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+          child: image,
+        ),
       ],
     );
   }
@@ -3246,7 +3294,11 @@ class _FinanceState extends State<Finance> {
   final TextEditingController escalationEditController =
       TextEditingController();
   edit(List list, TextEditingController controller) {
-    list.add(controller.text.toString());
+    setState(() {
+      list.add(controller.text.toString());
+      controller.clear();
+      print(list.length);
+    });
   }
 
   Widget scoperow(String text) {
@@ -3454,6 +3506,18 @@ class _FinanceState extends State<Finance> {
 
   bool _isEditingText = false;
   bool editable = false;
+  List<String> value = [
+    "We assist you to know whether a product falls under the purview of concerned authority.",
+    "For comprehensible guidance, we will first scrutinize the certification requirements of a product.",
+    "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type.",
+    "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same.",
+    "Being a reputed compliance consultant, we will provide you technical and non- technical support.",
+    "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands.",
+    "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product.",
+    "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities.",
+    "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines.",
+    "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."
+  ];
   String value1 =
       "We assist you to know whether a product falls under the purview of concerned authority.";
   String value2 =
@@ -3477,73 +3541,12 @@ class _FinanceState extends State<Finance> {
   bool boldpressed = false;
   bool underlinepressed = false;
   bool italicpressed = false;
-  // String fontSelection(fontSelected) {
-  //   switch (fontSelected) {
-  //     case "12":
-  //       {
-  //         return "12";
-  //       }
-  //     case "14":
-  //       {
-  //         return "14";
-  //       }
-  //     case "16":
-  //       {
-  //         return "16";
-  //       }
-  //     case "18":
-  //       {
-  //         return "18";
-  //       }
-  //     case "20":
-  //       {
-  //         return "20";
-  //       }
-  //     case "22":
-  //       {
-  //         return "22";
-  //       }
-  //     case "24":
-  //       {
-  //         return "24";
-  //       }
-  //     case "26":
-  //       {
-  //         return "26";
-  //       }
-  //     case "28":
-  //       {
-  //         return "28";
-  //       }
-  //     case "30":
-  //       {
-  //         return "30";
-  //       }
-  //     case "32":
-  //       {
-  //         return "32";
-  //       }
-  //     case "34":
-  //       {
-  //         return "34";
-  //       }
-  //     case "36":
-  //       {
-  //         return "36";
-  //       }
-  //
-  //     default:
-  //       {
-  //         return "12";
-  //       }
-  //   }
-  // }
-  TextAlign _align = TextAlign.left;
+
   TextAlign textAlignment(imageDropValue) {
     switch (imageDropValue) {
       case "1":
         {
-          return TextAlign.left;
+          return TextAlign.start;
         }
       case "2":
         {
@@ -3551,24 +3554,71 @@ class _FinanceState extends State<Finance> {
         }
       case "3":
         {
-          return TextAlign.right;
+          return TextAlign.end;
         }
       default:
         {
-          return TextAlign.left;
+          return TextAlign.start;
         }
     }
-    // if (imageDropValue == 2) {
-    //   setState(() {
-    //     _align = TextAlign.center;
-    //   });
-    // } else if (imageDropValue == 3) {
-    //   setState(() {
-    //     _align = TextAlign.right;
-    //   });
-    // } else {
-    //   _align = TextAlign.left;
-    // }
+  }
+
+  Widget _editableTextField(List list, int index) {
+    if (_isEditingText) {
+      return TextField(
+        style: boldpressed
+            ? TxtStls.tapstylebold
+            : underlinepressed
+                ? TxtStls.tapstyleunderline
+                : italicpressed
+                    ? TxtStls.tapstyleitalic
+                    : GoogleFonts.nunito(
+                        textStyle: TextStyle(
+                            color: txtColor,
+                            fontSize: fontSelected,
+                            letterSpacing: 0.2),
+                        color: txtColor,
+                        letterSpacing: 0.2,
+                        fontSize: fontSelected),
+        textAlign: textAlignment(imageDropValue),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+        ),
+        onSubmitted: (newValue) {
+          setState(() {
+            list[index].text = newValue[index];
+            _isEditingText = true;
+            print(list[index]);
+          });
+        },
+        autofocus: true,
+        controller: _getscopeController(index),
+      );
+    }
+    return InkWell(
+        onTap: () {
+          setState(() {
+            _isEditingText = true;
+          });
+        },
+        child: Text(
+          list[index],
+          style: boldpressed
+              ? TxtStls.tapstylebold
+              : underlinepressed
+                  ? TxtStls.tapstyleunderline
+                  : italicpressed
+                      ? TxtStls.tapstyleitalic
+                      : GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: txtColor,
+                              fontSize: fontSelected,
+                              letterSpacing: 0.2),
+                          color: txtColor,
+                          letterSpacing: 0.2,
+                          fontSize: fontSelected),
+          textAlign: textAlignment(imageDropValue),
+        ));
   }
 
   Widget _editableTextField1() {
@@ -3595,7 +3645,7 @@ class _FinanceState extends State<Finance> {
         onSubmitted: (newValue) {
           setState(() {
             value1 = newValue;
-            _isEditingText = false;
+            _isEditingText = !_isEditingText;
           });
         },
         autofocus: true,
@@ -4141,30 +4191,29 @@ class _FinanceState extends State<Finance> {
         ));
   }
 
+  var newList;
+  bool isDelete = false;
   Widget popupMenu(value1, value2, index,
       [Color? clr1, Color? clr2, IconData? icon, IconData? icon2]) {
     bool _ispopped = false;
     return PopupMenuButton(
       shape: const TooltipShape(),
-      offset: const Offset(5, 40),
+      offset: const Offset(-5, -50),
       icon: const Icon(
         Icons.more_horiz,
         color: btnColor,
       ),
       onSelected: (value) {
         setState(() {
-          // if (value == value2) {
-          //   var item = allProducts.removeAt(index);
-          //   newList = List.from(
-          //       allProducts.where((x) => allProducts.indexOf(x) != item));
-          //   print("list--" +
-          //       newList.toString() +
-          //       "item--" +
-          //       item.toJson().toString());
-          //   isDelete = true;
-          // } else if (value == value1) {
-          //   print(allProducts.length);
-          // }
+          if (value == value2) {
+            var item = allServices.removeAt(index);
+            newList = List.from(
+                allServices.where((x) => allServices.indexOf(x) != item));
+            print("list--" + newList.toString() + "item--" + item.toString());
+            isDelete = true;
+          } else if (value == value1) {
+            print(allServices.length);
+          }
           popValue = value;
         });
         print(value);
@@ -4838,6 +4887,15 @@ class _FinanceState extends State<Finance> {
     if (controller == null) {
       controller = TextEditingController(text: "");
       _controllerMap[name] = controller;
+    }
+    return controller;
+  }
+
+  TextEditingController _getscopeController(int index) {
+    var controller = _controllerMap2[index];
+    if (controller == null) {
+      controller = TextEditingController(text: index.toString());
+      _controllerMap2[index] = controller;
     }
     return controller;
   }

@@ -468,13 +468,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
-  flutter_quill:
-    dependency: "direct main"
-    description:
-      name: flutter_quill
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -744,6 +737,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  notus_format:
+    dependency: transitive
+    description:
+      name: notus_format
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   number_to_words:
     dependency: "direct main"
     description:
@@ -919,6 +919,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  quill_format:
+    dependency: transitive
+    description:
+      name: quill_format
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   quiver:
     dependency: transitive
     description:
@@ -1337,6 +1344,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.1"
+  zefyrka:
+    dependency: "direct main"
+    description:
+      name: zefyrka
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
 sdks:
   dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.10.0"
