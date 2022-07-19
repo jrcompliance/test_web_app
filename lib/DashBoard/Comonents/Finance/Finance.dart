@@ -16,6 +16,7 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/ScopeofWorkModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
 import 'package:test_web_app/PdfFiles/GetCRSServicePdf.dart';
@@ -151,7 +152,7 @@ class _FinanceState extends State<Finance> {
   final ScrollController sc = ScrollController();
   var randomNo;
   late List<ServicesModel> allServices;
-  List<String> scopeofwork = [];
+  List<ScopeofWorkModel> scopeofwork = [];
 
   String? selectedSamples;
   String selectedPerson = "Select";
@@ -198,20 +199,24 @@ class _FinanceState extends State<Finance> {
     scopeofwork8 = TextEditingController(text: value8);
     scopeofwork9 = TextEditingController(text: value9);
     scopeofwork10 = TextEditingController(text: value10);
-    scopeofwork.add(value1);
-    scopeofwork.add(value2);
-    scopeofwork.add(value3);
-    scopeofwork.add(value4);
-    scopeofwork.add(value5);
-    scopeofwork.add(value6);
-    scopeofwork.add(value7);
-    scopeofwork.add(value8);
-    scopeofwork.add(value9);
-    scopeofwork.add(value10);
+    scopeofwork.add(ScopeofWorkModel(text: value1));
+    scopeofwork.add(ScopeofWorkModel(text: value2));
+    scopeofwork.add(ScopeofWorkModel(text: value3));
+    scopeofwork.add(ScopeofWorkModel(text: value4));
+    scopeofwork.add(ScopeofWorkModel(text: value5));
+    scopeofwork.add(ScopeofWorkModel(text: value6));
+    scopeofwork.add(ScopeofWorkModel(text: value7));
+    scopeofwork.add(ScopeofWorkModel(text: value8));
+    scopeofwork.add(ScopeofWorkModel(text: value9));
+    scopeofwork.add(ScopeofWorkModel(text: value10));
+    print("scope of work--list--" + scopeofwork.toList().toString());
+    print("scope of work--" + scopeofwork[4].text.toString());
   }
 
   @override
   void dispose() {
+    int index = 0;
+    index = index + 1;
     // scopeofwork1.clear();
     // scopeofwork2.clear();
     // scopeofwork3.clear();
@@ -222,6 +227,7 @@ class _FinanceState extends State<Finance> {
     // scopeofwork8.clear();
     // scopeofwork9.clear();
     // scopeofwork10.clear();
+    _getscopeController(index).clear();
     super.dispose();
   }
 
@@ -2991,14 +2997,33 @@ class _FinanceState extends State<Finance> {
                 height: size.height * 0.2,
                 child: Material(
                   color: AbgColor.withOpacity(0.2),
+
                   //       // elevation: 1.0,
                   //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ZefyrEditor(
-                      controller: zefyrController,
-                    ),
-                  ),
+                  child: ListView.builder(
+                      controller: scopeListController2,
+                      shrinkWrap: true,
+                      itemCount: scopeofwork.length,
+                      itemBuilder: (context, index) {
+                        return _editableTextField(index);
+                      }),
+
+                  // child: ListView.builder(itemBuilder: (context, index) {
+                  //   bool isedited = false;
+                  //   if (!isedited) {
+                  //     return Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: ZefyrEditor(
+                  //           controller: zefyrController,
+                  //           embedBuilder: (context, node) {
+                  //             return ListView.builder(
+                  //                 itemCount: scopeofwork.length,
+                  //                 itemBuilder: (context, index) =>
+                  //                     Text(scopeofwork[index]));
+                  //           }),
+                  //     );
+                  //   }
+                  // }),
 
                   // child: ListView.builder(
                   //     controller: scopeListController,
@@ -3056,189 +3081,198 @@ class _FinanceState extends State<Finance> {
                   //       padding: const EdgeInsets.all(8.0),
                   //       child: _editableTextField10(),
                   //     ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: ListView.builder(
-                  //       controller: scopeListController2,
-                  //       itemCount: value.length,
-                  //       itemBuilder: (context, index) {
-                  //         return _editableTextField(index);
-                  //       }),
-                  // ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField11(),
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: _editableTextField12(),
+                  //     ),
+                  //     // Padding(
+                  //     //   padding: const EdgeInsets.all(8.0),
+                  //     //   child: ListView.builder(
+                  //     //       controller: scopeListController2,
+                  //     //       itemCount: scopeofwork.length,
+                  //     //       itemBuilder: (context, index) {
+                  //     //         return _editableTextField(scopeofwork, index);
+                  //     //       }),
+                  //     // ),
                   //   ],
                   // ),
                 ),
               ),
+              // ZefyrToolbar.basic(controller: zefyrController),
 
-              // Padding(
-              //   padding:
-              //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
-              //   child: Material(
-              //     color: AbgColor.withOpacity(0.2),
-              //     //       // elevation: 1.0,
-              //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              //     child: Container(
-              //       height: size.height * 0.04,
-              //       decoration: BoxDecoration(color: bgColor),
-              //       child: Row(
-              //         children: [
-              //           const SizedBox(
-              //             width: 10,
-              //           ),
-              //           InkWell(
-              //             child: Text(
-              //               'B',
-              //               style: TxtStls.tapstylebold,
-              //             ),
-              //             onTap: () {
-              //               setState(() {
-              //                 boldpressed = !boldpressed;
-              //               });
-              //             },
-              //           ),
-              //           SizedBox(
-              //             width: 10,
-              //           ),
-              //           InkWell(
-              //             child: Text(
-              //               "U",
-              //               style: TxtStls.tapstyleunderline,
-              //             ),
-              //             onTap: () {
-              //               setState(() {
-              //                 underlinepressed = !underlinepressed;
-              //               });
-              //             },
-              //           ),
-              //           const SizedBox(
-              //             width: 10,
-              //           ),
-              //           InkWell(
-              //             child: Text(
-              //               'I',
-              //               style: TxtStls.tapstyleitalic,
-              //             ),
-              //             onTap: () {
-              //               setState(() {
-              //                 italicpressed = !italicpressed;
-              //               });
-              //             },
-              //           ),
-              //           const SizedBox(
-              //             width: 10,
-              //           ),
-              //           Container(
-              //             height: 30,
-              //             width: 65,
-              //             decoration: BoxDecoration(
-              //                 borderRadius: BorderRadius.circular(8.0),
-              //                 border: Border.all(color: AbgColor)),
-              //             child: DropdownButton<double>(
-              //               underline: Container(),
-              //               hint: Padding(
-              //                 padding: const EdgeInsets.only(left: 8.0),
-              //                 child: Text(
-              //                   "A",
-              //                   style: TxtStls.tapstylebold,
-              //                 ),
-              //               ),
-              //               // Initial Value
-              //
-              //               // Down Arrow Icon
-              //               icon: const Padding(
-              //                 padding: EdgeInsets.only(right: 8.0),
-              //                 child: Icon(
-              //                   Icons.arrow_drop_down_rounded,
-              //                   size: 14.0,
-              //                 ),
-              //               ),
-              //
-              //               // Array list of items
-              //               items: fontSizeList
-              //                   .map((item) => DropdownMenuItem<double>(
-              //                         value: item,
-              //                         child: Text(
-              //                           item.toString(),
-              //                           style: TxtStls.fieldstyle,
-              //                         ),
-              //                       ))
-              //                   .toList(),
-              //               //  value: dropdownfonts,
-              //
-              //               onChanged: (double? newValue) {
-              //                 setState(() {
-              //                   fontSelected = newValue!;
-              //
-              //                   print(fontSelected);
-              //                   print(imageDropValue);
-              //                 });
-              //               },
-              //             ),
-              //           ),
-              //           Container(
-              //             height: 30,
-              //             width: 65,
-              //             decoration: BoxDecoration(
-              //                 borderRadius: BorderRadius.circular(8.0),
-              //                 border: Border.all(color: AbgColor)),
-              //             child: DropdownButton<String>(
-              //               underline: Container(),
-              //               hint: Padding(
-              //                   padding: const EdgeInsets.only(left: 8.0),
-              //                   child:
-              //                       Image.asset("assets/Logos/BIS_logo.png")),
-              //               // Initial Value
-              //
-              //               // Down Arrow Icon
-              //               icon: const Padding(
-              //                 padding: EdgeInsets.only(right: 8.0),
-              //                 child: Icon(
-              //                   Icons.arrow_drop_down_rounded,
-              //                   size: 14.0,
-              //                 ),
-              //               ),
-              //
-              //               // Array list of items
-              //               items: [
-              //                 DropdownMenuItem(
-              //                   child: imageDropItems("", imageDropList[0]),
-              //                   value: "1",
-              //                 ),
-              //                 DropdownMenuItem(
-              //                   child: imageDropItems("", imageDropList[1]),
-              //                   value: "2",
-              //                 ),
-              //                 DropdownMenuItem(
-              //                   child: imageDropItems("", imageDropList[2]),
-              //                   value: "3",
-              //                 ),
-              //               ],
-              //               value: imageDropValue,
-              //
-              //               onChanged: (newValue) {
-              //                 setState(() {
-              //                   imageDropValue = newValue.toString();
-              //                   print(imageDropValue);
-              //                 });
-              //               },
-              //             ),
-              //           ),
-              //           InkWell(
-              //             child: Text(
-              //               "A",
-              //               style: TxtStls.tapstyleunderline,
-              //             ),
-              //             onTap: () {
-              //               setState(() {
-              //                 //  underlinepressed = !underlinepressed;
-              //               });
-              //             },
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // )
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+                child: Material(
+                  color: AbgColor.withOpacity(0.2),
+                  //       // elevation: 1.0,
+                  //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  child: Container(
+                    height: size.height * 0.04,
+                    decoration: BoxDecoration(color: bgColor),
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          child: Text(
+                            'B',
+                            style: TxtStls.tapstylebold,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              boldpressed = !boldpressed;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          child: Text(
+                            "U",
+                            style: TxtStls.tapstyleunderline,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              underlinepressed = !underlinepressed;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          child: Text(
+                            'I',
+                            style: TxtStls.tapstyleitalic,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              italicpressed = !italicpressed;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 30,
+                          width: 65,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: AbgColor)),
+                          child: DropdownButton<double>(
+                            underline: Container(),
+                            hint: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "A",
+                                style: TxtStls.tapstylebold,
+                              ),
+                            ),
+                            // Initial Value
+
+                            // Down Arrow Icon
+                            icon: const Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.arrow_drop_down_rounded,
+                                size: 14.0,
+                              ),
+                            ),
+
+                            // Array list of items
+                            items: fontSizeList
+                                .map((item) => DropdownMenuItem<double>(
+                                      value: item,
+                                      child: Text(
+                                        item.toString(),
+                                        style: TxtStls.fieldstyle,
+                                      ),
+                                    ))
+                                .toList(),
+                            //  value: dropdownfonts,
+
+                            onChanged: (double? newValue) {
+                              setState(() {
+                                fontSelected = newValue!;
+
+                                print(fontSelected);
+                                print(imageDropValue);
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 30,
+                          width: 65,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              border: Border.all(color: AbgColor)),
+                          child: DropdownButton<String>(
+                            underline: Container(),
+                            hint: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child:
+                                    Image.asset("assets/Logos/BIS_logo.png")),
+                            // Initial Value
+
+                            // Down Arrow Icon
+                            icon: const Padding(
+                              padding: EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.arrow_drop_down_rounded,
+                                size: 14.0,
+                              ),
+                            ),
+
+                            // Array list of items
+                            items: [
+                              DropdownMenuItem(
+                                child: imageDropItems("", imageDropList[0]),
+                                value: "1",
+                              ),
+                              DropdownMenuItem(
+                                child: imageDropItems("", imageDropList[1]),
+                                value: "2",
+                              ),
+                              DropdownMenuItem(
+                                child: imageDropItems("", imageDropList[2]),
+                                value: "3",
+                              ),
+                            ],
+                            value: imageDropValue,
+
+                            onChanged: (newValue) {
+                              setState(() {
+                                imageDropValue = newValue.toString();
+                                print(imageDropValue);
+                              });
+                            },
+                          ),
+                        ),
+                        InkWell(
+                          child: Text(
+                            "A",
+                            style: TxtStls.tapstyleunderline,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              //  underlinepressed = !underlinepressed;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -3293,11 +3327,19 @@ class _FinanceState extends State<Finance> {
   final TextEditingController termsEditController = TextEditingController();
   final TextEditingController escalationEditController =
       TextEditingController();
-  edit(List list, TextEditingController controller) {
+  edit(List list, TextEditingController controller, [model]) {
     setState(() {
-      list.add(controller.text.toString());
+      list.add(controller.text);
       controller.clear();
-      print(list.length);
+      // print("scope of work length--" + list.length.toString());
+    });
+  }
+
+  scopeedit(List list, TextEditingController controller) {
+    setState(() {
+      list.add(ScopeofWorkModel(text: controller.text));
+      controller.clear();
+      // print("scope of work length--" + list.length.toString());
     });
   }
 
@@ -3315,8 +3357,13 @@ class _FinanceState extends State<Finance> {
         ),
         Flexible(
           flex: 1,
-          child: field2(scopeEditController, "", 1, true,
-              edit(scopeofwork, scopeEditController), const Icon(Icons.edit)),
+          child: field2(
+              scopeEditController,
+              "",
+              1,
+              true,
+              scopeedit(scopeofwork, scopeEditController),
+              const Icon(Icons.edit)),
         ),
       ],
     );
@@ -3506,18 +3553,6 @@ class _FinanceState extends State<Finance> {
 
   bool _isEditingText = false;
   bool editable = false;
-  List<String> value = [
-    "We assist you to know whether a product falls under the purview of concerned authority.",
-    "For comprehensible guidance, we will first scrutinize the certification requirements of a product.",
-    "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type.",
-    "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same.",
-    "Being a reputed compliance consultant, we will provide you technical and non- technical support.",
-    "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands.",
-    "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product.",
-    "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities.",
-    "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines.",
-    "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."
-  ];
   String value1 =
       "We assist you to know whether a product falls under the purview of concerned authority.";
   String value2 =
@@ -3563,7 +3598,13 @@ class _FinanceState extends State<Finance> {
     }
   }
 
-  Widget _editableTextField(List list, int index) {
+  // void editScopeofWork(String newText, int index) {
+  //   setState(() {
+  //     scopeofwork[index].text = newText.toString();
+  //   });
+  // }
+  String tappedText = "";
+  Widget _editableTextField(int index) {
     if (_isEditingText) {
       return TextField(
         style: boldpressed
@@ -3586,38 +3627,56 @@ class _FinanceState extends State<Finance> {
         ),
         onSubmitted: (newValue) {
           setState(() {
-            list[index].text = newValue[index];
-            _isEditingText = true;
-            print(list[index]);
+            _isEditingText = false;
+            scopeofwork[index].text = newValue;
+            //   print("newvalue--" + newValue.toString());
+            print("tappedtext--" + tappedText.toString());
+            tappedText = "";
+
+            // scopeofwork[index].text = newValue[index].toString();
+            //  print("scope list of index--" + scopeofwork[index].text.toString());
           });
         },
+        // onChanged: (newValue) {
+        //   _isEditingText = false;
+        //   setState(() {
+        //     tappedText = newValue;
+        //   });
+        //
+        //   //   print("list of index--" + scopeofwork[index].text.toString())
+        // },
         autofocus: true,
         controller: _getscopeController(index),
       );
     }
     return InkWell(
         onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
+          // setState(() {
+          //   _isEditingText = true;
+          //   //  print("tapped index--" + scopeofwork[index].text.toString());
+          //   tappedText = scopeofwork[index].text.toString();
+          // });
         },
-        child: Text(
-          list[index],
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            scopeofwork[index].text.toString(),
+            style: boldpressed
+                ? TxtStls.tapstylebold
+                : underlinepressed
+                    ? TxtStls.tapstyleunderline
+                    : italicpressed
+                        ? TxtStls.tapstyleitalic
+                        : GoogleFonts.nunito(
+                            textStyle: TextStyle(
+                                color: txtColor,
+                                fontSize: fontSelected,
+                                letterSpacing: 0.2),
+                            color: txtColor,
+                            letterSpacing: 0.2,
+                            fontSize: fontSelected),
+            textAlign: textAlignment(imageDropValue),
+          ),
         ));
   }
 
@@ -4134,62 +4193,176 @@ class _FinanceState extends State<Finance> {
         ));
   }
 
-  Widget _editableTextField10() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value10 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork10,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value10,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
+  // Widget _editableTextField10() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           scopeofwork[10] = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork10,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         scopeofwork[10],
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+
+  // Widget _editableTextField11() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           scopeEditController.text = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork10,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         scopeEditController.text == null ? "" : scopeofwork[11],
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+
+  // Widget _editableTextField12() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           scopeEditController.text = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork10,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         scopeEditController.text == null ? "" : scopeofwork[12],
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
 
   var newList;
   bool isDelete = false;
@@ -4894,7 +5067,7 @@ class _FinanceState extends State<Finance> {
   TextEditingController _getscopeController(int index) {
     var controller = _controllerMap2[index];
     if (controller == null) {
-      controller = TextEditingController(text: index.toString());
+      controller = TextEditingController(text: tappedText.toString());
       _controllerMap2[index] = controller;
     }
     return controller;
