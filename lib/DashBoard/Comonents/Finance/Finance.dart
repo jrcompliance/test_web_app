@@ -217,16 +217,16 @@ class _FinanceState extends State<Finance> {
   void dispose() {
     int index = 0;
     index = index + 1;
-    // scopeofwork1.clear();
-    // scopeofwork2.clear();
-    // scopeofwork3.clear();
-    // scopeofwork4.clear();
-    // scopeofwork5.clear();
-    // scopeofwork6.clear();
-    // scopeofwork7.clear();
-    // scopeofwork8.clear();
-    // scopeofwork9.clear();
-    // scopeofwork10.clear();
+    scopeofwork1.clear();
+    scopeofwork2.clear();
+    scopeofwork3.clear();
+    scopeofwork4.clear();
+    scopeofwork5.clear();
+    scopeofwork6.clear();
+    scopeofwork7.clear();
+    scopeofwork8.clear();
+    scopeofwork9.clear();
+    scopeofwork10.clear();
     _getscopeController(index).clear();
     super.dispose();
   }
@@ -2959,6 +2959,8 @@ class _FinanceState extends State<Finance> {
     Image.asset("assets/Logos/CRS_logo6.png"),
     Image.asset("assets/Logos/FMCS_logo3.png"),
   ];
+  bool isBullettapped = false;
+  bool isNumberBulletTapped = false;
   Widget scopeandTerms(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double rightpad = size.width * 0.3;
@@ -3245,6 +3247,7 @@ class _FinanceState extends State<Finance> {
                               DropdownMenuItem(
                                 child: imageDropItems("", imageDropList[2]),
                                 value: "3",
+                                onTap: () {},
                               ),
                             ],
                             value: imageDropValue,
@@ -3253,18 +3256,42 @@ class _FinanceState extends State<Finance> {
                               setState(() {
                                 imageDropValue = newValue.toString();
                                 print(imageDropValue);
+                                print(textAlignment(imageDropValue));
                               });
                             },
                           ),
                         ),
                         InkWell(
-                          child: Text(
-                            "A",
-                            style: TxtStls.tapstyleunderline,
-                          ),
+                          child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: isBullettapped
+                                          ? btnColor
+                                          : Colors.transparent),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Image.asset("assets/Logos/BIS_logo.png")),
                           onTap: () {
                             setState(() {
-                              //  underlinepressed = !underlinepressed;
+                              isBullettapped = !isBullettapped;
+                            });
+                          },
+                        ),
+                        InkWell(
+                          child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: isNumberBulletTapped
+                                          ? btnColor
+                                          : Colors.transparent),
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Image.asset("assets/Logos/CRS_logo6.png")),
+                          onTap: () {
+                            setState(() {
+                              isNumberBulletTapped = !isNumberBulletTapped;
                             });
                           },
                         ),
@@ -3632,19 +3659,8 @@ class _FinanceState extends State<Finance> {
             //   print("newvalue--" + newValue.toString());
             print("tappedtext--" + tappedText.toString());
             tappedText = "";
-
-            // scopeofwork[index].text = newValue[index].toString();
-            //  print("scope list of index--" + scopeofwork[index].text.toString());
           });
         },
-        // onChanged: (newValue) {
-        //   _isEditingText = false;
-        //   setState(() {
-        //     tappedText = newValue;
-        //   });
-        //
-        //   //   print("list of index--" + scopeofwork[index].text.toString())
-        // },
         autofocus: true,
         controller: _getscopeController(index),
       );
@@ -3659,23 +3675,63 @@ class _FinanceState extends State<Finance> {
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            scopeofwork[index].text.toString(),
-            style: boldpressed
-                ? TxtStls.tapstylebold
-                : underlinepressed
-                    ? TxtStls.tapstyleunderline
-                    : italicpressed
-                        ? TxtStls.tapstyleitalic
-                        : GoogleFonts.nunito(
-                            textStyle: TextStyle(
-                                color: txtColor,
-                                fontSize: fontSelected,
-                                letterSpacing: 0.2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              isBullettapped
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+                      child: Container(
+                        height: 5.0,
+                        width: 5.0,
+                        decoration: BoxDecoration(
                             color: txtColor,
-                            letterSpacing: 0.2,
-                            fontSize: fontSelected),
-            textAlign: textAlignment(imageDropValue),
+                            borderRadius: BorderRadius.circular(2.0)),
+                      ),
+                    )
+                  : SizedBox(),
+              isNumberBulletTapped
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 10.0, bottom: 10.0),
+                      child: Text(
+                        "${index + 1}" + ".",
+                        style: TxtStls.tapstylebold,
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(
+                width: isBullettapped
+                    ? 20.0
+                    : isNumberBulletTapped
+                        ? 20.0
+                        : 0.0,
+              ),
+              Flexible(
+                flex: 2,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(top: isNumberBulletTapped ? 5.0 : 0.0),
+                  child: Text(
+                    scopeofwork[index].text.toString(),
+                    style: boldpressed
+                        ? TxtStls.tapstylebold
+                        : underlinepressed
+                            ? TxtStls.tapstyleunderline
+                            : italicpressed
+                                ? TxtStls.tapstyleitalic
+                                : GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                        color: txtColor,
+                                        fontSize: fontSelected,
+                                        letterSpacing: 0.2),
+                                    color: txtColor,
+                                    letterSpacing: 0.2,
+                                    fontSize: fontSelected),
+                    textAlign: textAlignment(imageDropValue),
+                  ),
+                ),
+              ),
+            ],
           ),
         ));
   }
