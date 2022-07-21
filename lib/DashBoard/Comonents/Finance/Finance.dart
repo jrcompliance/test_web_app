@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:quill_delta/quill_delta.dart';
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
@@ -78,7 +79,9 @@ class _FinanceState extends State<Finance> {
     "Cancelled",
     "Disputed"
   ];
-  final ZefyrController zefyrController = ZefyrController();
+
+  late ZefyrController zefyrController;
+  late FocusNode focusNode;
 
   final TextEditingController _referenceController = TextEditingController();
   final TextEditingController _generatedateController = TextEditingController();
@@ -126,16 +129,16 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _internalController = TextEditingController();
   final TextEditingController _filterDateController = TextEditingController();
   final TextEditingController _serviceController1 = TextEditingController();
-  late TextEditingController scopeofwork1;
-  late TextEditingController scopeofwork2;
-  late TextEditingController scopeofwork3;
-  late TextEditingController scopeofwork4;
-  late TextEditingController scopeofwork5;
-  late TextEditingController scopeofwork6;
-  late TextEditingController scopeofwork7;
-  late TextEditingController scopeofwork8;
-  late TextEditingController scopeofwork9;
-  late TextEditingController scopeofwork10;
+  // late TextEditingController scopeofwork1;
+  // late TextEditingController scopeofwork2;
+  // late TextEditingController scopeofwork3;
+  // late TextEditingController scopeofwork4;
+  // late TextEditingController scopeofwork5;
+  // late TextEditingController scopeofwork6;
+  // late TextEditingController scopeofwork7;
+  // late TextEditingController scopeofwork8;
+  // late TextEditingController scopeofwork9;
+  // late TextEditingController scopeofwork10;
 
   List cust = [];
   List<CustomerModel> allCustomers = [];
@@ -189,47 +192,55 @@ class _FinanceState extends State<Finance> {
         ename = Provider.of<UserDataProvider>(context, listen: false).username;
       });
     });
-    scopeofwork1 = TextEditingController(text: value1);
-    scopeofwork2 = TextEditingController(text: value2);
-    scopeofwork3 = TextEditingController(text: value3);
-    scopeofwork4 = TextEditingController(text: value4);
-    scopeofwork5 = TextEditingController(text: value5);
-    scopeofwork6 = TextEditingController(text: value6);
-    scopeofwork7 = TextEditingController(text: value7);
-    scopeofwork8 = TextEditingController(text: value8);
-    scopeofwork9 = TextEditingController(text: value9);
-    scopeofwork10 = TextEditingController(text: value10);
-    scopeofwork.add(ScopeofWorkModel(text: value1));
-    scopeofwork.add(ScopeofWorkModel(text: value2));
-    scopeofwork.add(ScopeofWorkModel(text: value3));
-    scopeofwork.add(ScopeofWorkModel(text: value4));
-    scopeofwork.add(ScopeofWorkModel(text: value5));
-    scopeofwork.add(ScopeofWorkModel(text: value6));
-    scopeofwork.add(ScopeofWorkModel(text: value7));
-    scopeofwork.add(ScopeofWorkModel(text: value8));
-    scopeofwork.add(ScopeofWorkModel(text: value9));
-    scopeofwork.add(ScopeofWorkModel(text: value10));
-    print("scope of work--list--" + scopeofwork.toList().toString());
-    print("scope of work--" + scopeofwork[4].text.toString());
+    final document = _loadDocument();
+    zefyrController = ZefyrController(document);
+    focusNode = FocusNode();
+
+    // scopeofwork1 = TextEditingController(text: value1);
+    // scopeofwork2 = TextEditingController(text: value2);
+    // scopeofwork3 = TextEditingController(text: value3);
+    // scopeofwork4 = TextEditingController(text: value4);
+    // scopeofwork5 = TextEditingController(text: value5);
+    // scopeofwork6 = TextEditingController(text: value6);
+    // scopeofwork7 = TextEditingController(text: value7);
+    // scopeofwork8 = TextEditingController(text: value8);
+    // scopeofwork9 = TextEditingController(text: value9);
+    // scopeofwork10 = TextEditingController(text: value10);
+    // scopeofwork.add(ScopeofWorkModel(text: value1));
+    // scopeofwork.add(ScopeofWorkModel(text: value2));
+    // scopeofwork.add(ScopeofWorkModel(text: value3));
+    // scopeofwork.add(ScopeofWorkModel(text: value4));
+    // scopeofwork.add(ScopeofWorkModel(text: value5));
+    // scopeofwork.add(ScopeofWorkModel(text: value6));
+    // scopeofwork.add(ScopeofWorkModel(text: value7));
+    // scopeofwork.add(ScopeofWorkModel(text: value8));
+    // scopeofwork.add(ScopeofWorkModel(text: value9));
+    // scopeofwork.add(ScopeofWorkModel(text: value10));
   }
 
-  @override
-  void dispose() {
-    int index = 0;
-    index = index + 1;
-    scopeofwork1.clear();
-    scopeofwork2.clear();
-    scopeofwork3.clear();
-    scopeofwork4.clear();
-    scopeofwork5.clear();
-    scopeofwork6.clear();
-    scopeofwork7.clear();
-    scopeofwork8.clear();
-    scopeofwork9.clear();
-    scopeofwork10.clear();
-    _getscopeController(index).clear();
-    super.dispose();
+  NotusDocument _loadDocument() {
+    final Delta delta = Delta()..insert("uyfwhfuiwehfuiwefhewiuf");
+    final data = scopeOfWork2[0];
+    return NotusDocument.fromJson(data);
   }
+
+  // @override
+  // void dispose() {
+  // //  int index = 0;
+  //   //   index = index + 1;
+  //   // scopeofwork1.clear();
+  //   // scopeofwork2.clear();
+  //   // scopeofwork3.clear();
+  //   // scopeofwork4.clear();
+  //   // scopeofwork5.clear();
+  //   // scopeofwork6.clear();
+  //   // scopeofwork7.clear();
+  //   // scopeofwork8.clear();
+  //   // scopeofwork9.clear();
+  //   // scopeofwork10.clear();
+  //   // _getscopeController(index).clear();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -2996,310 +3007,217 @@ class _FinanceState extends State<Finance> {
           child: Column(
             children: [
               SizedBox(
-                height: size.height * 0.2,
-                child: Material(
-                  color: AbgColor.withOpacity(0.2),
+                  height: size.height * 0.2,
+                  child: Material(
+                    color: AbgColor.withOpacity(0.2),
 
-                  //       // elevation: 1.0,
-                  //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: ListView.builder(
-                      controller: scopeListController2,
-                      shrinkWrap: true,
-                      itemCount: scopeofwork.length,
-                      itemBuilder: (context, index) {
-                        return _editableTextField(index);
-                      }),
+                    //       // elevation: 1.0,
+                    //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ZefyrEditor(
+                          controller: zefyrController,
+                          // embedBuilder: (context, node) {
+                          //   return Text(scopeofwork1[0]);
+                          // }),
+                        )),
+                  )),
 
-                  // child: ListView.builder(itemBuilder: (context, index) {
-                  //   bool isedited = false;
-                  //   if (!isedited) {
-                  //     return Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: ZefyrEditor(
-                  //           controller: zefyrController,
-                  //           embedBuilder: (context, node) {
-                  //             return ListView.builder(
-                  //                 itemCount: scopeofwork.length,
-                  //                 itemBuilder: (context, index) =>
-                  //                     Text(scopeofwork[index]));
-                  //           }),
-                  //     );
-                  //   }
-                  // }),
-
-                  // child: ListView.builder(
-                  //     controller: scopeListController,
-                  //     itemCount: scopeofwork.length,
-                  //     itemBuilder: (context, index) {
-                  //       return Padding(
-                  //         padding: const EdgeInsets.all(8.0),
-                  //         child: HtmlEditor(
-                  //           controller: htmlController,
-                  //           hint: scopeofwork[index],
-                  //           options: const HtmlEditorOptions(),
-                  //         ),
-                  //       );
-                  //     }),
-                  // child: ListView(
-                  //   controller: scopeListController,
-                  //   children: [
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField1(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField2(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField3(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField4(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField5(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField6(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField7(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField8(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField9(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField10(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField11(),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: _editableTextField12(),
-                  //     ),
-                  //     // Padding(
-                  //     //   padding: const EdgeInsets.all(8.0),
-                  //     //   child: ListView.builder(
-                  //     //       controller: scopeListController2,
-                  //     //       itemCount: scopeofwork.length,
-                  //     //       itemBuilder: (context, index) {
-                  //     //         return _editableTextField(scopeofwork, index);
-                  //     //       }),
-                  //     // ),
-                  //   ],
-                  // ),
-                ),
-              ),
-              // ZefyrToolbar.basic(controller: zefyrController),
-
-              Padding(
-                padding:
-                    EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
-                child: Material(
-                  color: AbgColor.withOpacity(0.2),
-                  //       // elevation: 1.0,
-                  //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: Container(
-                    height: size.height * 0.04,
-                    decoration: BoxDecoration(color: bgColor),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            'B',
-                            style: TxtStls.tapstylebold,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              boldpressed = !boldpressed;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            "U",
-                            style: TxtStls.tapstyleunderline,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              underlinepressed = !underlinepressed;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          child: Text(
-                            'I',
-                            style: TxtStls.tapstyleitalic,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              italicpressed = !italicpressed;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: AbgColor)),
-                          child: DropdownButton<double>(
-                            underline: Container(),
-                            hint: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "A",
-                                style: TxtStls.tapstylebold,
-                              ),
-                            ),
-                            // Initial Value
-
-                            // Down Arrow Icon
-                            icon: const Padding(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                size: 14.0,
-                              ),
-                            ),
-
-                            // Array list of items
-                            items: fontSizeList
-                                .map((item) => DropdownMenuItem<double>(
-                                      value: item,
-                                      child: Text(
-                                        item.toString(),
-                                        style: TxtStls.fieldstyle,
-                                      ),
-                                    ))
-                                .toList(),
-                            //  value: dropdownfonts,
-
-                            onChanged: (double? newValue) {
-                              setState(() {
-                                fontSelected = newValue!;
-
-                                print(fontSelected);
-                                print(imageDropValue);
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 65,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: AbgColor)),
-                          child: DropdownButton<String>(
-                            underline: Container(),
-                            hint: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child:
-                                    Image.asset("assets/Logos/BIS_logo.png")),
-                            // Initial Value
-
-                            // Down Arrow Icon
-                            icon: const Padding(
-                              padding: EdgeInsets.only(right: 8.0),
-                              child: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                size: 14.0,
-                              ),
-                            ),
-
-                            // Array list of items
-                            items: [
-                              DropdownMenuItem(
-                                child: imageDropItems("", imageDropList[0]),
-                                value: "1",
-                              ),
-                              DropdownMenuItem(
-                                child: imageDropItems("", imageDropList[1]),
-                                value: "2",
-                              ),
-                              DropdownMenuItem(
-                                child: imageDropItems("", imageDropList[2]),
-                                value: "3",
-                                onTap: () {},
-                              ),
-                            ],
-                            value: imageDropValue,
-
-                            onChanged: (newValue) {
-                              setState(() {
-                                imageDropValue = newValue.toString();
-                                print(imageDropValue);
-                                print(textAlignment(imageDropValue));
-                              });
-                            },
-                          ),
-                        ),
-                        InkWell(
-                          child: Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: isBullettapped
-                                          ? btnColor
-                                          : Colors.transparent),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Image.asset("assets/Logos/BIS_logo.png")),
-                          onTap: () {
-                            setState(() {
-                              isBullettapped = !isBullettapped;
-                            });
-                          },
-                        ),
-                        InkWell(
-                          child: Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: isNumberBulletTapped
-                                          ? btnColor
-                                          : Colors.transparent),
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: Image.asset("assets/Logos/CRS_logo6.png")),
-                          onTap: () {
-                            setState(() {
-                              isNumberBulletTapped = !isNumberBulletTapped;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
+              ZefyrToolbar.basic(controller: zefyrController),
+              // Padding(
+              //   padding:
+              //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+              //   child: Material(
+              //     color: AbgColor.withOpacity(0.2),
+              //     //       // elevation: 1.0,
+              //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              //     child: Container(
+              //       height: size.height * 0.04,
+              //       decoration: BoxDecoration(color: bgColor),
+              //       child: Row(
+              //         children: [
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'B',
+              //               style: TxtStls.tapstylebold,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 boldpressed = !boldpressed;
+              //               });
+              //             },
+              //           ),
+              //           SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               "U",
+              //               style: TxtStls.tapstyleunderline,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 underlinepressed = !underlinepressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'I',
+              //               style: TxtStls.tapstyleitalic,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 italicpressed = !italicpressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<double>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                 padding: const EdgeInsets.only(left: 8.0),
+              //                 child: Text(
+              //                   "A",
+              //                   style: TxtStls.tapstylebold,
+              //                 ),
+              //               ),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: fontSizeList
+              //                   .map((item) => DropdownMenuItem<double>(
+              //                         value: item,
+              //                         child: Text(
+              //                           item.toString(),
+              //                           style: TxtStls.fieldstyle,
+              //                         ),
+              //                       ))
+              //                   .toList(),
+              //               //  value: dropdownfonts,
+              //
+              //               onChanged: (double? newValue) {
+              //                 setState(() {
+              //                   fontSelected = newValue!;
+              //
+              //                   print(fontSelected);
+              //                   print(imageDropValue);
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<String>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                   padding: const EdgeInsets.only(left: 8.0),
+              //                   child:
+              //                       Image.asset("assets/Logos/BIS_logo.png")),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: [
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[0]),
+              //                   value: "1",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[1]),
+              //                   value: "2",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[2]),
+              //                   value: "3",
+              //                   onTap: () {},
+              //                 ),
+              //               ],
+              //               value: imageDropValue,
+              //
+              //               onChanged: (newValue) {
+              //                 setState(() {
+              //                   imageDropValue = newValue.toString();
+              //                   print(imageDropValue);
+              //                   print(textAlignment(imageDropValue));
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isBullettapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/BIS_logo.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isBullettapped = !isBullettapped;
+              //               });
+              //             },
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isNumberBulletTapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/CRS_logo6.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isNumberBulletTapped = !isNumberBulletTapped;
+              //               });
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),
@@ -3362,11 +3280,10 @@ class _FinanceState extends State<Finance> {
     });
   }
 
-  scopeedit(List list, TextEditingController controller) {
+  scopeedit(TextEditingController controller) {
     setState(() {
-      list.add(ScopeofWorkModel(text: controller.text));
+      scopeofwork1;
       controller.clear();
-      // print("scope of work length--" + list.length.toString());
     });
   }
 
@@ -3384,13 +3301,8 @@ class _FinanceState extends State<Finance> {
         ),
         Flexible(
           flex: 1,
-          child: field2(
-              scopeEditController,
-              "",
-              1,
-              true,
-              scopeedit(scopeofwork, scopeEditController),
-              const Icon(Icons.edit)),
+          child: field2(scopeEditController, "", 1, true,
+              scopeedit(scopeEditController), const Icon(Icons.edit)),
         ),
       ],
     );
@@ -3580,6 +3492,7 @@ class _FinanceState extends State<Finance> {
 
   bool _isEditingText = false;
   bool editable = false;
+
   String value1 =
       "We assist you to know whether a product falls under the purview of concerned authority.";
   String value2 =
@@ -3601,6 +3514,20 @@ class _FinanceState extends State<Finance> {
   String value10 =
       "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.";
   bool boldpressed = false;
+  List scopeofwork1 = [
+    "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.",
+  ].toList();
+
+  List scopeOfWork2 = [
+    {
+      "text":
+          "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."
+    },
+    // {
+    //   "text":
+    //       "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."
+    // },
+  ];
   bool underlinepressed = false;
   bool italicpressed = false;
 
@@ -3608,7 +3535,7 @@ class _FinanceState extends State<Finance> {
     switch (imageDropValue) {
       case "1":
         {
-          return TextAlign.start;
+          return TextAlign.left;
         }
       case "2":
         {
@@ -3616,11 +3543,11 @@ class _FinanceState extends State<Finance> {
         }
       case "3":
         {
-          return TextAlign.end;
+          return TextAlign.right;
         }
       default:
         {
-          return TextAlign.start;
+          return TextAlign.left;
         }
     }
   }
@@ -3706,29 +3633,25 @@ class _FinanceState extends State<Finance> {
                         ? 20.0
                         : 0.0,
               ),
-              Flexible(
-                flex: 2,
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(top: isNumberBulletTapped ? 5.0 : 0.0),
-                  child: Text(
-                    scopeofwork[index].text.toString(),
-                    style: boldpressed
-                        ? TxtStls.tapstylebold
-                        : underlinepressed
-                            ? TxtStls.tapstyleunderline
-                            : italicpressed
-                                ? TxtStls.tapstyleitalic
-                                : GoogleFonts.nunito(
-                                    textStyle: TextStyle(
-                                        color: txtColor,
-                                        fontSize: fontSelected,
-                                        letterSpacing: 0.2),
-                                    color: txtColor,
-                                    letterSpacing: 0.2,
-                                    fontSize: fontSelected),
-                    textAlign: textAlignment(imageDropValue),
-                  ),
+              Padding(
+                padding: EdgeInsets.only(top: isNumberBulletTapped ? 5.0 : 0.0),
+                child: Text(
+                  scopeofwork[index].text.toString(),
+                  style: boldpressed
+                      ? TxtStls.tapstylebold
+                      : underlinepressed
+                          ? TxtStls.tapstyleunderline
+                          : italicpressed
+                              ? TxtStls.tapstyleitalic
+                              : GoogleFonts.nunito(
+                                  textStyle: TextStyle(
+                                      color: txtColor,
+                                      fontSize: fontSelected,
+                                      letterSpacing: 0.2),
+                                  color: txtColor,
+                                  letterSpacing: 0.2,
+                                  fontSize: fontSelected),
+                  textAlign: textAlignment(imageDropValue),
                 ),
               ),
             ],
@@ -3736,518 +3659,518 @@ class _FinanceState extends State<Finance> {
         ));
   }
 
-  Widget _editableTextField1() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value1 = newValue;
-            _isEditingText = !_isEditingText;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork1,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value1,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField2() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value2 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork2,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value2,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField3() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value3 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork3,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value3,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField4() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value4 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork4,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value4,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField5() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value5 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork5,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value5,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField6() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value6 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork6,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value6,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField7() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value7 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork7,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value7,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField8() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value8 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork8,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value8,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
-
-  Widget _editableTextField9() {
-    if (_isEditingText) {
-      return TextField(
-        style: boldpressed
-            ? TxtStls.tapstylebold
-            : underlinepressed
-                ? TxtStls.tapstyleunderline
-                : italicpressed
-                    ? TxtStls.tapstyleitalic
-                    : GoogleFonts.nunito(
-                        textStyle: TextStyle(
-                            color: txtColor,
-                            fontSize: fontSelected,
-                            letterSpacing: 0.2),
-                        color: txtColor,
-                        letterSpacing: 0.2,
-                        fontSize: fontSelected),
-        textAlign: textAlignment(imageDropValue),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onSubmitted: (newValue) {
-          setState(() {
-            value9 = newValue;
-            _isEditingText = false;
-          });
-        },
-        autofocus: true,
-        controller: scopeofwork9,
-      );
-    }
-    return InkWell(
-        onTap: () {
-          setState(() {
-            _isEditingText = true;
-          });
-        },
-        child: Text(
-          value9,
-          style: boldpressed
-              ? TxtStls.tapstylebold
-              : underlinepressed
-                  ? TxtStls.tapstyleunderline
-                  : italicpressed
-                      ? TxtStls.tapstyleitalic
-                      : GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: txtColor,
-                              fontSize: fontSelected,
-                              letterSpacing: 0.2),
-                          color: txtColor,
-                          letterSpacing: 0.2,
-                          fontSize: fontSelected),
-          textAlign: textAlignment(imageDropValue),
-        ));
-  }
+  // Widget _editableTextField1() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value1 = newValue;
+  //           _isEditingText = !_isEditingText;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork1,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value1,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField2() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value2 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork2,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value2,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField3() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value3 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork3,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value3,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField4() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value4 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork4,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value4,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField5() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value5 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork5,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value5,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField6() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value6 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork6,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value6,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField7() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value7 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork7,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value7,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField8() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value8 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork8,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value8,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
+  //
+  // Widget _editableTextField9() {
+  //   if (_isEditingText) {
+  //     return TextField(
+  //       style: boldpressed
+  //           ? TxtStls.tapstylebold
+  //           : underlinepressed
+  //               ? TxtStls.tapstyleunderline
+  //               : italicpressed
+  //                   ? TxtStls.tapstyleitalic
+  //                   : GoogleFonts.nunito(
+  //                       textStyle: TextStyle(
+  //                           color: txtColor,
+  //                           fontSize: fontSelected,
+  //                           letterSpacing: 0.2),
+  //                       color: txtColor,
+  //                       letterSpacing: 0.2,
+  //                       fontSize: fontSelected),
+  //       textAlign: textAlignment(imageDropValue),
+  //       decoration: const InputDecoration(
+  //         border: InputBorder.none,
+  //       ),
+  //       onSubmitted: (newValue) {
+  //         setState(() {
+  //           value9 = newValue;
+  //           _isEditingText = false;
+  //         });
+  //       },
+  //       autofocus: true,
+  //       controller: scopeofwork9,
+  //     );
+  //   }
+  //   return InkWell(
+  //       onTap: () {
+  //         setState(() {
+  //           _isEditingText = true;
+  //         });
+  //       },
+  //       child: Text(
+  //         value9,
+  //         style: boldpressed
+  //             ? TxtStls.tapstylebold
+  //             : underlinepressed
+  //                 ? TxtStls.tapstyleunderline
+  //                 : italicpressed
+  //                     ? TxtStls.tapstyleitalic
+  //                     : GoogleFonts.nunito(
+  //                         textStyle: TextStyle(
+  //                             color: txtColor,
+  //                             fontSize: fontSelected,
+  //                             letterSpacing: 0.2),
+  //                         color: txtColor,
+  //                         letterSpacing: 0.2,
+  //                         fontSize: fontSelected),
+  //         textAlign: textAlignment(imageDropValue),
+  //       ));
+  // }
 
   // Widget _editableTextField10() {
   //   if (_isEditingText) {

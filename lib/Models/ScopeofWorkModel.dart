@@ -4,9 +4,9 @@ class ScopeofWorkModel {
   ScopeofWorkModel({
     this.text,
   });
-  factory ScopeofWorkModel.fromMap(map) {
+  factory ScopeofWorkModel.fromJson(json) {
     return ScopeofWorkModel(
-      text: map['text'],
+      text: json['text'],
       // price: map['price'],
       // gst: map['gst'],
       // image: map['image'],
@@ -15,7 +15,7 @@ class ScopeofWorkModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'text': text,
       // 'gst': gst,
