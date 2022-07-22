@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_delta/quill_delta.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
@@ -127,8 +128,8 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
-  final TextEditingController _filterDateController = TextEditingController();
-  final TextEditingController _serviceController1 = TextEditingController();
+  // final TextEditingController _filterDateController = TextEditingController();
+  // final TextEditingController _serviceController1 = TextEditingController();
   // late TextEditingController scopeofwork1;
   // late TextEditingController scopeofwork2;
   // late TextEditingController scopeofwork3;
@@ -219,9 +220,16 @@ class _FinanceState extends State<Finance> {
   }
 
   NotusDocument _loadDocument() {
-    final Delta delta = Delta()..insert("uyfwhfuiwehfuiwefhewiuf");
-    final data = scopeOfWork2[0];
-    return NotusDocument.fromJson(data);
+    final Delta delta = Delta()
+      ..insert(
+        "uyfwhfuiwehfuiwefhewiuf\n",
+      )
+      ..insert("yuruqhu\n")
+      ..insert('jkiahdfuiahaiuhkjsjvi\n');
+
+    // final data = scopeofwork1;
+    //  return NotusDocument.fromJson(data);
+    return NotusDocument.fromDelta(delta);
   }
 
   // @override
@@ -2947,7 +2955,7 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  // final QuillController _quillController = QuillController.basic();
+  final quill.QuillController _quillController = quill.QuillController.basic();
   double fontSelected = 12.0;
   List<double> fontSizeList = [
     12.0,
@@ -3013,6 +3021,10 @@ class _FinanceState extends State<Finance> {
 
                     //       // elevation: 1.0,
                     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    // child: Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: quill.QuillEditor.,
+                    // ),
                     child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ZefyrEditor(
