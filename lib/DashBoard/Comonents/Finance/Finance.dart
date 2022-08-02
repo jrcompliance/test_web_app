@@ -4,6 +4,7 @@ import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_delta/quill_delta.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
+// import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
@@ -193,8 +194,8 @@ class _FinanceState extends State<Finance> {
         ename = Provider.of<UserDataProvider>(context, listen: false).username;
       });
     });
-    final document = _loadDocument();
-    zefyrController = ZefyrController(document);
+    // final document = _loadDocument();
+    zefyrController = ZefyrController();
     focusNode = FocusNode();
 
     // scopeofwork1 = TextEditingController(text: value1);
@@ -219,18 +220,18 @@ class _FinanceState extends State<Finance> {
     // scopeofwork.add(ScopeofWorkModel(text: value10));
   }
 
-  NotusDocument _loadDocument() {
-    final Delta delta = Delta()
-      ..insert(
-        "uyfwhfuiwehfuiwefhewiuf\n",
-      )
-      ..insert("yuruqhu\n")
-      ..insert('jkiahdfuiahaiuhkjsjvi\n');
-
-    // final data = scopeofwork1;
-    //  return NotusDocument.fromJson(data);
-    return NotusDocument.fromDelta(delta);
-  }
+  // NotusDocument _loadDocument() {
+  //   final Delta delta = Delta()..insert("uyfwhfu iwehfu iwefhewiuf\n");
+  //   // ..insert(
+  //   //   "uyfwhfuiwehfuiwefhewiuf\n",
+  //   // )
+  //   // ..insert("yuruqhu\n")
+  //   // ..insert('jkiahdfuiahaiuhkjsjvi\n');
+  //
+  //   final data = scopeOfWork2;
+  //   return NotusDocument.fromJson(data);
+  //   // return NotusDocument.fromDelta(delta);
+  // }
 
   // @override
   // void dispose() {
@@ -2955,7 +2956,7 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  final quill.QuillController _quillController = quill.QuillController.basic();
+  // final quill.QuillController _quillController = quill.QuillController.basic();
   double fontSelected = 12.0;
   List<double> fontSizeList = [
     12.0,
@@ -3018,20 +3019,16 @@ class _FinanceState extends State<Finance> {
                   height: size.height * 0.2,
                   child: Material(
                     color: AbgColor.withOpacity(0.2),
-
-                    //       // elevation: 1.0,
-                    //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                    // child: Padding(
-                    //   padding: const EdgeInsets.all(8.0),
-                    //   child: quill.QuillEditor.,
-                    // ),
                     child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ZefyrEditor(
                           controller: zefyrController,
-                          // embedBuilder: (context, node) {
-                          //   return Text(scopeofwork1[0]);
-                          // }),
+                          embedBuilder: (context, node) {
+                            return Text(
+                              scopetext,
+                              style: TxtStls.fieldstyle,
+                            );
+                          },
                         )),
                   )),
 
@@ -3313,10 +3310,56 @@ class _FinanceState extends State<Finance> {
         ),
         Flexible(
           flex: 1,
-          child: field2(scopeEditController, "", 1, true,
-              scopeedit(scopeEditController), const Icon(Icons.edit)),
+          child: InkWell(
+            child: const Icon(
+              Icons.copy,
+              size: 20.0,
+            ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    predefinedtextDialog(context, scopetext),
+              );
+            },
+          ),
+          // child: field2(scopeEditController, "", 1, true,
+          //     scopeedit(scopeEditController), const Icon(Icons.edit)),
         ),
       ],
+    );
+  }
+
+  String scopetext =
+      'We assist you to know whether a product falls under the purview of concernedauthority.\nFor comprehensible guidance, we will first scrutinize the certificationrequirements of a product.\nWe will provide you information regarding a number of samples required forproduct testing because product sample requirements differ depending onproduct type.\nWe will educate you about the registration process, benefits, documentsrequired, including any query you may have regarding the same.\nBeing a reputed compliance consultant, we will provide you technical and non-technical support.\nJR Compliance offers competitive and excellent services to our clients bymeeting the startled queries/demands.\nTo ensure the utmost convenience of our client, we will also assist you in thecustom clearance of the sample product.\nWe are available 24*7 to make sure our clients get what they expect from us,thus, we will provide you with the finest solution to your queries.';
+
+  Widget predefinedtextDialog(BuildContext context, text) {
+    bool tapped = false;
+    final key = new GlobalKey<ScaffoldState>();
+    return AlertDialog(
+      key: key,
+      contentPadding: const EdgeInsets.all(0.0),
+      contentTextStyle: TxtStls.fieldstyle,
+      content: InkWell(
+        child: Tooltip(
+          message: tapped == true ? 'copied' : 'tap to copy',
+          child: Text(
+            text,
+            style: TxtStls.fieldstyle,
+          ),
+        ),
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: text));
+          setState(() {
+            tapped = !tapped;
+            print(tapped);
+            Navigator.of(context, rootNavigator: true).pop();
+          });
+          // key.currentState!.showSnackBar( const SnackBar(
+          //   content:  Text("Copied to Clipboard"),
+          // ));
+        },
+      ),
     );
   }
 
@@ -3526,11 +3569,12 @@ class _FinanceState extends State<Finance> {
   String value10 =
       "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.";
   bool boldpressed = false;
-  List scopeofwork1 = [
-    "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.",
-  ].toList();
+  // List scopeofwork1 = [
+  //   "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.",
+  // ];
+  var scopeofwork1 = ScopeofWorkModel(text: "fsfwefewfw");
 
-  List scopeOfWork2 = [
+  var scopeOfWork2 = [
     {
       "text":
           "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."

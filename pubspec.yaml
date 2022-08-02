@@ -98,8 +98,8 @@ dependencies:
   status_change: ^2.0.0
   flutter_dropdown: ^1.0.1+hotfix.1
   zefyrka:
-  flutter_quill: ^1.0.9
-  quill_delta: ^3.0.0-nullsafety.1
+#  flutter_quill: ^1.0.9
+  quill_delta:
 
 
 
