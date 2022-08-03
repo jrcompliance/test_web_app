@@ -82,7 +82,9 @@ class _FinanceState extends State<Finance> {
     "Disputed"
   ];
 
-  late ZefyrController zefyrController;
+  late ZefyrController zefyrTermsController;
+  late ZefyrController zefyrScopeController;
+  late ZefyrController zefyrExclusionsController;
   late FocusNode focusNode;
 
   final TextEditingController _referenceController = TextEditingController();
@@ -195,7 +197,9 @@ class _FinanceState extends State<Finance> {
       });
     });
     // final document = _loadDocument();
-    zefyrController = ZefyrController();
+    zefyrScopeController = ZefyrController();
+    zefyrTermsController = ZefyrController();
+    zefyrExclusionsController = ZefyrController();
     focusNode = FocusNode();
 
     // scopeofwork1 = TextEditingController(text: value1);
@@ -2489,7 +2493,7 @@ class _FinanceState extends State<Finance> {
     } else if (activeStep == 5) {
       return Container(
         child: Center(
-          child: Text('HIIII$activeStep'),
+          child: TextButton(onPressed: () {}, child: Text("")),
         ),
       );
     } else {
@@ -3005,24 +3009,22 @@ class _FinanceState extends State<Finance> {
           ),
         ),
         space2(),
-        scoperow(
-          "Scope of Work",
-        ),
+        scoperow("Scope of Work", scopetext),
         space2(),
         Material(
           color: AbgColor.withOpacity(0.2),
-          //       // elevation: 1.0,
-          //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          // elevation: 0.5,
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
           child: Column(
             children: [
               SizedBox(
                   height: size.height * 0.2,
-                  child: Material(
+                  child: Container(
                     color: AbgColor.withOpacity(0.2),
                     child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ZefyrEditor(
-                          controller: zefyrController,
+                          controller: zefyrScopeController,
                           embedBuilder: (context, node) {
                             return Text(
                               scopetext,
@@ -3032,7 +3034,7 @@ class _FinanceState extends State<Finance> {
                         )),
                   )),
 
-              ZefyrToolbar.basic(controller: zefyrController),
+              ZefyrToolbar.basic(controller: zefyrScopeController),
               // Padding(
               //   padding:
               //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
@@ -3232,10 +3234,232 @@ class _FinanceState extends State<Finance> {
         ),
         // listview(scopeofwork),
         space2(),
-        termsrow(
-          "Terms and Conditions",
-        ),
+        scoperow("Terms and Conditions", terms),
+        // termsrow(
+        //   "Terms and Conditions",
+        // ),
         space2(),
+        Material(
+          color: AbgColor.withOpacity(0.2),
+          //       // elevation: 1.0,
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          child: Column(
+            children: [
+              SizedBox(
+                  height: size.height * 0.2,
+                  child: Material(
+                    color: AbgColor.withOpacity(0.2),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ZefyrEditor(
+                          controller: zefyrTermsController,
+                          embedBuilder: (context, node) {
+                            return Text(
+                              terms,
+                              style: TxtStls.fieldstyle,
+                            );
+                          },
+                        )),
+                  )),
+
+              ZefyrToolbar.basic(controller: zefyrTermsController),
+              // Padding(
+              //   padding:
+              //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+              //   child: Material(
+              //     color: AbgColor.withOpacity(0.2),
+              //     //       // elevation: 1.0,
+              //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              //     child: Container(
+              //       height: size.height * 0.04,
+              //       decoration: BoxDecoration(color: bgColor),
+              //       child: Row(
+              //         children: [
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'B',
+              //               style: TxtStls.tapstylebold,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 boldpressed = !boldpressed;
+              //               });
+              //             },
+              //           ),
+              //           SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               "U",
+              //               style: TxtStls.tapstyleunderline,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 underlinepressed = !underlinepressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'I',
+              //               style: TxtStls.tapstyleitalic,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 italicpressed = !italicpressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<double>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                 padding: const EdgeInsets.only(left: 8.0),
+              //                 child: Text(
+              //                   "A",
+              //                   style: TxtStls.tapstylebold,
+              //                 ),
+              //               ),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: fontSizeList
+              //                   .map((item) => DropdownMenuItem<double>(
+              //                         value: item,
+              //                         child: Text(
+              //                           item.toString(),
+              //                           style: TxtStls.fieldstyle,
+              //                         ),
+              //                       ))
+              //                   .toList(),
+              //               //  value: dropdownfonts,
+              //
+              //               onChanged: (double? newValue) {
+              //                 setState(() {
+              //                   fontSelected = newValue!;
+              //
+              //                   print(fontSelected);
+              //                   print(imageDropValue);
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<String>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                   padding: const EdgeInsets.only(left: 8.0),
+              //                   child:
+              //                       Image.asset("assets/Logos/BIS_logo.png")),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: [
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[0]),
+              //                   value: "1",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[1]),
+              //                   value: "2",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[2]),
+              //                   value: "3",
+              //                   onTap: () {},
+              //                 ),
+              //               ],
+              //               value: imageDropValue,
+              //
+              //               onChanged: (newValue) {
+              //                 setState(() {
+              //                   imageDropValue = newValue.toString();
+              //                   print(imageDropValue);
+              //                   print(textAlignment(imageDropValue));
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isBullettapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/BIS_logo.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isBullettapped = !isBullettapped;
+              //               });
+              //             },
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isNumberBulletTapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/CRS_logo6.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isNumberBulletTapped = !isNumberBulletTapped;
+              //               });
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
+            ],
+          ),
+        ),
         //  listview(terms),
       ],
     );
@@ -3261,22 +3485,9 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  List exclusions = [
-    'hfyfyuygyuui',
-    'yguyiuyiyihugui',
-    'tygfuhjfdytfcxaet',
-    'jfuhjdtyggfstrfvgh',
-    'dytuyjhfdrytr7u'
-  ];
-  List terms = [
-    "The services provided by JR Compliance are governed by our",
-    "https://www.jrcompliance.com/terms-and-conditions.",
-    "In case you face difficulty in obtaining our Terms and conditions from our official website, contact your designated representative immediately to receive a copy of the same.",
-    "To know the information regarding purchase and billing,visit -",
-    "https://www.jrcompliance.com/purchase-and-billing.",
-    "To know more about our privacy policies, visit -",
-    "https://www.jrcompliance.com/privacy-policy"
-  ];
+  var exclusions = "";
+  var terms =
+      "The services provided by JR Compliance are governed by our https://www.jrcompliance.com/terms-and-conditions.\nIn case you face difficulty in obtaining our Terms and conditions from our official website, contact your designated representative immediately to receive a copy of the same.\nTo know the information regarding purchase and billing,visit - https://www.jrcompliance.com/purchase-and-billing.\nTo know more about our privacy policies, visit - https://www.jrcompliance.com/privacy-policy";
   final TextEditingController scopeEditController = TextEditingController();
   final TextEditingController termsEditController = TextEditingController();
   final TextEditingController escalationEditController =
@@ -3296,7 +3507,7 @@ class _FinanceState extends State<Finance> {
     });
   }
 
-  Widget scoperow(String text) {
+  Widget scoperow(String text, text2) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3319,8 +3530,10 @@ class _FinanceState extends State<Finance> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) =>
-                    predefinedtextDialog(context, scopetext),
+                    predefinedtextDialog(context, text2),
               );
+              //  print("scope---" + scopetext.toString());
+              print("terms---" + terms.toString());
             },
           ),
           // child: field2(scopeEditController, "", 1, true,
@@ -3363,78 +3576,78 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  Widget escalationrow(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          flex: 1,
-          child: Text(
-            text,
-            style: TxtStls.fieldtitlestyle11,
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: field2(
-              escalationEditController,
-              "",
-              1,
-              true,
-              edit(escalations, escalationEditController),
-              const Icon(Icons.edit)),
-        ),
-      ],
-    );
-  }
+  // Widget escalationrow(String text) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Flexible(
+  //         flex: 1,
+  //         child: Text(
+  //           text,
+  //           style: TxtStls.fieldtitlestyle11,
+  //         ),
+  //       ),
+  //       Flexible(
+  //         flex: 1,
+  //         child: field2(
+  //             escalationEditController,
+  //             "",
+  //             1,
+  //             true,
+  //             edit(escalations, escalationEditController),
+  //             const Icon(Icons.edit)),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget termsrow(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          flex: 1,
-          child: Text(
-            text,
-            style: TxtStls.fieldtitlestyle11,
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: field2(termsEditController, "", 1, true,
-              edit(terms, termsEditController), const Icon(Icons.edit)),
-          // child: ElevatedButton.icon(
-          //   style: ElevatedButton.styleFrom(
-          //     primary: bgColor,
-          //     shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(8.0)),
-          //   ),
-          //   label: const Icon(
-          //     Icons.edit,
-          //     color: AbgColor,
-          //     size: 16,
-          //   ),
-          //   onPressed: () {
-          //     setState(() {
-          //       _isscopeeditPressed = true;
-          //     });
-          //   _isscopeeditPressed ? scopeEditExpanded(8): null;
-          //
-          //     // list.forEach((element) {
-          //     //   element.toString().trim();
-          //     // });
-          //   }, icon: const Icon(
-          //   Icons.edit,
-          //   color: AbgColor,
-          //   size: 16,
-          // ),
-          // ),
-        ),
-      ],
-    );
-  }
+  // Widget termsrow(String text) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Flexible(
+  //         flex: 1,
+  //         child: Text(
+  //           text,
+  //           style: TxtStls.fieldtitlestyle11,
+  //         ),
+  //       ),
+  //       Flexible(
+  //         flex: 1,
+  //         child: field2(termsEditController, "", 1, true,
+  //             edit(terms, termsEditController), const Icon(Icons.edit)),
+  //         // child: ElevatedButton.icon(
+  //         //   style: ElevatedButton.styleFrom(
+  //         //     primary: bgColor,
+  //         //     shape: RoundedRectangleBorder(
+  //         //         borderRadius: BorderRadius.circular(8.0)),
+  //         //   ),
+  //         //   label: const Icon(
+  //         //     Icons.edit,
+  //         //     color: AbgColor,
+  //         //     size: 16,
+  //         //   ),
+  //         //   onPressed: () {
+  //         //     setState(() {
+  //         //       _isscopeeditPressed = true;
+  //         //     });
+  //         //   _isscopeeditPressed ? scopeEditExpanded(8): null;
+  //         //
+  //         //     // list.forEach((element) {
+  //         //     //   element.toString().trim();
+  //         //     // });
+  //         //   }, icon: const Icon(
+  //         //   Icons.edit,
+  //         //   color: AbgColor,
+  //         //   size: 16,
+  //         // ),
+  //         // ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget dropdecor(String text, [Color? clr, IconData? icon]) {
     return Container(
@@ -5147,11 +5360,232 @@ class _FinanceState extends State<Finance> {
           ),
         ),
         space(),
-        escalationrow(
-          "Exclusions",
-        ),
+        scoperow("Exclusions", "Go back and Please type something"),
+        // escalationrow(
+        //   "Exclusions",
+        // ),
         space(),
-        //  listview(exclusions),
+        Material(
+          color: AbgColor.withOpacity(0.2),
+          //       // elevation: 1.0,
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          child: Column(
+            children: [
+              SizedBox(
+                  height: size.height * 0.2,
+                  child: Material(
+                    color: AbgColor.withOpacity(0.2),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ZefyrEditor(
+                          controller: zefyrExclusionsController,
+                          embedBuilder: (context, node) {
+                            return Text(
+                              exclusions,
+                              style: TxtStls.fieldstyle,
+                            );
+                          },
+                        )),
+                  )),
+
+              ZefyrToolbar.basic(controller: zefyrExclusionsController),
+              // Padding(
+              //   padding:
+              //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+              //   child: Material(
+              //     color: AbgColor.withOpacity(0.2),
+              //     //       // elevation: 1.0,
+              //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              //     child: Container(
+              //       height: size.height * 0.04,
+              //       decoration: BoxDecoration(color: bgColor),
+              //       child: Row(
+              //         children: [
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'B',
+              //               style: TxtStls.tapstylebold,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 boldpressed = !boldpressed;
+              //               });
+              //             },
+              //           ),
+              //           SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               "U",
+              //               style: TxtStls.tapstyleunderline,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 underlinepressed = !underlinepressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           InkWell(
+              //             child: Text(
+              //               'I',
+              //               style: TxtStls.tapstyleitalic,
+              //             ),
+              //             onTap: () {
+              //               setState(() {
+              //                 italicpressed = !italicpressed;
+              //               });
+              //             },
+              //           ),
+              //           const SizedBox(
+              //             width: 10,
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<double>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                 padding: const EdgeInsets.only(left: 8.0),
+              //                 child: Text(
+              //                   "A",
+              //                   style: TxtStls.tapstylebold,
+              //                 ),
+              //               ),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: fontSizeList
+              //                   .map((item) => DropdownMenuItem<double>(
+              //                         value: item,
+              //                         child: Text(
+              //                           item.toString(),
+              //                           style: TxtStls.fieldstyle,
+              //                         ),
+              //                       ))
+              //                   .toList(),
+              //               //  value: dropdownfonts,
+              //
+              //               onChanged: (double? newValue) {
+              //                 setState(() {
+              //                   fontSelected = newValue!;
+              //
+              //                   print(fontSelected);
+              //                   print(imageDropValue);
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           Container(
+              //             height: 30,
+              //             width: 65,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(8.0),
+              //                 border: Border.all(color: AbgColor)),
+              //             child: DropdownButton<String>(
+              //               underline: Container(),
+              //               hint: Padding(
+              //                   padding: const EdgeInsets.only(left: 8.0),
+              //                   child:
+              //                       Image.asset("assets/Logos/BIS_logo.png")),
+              //               // Initial Value
+              //
+              //               // Down Arrow Icon
+              //               icon: const Padding(
+              //                 padding: EdgeInsets.only(right: 8.0),
+              //                 child: Icon(
+              //                   Icons.arrow_drop_down_rounded,
+              //                   size: 14.0,
+              //                 ),
+              //               ),
+              //
+              //               // Array list of items
+              //               items: [
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[0]),
+              //                   value: "1",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[1]),
+              //                   value: "2",
+              //                 ),
+              //                 DropdownMenuItem(
+              //                   child: imageDropItems("", imageDropList[2]),
+              //                   value: "3",
+              //                   onTap: () {},
+              //                 ),
+              //               ],
+              //               value: imageDropValue,
+              //
+              //               onChanged: (newValue) {
+              //                 setState(() {
+              //                   imageDropValue = newValue.toString();
+              //                   print(imageDropValue);
+              //                   print(textAlignment(imageDropValue));
+              //                 });
+              //               },
+              //             ),
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isBullettapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/BIS_logo.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isBullettapped = !isBullettapped;
+              //               });
+              //             },
+              //           ),
+              //           InkWell(
+              //             child: Container(
+              //                 height: 30,
+              //                 width: 30,
+              //                 decoration: BoxDecoration(
+              //                     border: Border.all(
+              //                         color: isNumberBulletTapped
+              //                             ? btnColor
+              //                             : Colors.transparent),
+              //                     borderRadius: BorderRadius.circular(5.0)),
+              //                 child: Image.asset("assets/Logos/CRS_logo6.png")),
+              //             onTap: () {
+              //               setState(() {
+              //                 isNumberBulletTapped = !isNumberBulletTapped;
+              //               });
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
+            ],
+          ),
+        ),
         space(),
         Align(
           alignment: Alignment.centerLeft,
@@ -5177,9 +5611,12 @@ class _FinanceState extends State<Finance> {
                   )),
               Expanded(
                   flex: 2,
-                  child: Text(
-                    "Standard",
-                    style: TxtStls.fieldstyle,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50.0),
+                    child: Text(
+                      "Standard",
+                      style: TxtStls.fieldstyle,
+                    ),
                   )),
               Expanded(
                   flex: 2,
@@ -5191,7 +5628,9 @@ class _FinanceState extends State<Finance> {
           ),
         ),
         space(),
-        escalationLevels(person1, AbgColor.withOpacity(0.1)),
+        escalationLevels(),
+        escalationLevels2(),
+        escalationLevels3(),
         // SizedBox(
         //   height: size.height*0.26,
         //   child: ListView.builder(
@@ -5422,11 +5861,11 @@ class _FinanceState extends State<Finance> {
   String? person1;
   String? person2;
   String? person3;
-  Widget escalationLevels(person, color) {
+  Widget escalationLevels() {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.08,
-      color: color,
+      color: AbgColor.withOpacity(0.1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -5510,7 +5949,142 @@ class _FinanceState extends State<Finance> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text("Tarun Sadana",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Lalit Gupta", style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text("Rishikesh Mishra",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                  hint: const Text("Select Person"),
+                  onChanged: (selectedPerson) {
+                    setState(() {
+                      person1 = selectedPerson;
+                      print(person1.toString());
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+          const Expanded(flex: 2, child: Text("")),
+        ],
+      ),
+    );
+  }
+
+  Widget escalationLevels2() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height * 0.08,
+      color: bgColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 50.0),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 12,
+                    child: Icon(Icons.signal_cellular_alt_rounded),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: Text(
+                        "Level2",
+                        style: TxtStls.fieldstyle,
+                      )),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Expanded(
+              flex: 2,
+              child: Container(
+                height: size.height * 0.06,
+                decoration: BoxDecoration(
+                    color: bgColor,
+                    boxShadow: const [
+                      BoxShadow(offset: Offset(0.1, 0.1), spreadRadius: 0.5)
+                    ],
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.transparent)),
+                child: DropDown<String>(
+                  showUnderline: false,
+                  items: const <String>[
+                    "Prashant Thakur",
+                    "Tarun Sadana",
+                    "Lalit Gupta",
+                    "Rishikesh Mishra"
+                  ],
+                  icon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: AbgColor,
+                  ),
+                  customWidgets: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Prashant Thakur",
                                 style: TxtStls.smallfieldstyle),
                             Text("prashant@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
@@ -5558,12 +6132,188 @@ class _FinanceState extends State<Finance> {
                           ],
                         )
                       ],
-                    )
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Rishikesh Mishra",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
                   ],
                   hint: const Text("Select Person"),
                   onChanged: (selectedPerson) {
                     setState(() {
-                      person = selectedPerson;
+                      person2 = selectedPerson;
+                      print(person2.toString());
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+          const Expanded(flex: 2, child: Text(""))
+        ],
+      ),
+    );
+  }
+
+  Widget escalationLevels3() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      height: size.height * 0.08,
+      color: AbgColor.withOpacity(0.1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 50.0),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 12,
+                    child: Icon(Icons.signal_cellular_alt_rounded),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(right: 0.0),
+                      child: Text(
+                        "Level1",
+                        style: TxtStls.fieldstyle,
+                      )),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Expanded(
+              flex: 2,
+              child: Container(
+                height: size.height * 0.06,
+                decoration: BoxDecoration(
+                    color: bgColor,
+                    boxShadow: const [
+                      BoxShadow(offset: Offset(0.1, 0.1), spreadRadius: 0.5)
+                    ],
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(color: Colors.transparent)),
+                child: DropDown<String>(
+                  showUnderline: false,
+                  items: const <String>[
+                    "Prashant Thakur",
+                    "Tarun Sadana",
+                    "Lalit Gupta",
+                    "Rishikesh Mishra"
+                  ],
+                  icon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: AbgColor,
+                  ),
+                  customWidgets: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Prashant Thakur",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Tarun Sadana",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Lalit Gupta", style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Rishikesh Mishra",
+                                style: TxtStls.smallfieldstyle),
+                            Text("prashant@jrcompliance.com",
+                                style: TxtStls.smallfieldstyle),
+                            Text("+91 96679 55225",
+                                style: TxtStls.smallfieldstyle),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                  hint: const Text("Select Person"),
+                  onChanged: (selectedPerson) {
+                    setState(() {
+                      person3 = selectedPerson;
+                      print(person3.toString());
                     });
                   },
                 ),
