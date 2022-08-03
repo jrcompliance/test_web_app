@@ -2493,7 +2493,7 @@ class _FinanceState extends State<Finance> {
     } else if (activeStep == 5) {
       return Container(
         child: Center(
-          child: TextButton(onPressed: () {}, child: Text("")),
+          child: TextButton(onPressed: () {}, child: Text("Create Pdf")),
         ),
       );
     } else {
@@ -5191,110 +5191,551 @@ class _FinanceState extends State<Finance> {
 
   Widget serviceIntro(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Center(
-      child: TextButton(
-          onPressed: () async {
-            var gstno = _gstController.text == null
-                ? ""
-                : _gstController.text.toString();
-            print(invoiceid.toString());
-            int? isiserviceid;
-            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                .fetchISIServiceId()
-                .then((value) {
-              isiserviceid =
-                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                      .isiserviceid;
-            });
-            int? fmcsserviceid;
-            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                .fetchFMCSServiceId()
-                .then((value) {
-              fmcsserviceid =
-                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                      .fmcsserviceid;
-            });
-            int? crsserviceid;
-            Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                .fetchCRSServiceId()
-                .then((value) {
-              crsserviceid =
-                  Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                      .crsserviceid;
-            });
-            Future.delayed(const Duration(seconds: 2)).then((value) async {
-              await PdfISIService.generatePdf(
-                  context: context,
-                  cusname: cusname.toString(),
-                  tbal: tbal,
-                  total: total,
-                  gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                  selectedValue: selectedValue,
-                  isiserviceid: isiserviceid!,
-                  Servicelist: servicelist,
-                  activeid: activeid.toString(),
-                  actualinid: invoiceid.toString(),
-                  cxID: cusID.toString(),
-                  docid: Idocid.toString(),
-                  duedate: _duedatedateController.text,
-                  externalNotes: _externalController.text,
-                  gstNo: gstno,
-                  internalNotes: _internalController.text.toString(),
-                  invoicedate: _generatedateController.text.toString(),
-                  LeadId: leadID.toString(),
-                  eimageurl: eimageurl.toString(),
-                  ename: ename.toString(),
-                  eemail: eemail.toString(),
-                  ephone: ephone.toString(),
-                  edesig: edesig.toString(),
-                  referenceID: _referenceController.text);
-            });
-            // Future.delayed(Duration(seconds: 2)).then((value) async {
-            //   await PdfFMCSService.generatePdf(
-            //       context: context,
-            //       cusname: cusname.toString(),
-            //       tbal: tbal,
-            //       total: total,
-            //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-            //       selectedValue: selectedValue,
-            //       fmcsserviceid: fmcsserviceid!,
-            //       Servicelist: servicelist,
-            //       activeid: activeid.toString(),
-            //       actualinid: invoiceid.toString(),
-            //       cxID: cusID.toString(),
-            //       docid: Idocid.toString(),
-            //       duedate: _duedatedateController.text,
-            //       externalNotes: _externalController.text,
-            //       gstNo: gstno,
-            //       internalNotes: _internalController.text.toString(),
-            //       invoicedate: _generatedateController.text.toString(),
-            //       LeadId: leadID.toString(),
-            //       referenceID: _referenceController.text);
-            // });
-            // Future.delayed(Duration(seconds: 2)).then((value) async {
-            //   await PdfCRSService.generatePdf(         context: context,
-            //       cusname: cusname.toString(),
-            //       tbal: tbal,
-            //       total: total,
-            //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-            //       selectedValue: selectedValue,
-            //       crsserviceid: crsserviceid!,
-            //       Servicelist: servicelist,
-            //       activeid: activeid.toString(),
-            //       actualinid: invoiceid.toString(),
-            //       cxID: cusID.toString(),
-            //       docid: Idocid.toString(),
-            //       duedate: _duedatedateController.text,
-            //       externalNotes: _externalController.text,
-            //       gstNo: gstno,
-            //       internalNotes: _internalController.text.toString(),
-            //       invoicedate: _generatedateController.text.toString(),
-            //       LeadId: leadID.toString(),
-            //       referenceID: _referenceController.text);
-            // });
-          },
-          child: const Text("CreatePdf")),
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AbgColor.withOpacity(0.1),
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(
+                            12.0) //                 <--- border radius here
+                        ),
+                  ),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+            Text(
+              'Sending Window',
+              style: TxtStls.fieldtitlestyle11,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+              child: Text(
+                'Recepient',
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Container(
+                    height: 60,
+                    width: 500,
+                    decoration: BoxDecoration(
+                      // color: Color(0XFF1485C9),
+                      border: Border.all(
+                          color: Colors.black,
+                          width: 0.1,
+                          style: BorderStyle.solid), //Border.all
+
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      //BorderRadius.only
+                      /************************************/
+                      /* The BoxShadow widget  is here */
+                      /************************************/
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: const Offset(
+                            1.0,
+                            1.0,
+                          ),
+                          blurRadius: 1.0,
+                          spreadRadius: 1.0,
+                        ), //BoxShadow
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: const Offset(0.0, 0.0),
+                          blurRadius: 1.0,
+                          spreadRadius: 1.0,
+                        ), //BoxShadow
+                      ],
+                    ), //BoxDecoration
+                  ),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                CircleAvatar(
+                  backgroundColor: Colors.indigo,
+                  radius: 20,
+                  child: Icon(Icons.add),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+              child: Text(
+                'Subject',
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Container(
+                height: 50,
+                width: 350,
+                decoration: BoxDecoration(
+                  // color: Color(0XFF1485C9),
+                  border: Border.all(
+                      color: Colors.black,
+                      width: 0.1,
+                      style: BorderStyle.solid), //Border.all
+
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                  ),
+                  //BorderRadius.only
+                  /************************************/
+                  /* The BoxShadow widget  is here */
+                  /************************************/
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: const Offset(
+                        1.0,
+                        1.0,
+                      ),
+                      blurRadius: 1.0,
+                      spreadRadius: 1.0,
+                    ), //BoxShadow
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: const Offset(0.0, 0.0),
+                      blurRadius: 1.0,
+                      spreadRadius: 1.0,
+                    ), //BoxShadow
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    'Automatic From Question',
+                    style: TxtStls.fieldstyle,
+                  ),
+                ), //BoxDecoration
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+              child: Text(
+                'Standard',
+                style: TxtStls.fieldstyle,
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Container(
+                // decoration: BoxDecoration(
+                //   // color: Color(0XFF1485C9),
+                //   border: Border.all(
+                //       color: Colors.black,
+                //       width: 0.1,
+                //       style: BorderStyle.solid), //Border.all
+                //
+                //   borderRadius: BorderRadius.only(
+                //     topLeft: Radius.circular(10.0),
+                //     topRight: Radius.circular(10.0),
+                //     bottomLeft: Radius.circular(10.0),
+                //     bottomRight: Radius.circular(10.0),
+                //   ),
+                //   //BorderRadius.only
+                //   /************************************/
+                //   /* The BoxShadow widget  is here */
+                //   /************************************/
+                //   boxShadow: [
+                //     BoxShadow(
+                //       color: Colors.grey,
+                //       offset: const Offset(
+                //         1.0,
+                //         1.0,
+                //       ),
+                //       blurRadius: 1.0,
+                //       spreadRadius: 1.0,
+                //     ), //BoxShadow
+                //     BoxShadow(
+                //       color: Colors.white,
+                //       offset: const Offset(0.0, 0.0),
+                //       blurRadius: 1.0,
+                //       spreadRadius: 1.0,
+                //     ), //BoxShadow
+                //   ],
+                // ),
+                child: Material(
+                  color: AbgColor.withOpacity(0.2),
+                  //       // elevation: 1.0,
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: size.height * 0.2,
+                          child: Material(
+                            color: AbgColor.withOpacity(0.2),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ZefyrEditor(
+                                  controller: zefyrExclusionsController,
+                                  embedBuilder: (context, node) {
+                                    return Text(
+                                      exclusions,
+                                      style: TxtStls.fieldstyle,
+                                    );
+                                  },
+                                )),
+                          )),
+
+                      ZefyrToolbar.basic(controller: zefyrExclusionsController),
+                      // Padding(
+                      //   padding:
+                      //       EdgeInsets.only(left: 20.0, right: rightpad, bottom: 10.0),
+                      //   child: Material(
+                      //     color: AbgColor.withOpacity(0.2),
+                      //     //       // elevation: 1.0,
+                      //     //       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      //     child: Container(
+                      //       height: size.height * 0.04,
+                      //       decoration: BoxDecoration(color: bgColor),
+                      //       child: Row(
+                      //         children: [
+                      //           const SizedBox(
+                      //             width: 10,
+                      //           ),
+                      //           InkWell(
+                      //             child: Text(
+                      //               'B',
+                      //               style: TxtStls.tapstylebold,
+                      //             ),
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 boldpressed = !boldpressed;
+                      //               });
+                      //             },
+                      //           ),
+                      //           SizedBox(
+                      //             width: 10,
+                      //           ),
+                      //           InkWell(
+                      //             child: Text(
+                      //               "U",
+                      //               style: TxtStls.tapstyleunderline,
+                      //             ),
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 underlinepressed = !underlinepressed;
+                      //               });
+                      //             },
+                      //           ),
+                      //           const SizedBox(
+                      //             width: 10,
+                      //           ),
+                      //           InkWell(
+                      //             child: Text(
+                      //               'I',
+                      //               style: TxtStls.tapstyleitalic,
+                      //             ),
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 italicpressed = !italicpressed;
+                      //               });
+                      //             },
+                      //           ),
+                      //           const SizedBox(
+                      //             width: 10,
+                      //           ),
+                      //           Container(
+                      //             height: 30,
+                      //             width: 65,
+                      //             decoration: BoxDecoration(
+                      //                 borderRadius: BorderRadius.circular(8.0),
+                      //                 border: Border.all(color: AbgColor)),
+                      //             child: DropdownButton<double>(
+                      //               underline: Container(),
+                      //               hint: Padding(
+                      //                 padding: const EdgeInsets.only(left: 8.0),
+                      //                 child: Text(
+                      //                   "A",
+                      //                   style: TxtStls.tapstylebold,
+                      //                 ),
+                      //               ),
+                      //               // Initial Value
+                      //
+                      //               // Down Arrow Icon
+                      //               icon: const Padding(
+                      //                 padding: EdgeInsets.only(right: 8.0),
+                      //                 child: Icon(
+                      //                   Icons.arrow_drop_down_rounded,
+                      //                   size: 14.0,
+                      //                 ),
+                      //               ),
+                      //
+                      //               // Array list of items
+                      //               items: fontSizeList
+                      //                   .map((item) => DropdownMenuItem<double>(
+                      //                         value: item,
+                      //                         child: Text(
+                      //                           item.toString(),
+                      //                           style: TxtStls.fieldstyle,
+                      //                         ),
+                      //                       ))
+                      //                   .toList(),
+                      //               //  value: dropdownfonts,
+                      //
+                      //               onChanged: (double? newValue) {
+                      //                 setState(() {
+                      //                   fontSelected = newValue!;
+                      //
+                      //                   print(fontSelected);
+                      //                   print(imageDropValue);
+                      //                 });
+                      //               },
+                      //             ),
+                      //           ),
+                      //           Container(
+                      //             height: 30,
+                      //             width: 65,
+                      //             decoration: BoxDecoration(
+                      //                 borderRadius: BorderRadius.circular(8.0),
+                      //                 border: Border.all(color: AbgColor)),
+                      //             child: DropdownButton<String>(
+                      //               underline: Container(),
+                      //               hint: Padding(
+                      //                   padding: const EdgeInsets.only(left: 8.0),
+                      //                   child:
+                      //                       Image.asset("assets/Logos/BIS_logo.png")),
+                      //               // Initial Value
+                      //
+                      //               // Down Arrow Icon
+                      //               icon: const Padding(
+                      //                 padding: EdgeInsets.only(right: 8.0),
+                      //                 child: Icon(
+                      //                   Icons.arrow_drop_down_rounded,
+                      //                   size: 14.0,
+                      //                 ),
+                      //               ),
+                      //
+                      //               // Array list of items
+                      //               items: [
+                      //                 DropdownMenuItem(
+                      //                   child: imageDropItems("", imageDropList[0]),
+                      //                   value: "1",
+                      //                 ),
+                      //                 DropdownMenuItem(
+                      //                   child: imageDropItems("", imageDropList[1]),
+                      //                   value: "2",
+                      //                 ),
+                      //                 DropdownMenuItem(
+                      //                   child: imageDropItems("", imageDropList[2]),
+                      //                   value: "3",
+                      //                   onTap: () {},
+                      //                 ),
+                      //               ],
+                      //               value: imageDropValue,
+                      //
+                      //               onChanged: (newValue) {
+                      //                 setState(() {
+                      //                   imageDropValue = newValue.toString();
+                      //                   print(imageDropValue);
+                      //                   print(textAlignment(imageDropValue));
+                      //                 });
+                      //               },
+                      //             ),
+                      //           ),
+                      //           InkWell(
+                      //             child: Container(
+                      //                 height: 30,
+                      //                 width: 30,
+                      //                 decoration: BoxDecoration(
+                      //                     border: Border.all(
+                      //                         color: isBullettapped
+                      //                             ? btnColor
+                      //                             : Colors.transparent),
+                      //                     borderRadius: BorderRadius.circular(5.0)),
+                      //                 child: Image.asset("assets/Logos/BIS_logo.png")),
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 isBullettapped = !isBullettapped;
+                      //               });
+                      //             },
+                      //           ),
+                      //           InkWell(
+                      //             child: Container(
+                      //                 height: 30,
+                      //                 width: 30,
+                      //                 decoration: BoxDecoration(
+                      //                     border: Border.all(
+                      //                         color: isNumberBulletTapped
+                      //                             ? btnColor
+                      //                             : Colors.transparent),
+                      //                     borderRadius: BorderRadius.circular(5.0)),
+                      //                 child: Image.asset("assets/Logos/CRS_logo6.png")),
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 isNumberBulletTapped = !isNumberBulletTapped;
+                      //               });
+                      //             },
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+    //   Center(
+    //   child: TextButton(
+    //       onPressed: () async {
+    //         var gstno = _gstController.text == null
+    //             ? ""
+    //             : _gstController.text.toString();
+    //         print(invoiceid.toString());
+    //         int? isiserviceid;
+    //         Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //             .fetchISIServiceId()
+    //             .then((value) {
+    //           isiserviceid =
+    //               Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //                   .isiserviceid;
+    //         });
+    //         int? fmcsserviceid;
+    //         Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //             .fetchFMCSServiceId()
+    //             .then((value) {
+    //           fmcsserviceid =
+    //               Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //                   .fmcsserviceid;
+    //         });
+    //         int? crsserviceid;
+    //         Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //             .fetchCRSServiceId()
+    //             .then((value) {
+    //           crsserviceid =
+    //               Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+    //                   .crsserviceid;
+    //         });
+    //         Future.delayed(const Duration(seconds: 2)).then((value) async {
+    //           await PdfISIService.generatePdf(
+    //               context: context,
+    //               cusname: cusname.toString(),
+    //               tbal: tbal,
+    //               total: total,
+    //               gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+    //               selectedValue: selectedValue,
+    //               isiserviceid: isiserviceid!,
+    //               Servicelist: servicelist,
+    //               activeid: activeid.toString(),
+    //               actualinid: invoiceid.toString(),
+    //               cxID: cusID.toString(),
+    //               docid: Idocid.toString(),
+    //               duedate: _duedatedateController.text,
+    //               externalNotes: _externalController.text,
+    //               gstNo: gstno,
+    //               internalNotes: _internalController.text.toString(),
+    //               invoicedate: _generatedateController.text.toString(),
+    //               LeadId: leadID.toString(),
+    //               eimageurl: eimageurl.toString(),
+    //               ename: ename.toString(),
+    //               eemail: eemail.toString(),
+    //               ephone: ephone.toString(),
+    //               edesig: edesig.toString(),
+    //               referenceID: _referenceController.text);
+    //         });
+    //         // Future.delayed(Duration(seconds: 2)).then((value) async {
+    //         //   await PdfFMCSService.generatePdf(
+    //         //       context: context,
+    //         //       cusname: cusname.toString(),
+    //         //       tbal: tbal,
+    //         //       total: total,
+    //         //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+    //         //       selectedValue: selectedValue,
+    //         //       fmcsserviceid: fmcsserviceid!,
+    //         //       Servicelist: servicelist,
+    //         //       activeid: activeid.toString(),
+    //         //       actualinid: invoiceid.toString(),
+    //         //       cxID: cusID.toString(),
+    //         //       docid: Idocid.toString(),
+    //         //       duedate: _duedatedateController.text,
+    //         //       externalNotes: _externalController.text,
+    //         //       gstNo: gstno,
+    //         //       internalNotes: _internalController.text.toString(),
+    //         //       invoicedate: _generatedateController.text.toString(),
+    //         //       LeadId: leadID.toString(),
+    //         //       referenceID: _referenceController.text);
+    //         // });
+    //         // Future.delayed(Duration(seconds: 2)).then((value) async {
+    //         //   await PdfCRSService.generatePdf(         context: context,
+    //         //       cusname: cusname.toString(),
+    //         //       tbal: tbal,
+    //         //       total: total,
+    //         //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+    //         //       selectedValue: selectedValue,
+    //         //       crsserviceid: crsserviceid!,
+    //         //       Servicelist: servicelist,
+    //         //       activeid: activeid.toString(),
+    //         //       actualinid: invoiceid.toString(),
+    //         //       cxID: cusID.toString(),
+    //         //       docid: Idocid.toString(),
+    //         //       duedate: _duedatedateController.text,
+    //         //       externalNotes: _externalController.text,
+    //         //       gstNo: gstno,
+    //         //       internalNotes: _internalController.text.toString(),
+    //         //       invoicedate: _generatedateController.text.toString(),
+    //         //       LeadId: leadID.toString(),
+    //         //       referenceID: _referenceController.text);
+    //         // });
+    //       },
+    //       child: const Text("CreatePdf")),
+    // );
   }
 
   final services = <ServicesModel>[
