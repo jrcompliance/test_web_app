@@ -5245,7 +5245,30 @@ class _FinanceState extends State<Finance> {
                   child: Container(
                     height: 60,
                     width: 500,
-                    decoration: decoration(), //BoxDecoration
+                    decoration: decoration(),
+                    child: Row(
+                      children: [
+                        //multiple ternary operator syntax
+                        // iscleared
+                        //     ? const SizedBox()
+                        //     : cusemail.toString() == null
+                        //         ? const SizedBox()
+                        //         : emaildeco(cusemail.toString()),
+                        iscleared
+                            ? const SizedBox()
+                            : popupcontroller1.text == null
+                                ? const SizedBox()
+                                : emaildeco(
+                                    popupcontroller1.text.toString(),
+                                  ),
+                        // iscleared && popupcontroller2.text == null
+                        //     ? const SizedBox()
+                        //     : emaildeco(
+                        //         popupcontroller2.text.toString(),
+                        //       ),
+                      ],
+                    ),
+                    //BoxDecoration
                   ),
                 ),
                 SizedBox(
@@ -5258,16 +5281,24 @@ class _FinanceState extends State<Finance> {
                     child: Icon(Icons.add),
                   ),
                   onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Container(
-                              child: ListView.builder(
-                                  itemBuilder: (context, index) => Text("")),
-                            ),
-                          );
-                        });
+                    setState(() {
+                      iscleared = !iscleared;
+                      print(iscleared);
+                    });
+                    _showPopupMenu();
+                    // Container(
+                    //     height: size.height * 0.02,
+                    //     width: size.width * 0.02,
+                    //     color: Colors.yellow,
+                    //     child: PopupMenuButton(
+                    //         itemBuilder: (context) =>
+                    //             const <PopupMenuItem<String>>[
+                    //               PopupMenuItem<String>(
+                    //                   child: Text('Doge'), value: 'Doge'),
+                    //               PopupMenuItem<String>(
+                    //                   child: Text('Lion'), value: 'Lion'),
+                    //             ],
+                    //         onSelected: (_) {}));
                   },
                 ),
               ],
@@ -5347,6 +5378,90 @@ class _FinanceState extends State<Finance> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget emaildeco(text) {
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: AbgColor.withOpacity(0.2)),
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    text,
+                    style: TxtStls.fieldstyle,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: AbgColor.withOpacity(0.2)),
+                        borderRadius: BorderRadius.circular(16.0)),
+                    child: const Icon(
+                      Icons.close,
+                      size: 16.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            )),
+      ),
+      onTap: () {
+        iscleared = !iscleared;
+        print(iscleared);
+      },
+    );
+  }
+
+  bool iscleared = false;
+  bool isclearedemail1 = false;
+  bool isclearedemail2 = false;
+
+  final TextEditingController popupcontroller1 = TextEditingController();
+  final TextEditingController popupcontroller2 = TextEditingController();
+  void _showPopupMenu() async {
+    Size size = MediaQuery.of(context).size;
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(size.width * 0.78, size.height * 0.3,
+          size.width * 0.22, size.height * 0.7),
+      items: [
+        PopupMenuItem<String>(
+            child: TextField(
+              controller: popupcontroller1,
+              decoration: InputDecoration(
+                  hintText: "type an email1", hintStyle: TxtStls.fieldstyle),
+              onSubmitted: (String text) {
+                setState(() {
+                  popupcontroller1.text = text;
+                });
+              },
+            ),
+            value: popupcontroller1.text),
+        PopupMenuItem<String>(
+            child: TextField(
+              controller: popupcontroller2,
+              decoration: InputDecoration(
+                  hintText: "type an email2", hintStyle: TxtStls.fieldstyle),
+              onSubmitted: (String text) {
+                setState(() {
+                  popupcontroller2.text = text;
+                });
+              },
+            ),
+            value: popupcontroller2.text),
+      ],
+      elevation: 8.0,
     );
   }
 
