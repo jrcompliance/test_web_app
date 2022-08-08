@@ -30,6 +30,7 @@ import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
+import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
 import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
@@ -92,6 +93,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => LeadIdProviders()),
       ChangeNotifierProvider(create: (ctx) => ChatProvider()),
       ChangeNotifierProvider(create: (ctx) => GetMessagesListProvider()),
+      ChangeNotifierProvider(create: (ctx) => ServiceSaveProvider()),
     ],
     child: MyApp(),
   ));

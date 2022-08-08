@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing%202.dart';
+import 'package:provider/provider.dart';
 import 'package:test_web_app/Models/UserModels.dart';
+import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 
 class PdfISIService {
   static generatePdf({
@@ -2595,19 +2597,32 @@ class PdfISIService {
       print(e.toString());
       print(s.toString());
     }
-    // Provider.of<InvoiceSaveProvider>(context, listen: false).invoiceData(
-    //     myUrl,
-    //     activeid,
-    //     "Pending",
-    //     actualinid,
-    //     total,
-    //     selectedValue,
-    //     duedate,
-    //     internalNotes,
-    //     externalNotes,
-    //     referenceID,
-    //     cxID,
-    //     LeadId);
+    Provider.of<ServiceSaveProvider>(context, listen: false).ServiceData(
+      isiserviceid: isiserviceid,
+      Servicelist: Servicelist,
+      cusname: cusname,
+      tbal: tbal,
+      actualinid: actualinid,
+      gstNo: gstNo,
+      docid: docid,
+      activeid: activeid,
+      gstAmount: gstAmount,
+      total: total,
+      invoicedate: invoicedate,
+      duedate: duedate,
+      selectedValue: selectedValue,
+      cxID: cxID,
+      externalNotes: externalNotes,
+      internalNotes: internalNotes,
+      referenceID: referenceID,
+      LeadId: LeadId,
+      eimageurl: eimageurl,
+      ename: ename,
+      eemail: eemail,
+      ephone: ephone,
+      edesig: edesig,
+      serviceurl: myUrl.toString(),
+    );
     print(6);
     return pdf.save();
   }

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:animated_widgets/widgets/scale_animated.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
@@ -12,8 +14,10 @@ import 'package:im_stepper/stepper.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_delta/quill_delta.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer%202.dart';
 // import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
@@ -33,6 +37,7 @@ import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
+import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
 import 'package:zefyrka/zefyrka.dart';
 import '../../../PdfFiles/GetISIServicePdf.dart';
@@ -2479,6 +2484,7 @@ class _FinanceState extends State<Finance> {
     );
   }
 
+  var serviceurl;
   showScreen(activeStep) {
     if (activeStep == 0) {
       return serviceWidget(context);
@@ -2499,8 +2505,133 @@ class _FinanceState extends State<Finance> {
             .toString();
       });
       return Container(
-        child: Center(
-          child: TextButton(onPressed: () {}, child: const Text("Create Pdf")),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TextButton(
+                onPressed: () async {
+                  var gstno = _gstController.text == null
+                      ? ""
+                      : _gstController.text.toString();
+                  print(invoiceid.toString());
+                  int? isiserviceid;
+                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                  //     .fetchISIServiceId()
+                  //     .then((value) async {
+                  //   isiserviceid = Provider.of<RecentFetchCXIDProvider>(context,
+                  //           listen: false)
+                  //       .isiserviceid;
+                  FirebaseFirestore firestore = FirebaseFirestore.instance;
+                  CollectionReference reference =
+                      await firestore.collection("Services");
+                  serviceurl = reference.doc(Idocid).get();
+                  print("service--urol--" + serviceurl.toString());
+                  FirebaseStorage storage = FirebaseStorage.instance;
+
+                  var url =
+                      await storage.refFromURL(serviceurl.toString()).getData();
+                  print('erdrttyftyyu' + url.toString());
+
+                  // });
+                  // int? fmcsserviceid;
+                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                  //     .fetchFMCSServiceId()
+                  //     .then((value) {
+                  //   fmcsserviceid =
+                  //       Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                  //           .fmcsserviceid;
+                  // });
+                  // int? crsserviceid;
+                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                  //     .fetchCRSServiceId()
+                  //     .then((value) {
+                  //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(context,
+                  //           listen: false)
+                  //       .crsserviceid;
+                  // });
+                  // Future.delayed(Duration(seconds: 2)).then((value) async {
+                  //   await PdfISIService.generatePdf(
+                  //       context: context,
+                  //       cusname: cusname.toString(),
+                  //       tbal: tbal,
+                  //       total: total,
+                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                  //       selectedValue: selectedValue,
+                  //       isiserviceid: isiserviceid!,
+                  //       Servicelist: servicelist,
+                  //       activeid: activeid.toString(),
+                  //       actualinid: invoiceid.toString(),
+                  //       cxID: cusID.toString(),
+                  //       docid: Idocid.toString(),
+                  //       duedate: _duedatedateController.text,
+                  //       externalNotes: _externalController.text,
+                  //       gstNo: gstno,
+                  //       internalNotes: _internalController.text.toString(),
+                  //       invoicedate: _generatedateController.text.toString(),
+                  //       LeadId: leadID.toString(),
+                  //       eimageurl: eimageurl.toString(),
+                  //       ename: ename.toString(),
+                  //       eemail: eemail.toString(),
+                  //       ephone: ephone.toString(),
+                  //       edesig: edesig.toString(),
+                  //       referenceID: _referenceController.text);
+                  // });
+                  // Future.delayed(Duration(seconds: 2)).then((value) async {
+                  //   await PdfFMCSService.generatePdf(
+                  //       context: context,
+                  //       cusname: cusname.toString(),
+                  //       tbal: tbal,
+                  //       total: total,
+                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                  //       selectedValue: selectedValue,
+                  //       fmcsserviceid: fmcsserviceid!,
+                  //       Servicelist: servicelist,
+                  //       activeid: activeid.toString(),
+                  //       actualinid: invoiceid.toString(),
+                  //       cxID: cusID.toString(),
+                  //       docid: Idocid.toString(),
+                  //       duedate: _duedatedateController.text,
+                  //       externalNotes: _externalController.text,
+                  //       gstNo: gstno,
+                  //       internalNotes: _internalController.text.toString(),
+                  //       invoicedate: _generatedateController.text.toString(),
+                  //       LeadId: leadID.toString(),
+                  //       referenceID: _referenceController.text);
+                  // });
+                  // Future.delayed(Duration(seconds: 2)).then((value) async {
+                  //   await PdfCRSService.generatePdf(
+                  //       context: context,
+                  //       cusname: cusname.toString(),
+                  //       tbal: tbal,
+                  //       total: total,
+                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                  //       selectedValue: selectedValue,
+                  //       crsserviceid: crsserviceid!,
+                  //       Servicelist: servicelist,
+                  //       activeid: activeid.toString(),
+                  //       actualinid: invoiceid.toString(),
+                  //       cxID: cusID.toString(),
+                  //       docid: Idocid.toString(),
+                  //       duedate: _duedatedateController.text,
+                  //       externalNotes: _externalController.text,
+                  //       gstNo: gstno,
+                  //       internalNotes: _internalController.text.toString(),
+                  //       invoicedate: _generatedateController.text.toString(),
+                  //       LeadId: leadID.toString(),
+                  //       referenceID: _referenceController.text);
+                  // });
+                },
+                child: const Text("Create Pdf")),
+            TextButton(
+                onPressed: () async {
+                  // PdfDocument doc = await PdfDocument.fromUrl()
+                  pdfview();
+                  print(serviceurl.toString());
+                },
+                child: Text("view pdf")),
+            pdfview(),
+          ],
         ),
       );
     } else {
@@ -2508,6 +2639,17 @@ class _FinanceState extends State<Finance> {
         child: serviceIntro(context),
       );
     }
+  }
+
+  Widget pdfview() {
+    return Container(
+      height: 500,
+      width: 500,
+      child: ListView.builder(itemBuilder: (context, index) {
+        return Container(
+            child: SfPdfViewer.network(serviceurl[index].toString()));
+      }),
+    );
   }
 
   Widget paymentsService(BuildContext context) {
@@ -5246,29 +5388,41 @@ class _FinanceState extends State<Finance> {
                     height: 60,
                     width: 500,
                     decoration: decoration(),
-                    child: Row(
-                      children: [
-                        //multiple ternary operator syntax
-                        // iscleared
-                        //     ? const SizedBox()
-                        //     : cusemail.toString() == null
-                        //         ? const SizedBox()
-                        //         : emaildeco(cusemail.toString()),
-                        iscleared
-                            ? const SizedBox()
-                            : popupcontroller1.text == null
-                                ? const SizedBox()
-                                : emaildeco(
-                                    popupcontroller1.text.toString(),
-                                  ),
-                        // iscleared && popupcontroller2.text == null
-                        //     ? const SizedBox()
-                        //     : emaildeco(
-                        //         popupcontroller2.text.toString(),
-                        //       ),
-                      ],
-                    ),
+                    // child: Row(
+                    //   children: [
+                    //     //multiple ternary operator syntax
+                    //     // iscleared
+                    //     //     ? const SizedBox()
+                    //     //     : cusemail.toString() == null
+                    //     //         ? const SizedBox()
+                    //     //         : emaildeco(cusemail.toString()),
+                    //     // iscleared
+                    //     //     ? const SizedBox()
+                    //     //     : popupcontroller1.text == null
+                    //     //         ? const SizedBox()
+                    //     //         : emaildeco(
+                    //     //             popupcontroller1.text.toString(),
+                    //     //           ),
+                    //     // iscleared && popupcontroller2.text == null
+                    //     //     ? const SizedBox()
+                    //     //     : emaildeco(
+                    //     //         popupcontroller2.text.toString(),
+                    //     //       ),
+                    //   ],
+                    // ),
                     //BoxDecoration
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: emaillist.length,
+                        itemBuilder: (context, index) {
+                          return Center(
+                            child: Row(
+                              children: [
+                                emaildeco(emaillist[index], index),
+                              ],
+                            ),
+                          );
+                        }),
                   ),
                 ),
                 SizedBox(
@@ -5282,23 +5436,10 @@ class _FinanceState extends State<Finance> {
                   ),
                   onTap: () {
                     setState(() {
-                      iscleared = !iscleared;
-                      print(iscleared);
+                      // iscleared = !iscleared;
+                      // print(iscleared);
                     });
                     _showPopupMenu();
-                    // Container(
-                    //     height: size.height * 0.02,
-                    //     width: size.width * 0.02,
-                    //     color: Colors.yellow,
-                    //     child: PopupMenuButton(
-                    //         itemBuilder: (context) =>
-                    //             const <PopupMenuItem<String>>[
-                    //               PopupMenuItem<String>(
-                    //                   child: Text('Doge'), value: 'Doge'),
-                    //               PopupMenuItem<String>(
-                    //                   child: Text('Lion'), value: 'Lion'),
-                    //             ],
-                    //         onSelected: (_) {}));
                   },
                 ),
               ],
@@ -5381,7 +5522,9 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  Widget emaildeco(text) {
+  List emaillist = ["$cusemail"];
+
+  Widget emaildeco(String text, int index) {
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -5417,8 +5560,11 @@ class _FinanceState extends State<Finance> {
             )),
       ),
       onTap: () {
-        iscleared = !iscleared;
-        print(iscleared);
+        setState(() {
+          emaillist.removeAt(index);
+        });
+        // iscleared = !iscleared;
+        // print(iscleared);
       },
     );
   }
@@ -5440,26 +5586,30 @@ class _FinanceState extends State<Finance> {
             child: TextField(
               controller: popupcontroller1,
               decoration: InputDecoration(
-                  hintText: "type an email1", hintStyle: TxtStls.fieldstyle),
+                  hintText: "type an email", hintStyle: TxtStls.fieldstyle),
               onSubmitted: (String text) {
                 setState(() {
                   popupcontroller1.text = text;
+                  emaillist.add(popupcontroller1.text);
+                  popupcontroller1.clear();
                 });
               },
             ),
             value: popupcontroller1.text),
-        PopupMenuItem<String>(
-            child: TextField(
-              controller: popupcontroller2,
-              decoration: InputDecoration(
-                  hintText: "type an email2", hintStyle: TxtStls.fieldstyle),
-              onSubmitted: (String text) {
-                setState(() {
-                  popupcontroller2.text = text;
-                });
-              },
-            ),
-            value: popupcontroller2.text),
+        // PopupMenuItem<String>(
+        //     child: TextField(
+        //       controller: popupcontroller2,
+        //       decoration: InputDecoration(
+        //           hintText: "type an email2", hintStyle: TxtStls.fieldstyle),
+        //       onSubmitted: (String text) {
+        //         setState(() {
+        //           popupcontroller2.text = text;
+        //           emaillist.add(popupcontroller2.text);
+        //           popupcontroller2.clear();
+        //         });
+        //       },
+        //     ),
+        //     value: popupcontroller2.text),
       ],
       elevation: 8.0,
     );
