@@ -33,7 +33,7 @@ class ServiceSaveProvider extends ChangeNotifier {
   }) async {
     try {
       CollectionReference reference = await _firestore.collection("Services");
-      String docID = reference.doc().id;
+      // String docID = reference.doc().id;
       ServiceSaveModel model = ServiceSaveModel();
       model.invoicedate = invoicedate;
       model.activeid = activeid;
@@ -59,7 +59,7 @@ class ServiceSaveProvider extends ChangeNotifier {
       model.ephone = ephone;
       model.edesig = edesig;
       model.serviceurl = serviceurl;
-      reference.doc(docID).set(model.toMap());
+      reference.doc(docid).set(model.toMap());
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());

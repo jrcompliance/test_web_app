@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,13 +11,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
 import 'package:quill_delta/quill_delta.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer%202.dart';
 // import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:test_web_app/Constants/Calenders.dart';
@@ -39,6 +45,8 @@ import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
+import 'package:universal_html/html.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zefyrka/zefyrka.dart';
 import '../../../PdfFiles/GetISIServicePdf.dart';
 import '../../../Providers/CustomerProvider.dart';
@@ -53,6 +61,7 @@ class Finance extends StatefulWidget {
 class _FinanceState extends State<Finance> {
   Map<String, TextEditingController> _controllerMap = Map();
   Map<int, TextEditingController> _controllerMap2 = Map();
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   bool _isCreate = false;
   bool isgst = false;
   var date1;
@@ -411,6 +420,7 @@ class _FinanceState extends State<Finance> {
                                             f = snp.f;
                                             assign = snp.assign;
                                             leadID = snp.leadId;
+                                            getServiceUrl();
                                             Provider.of<GetInvoiceListProvider>(
                                                     context,
                                                     listen: false)
@@ -2326,12 +2336,6 @@ class _FinanceState extends State<Finance> {
                     activeStep--;
                   });
                 }
-
-                // if (activeStep == 7) {
-                //   setState(() {
-                //     isServiceAdded = !isServiceAdded;
-                //   });
-                // }
               },
             ),
             SizedBox(
@@ -2342,16 +2346,28 @@ class _FinanceState extends State<Finance> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0)),
                   primary: btnColor),
-              child: Text(
-                "NEXT",
-                style: TxtStls.fieldstyle1,
+              child: Row(
+                children: [
+                  activeStep == 6
+                      ? InkWell(
+                          child: Text("SEND"),
+                          onTap: () {
+                            sendmail();
+                          },
+                        )
+                      : const Text('NEXT'),
+                  activeStep == 6 ? Icon(Icons.done) : const SizedBox()
+                ],
               ),
               onPressed: () {
                 // showScreen(activeStep);
-                if (activeStep < upperBound) {
+                if (activeStep < upperBound && activeStep != 6) {
                   setState(() {
                     activeStep++;
                   });
+                }
+                if (activeStep == 6) {
+                  print(activeStep.toString());
                 }
 
                 // if (activeStep == 7) {
@@ -2365,6 +2381,37 @@ class _FinanceState extends State<Finance> {
         ),
       ],
     );
+  }
+
+  Future<void> sendmail() async {
+    final user = await GoogleAuthApi.signIn();
+    if (user == null) return;
+    final email = user.email;
+    final auth = await user.authentication;
+    final token = auth.accessToken;
+    print("authenticated $email");
+    print("proccessing your request");
+    final smtpServer = gmailSaslXoauth2(email, token);
+    final message = Message()
+      ..from = Address(eemail.toString(), ename.toString())
+      ..recipients.add(cusemail.toString())
+      ..ccRecipients
+          .addAll([popupcontroller1.text.toString(), cusemail.toString()])
+      ..bccRecipients.add(Address('bccAddress@example.com'))
+      ..subject =
+          'This is conformation mail from Jrcompliance ands Testing labs :: 😀 :: ${DateTime.now()}'
+      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>"
+      ..attachments = [];
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
   }
 
   bool searching = false;
@@ -2522,18 +2569,7 @@ class _FinanceState extends State<Finance> {
                   //   isiserviceid = Provider.of<RecentFetchCXIDProvider>(context,
                   //           listen: false)
                   //       .isiserviceid;
-                  FirebaseFirestore firestore = FirebaseFirestore.instance;
-                  CollectionReference reference =
-                      await firestore.collection("Services");
-                  serviceurl = reference.doc(Idocid).get();
-                  print("service--urol--" + serviceurl.toString());
-                  FirebaseStorage storage = FirebaseStorage.instance;
 
-                  var url =
-                      await storage.refFromURL(serviceurl.toString()).getData();
-                  print('erdrttyftyyu' + url.toString());
-
-                  // });
                   // int? fmcsserviceid;
                   // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
                   //     .fetchFMCSServiceId()
@@ -2622,15 +2658,8 @@ class _FinanceState extends State<Finance> {
                   //       referenceID: _referenceController.text);
                   // });
                 },
-                child: const Text("Create Pdf")),
-            TextButton(
-                onPressed: () async {
-                  // PdfDocument doc = await PdfDocument.fromUrl()
-                  pdfview();
-                  print(serviceurl.toString());
-                },
-                child: Text("view pdf")),
-            pdfview(),
+                child: const Text("Create & View Pdf")),
+            serviceurl == null ? const SizedBox() : pdfview(),
           ],
         ),
       );
@@ -2642,13 +2671,14 @@ class _FinanceState extends State<Finance> {
   }
 
   Widget pdfview() {
+    Size size = MediaQuery.of(context).size;
     return Container(
-      height: 500,
-      width: 500,
-      child: ListView.builder(itemBuilder: (context, index) {
-        return Container(
-            child: SfPdfViewer.network(serviceurl[index].toString()));
-      }),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: bgColor)),
+      height: size.height * 0.75,
+      width: size.width * 0.32,
+      child: Container(child: SfPdfViewer.network(serviceurl.toString())),
     );
   }
 
@@ -6680,6 +6710,46 @@ class _FinanceState extends State<Finance> {
         ],
       ),
     );
+  }
+
+  Future<void> getServiceUrl() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference reference = await firestore.collection("Services");
+    var docdata = reference.doc(Idocid).get().then((value) {
+      serviceurl = value.get('serviceurl');
+      print("service--urol--" + serviceurl.toString());
+    });
+    return serviceurl;
+  }
+}
+
+class GoogleAuthApi {
+  static final _googleSignIn = GoogleSignIn(
+      scopes: ["https://mail.google.com/"],
+      clientId:
+          '482749695187-llh08gtitdd2gmv72v4ka7oeltn9ttmm.apps.googleusercontent.com');
+  static Future signIn() async {
+    if (await _googleSignIn.isSignedIn()) {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      return _googleSignIn.currentUser;
+    }
+    return await _googleSignIn.signIn();
+  }
+
+  static Future signOut() => _googleSignIn.signOut();
+}
+
+class Utils {
+  static Future openLink(String url) => _launchaUrl(url);
+  static Future _launchaUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    }
   }
 }
 
