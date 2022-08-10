@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:animated_widgets/widgets/scale_animated.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,6 +51,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zefyrka/zefyrka.dart';
 import '../../../PdfFiles/GetISIServicePdf.dart';
 import '../../../Providers/CustomerProvider.dart';
+import 'package:http/http.dart' as http;
 
 class Finance extends StatefulWidget {
   Finance({Key? key}) : super(key: key);
@@ -2352,11 +2354,32 @@ class _FinanceState extends State<Finance> {
                       ? InkWell(
                           child: Text("SEND"),
                           onTap: () {
-                            sendmail();
+                            sendemail2(
+                                    email: "yalagala@jrcompliance.com",
+                                    name: "yalagala",
+                                    fromName: "yalagala",
+                                    toName: "deepika",
+                                    toemail: "deepika@jrcompliance.com",
+                                    subject: _subjectController.text.toString(),
+                                    message:
+                                        "this is a test message from yalagala")
+                                .whenComplete(() => toastmessage.sucesstoast(
+                                    context, "mail sent successfully"));
+
+                            // Utils.openEmail(
+                            //     cusemail.toString(),
+                            //     _subjectController.text.toString(),
+                            //     "this is test from mail ");
+                            //  sendmail();
                           },
                         )
                       : const Text('NEXT'),
-                  activeStep == 6 ? Icon(Icons.done) : const SizedBox()
+                  activeStep == 6
+                      ? Icon(
+                          Icons.done,
+                          size: 12.0,
+                        )
+                      : const SizedBox()
                 ],
               ),
               onPressed: () {
@@ -2368,6 +2391,8 @@ class _FinanceState extends State<Finance> {
                 }
                 if (activeStep == 6) {
                   print(activeStep.toString());
+                  // Utils.openEmail('deepika@jrcompliance.com', "hello deepika",
+                  //     "this is test from mail ");
                 }
 
                 // if (activeStep == 7) {
@@ -2381,6 +2406,43 @@ class _FinanceState extends State<Finance> {
         ),
       ],
     );
+  }
+
+  Future sendemail2({
+    required String email,
+    required String name,
+    required String toemail,
+    required String subject,
+    required String message,
+    required String toName,
+    required String fromName,
+  }) async {
+    final serviceId = 'service_tjaio0e';
+    final templateId = 'template_0kh0f9n';
+    final userId = 'P2tea9QRzq9zUgn2x';
+    final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+    final response = await http.post(
+      url,
+      headers: {
+        'origin': "https://localhost",
+        'Content-type': "application/json"
+      },
+      body: json.encode({
+        "service_id": serviceId,
+        "template_id": templateId,
+        "user_id": userId,
+        'template_params': {
+          'user_name': name,
+          'user_email': email,
+          'to_email': toemail,
+          'to_name': toName,
+          'from_name': fromName,
+          'user_subject': subject,
+          'user_message': message,
+        },
+      }),
+    );
+    print('sent to-- $toemail--' + response.body.toString());
   }
 
   Future<void> sendmail() async {
@@ -6727,7 +6789,7 @@ class GoogleAuthApi {
   static final _googleSignIn = GoogleSignIn(
       scopes: ["https://mail.google.com/"],
       clientId:
-          '482749695187-llh08gtitdd2gmv72v4ka7oeltn9ttmm.apps.googleusercontent.com');
+          '482749695187-701enntii7abng182rrd479tfcevjfe8.apps.googleusercontent.com');
   static Future signIn() async {
     if (await _googleSignIn.isSignedIn()) {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -6750,6 +6812,12 @@ class Utils {
     if (await canLaunch(url)) {
       await launch(url);
     }
+  }
+
+  static openEmail(String toEmail, String subject, String body) async {
+    final url =
+        'mailto:$toEmail?subject=${Uri.encodeFull(subject)}&body=${Uri.encodeFull(body)}';
+    await _launchaUrl(url);
   }
 }
 
