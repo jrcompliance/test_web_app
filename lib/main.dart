@@ -30,12 +30,14 @@ import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
 import 'package:test_web_app/Providers/LeadIDProviders.dart';
 import 'package:test_web_app/Providers/LeadUpdateProvider.dart';
 import 'package:test_web_app/Providers/RemoveServiceProvider.dart';
+import 'package:test_web_app/Providers/ServiceGetProvider.dart';
 import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 import 'package:test_web_app/Providers/UpdateCompanyDetailsProvider.dart';
 import 'package:test_web_app/Providers/UpdatestatusProvider.dart';
 import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
+import 'package:test_web_app/TestPage.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
@@ -45,7 +47,6 @@ import 'package:http/http.dart' as http;
 void main() async {
   // developer phone number-8794562301
   WidgetsFlutterBinding.ensureInitialized();
-  await GSheetsApi.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // /// Create a new instance of [StreamChatClient] passing the apikey obtained from your
@@ -94,6 +95,7 @@ void main() async {
       ChangeNotifierProvider(create: (ctx) => ChatProvider()),
       ChangeNotifierProvider(create: (ctx) => GetMessagesListProvider()),
       ChangeNotifierProvider(create: (ctx) => ServiceSaveProvider()),
+      ChangeNotifierProvider(create: (ctx) => GetServiceProvider()),
     ],
     child: MyApp(),
   ));
@@ -112,7 +114,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AbgColor.withOpacity(0.1),
         canvasColor: bgColor.withOpacity(1),
       ),
-      home: SafeArea(child: LandingScreen()),
+      home: SafeArea(child: TestPage()),
     );
   }
 }

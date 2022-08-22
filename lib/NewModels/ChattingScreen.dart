@@ -92,7 +92,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
           color: AbgColor.withOpacity(0.0001),
           child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 flex: 3,
                 child: Text(''),
               ),
@@ -116,7 +116,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                   padding: EdgeInsets.all(16.0),
                                   child: IconButton(
                                       tooltip: "press to go back",
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: EdgeInsets.all(10.0),
                                       onPressed: () {
                                         Navigator.pop(context, false);
                                       },
@@ -137,7 +137,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                 Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 20),
+                                      padding: EdgeInsets.only(top: 20),
                                       child: Text(
                                         widget.employeesModel.uname ?? "Chat",
                                         style: TxtStls.fieldtitlestyle,
@@ -190,7 +190,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
 
                                 if (snapshot.hasData) {
                                   if (snapshot.data!.docs.length == 0) {
-                                    return Center(
+                                    return const Center(
                                         child: Text("No chats Found"));
                                   }
 
@@ -221,7 +221,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                     child: CircularProgressIndicator());
                               })),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 30),
+                        padding: EdgeInsets.only(bottom: 30),
                         child: Container(
                           height: size.height * 0.06,
                           decoration: BoxDecoration(
@@ -241,11 +241,11 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10),
+                                padding: EdgeInsets.only(left: 10),
                                 child: Container(
                                     padding: const EdgeInsets.only(
                                         top: 12.5, bottom: 12.5),
-                                    child: VerticalDivider(
+                                    child: const VerticalDivider(
                                       thickness: 2.5,
                                       width: 2.5,
                                       color: AbgColor,
@@ -273,7 +273,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                               Container(
                                 child: IconButton(
                                     onPressed: () {},
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.emoji_emotions,
                                       size: 20,
                                       color: AbgColor,

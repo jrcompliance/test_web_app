@@ -9,11 +9,11 @@ class GetInvoiceListProvider extends ChangeNotifier {
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> getInvoiceList(custometid) async {
+  Future<void> getInvoiceList(customerid) async {
     try {
       CollectionReference _collectionref = _firestore.collection("Invoices");
       var extractedResponse =
-          await _collectionref.where("cxid", isEqualTo: custometid).get();
+          await _collectionref.where("cxid", isEqualTo: customerid).get();
       List<GetInvoiceModel> loadedData = [];
       extractedResponse.docs.forEach((element) {
         loadedData.add(GetInvoiceModel(

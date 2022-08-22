@@ -44,6 +44,7 @@ import 'package:test_web_app/Providers/GenerateCxIDProvider.dart';
 import 'package:test_web_app/Providers/GetInvoiceProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Providers/InvoiceUpdateProvider.dart';
+import 'package:test_web_app/Providers/ServiceGetProvider.dart';
 import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 import 'package:test_web_app/Widgets/InvoicePopup.dart';
 import 'package:universal_html/html.dart';
@@ -182,6 +183,7 @@ class _FinanceState extends State<Finance> {
 
   bool isImageDropSelected = false;
 
+  List selectedList = [];
   @override
   void initState() {
     var rng = new Random();
@@ -422,11 +424,28 @@ class _FinanceState extends State<Finance> {
                                             f = snp.f;
                                             assign = snp.assign;
                                             leadID = snp.leadId;
-                                            getServiceUrl();
+                                            var serviceProvider =
+                                                Provider.of<GetServiceProvider>(
+                                                    context,
+                                                    listen: false);
+
                                             Provider.of<GetInvoiceListProvider>(
                                                     context,
                                                     listen: false)
                                                 .getInvoiceList(snp.CxID);
+                                            serviceProvider
+                                                .getServiceData(snp.leadId,
+                                                    snp.Idocid, snp.CxID)
+                                                .whenComplete(() {
+                                              print(cusID.toString());
+                                              print('serviceurl==' +
+                                                  serviceProvider.serviceurl
+                                                      .toString());
+                                              serviceurl = serviceProvider
+                                                  .serviceurl
+                                                  .toString();
+                                            });
+
                                             Provider.of<LeadIdProviders>(
                                                     context,
                                                     listen: false)
@@ -2389,17 +2408,6 @@ class _FinanceState extends State<Finance> {
                     activeStep++;
                   });
                 }
-                if (activeStep == 6) {
-                  print(activeStep.toString());
-                  // Utils.openEmail('deepika@jrcompliance.com', "hello deepika",
-                  //     "this is test from mail ");
-                }
-
-                // if (activeStep == 7) {
-                //   setState(() {
-                //     isServiceAdded = !isServiceAdded;
-                //   });
-                // }
               },
             ),
           ],
@@ -2593,7 +2601,8 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  var serviceurl;
+  String serviceurl = '';
+  bool isShowPdf = false;
   showScreen(activeStep) {
     if (activeStep == 0) {
       return serviceWidget(context);
@@ -2719,13 +2728,21 @@ class _FinanceState extends State<Finance> {
                   //       LeadId: leadID.toString(),
                   //       referenceID: _referenceController.text);
                   // });
+                  setState(() {
+                    isShowPdf = !isShowPdf;
+                  });
                 },
                 child: const Text("Create & View Pdf")),
-            serviceurl == null ? const SizedBox() : pdfview(),
+            isShowPdf
+                ? serviceurl != null
+                    ? pdfview()
+                    : const SizedBox()
+                : const SizedBox(),
           ],
         ),
       );
     } else {
+      isShowPdf = !isShowPdf;
       return Container(
         child: serviceIntro(context),
       );
@@ -2738,7 +2755,7 @@ class _FinanceState extends State<Finance> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(color: bgColor)),
-      height: size.height * 0.75,
+      height: size.height * 0.72,
       width: size.width * 0.32,
       child: Container(child: SfPdfViewer.network(serviceurl.toString())),
     );
@@ -2839,7 +2856,7 @@ class _FinanceState extends State<Finance> {
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             controller: sc,
-            itemCount: allServices.length,
+            itemCount: selectedList.length,
             itemBuilder: (context, index) {
               return InkWell(
                 child: Padding(
@@ -2877,7 +2894,7 @@ class _FinanceState extends State<Finance> {
                                     padding: const EdgeInsets.only(right: 0.0),
                                     child: productWidget(
                                       "assets/Images/pending.png",
-                                      allServices[index].name,
+                                      selectedList[index].name,
                                     ),
                                   ),
                                 ),
@@ -2907,7 +2924,7 @@ class _FinanceState extends State<Finance> {
                                   height: size.width * 0.015,
                                   child: field3(
                                       _getController(
-                                          allServices[index].name.toString()),
+                                          selectedList[index].name.toString()),
                                       "Type",
                                       1,
                                       true),
@@ -2949,7 +2966,7 @@ class _FinanceState extends State<Finance> {
                                               height: size.width * 0.015,
                                               child: field3(
                                                   _getController(
-                                                      allServices[index]
+                                                      selectedList[index]
                                                           .qty
                                                           .toString()),
                                                   "Type",
@@ -3059,7 +3076,7 @@ class _FinanceState extends State<Finance> {
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             controller: sc,
-            itemCount: allServices.length,
+            itemCount: selectedList.length,
             itemBuilder: (context, index) {
               return InkWell(
                 child: Padding(
@@ -5315,6 +5332,10 @@ class _FinanceState extends State<Finance> {
                 ),
                 onTap: () {
                   print(allServices[index].name);
+                  setState(() {
+                    selectedList.add(allServices[index]);
+                    print(selectedList.toString());
+                  });
                 },
               );
             },
@@ -6774,15 +6795,15 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  Future<void> getServiceUrl() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference reference = await firestore.collection("Services");
-    var docdata = reference.doc(Idocid).get().then((value) {
-      serviceurl = value.get('serviceurl');
-      print("service--urol--" + serviceurl.toString());
-    });
-    return serviceurl;
-  }
+  // Future<void> getServiceUrl(docid, cusid) async {
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   CollectionReference reference = await firestore.collection("Services");
+  //   var docdata = reference.doc(docid).get().then((value) {
+  //     serviceurl = value.get('serviceurl');
+  //     print("service--urol--" + serviceurl.toString());
+  //   });
+  //   return serviceurl;
+  // }
 }
 
 class GoogleAuthApi {

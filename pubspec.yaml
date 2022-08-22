@@ -102,6 +102,7 @@ dependencies:
   mailer: ^5.2.0
   google_sign_in: ^5.4.1
   sign_in_with_apple: ^4.1.0
+  expandable: ^5.0.1
 
 
 
