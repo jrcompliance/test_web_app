@@ -17,52 +17,40 @@ class _TestPageState extends State<TestPage> {
         child: Column(
           children: [
             Expanded(
-                flex: isExpanded ? 6 : 2,
+                flex: 2,
                 child: Container(
                     color: Colors.pink,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ExpandablePanel(
-                          collapsed: ExpandableButton(
-                            child: Text("eiughiur"),
-                          ),
-                          expanded: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                  Text("gsuyfhewiuf"),
-                                ],
-                              ),
-                              ExpandableButton(
-                                child: Text('back'),
-                              )
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                            onPressed: () {}, child: Text("uifhawiufhweu")),
+                        Stack(children: [
+                          TextButton(
+                              onHover: (bool value) {
+                                setState(() {
+                                  value
+                                      ? isExpanded == true
+                                      : isExpanded == false;
+                                });
+                              },
+                              onPressed: () {},
+                              child: Text("hover")),
+                          // Expanded(child: SizedBox()),
+                          // Expanded(child: SizedBox()),
+                          // Expanded(child: SizedBox()),
+                          // Expanded(child: Text('huyghguiwehgiu'))
+                        ]),
+                        Stack(children: [
+                          TextButton(
+                              onPressed: () {}, child: Text("uifhawiufhweu")),
+                        ]),
                       ],
                     ))),
+            isExpanded
+                ? const Positioned(
+                    bottom: 50.0,
+                    left: 50.0,
+                    child: Expanded(child: const Text('huyghguiwehgiu')))
+                : const SizedBox(),
             Expanded(
                 flex: 8,
                 child: Container(
