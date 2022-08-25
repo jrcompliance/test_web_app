@@ -16,6 +16,13 @@ import 'package:test_web_app/Providers/ServiceSaveProvider.dart';
 class PdfISIService {
   static generatePdf({
     required BuildContext context,
+    required String subject,
+    required List scopeofWork,
+    required List termsandConditions,
+    required String serviceStandard,
+    // required String sampleQuantity,
+    required String quotationNo,
+    required String sampleQuantity,
     required int isiserviceid,
     required List Servicelist,
     required String cusname,
@@ -347,7 +354,7 @@ class PdfISIService {
     pw.Row rowWidget2link(text1, text2, [text3]) {
       return pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
         pw.Padding(
-          padding: pw.EdgeInsets.only(top: 5.0),
+          padding: const pw.EdgeInsets.only(top: 5.0),
           child: pw.Container(
             decoration: pw.BoxDecoration(
                 borderRadius: pw.BorderRadius.circular(2.0),
@@ -627,7 +634,9 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of New and Renewable Energy",
+                            subject != null
+                                ? subject.toString()
+                                : "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of New and Renewable Energy",
                             style: textStl12bold,
                           ),
                         ),
@@ -1081,7 +1090,11 @@ class PdfISIService {
                                           children: [
                                             pw.Expanded(
                                                 flex: 1,
-                                                child: pw.Text("IS 14286",
+                                                child: pw.Text(
+                                                    serviceStandard != null
+                                                        ? serviceStandard
+                                                            .toString()
+                                                        : "IS 14286",
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
@@ -1109,7 +1122,10 @@ class PdfISIService {
                                 padding: pw.EdgeInsets.only(bottom: 5.0),
                                 child: pw.Flexible(
                                     flex: 1,
-                                    child: pw.Text("487256484",
+                                    child: pw.Text(
+                                        quotationNo != null
+                                            ? quotationNo.toString()
+                                            : "487256484",
                                         style: textStl18bold)),
                               )
                             ]),
@@ -1522,35 +1538,67 @@ class PdfISIService {
                         ),
                         space3(),
                         rowWidget2(
-                          "We assist you to know whether a product falls under the purview of concerned authority.",
+                          scopeofWork[0] != null
+                              ? scopeofWork[0]
+                              : "We assist you to know whether a product falls under the purview of concerned authority.",
                         ),
                         space4(),
-                        rowWidget2(
-                            "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
+                        rowWidget2(scopeofWork[1] != null
+                            ? scopeofWork[1]
+                            : "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
                         space4(),
-                        rowWidget2(
-                            "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
+                        rowWidget2(scopeofWork[2] != null
+                            ? scopeofWork[2]
+                            : "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
                         space4(),
-                        rowWidget2(
-                            "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
+                        rowWidget2(scopeofWork[3] != null
+                            ? scopeofWork[3]
+                            : "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
                         space4(),
-                        rowWidget2(
-                            "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
+                        rowWidget2(scopeofWork[4] != null
+                            ? scopeofWork[4]
+                            : "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
                         space4(),
-                        rowWidget2(
-                            "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
+                        rowWidget2(scopeofWork[5] != null
+                            ? scopeofWork[5]
+                            : "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
                         space4(),
-                        rowWidget2(
-                            "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
+                        rowWidget2(scopeofWork[6] != null
+                            ? scopeofWork[6]
+                            : "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
                         space4(),
-                        rowWidget2(
-                            "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
+                        rowWidget2(scopeofWork[7] != null
+                            ? scopeofWork[7]
+                            : "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
                         space4(),
-                        rowWidget2(
-                            "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
+                        rowWidget2(scopeofWork[8] != null
+                            ? scopeofWork[8]
+                            : "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
                         space4(),
-                        rowWidget2(
-                            "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        rowWidget2(scopeofWork[0] != null
+                            ? scopeofWork[0]
+                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        rowWidget2(scopeofWork[9] != null
+                            ? scopeofWork[9]
+                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        rowWidget2(scopeofWork[10] != null
+                            ? scopeofWork[10]
+                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        scopeofWork[11] != null
+                            ? rowWidget2(scopeofWork[11] != null
+                                ? scopeofWork[11]
+                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                            : pw.SizedBox(),
+                        scopeofWork[12] != null
+                            ? rowWidget2(scopeofWork[12] != null
+                                ? scopeofWork[12]
+                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                            : pw.SizedBox(),
+                        scopeofWork[13] != null
+                            ? rowWidget2(scopeofWork[13] != null
+                                ? scopeofWork[13]
+                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                            : pw.SizedBox(),
                       ]),
                 ),
                 pw.Container(
@@ -2415,6 +2463,12 @@ class PdfISIService {
                               "To	know	the	information	regarding	purchase	and	billing,visit - ",
                               "https://www.jrcompliance.com/purchase-and-billing.	"),
                           space2(),
+                          rowWidget2link(
+                              "To know more about our privacy policies, visit - ",
+                              "https://www.jrcompliance.com/privacy-policy"),
+                          rowWidget2link(
+                              "To know more about our privacy policies, visit - ",
+                              "https://www.jrcompliance.com/privacy-policy"),
                           rowWidget2link(
                               "To know more about our privacy policies, visit - ",
                               "https://www.jrcompliance.com/privacy-policy"),

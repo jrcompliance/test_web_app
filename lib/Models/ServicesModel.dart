@@ -6,8 +6,14 @@ class ServicesModel {
   String? price;
   int? qty;
 
-  ServicesModel(
-      {this.name, this.price, this.gst, this.image, this.sacCode, this.qty});
+  ServicesModel({
+    this.name,
+    this.price,
+    this.gst,
+    this.image,
+    this.sacCode,
+    this.qty,
+  });
   factory ServicesModel.fromMap(map) {
     return ServicesModel(
         name: map['name'],

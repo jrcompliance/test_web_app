@@ -270,10 +270,10 @@ class statClr {
 }
 
 class toastmessage {
-  static sucesstoast(BuildContext context, e) {
+  static sucesstoast(BuildContext context, e, [int time = 2]) {
     Size size = MediaQuery.of(context).size;
     MotionToast.success(
-      toastDuration: const Duration(seconds: 2),
+      toastDuration: Duration(seconds: time),
       title: Text("Success", style: TxtStls.fieldtitlestyle),
       description: Text(e, style: TxtStls.fieldstyle),
       width: size.width * 0.25,

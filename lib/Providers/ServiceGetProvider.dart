@@ -7,20 +7,23 @@ import 'package:test_web_app/Models/UserModels.dart';
 
 class GetServiceProvider extends ChangeNotifier {
   String? serviceurl;
+  String? customername;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future getServiceData(leadid, docid, customerid) async {
+  Future getServiceData(leadid, cusname, customerid) async {
     try {
       CollectionReference reference = _firestore.collection("Services");
       var extractedResponse = await reference
-          .where('docid', isEqualTo: docid)
+          .where('cusname', isEqualTo: cusname)
           .where('LeadId', isEqualTo: leadid.toString())
           .where('cxID', isEqualTo: customerid.toString())
           .get();
       extractedResponse.docs.forEach((element) {
         serviceurl = element.get('serviceurl');
+        customername = element.get('cusname');
+
         print('kggerge' + serviceurl.toString());
-        notifyListeners();
       });
+      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
     }

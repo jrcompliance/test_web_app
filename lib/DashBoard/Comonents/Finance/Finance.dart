@@ -30,6 +30,7 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/ScopeofWorkModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
 import 'package:test_web_app/Models/UserModel2.dart';
@@ -184,6 +185,10 @@ class _FinanceState extends State<Finance> {
   bool isImageDropSelected = false;
 
   List selectedList = [];
+
+  var serviceProvider;
+
+  bool isServiceSelected = false;
   @override
   void initState() {
     var rng = new Random();
@@ -424,7 +429,7 @@ class _FinanceState extends State<Finance> {
                                             f = snp.f;
                                             assign = snp.assign;
                                             leadID = snp.leadId;
-                                            var serviceProvider =
+                                            serviceProvider =
                                                 Provider.of<GetServiceProvider>(
                                                     context,
                                                     listen: false);
@@ -435,7 +440,7 @@ class _FinanceState extends State<Finance> {
                                                 .getInvoiceList(snp.CxID);
                                             serviceProvider
                                                 .getServiceData(snp.leadId,
-                                                    snp.Idocid, snp.CxID)
+                                                    snp.Customername, snp.CxID)
                                                 .whenComplete(() {
                                               print(cusID.toString());
                                               print('serviceurl==' +
@@ -2529,7 +2534,7 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  Widget productWidget(assetImage, text) {
+  Widget productWidget(assetImage, text, index) {
     return Row(
       children: [
         CircleAvatar(
@@ -2622,119 +2627,141 @@ class _FinanceState extends State<Finance> {
             .actualinid
             .toString();
       });
+
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            TextButton(
-                onPressed: () async {
-                  var gstno = _gstController.text == null
-                      ? ""
-                      : _gstController.text.toString();
-                  print(invoiceid.toString());
-                  int? isiserviceid;
-                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                  //     .fetchISIServiceId()
-                  //     .then((value) async {
-                  //   isiserviceid = Provider.of<RecentFetchCXIDProvider>(context,
-                  //           listen: false)
-                  //       .isiserviceid;
+            Row(
+              children: [
+                TextButton(
+                    onPressed: () async {
+                      var gstno = _gstController.text == null
+                          ? ""
+                          : _gstController.text.toString();
+                      print(invoiceid.toString());
 
-                  // int? fmcsserviceid;
-                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                  //     .fetchFMCSServiceId()
-                  //     .then((value) {
-                  //   fmcsserviceid =
-                  //       Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                  //           .fmcsserviceid;
-                  // });
-                  // int? crsserviceid;
-                  // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                  //     .fetchCRSServiceId()
-                  //     .then((value) {
-                  //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(context,
-                  //           listen: false)
-                  //       .crsserviceid;
-                  // });
-                  // Future.delayed(Duration(seconds: 2)).then((value) async {
-                  //   await PdfISIService.generatePdf(
-                  //       context: context,
-                  //       cusname: cusname.toString(),
-                  //       tbal: tbal,
-                  //       total: total,
-                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                  //       selectedValue: selectedValue,
-                  //       isiserviceid: isiserviceid!,
-                  //       Servicelist: servicelist,
-                  //       activeid: activeid.toString(),
-                  //       actualinid: invoiceid.toString(),
-                  //       cxID: cusID.toString(),
-                  //       docid: Idocid.toString(),
-                  //       duedate: _duedatedateController.text,
-                  //       externalNotes: _externalController.text,
-                  //       gstNo: gstno,
-                  //       internalNotes: _internalController.text.toString(),
-                  //       invoicedate: _generatedateController.text.toString(),
-                  //       LeadId: leadID.toString(),
-                  //       eimageurl: eimageurl.toString(),
-                  //       ename: ename.toString(),
-                  //       eemail: eemail.toString(),
-                  //       ephone: ephone.toString(),
-                  //       edesig: edesig.toString(),
-                  //       referenceID: _referenceController.text);
-                  // });
-                  // Future.delayed(Duration(seconds: 2)).then((value) async {
-                  //   await PdfFMCSService.generatePdf(
-                  //       context: context,
-                  //       cusname: cusname.toString(),
-                  //       tbal: tbal,
-                  //       total: total,
-                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                  //       selectedValue: selectedValue,
-                  //       fmcsserviceid: fmcsserviceid!,
-                  //       Servicelist: servicelist,
-                  //       activeid: activeid.toString(),
-                  //       actualinid: invoiceid.toString(),
-                  //       cxID: cusID.toString(),
-                  //       docid: Idocid.toString(),
-                  //       duedate: _duedatedateController.text,
-                  //       externalNotes: _externalController.text,
-                  //       gstNo: gstno,
-                  //       internalNotes: _internalController.text.toString(),
-                  //       invoicedate: _generatedateController.text.toString(),
-                  //       LeadId: leadID.toString(),
-                  //       referenceID: _referenceController.text);
-                  // });
-                  // Future.delayed(Duration(seconds: 2)).then((value) async {
-                  //   await PdfCRSService.generatePdf(
-                  //       context: context,
-                  //       cusname: cusname.toString(),
-                  //       tbal: tbal,
-                  //       total: total,
-                  //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                  //       selectedValue: selectedValue,
-                  //       crsserviceid: crsserviceid!,
-                  //       Servicelist: servicelist,
-                  //       activeid: activeid.toString(),
-                  //       actualinid: invoiceid.toString(),
-                  //       cxID: cusID.toString(),
-                  //       docid: Idocid.toString(),
-                  //       duedate: _duedatedateController.text,
-                  //       externalNotes: _externalController.text,
-                  //       gstNo: gstno,
-                  //       internalNotes: _internalController.text.toString(),
-                  //       invoicedate: _generatedateController.text.toString(),
-                  //       LeadId: leadID.toString(),
-                  //       referenceID: _referenceController.text);
-                  // });
-                  setState(() {
-                    isShowPdf = !isShowPdf;
-                  });
-                },
-                child: const Text("Create & View Pdf")),
+                      setState(() {});
+
+                      int? isiserviceid;
+                      Provider.of<RecentFetchCXIDProvider>(context,
+                              listen: false)
+                          .fetchISIServiceId()
+                          .then((value) async {
+                        isiserviceid = Provider.of<RecentFetchCXIDProvider>(
+                                context,
+                                listen: false)
+                            .isiserviceid;
+
+                        // int? fmcsserviceid;
+                        // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                        //     .fetchFMCSServiceId()
+                        //     .then((value) {
+                        //   fmcsserviceid =
+                        //       Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                        //           .fmcsserviceid;
+                        // });
+                        // int? crsserviceid;
+                        // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
+                        //     .fetchCRSServiceId()
+                        //     .then((value) {
+                        //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(context,
+                        //           listen: false)
+                        //       .crsserviceid;
+                        // });
+                        Future.delayed(Duration(seconds: 2))
+                            .then((value) async {
+                          await PdfISIService.generatePdf(
+                              context: context,
+                              cusname: cusname.toString(),
+                              tbal: tbal,
+                              total: total,
+                              gstAmount:
+                                  selectedValue == "INR" ? _gstamount : 0.00,
+                              selectedValue: selectedValue,
+                              isiserviceid: isiserviceid!,
+                              Servicelist: servicelist,
+                              activeid: activeid.toString(),
+                              actualinid: invoiceid.toString(),
+                              cxID: cusID.toString(),
+                              docid: Idocid.toString(),
+                              duedate: _duedatedateController.text,
+                              externalNotes: _externalController.text,
+                              gstNo: gstno,
+                              internalNotes:
+                                  _internalController.text.toString(),
+                              invoicedate:
+                                  _generatedateController.text.toString(),
+                              LeadId: leadID.toString(),
+                              eimageurl: eimageurl.toString(),
+                              ename: ename.toString(),
+                              eemail: eemail.toString(),
+                              ephone: ephone.toString(),
+                              edesig: edesig.toString(),
+                              referenceID: _referenceController.text,
+                              subject: _subjectController.text.toString(),
+                              sampleQuantity: selectedList[0].type.toString(),
+                              serviceStandard: selectedList[0].name.toString(),
+                              quotationNo: randomNo.toString());
+                        });
+                        // Future.delayed(Duration(seconds: 2)).then((value) async {
+                        //   await PdfFMCSService.generatePdf(
+                        //       context: context,
+                        //       cusname: cusname.toString(),
+                        //       tbal: tbal,
+                        //       total: total,
+                        //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                        //       selectedValue: selectedValue,
+                        //       fmcsserviceid: fmcsserviceid!,
+                        //       Servicelist: servicelist,
+                        //       activeid: activeid.toString(),
+                        //       actualinid: invoiceid.toString(),
+                        //       cxID: cusID.toString(),
+                        //       docid: Idocid.toString(),
+                        //       duedate: _duedatedateController.text,
+                        //       externalNotes: _externalController.text,
+                        //       gstNo: gstno,
+                        //       internalNotes: _internalController.text.toString(),
+                        //       invoicedate: _generatedateController.text.toString(),
+                        //       LeadId: leadID.toString(),
+                        //       referenceID: _referenceController.text);
+                      });
+                      // Future.delayed(Duration(seconds: 2)).then((value) async {
+                      //   await PdfCRSService.generatePdf(
+                      //       context: context,
+                      //       cusname: cusname.toString(),
+                      //       tbal: tbal,
+                      //       total: total,
+                      //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                      //       selectedValue: selectedValue,
+                      //       crsserviceid: crsserviceid!,
+                      //       Servicelist: servicelist,
+                      //       activeid: activeid.toString(),
+                      //       actualinid: invoiceid.toString(),
+                      //       cxID: cusID.toString(),
+                      //       docid: Idocid.toString(),
+                      //       duedate: _duedatedateController.text,
+                      //       externalNotes: _externalController.text,
+                      //       gstNo: gstno,
+                      //       internalNotes: _internalController.text.toString(),
+                      //       invoicedate: _generatedateController.text.toString(),
+                      //       LeadId: leadID.toString(),
+                      //       referenceID: _referenceController.text);
+                      // });
+                      setState(() {
+                        isShowPdf = !isShowPdf;
+                      });
+                    },
+                    child: const Text("Create Pdf")),
+                TextButton(onPressed: () {}, child: Text("view Pdf")),
+              ],
+            ),
             isShowPdf
-                ? serviceurl != null
+                ? serviceurl != null &&
+                        Provider.of<GetServiceProvider>(context, listen: false)
+                                .customername ==
+                            cusname
                     ? pdfview()
                     : const SizedBox()
                 : const SizedBox(),
@@ -2742,7 +2769,10 @@ class _FinanceState extends State<Finance> {
         ),
       );
     } else {
-      isShowPdf = !isShowPdf;
+      setState(() {
+        isShowPdf = !isShowPdf;
+        emaillist.add(cusemail.toString());
+      });
       return Container(
         child: serviceIntro(context),
       );
@@ -2893,9 +2923,9 @@ class _FinanceState extends State<Finance> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 0.0),
                                     child: productWidget(
-                                      "assets/Images/pending.png",
-                                      selectedList[index].name,
-                                    ),
+                                        "assets/Images/pending.png",
+                                        selectedList[index].name,
+                                        index),
                                   ),
                                 ),
                               ],
@@ -3738,7 +3768,7 @@ class _FinanceState extends State<Finance> {
 
   var exclusions = "";
   var terms =
-      "The services provided by JR Compliance are governed by our https://www.jrcompliance.com/terms-and-conditions.\nIn case you face difficulty in obtaining our Terms and conditions from our official website, contact your designated representative immediately to receive a copy of the same.\nTo know the information regarding purchase and billing,visit - https://www.jrcompliance.com/purchase-and-billing.\nTo know more about our privacy policies, visit - https://www.jrcompliance.com/privacy-policy";
+      "The services provided by JR Compliance are governed by our - https://www.jrcompliance.com/terms-and-conditions.In case you face difficulty in obtaining our Terms and conditions from our official website, contact your designated representative immediately to receive a copy of the same.\nTo know the information regarding purchase and billing,visit - https://www.jrcompliance.com/purchase-and-billing.\nTo know more about our privacy policies, visit - https://www.jrcompliance.com/privacy-policy";
   final TextEditingController scopeEditController = TextEditingController();
   final TextEditingController termsEditController = TextEditingController();
   final TextEditingController escalationEditController =
@@ -5280,10 +5310,8 @@ class _FinanceState extends State<Finance> {
                             flex: 2,
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
-                              child: productWidget(
-                                "assets/Images/pending.png",
-                                allServices[index].name,
-                              ),
+                              child: productWidget("assets/Images/pending.png",
+                                  allServices[index].name, index),
                             ),
                           ),
                           Flexible(
@@ -5334,8 +5362,15 @@ class _FinanceState extends State<Finance> {
                   print(allServices[index].name);
                   setState(() {
                     selectedList.add(allServices[index]);
+
+                    isServiceSelected = !isServiceSelected;
+
                     print(selectedList.toString());
                   });
+                  toastmessage.sucesstoast(
+                      context,
+                      "you have selected ${allServices[index].name} please go to next for futher details",
+                      10);
                 },
               );
             },
@@ -5635,9 +5670,10 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  List emaillist = ["$cusemail"];
+  List emaillist = [];
 
   Widget emaildeco(String text, int index) {
+    print(emaillist.toString());
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -5807,7 +5843,8 @@ class _FinanceState extends State<Finance> {
     'percentage5',
     'percentage6'
   ];
-
+  String escalationsText =
+      "JR Compliance is not liable to pay shipping/ freight/ courier charges.\nWe are not responsible for payment of custom duties borne by clients.\nAll the penalties and royalties are excluded.\nWe strictly prohibit and restrict the submission of any inaccurate information to any concerned authorities.";
   Widget escalationScreen(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Column(
@@ -5829,7 +5866,7 @@ class _FinanceState extends State<Finance> {
           ),
         ),
         space(),
-        scoperow("Exclusions", "Go back and Please type something"),
+        scoperow("Exclusions", escalationsText),
         // escalationrow(
         //   "Exclusions",
         // ),
