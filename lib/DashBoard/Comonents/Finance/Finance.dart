@@ -2703,7 +2703,9 @@ class _FinanceState extends State<Finance> {
                               subject: _subjectController.text.toString(),
                               sampleQuantity: selectedList[0].type.toString(),
                               serviceStandard: selectedList[0].name.toString(),
-                              quotationNo: randomNo.toString());
+                              quotationNo: randomNo.toString(),
+                              scopeofWork: [],
+                              termsandConditions: []);
                         });
                         // Future.delayed(Duration(seconds: 2)).then((value) async {
                         //   await PdfFMCSService.generatePdf(
