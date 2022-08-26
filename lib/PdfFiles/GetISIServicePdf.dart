@@ -644,7 +644,7 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Prepared By: Mr.Tarun Sadana",
+                            "Prepared By: Mr.Prashant Thakur",
                             style: textStl12bold,
                           ),
                         ),
@@ -791,7 +791,7 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Mr.Tarun Sadana",
+                            "Mr.Prashant Thakur",
                             style: textStl12bold,
                           ),
                         ),
@@ -807,7 +807,7 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "tarun@jrcompliance.com",
+                            "prashant@jrcompliance.com",
                             style: textStl12bold,
                           ),
                         ),
@@ -1299,7 +1299,7 @@ class PdfISIService {
                                               child: pw.Flexible(
                                                   flex: 1,
                                                   child: pw.Text(
-                                                      "tarun@jrcompliance.com",
+                                                      "prashant@jrcompliance.com",
                                                       style: textStl12bold)),
                                             ),
                                             pw.SizedBox(height: 5),
@@ -1309,7 +1309,7 @@ class PdfISIService {
                                               child: pw.Flexible(
                                                   flex: 1,
                                                   child: pw.Text(
-                                                      "+91 9599550680"
+                                                      "+91 96679 55225"
                                                           .toString(),
                                                       style: textStl12bold)),
                                             ),
@@ -1328,7 +1328,7 @@ class PdfISIService {
                             "+91 $ephone"),
                         space(),
                         // listTile2(escimage, "Mr.Tarun Sadana - BDE",
-                        //     "tarun@jrcompliance.com", "+91 9599550680"),
+                        //     "tarun@jrcompliance.com", "+91 96679 55225"),
                         space(),
                         listTile(vpimage, "Mr.Lalit Gupta - VP",
                             "lalit@jrcompliance.com", "+91 9873060689"),
@@ -1413,7 +1413,7 @@ class PdfISIService {
                         //                             padding: pw.EdgeInsets.only(
                         //                                 left: 5.0, top: 5.0),
                         //                             child: pw.Text(
-                        //                                 "+91 9599550680",
+                        //                                 "+91 96679 55225",
                         //                                 style: textStl12bold),
                         //                           ),
                         //                         ]),

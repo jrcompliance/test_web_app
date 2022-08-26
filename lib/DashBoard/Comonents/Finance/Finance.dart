@@ -2637,6 +2637,9 @@ class _FinanceState extends State<Finance> {
               children: [
                 TextButton(
                     onPressed: () async {
+                      List scope = scopetext.split('\n');
+                      List termsList = terms.split('\n');
+                      print(scope.toString());
                       var gstno = _gstController.text == null
                           ? ""
                           : _gstController.text.toString();
@@ -2654,22 +2657,26 @@ class _FinanceState extends State<Finance> {
                                 listen: false)
                             .isiserviceid;
 
-                        // int? fmcsserviceid;
-                        // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                        //     .fetchFMCSServiceId()
-                        //     .then((value) {
-                        //   fmcsserviceid =
-                        //       Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                        //           .fmcsserviceid;
-                        // });
-                        // int? crsserviceid;
-                        // Provider.of<RecentFetchCXIDProvider>(context, listen: false)
-                        //     .fetchCRSServiceId()
-                        //     .then((value) {
-                        //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(context,
-                        //           listen: false)
-                        //       .crsserviceid;
-                        // });
+                        int? fmcsserviceid;
+                        Provider.of<RecentFetchCXIDProvider>(context,
+                                listen: false)
+                            .fetchFMCSServiceId()
+                            .then((value) {
+                          fmcsserviceid = Provider.of<RecentFetchCXIDProvider>(
+                                  context,
+                                  listen: false)
+                              .fmcsserviceid;
+                        });
+                        int? crsserviceid;
+                        Provider.of<RecentFetchCXIDProvider>(context,
+                                listen: false)
+                            .fetchCRSServiceId()
+                            .then((value) {
+                          crsserviceid = Provider.of<RecentFetchCXIDProvider>(
+                                  context,
+                                  listen: false)
+                              .crsserviceid;
+                        });
                         Future.delayed(Duration(seconds: 2))
                             .then((value) async {
                           await PdfISIService.generatePdf(
@@ -2699,13 +2706,13 @@ class _FinanceState extends State<Finance> {
                               eemail: eemail.toString(),
                               ephone: ephone.toString(),
                               edesig: edesig.toString(),
-                              referenceID: _referenceController.text,
+                              referenceID: _referenceController.text.toString(),
                               subject: _subjectController.text.toString(),
-                              sampleQuantity: selectedList[0].type.toString(),
+                              sampleQuantity: selectedList[0].qty.toString(),
                               serviceStandard: selectedList[0].name.toString(),
                               quotationNo: randomNo.toString(),
-                              scopeofWork: [],
-                              termsandConditions: []);
+                              scopeofWork: scope,
+                              termsandConditions: termsList);
                         });
                         // Future.delayed(Duration(seconds: 2)).then((value) async {
                         //   await PdfFMCSService.generatePdf(
@@ -2728,29 +2735,32 @@ class _FinanceState extends State<Finance> {
                         //       invoicedate: _generatedateController.text.toString(),
                         //       LeadId: leadID.toString(),
                         //       referenceID: _referenceController.text);
+                        //   });
+
+                        // Future.delayed(Duration(seconds: 2)).then((value) async {
+                        //   await PdfCRSService.generatePdf(
+                        //       context: context,
+                        //       cusname: cusname.toString(),
+                        //       tbal: tbal,
+                        //       total: total,
+                        //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
+                        //       selectedValue: selectedValue,
+                        //       crsserviceid: crsserviceid!,
+                        //       Servicelist: servicelist,
+                        //       activeid: activeid.toString(),
+                        //       actualinid: invoiceid.toString(),
+                        //       cxID: cusID.toString(),
+                        //       docid: Idocid.toString(),
+                        //       duedate: _duedatedateController.text,
+                        //       externalNotes: _externalController.text,
+                        //       gstNo: gstno,
+                        //       internalNotes: _internalController.text.toString(),
+                        //       invoicedate: _generatedateController.text.toString(),
+                        //       LeadId: leadID.toString(),
+                        //       referenceID: _referenceController.text);
+                        // });
                       });
-                      // Future.delayed(Duration(seconds: 2)).then((value) async {
-                      //   await PdfCRSService.generatePdf(
-                      //       context: context,
-                      //       cusname: cusname.toString(),
-                      //       tbal: tbal,
-                      //       total: total,
-                      //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                      //       selectedValue: selectedValue,
-                      //       crsserviceid: crsserviceid!,
-                      //       Servicelist: servicelist,
-                      //       activeid: activeid.toString(),
-                      //       actualinid: invoiceid.toString(),
-                      //       cxID: cusID.toString(),
-                      //       docid: Idocid.toString(),
-                      //       duedate: _duedatedateController.text,
-                      //       externalNotes: _externalController.text,
-                      //       gstNo: gstno,
-                      //       internalNotes: _internalController.text.toString(),
-                      //       invoicedate: _generatedateController.text.toString(),
-                      //       LeadId: leadID.toString(),
-                      //       referenceID: _referenceController.text);
-                      // });
+
                       setState(() {
                         isShowPdf = !isShowPdf;
                       });
@@ -5381,72 +5391,72 @@ class _FinanceState extends State<Finance> {
         const SizedBox(
           height: 10,
         ),
-        Row(
-          children: [
-            const Text("Samples Required??"),
-            textButton("Yes"),
-            textButton("No"),
-            const SizedBox(
-              width: 50,
-            ),
-            isChoosed
-                ? Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DropdownButton2<String>(
-                        iconEnabledColor: btnColor,
-                        iconDisabledColor: AbgColor,
-                        itemPadding: const EdgeInsets.only(left: 5),
-                        buttonHeight: 30,
-                        buttonPadding: null,
-                        hint: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            "Samples",
-                            style: TxtStls.fieldstyle,
-                          ),
-                        ),
-
-                        // selectedItemBuilder: (BuildContext context) {
-                        //   return items.map((String value) {
-                        //     return Text(value.toString(),
-                        //         style: TextStyle(
-                        //             fontSize: 13,
-                        //             color: bgColor,
-                        //             fontWeight: FontWeight.bold));
-                        //   }).toList();
-                        // },
-                        selectedItemHighlightColor: bgColor,
-                        buttonDecoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: btnColor.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        items: items
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                      item,
-                                      style: TxtStls.fieldstyle,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                        value: selectedSamples,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedSamples = value as String;
-                          });
-                        },
-                      ),
-                    ))
-                : const SizedBox(),
-          ],
-        )
+        // Row(
+        //   children: [
+        //     const Text("Samples Required??"),
+        //     textButton("Yes"),
+        //     textButton("No"),
+        //     const SizedBox(
+        //       width: 50,
+        //     ),
+        //     isChoosed
+        //         ? Align(
+        //             alignment: Alignment.bottomCenter,
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(8.0),
+        //               child: DropdownButton2<String>(
+        //                 iconEnabledColor: btnColor,
+        //                 iconDisabledColor: AbgColor,
+        //                 itemPadding: const EdgeInsets.only(left: 5),
+        //                 buttonHeight: 30,
+        //                 buttonPadding: null,
+        //                 hint: Padding(
+        //                   padding: const EdgeInsets.only(left: 8.0),
+        //                   child: Text(
+        //                     "Samples",
+        //                     style: TxtStls.fieldstyle,
+        //                   ),
+        //                 ),
+        //
+        //                 // selectedItemBuilder: (BuildContext context) {
+        //                 //   return items.map((String value) {
+        //                 //     return Text(value.toString(),
+        //                 //         style: TextStyle(
+        //                 //             fontSize: 13,
+        //                 //             color: bgColor,
+        //                 //             fontWeight: FontWeight.bold));
+        //                 //   }).toList();
+        //                 // },
+        //                 selectedItemHighlightColor: bgColor,
+        //                 buttonDecoration: BoxDecoration(
+        //                   shape: BoxShape.rectangle,
+        //                   color: btnColor.withOpacity(0.4),
+        //                   borderRadius: BorderRadius.circular(10.0),
+        //                 ),
+        //                 items: items
+        //                     .map((item) => DropdownMenuItem<String>(
+        //                           value: item,
+        //                           child: Padding(
+        //                             padding: const EdgeInsets.only(left: 8.0),
+        //                             child: Text(
+        //                               item,
+        //                               style: TxtStls.fieldstyle,
+        //                               overflow: TextOverflow.ellipsis,
+        //                             ),
+        //                           ),
+        //                         ))
+        //                     .toList(),
+        //                 value: selectedSamples,
+        //                 onChanged: (value) {
+        //                   setState(() {
+        //                     selectedSamples = value as String;
+        //                   });
+        //                 },
+        //               ),
+        //             ))
+        //         : const SizedBox(),
+        //   ],
+        // )
       ],
     );
   }
@@ -5538,33 +5548,13 @@ class _FinanceState extends State<Finance> {
                     height: 60,
                     width: 500,
                     decoration: decoration(),
-                    // child: Row(
-                    //   children: [
-                    //     //multiple ternary operator syntax
-                    //     // iscleared
-                    //     //     ? const SizedBox()
-                    //     //     : cusemail.toString() == null
-                    //     //         ? const SizedBox()
-                    //     //         : emaildeco(cusemail.toString()),
-                    //     // iscleared
-                    //     //     ? const SizedBox()
-                    //     //     : popupcontroller1.text == null
-                    //     //         ? const SizedBox()
-                    //     //         : emaildeco(
-                    //     //             popupcontroller1.text.toString(),
-                    //     //           ),
-                    //     // iscleared && popupcontroller2.text == null
-                    //     //     ? const SizedBox()
-                    //     //     : emaildeco(
-                    //     //         popupcontroller2.text.toString(),
-                    //     //       ),
-                    //   ],
-                    // ),
                     //BoxDecoration
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: emaillist.length,
                         itemBuilder: (context, index) {
+                          print('hjshfiuw' + emaillist.length.toString());
+                          print('hjshfiuw' + emaillist.toString());
                           return Center(
                             child: Row(
                               children: [
@@ -5673,8 +5663,7 @@ class _FinanceState extends State<Finance> {
   }
 
   List emaillist = [];
-
-  Widget emaildeco(String text, int index) {
+  Widget emaildeco(text, int index) {
     print(emaillist.toString());
     return InkWell(
       child: Padding(
@@ -5689,7 +5678,7 @@ class _FinanceState extends State<Finance> {
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Text(
-                    text,
+                    text.toString(),
                     style: TxtStls.fieldstyle,
                   ),
                 ),
@@ -5711,13 +5700,16 @@ class _FinanceState extends State<Finance> {
             )),
       ),
       onTap: () {
-        setState(() {
-          emaillist.removeAt(index);
-        });
-        // iscleared = !iscleared;
-        // print(iscleared);
+        removeEmail(index, emaillist);
       },
     );
+  }
+
+  removeEmail(index, list) {
+    setState(() {
+      list.removeAt(index);
+      print(list[index]);
+    });
   }
 
   bool iscleared = false;
@@ -5747,20 +5739,6 @@ class _FinanceState extends State<Finance> {
               },
             ),
             value: popupcontroller1.text),
-        // PopupMenuItem<String>(
-        //     child: TextField(
-        //       controller: popupcontroller2,
-        //       decoration: InputDecoration(
-        //           hintText: "type an email2", hintStyle: TxtStls.fieldstyle),
-        //       onSubmitted: (String text) {
-        //         setState(() {
-        //           popupcontroller2.text = text;
-        //           emaillist.add(popupcontroller2.text);
-        //           popupcontroller2.clear();
-        //         });
-        //       },
-        //     ),
-        //     value: popupcontroller2.text),
       ],
       elevation: 8.0,
     );
@@ -6418,7 +6396,7 @@ class _FinanceState extends State<Finance> {
                   showUnderline: false,
                   items: const <String>[
                     "Prashant Thakur",
-                    "Tarun Sadana",
+                    // "Tarun Sadana",
                     "Lalit Gupta",
                     "Rishikesh Mishra"
                   ],
@@ -6447,26 +6425,26 @@ class _FinanceState extends State<Finance> {
                         )
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Tarun Sadana",
-                                style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
-                                style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
-                                style: TxtStls.smallfieldstyle),
-                          ],
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: <Widget>[
+                    //     const CircleAvatar(
+                    //       backgroundImage: NetworkImage(
+                    //           "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                    //     ),
+                    //     Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Text("Tarun Sadana",
+                    //             style: TxtStls.smallfieldstyle),
+                    //         Text("prashant@jrcompliance.com",
+                    //             style: TxtStls.smallfieldstyle),
+                    //         Text("+91 96679 55225",
+                    //             style: TxtStls.smallfieldstyle),
+                    //       ],
+                    //     )
+                    //   ],
+                    // ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -6478,9 +6456,9 @@ class _FinanceState extends State<Finance> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("Lalit Gupta", style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("lalit@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 98730 60689",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
@@ -6498,9 +6476,9 @@ class _FinanceState extends State<Finance> {
                           children: [
                             Text("Rishikesh Mishra",
                                 style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("rishi@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 92664 50125",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
@@ -6573,7 +6551,7 @@ class _FinanceState extends State<Finance> {
                   showUnderline: false,
                   items: const <String>[
                     "Prashant Thakur",
-                    "Tarun Sadana",
+                    //  "Tarun Sadana",
                     "Lalit Gupta",
                     "Rishikesh Mishra"
                   ],
@@ -6612,30 +6590,10 @@ class _FinanceState extends State<Finance> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Tarun Sadana",
-                                style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
-                                style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
-                                style: TxtStls.smallfieldstyle),
-                          ],
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text("Lalit Gupta", style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("lalit@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 98730 60689",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
@@ -6653,9 +6611,9 @@ class _FinanceState extends State<Finance> {
                           children: [
                             Text("Rishikesh Mishra",
                                 style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("rishi@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 92664 50125",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
@@ -6704,7 +6662,7 @@ class _FinanceState extends State<Finance> {
                   Padding(
                       padding: const EdgeInsets.only(right: 0.0),
                       child: Text(
-                        "Level1",
+                        "Level3",
                         style: TxtStls.fieldstyle,
                       )),
                 ],
@@ -6728,7 +6686,7 @@ class _FinanceState extends State<Finance> {
                   showUnderline: false,
                   items: const <String>[
                     "Prashant Thakur",
-                    "Tarun Sadana",
+                    // "Tarun Sadana",
                     "Lalit Gupta",
                     "Rishikesh Mishra"
                   ],
@@ -6767,30 +6725,10 @@ class _FinanceState extends State<Finance> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Tarun Sadana",
-                                style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
-                                style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
-                                style: TxtStls.smallfieldstyle),
-                          ],
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
                             Text("Lalit Gupta", style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("lalit@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 98730 60689",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
@@ -6808,9 +6746,9 @@ class _FinanceState extends State<Finance> {
                           children: [
                             Text("Rishikesh Mishra",
                                 style: TxtStls.smallfieldstyle),
-                            Text("prashant@jrcompliance.com",
+                            Text("rishi@jrcompliance.com",
                                 style: TxtStls.smallfieldstyle),
-                            Text("+91 96679 55225",
+                            Text("+91 92664 50125",
                                 style: TxtStls.smallfieldstyle),
                           ],
                         )
