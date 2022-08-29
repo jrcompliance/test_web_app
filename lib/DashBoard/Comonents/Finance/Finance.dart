@@ -30,6 +30,7 @@ import 'package:test_web_app/Constants/Calenders.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Constants/shape.dart';
 import 'package:test_web_app/Models/CustomerModel.dart';
+import 'package:test_web_app/Models/EscalationsModel.dart';
 import 'package:test_web_app/Models/MoveModel.dart';
 import 'package:test_web_app/Models/ScopeofWorkModel.dart';
 import 'package:test_web_app/Models/ServicesModel.dart';
@@ -151,17 +152,6 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _internalController = TextEditingController();
   // final TextEditingController _filterDateController = TextEditingController();
   // final TextEditingController _serviceController1 = TextEditingController();
-  // late TextEditingController scopeofwork1;
-  // late TextEditingController scopeofwork2;
-  // late TextEditingController scopeofwork3;
-  // late TextEditingController scopeofwork4;
-  // late TextEditingController scopeofwork5;
-  // late TextEditingController scopeofwork6;
-  // late TextEditingController scopeofwork7;
-  // late TextEditingController scopeofwork8;
-  // late TextEditingController scopeofwork9;
-  // late TextEditingController scopeofwork10;
-
   List cust = [];
   List<CustomerModel> allCustomers = [];
 
@@ -189,6 +179,9 @@ class _FinanceState extends State<Finance> {
   var serviceProvider;
 
   bool isServiceSelected = false;
+  String vpimage = "";
+  String bde2image = "";
+  String ceoimage = "";
   @override
   void initState() {
     var rng = new Random();
@@ -196,6 +189,18 @@ class _FinanceState extends State<Finance> {
     allServices = services;
     super.initState();
     Future.delayed(const Duration(seconds: 2)).then((value) {
+      Utils.getEscalationsDownloadurl('vpimage.jpg').then((value) {
+        vpimage = value.toString();
+        print("vpimage---" + vpimage.toString());
+      });
+      Utils.getEscalationsDownloadurl('bde2image.jpg').then((value) {
+        bde2image = value.toString();
+        print("bde2image---" + bde2image.toString());
+      });
+      Utils.getEscalationsDownloadurl('ceoimage.png').then((value) {
+        ceoimage = value.toString();
+        print("ceoimage---" + ceoimage.toString());
+      });
       Provider.of<CustmerProvider>(context, listen: false)
           .getCustomers(
         context,
@@ -277,6 +282,12 @@ class _FinanceState extends State<Finance> {
   //   // _getscopeController(index).clear();
   //   super.dispose();
   // }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    popupcontroller1.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -2677,43 +2688,43 @@ class _FinanceState extends State<Finance> {
                                   listen: false)
                               .crsserviceid;
                         });
-                        Future.delayed(Duration(seconds: 2))
-                            .then((value) async {
-                          await PdfISIService.generatePdf(
-                              context: context,
-                              cusname: cusname.toString(),
-                              tbal: tbal,
-                              total: total,
-                              gstAmount:
-                                  selectedValue == "INR" ? _gstamount : 0.00,
-                              selectedValue: selectedValue,
-                              isiserviceid: isiserviceid!,
-                              Servicelist: servicelist,
-                              activeid: activeid.toString(),
-                              actualinid: invoiceid.toString(),
-                              cxID: cusID.toString(),
-                              docid: Idocid.toString(),
-                              duedate: _duedatedateController.text,
-                              externalNotes: _externalController.text,
-                              gstNo: gstno,
-                              internalNotes:
-                                  _internalController.text.toString(),
-                              invoicedate:
-                                  _generatedateController.text.toString(),
-                              LeadId: leadID.toString(),
-                              eimageurl: eimageurl.toString(),
-                              ename: ename.toString(),
-                              eemail: eemail.toString(),
-                              ephone: ephone.toString(),
-                              edesig: edesig.toString(),
-                              referenceID: _referenceController.text.toString(),
-                              subject: _subjectController.text.toString(),
-                              sampleQuantity: selectedList[0].qty.toString(),
-                              serviceStandard: selectedList[0].name.toString(),
-                              quotationNo: randomNo.toString(),
-                              scopeofWork: scope,
-                              termsandConditions: termsList);
-                        });
+                        // Future.delayed(Duration(seconds: 2))
+                        //     .then((value) async {
+                        //   await PdfISIService.generatePdf(
+                        //       context: context,
+                        //       cusname: cusname.toString(),
+                        //       tbal: tbal,
+                        //       total: total,
+                        //       gstAmount:
+                        //           selectedValue == "INR" ? _gstamount : 0.00,
+                        //       selectedValue: selectedValue,
+                        //       isiserviceid: isiserviceid!,
+                        //       Servicelist: servicelist,
+                        //       activeid: activeid.toString(),
+                        //       actualinid: invoiceid.toString(),
+                        //       cxID: cusID.toString(),
+                        //       docid: Idocid.toString(),
+                        //       duedate: _duedatedateController.text,
+                        //       externalNotes: _externalController.text,
+                        //       gstNo: gstno,
+                        //       internalNotes:
+                        //           _internalController.text.toString(),
+                        //       invoicedate:
+                        //           _generatedateController.text.toString(),
+                        //       LeadId: leadID.toString(),
+                        //       eimageurl: eimageurl.toString(),
+                        //       ename: ename.toString(),
+                        //       eemail: eemail.toString(),
+                        //       ephone: ephone.toString(),
+                        //       edesig: edesig.toString(),
+                        //       referenceID: _referenceController.text.toString(),
+                        //       subject: _subjectController.text.toString(),
+                        //       sampleQuantity: selectedList[0].qty.toString(),
+                        //       serviceStandard: selectedList[0].name.toString(),
+                        //       quotationNo: randomNo.toString(),
+                        //       scopeofWork: scope,
+                        //       termsandConditions: termsList);
+                        // });
                         // Future.delayed(Duration(seconds: 2)).then((value) async {
                         //   await PdfFMCSService.generatePdf(
                         //       context: context,
@@ -2763,6 +2774,7 @@ class _FinanceState extends State<Finance> {
 
                       setState(() {
                         isShowPdf = !isShowPdf;
+                        emaillist.add(cusemail);
                       });
                     },
                     child: const Text("Create Pdf")),
@@ -2783,8 +2795,9 @@ class _FinanceState extends State<Finance> {
     } else {
       setState(() {
         isShowPdf = !isShowPdf;
-        emaillist.add(cusemail.toString());
+        emaillist.add(cusemail);
       });
+
       return Container(
         child: serviceIntro(context),
       );
@@ -5549,20 +5562,68 @@ class _FinanceState extends State<Finance> {
                     width: 500,
                     decoration: decoration(),
                     //BoxDecoration
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: emaillist.length,
-                        itemBuilder: (context, index) {
-                          print('hjshfiuw' + emaillist.length.toString());
-                          print('hjshfiuw' + emaillist.toString());
-                          return Center(
-                            child: Row(
-                              children: [
-                                emaildeco(emaillist[index], index),
-                              ],
+                    // child: ListView.builder(
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemCount: emaillist.length,
+                    //     itemBuilder: (context, index) {
+                    //       print('hjshfiuw' + emaillist.length.toString());
+                    //       print('hjshfiuw' + emaillist.toString());
+                    //       return Center(
+                    //         child: Row(
+                    //           children: [
+                    //             emaildeco(emaillist[index], index),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     }),
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: emaillist
+                          .map(
+                            (e) => InkWell(
+                              child: Center(
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AbgColor.withOpacity(0.2)),
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(e.toString()),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color: AbgColor.withOpacity(
+                                                        0.2)),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        16.0)),
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 16.0,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                              onTap: () {
+                                emaillist.removeLast();
+                              },
                             ),
-                          );
-                        }),
+                          )
+                          .toSet()
+                          .toList(),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -5575,10 +5636,6 @@ class _FinanceState extends State<Finance> {
                     child: Icon(Icons.add),
                   ),
                   onTap: () {
-                    setState(() {
-                      // iscleared = !iscleared;
-                      // print(iscleared);
-                    });
                     _showPopupMenu();
                   },
                 ),
@@ -5662,9 +5719,8 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  List emaillist = [];
+  List emaillist = [].toSet().toList();
   Widget emaildeco(text, int index) {
-    print(emaillist.toString());
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -5700,17 +5756,20 @@ class _FinanceState extends State<Finance> {
             )),
       ),
       onTap: () {
-        removeEmail(index, emaillist);
+        // removeEmail(index, emaillist);
+        setState(() {
+          emaillist.removeAt(index);
+        });
       },
     );
   }
 
-  removeEmail(index, list) {
-    setState(() {
-      list.removeAt(index);
-      print(list[index]);
-    });
-  }
+  // removeEmail(index, list) {
+  //   setState(() {
+  //     list.removeAt(index);
+  //     print(list[index]);
+  //   });
+  // }
 
   bool iscleared = false;
   bool isclearedemail1 = false;
@@ -5731,9 +5790,9 @@ class _FinanceState extends State<Finance> {
               decoration: InputDecoration(
                   hintText: "type an email", hintStyle: TxtStls.fieldstyle),
               onSubmitted: (String text) {
+                emaillist.add(popupcontroller1.text.toString());
                 setState(() {
                   popupcontroller1.text = text;
-                  emaillist.add(popupcontroller1.text);
                   popupcontroller1.clear();
                 });
               },
@@ -6490,6 +6549,8 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person1 = selectedPerson;
                       print(person1.toString());
+                      print("uishfiueof" +
+                          escalationImages(person1!, escList1).toString());
                     });
                   },
                 ),
@@ -6625,6 +6686,8 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person2 = selectedPerson;
                       print(person2.toString());
+                      print("uishfiueof" +
+                          escalationImages(person2!, escList2).toString());
                     });
                   },
                 ),
@@ -6760,6 +6823,8 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person3 = selectedPerson;
                       print(person3.toString());
+                      print("uishfiueof" +
+                          escalationImages(person3!, escList3).toString());
                     });
                   },
                 ),
@@ -6771,6 +6836,42 @@ class _FinanceState extends State<Finance> {
       ),
     );
   }
+
+  List escList1 = [];
+  List escList2 = [];
+  List escList3 = [];
+  List escalationImages(String person, List list) {
+    if (person == "Prashant Thakur") {
+      list.add(EscalationsModel(
+              desig: "BDE",
+              name: person,
+              phone: "+91 96679 55225",
+              imageUrl: bde2image,
+              email: "prashant@jrcompliance.com")
+          .toJson());
+      return list;
+    } else if (person == "Lalit Gupta") {
+      list.add(EscalationsModel(
+              desig: "VP",
+              name: person,
+              phone: "+91 966",
+              imageUrl: "",
+              email: "prashant@jrcompliance.com")
+          .toJson());
+      return list;
+    } else if (person == "Rishikesh Mistra") {
+      list.add(EscalationsModel(
+              desig: "",
+              name: person,
+              phone: "",
+              imageUrl: "",
+              email: "prashant@jrcompliance.com")
+          .toJson());
+      return list;
+    } else
+      return [];
+  }
+  /////
 
   // Future<void> getServiceUrl(docid, cusid) async {
   //   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -6816,6 +6917,13 @@ class Utils {
     final url =
         'mailto:$toEmail?subject=${Uri.encodeFull(subject)}&body=${Uri.encodeFull(body)}';
     await _launchaUrl(url);
+  }
+
+  static Future<String> getEscalationsDownloadurl(String imageUrl) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    var downloadUrl =
+        await storage.ref('Escalations/$imageUrl').getDownloadURL();
+    return downloadUrl;
   }
 }
 

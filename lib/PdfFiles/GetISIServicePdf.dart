@@ -46,11 +46,20 @@ class PdfISIService {
     required String eemail,
     required String ephone,
     required String edesig,
+    required String person1Image,
+    required String person2Image,
+    required String person3Image,
+    required String person1Desig,
+    required String person2Desig,
+    required String person3Desig,
   }) async {
     Size size = MediaQuery.of(context).size;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
     final eimage = await networkImage(eimageurl);
+    final esc1image = await networkImage(person1Image);
+    final esc2image = await networkImage(person2Image);
+    final esc3image = await networkImage(person3Image);
 
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
