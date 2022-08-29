@@ -2649,12 +2649,15 @@ class _FinanceState extends State<Finance> {
                 TextButton(
                     onPressed: () async {
                       List scope = scopetext.split('\n');
+                      print("qwerty--" + zefyrTermsController
+                        ..toString());
                       List termsList = terms.split('\n');
-                      print(scope.toString());
+                      // print(scope.toString());
                       var gstno = _gstController.text == null
                           ? ""
                           : _gstController.text.toString();
-                      print(invoiceid.toString());
+                      //  print(invoiceid.toString());
+                      print(escList3.toString());
 
                       setState(() {});
 
@@ -2691,39 +2694,42 @@ class _FinanceState extends State<Finance> {
                         // Future.delayed(Duration(seconds: 2))
                         //     .then((value) async {
                         //   await PdfISIService.generatePdf(
-                        //       context: context,
-                        //       cusname: cusname.toString(),
-                        //       tbal: tbal,
-                        //       total: total,
-                        //       gstAmount:
-                        //           selectedValue == "INR" ? _gstamount : 0.00,
-                        //       selectedValue: selectedValue,
-                        //       isiserviceid: isiserviceid!,
-                        //       Servicelist: servicelist,
-                        //       activeid: activeid.toString(),
-                        //       actualinid: invoiceid.toString(),
-                        //       cxID: cusID.toString(),
-                        //       docid: Idocid.toString(),
-                        //       duedate: _duedatedateController.text,
-                        //       externalNotes: _externalController.text,
-                        //       gstNo: gstno,
-                        //       internalNotes:
-                        //           _internalController.text.toString(),
-                        //       invoicedate:
-                        //           _generatedateController.text.toString(),
-                        //       LeadId: leadID.toString(),
-                        //       eimageurl: eimageurl.toString(),
-                        //       ename: ename.toString(),
-                        //       eemail: eemail.toString(),
-                        //       ephone: ephone.toString(),
-                        //       edesig: edesig.toString(),
-                        //       referenceID: _referenceController.text.toString(),
-                        //       subject: _subjectController.text.toString(),
-                        //       sampleQuantity: selectedList[0].qty.toString(),
-                        //       serviceStandard: selectedList[0].name.toString(),
-                        //       quotationNo: randomNo.toString(),
-                        //       scopeofWork: scope,
-                        //       termsandConditions: termsList);
+                        //     context: context,
+                        //     cusname: cusname.toString(),
+                        //     tbal: tbal,
+                        //     total: total,
+                        //     gstAmount:
+                        //         selectedValue == "INR" ? _gstamount : 0.00,
+                        //     selectedValue: selectedValue,
+                        //     isiserviceid: isiserviceid!,
+                        //     Servicelist: servicelist,
+                        //     activeid: activeid.toString(),
+                        //     actualinid: invoiceid.toString(),
+                        //     cxID: cusID.toString(),
+                        //     docid: Idocid.toString(),
+                        //     duedate: _duedatedateController.text,
+                        //     externalNotes: _externalController.text,
+                        //     gstNo: gstno,
+                        //     internalNotes: _internalController.text.toString(),
+                        //     invoicedate:
+                        //         _generatedateController.text.toString(),
+                        //     LeadId: leadID.toString(),
+                        //     eimageurl: eimageurl.toString(),
+                        //     ename: ename.toString(),
+                        //     eemail: eemail.toString(),
+                        //     ephone: ephone.toString(),
+                        //     edesig: edesig.toString(),
+                        //     referenceID: _referenceController.text.toString(),
+                        //     subject: _subjectController.text.toString(),
+                        //     // sampleQuantity: selectedList[0].qty.toString(),
+                        //     // serviceStandard: selectedList[0].name.toString(),
+                        //     quotationNo: randomNo.toString(),
+                        //     scopeofWork: scope,
+                        //     termsandConditions: termsList,
+                        //     // escalations1: escList1,
+                        //     // escalations2: escList2,
+                        //     escalations3: escList3,
+                        //   );
                         // });
                         // Future.delayed(Duration(seconds: 2)).then((value) async {
                         //   await PdfFMCSService.generatePdf(
@@ -6467,9 +6473,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(bde2image.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6507,9 +6512,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(vpimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6526,9 +6530,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(ceoimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6549,8 +6552,9 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person1 = selectedPerson;
                       print(person1.toString());
-                      print("uishfiueof" +
-                          escalationImages(person1!, escList1).toString());
+
+                      escList1 = escalationImages(person1!, escList1);
+                      print('esclist1--' + escList1.toString());
                     });
                   },
                 ),
@@ -6624,9 +6628,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(bde2image.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6644,9 +6647,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(vpimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6663,9 +6665,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(ceoimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6686,8 +6687,9 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person2 = selectedPerson;
                       print(person2.toString());
-                      print("uishfiueof" +
-                          escalationImages(person2!, escList2).toString());
+
+                      escList2 = escalationImages(person2!, escList2);
+                      print("esclist2" + escList2.toString());
                     });
                   },
                 ),
@@ -6761,9 +6763,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(bde2image.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6781,9 +6782,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(vpimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6800,9 +6800,8 @@ class _FinanceState extends State<Finance> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/expanded_devtools.jpg"),
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(ceoimage.toString()),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6823,8 +6822,8 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person3 = selectedPerson;
                       print(person3.toString());
-                      print("uishfiueof" +
-                          escalationImages(person3!, escList3).toString());
+                      escList3 = escalationImages(person3!, escList3);
+                      print("escList3--" + escList3.toString());
                     });
                   },
                 ),
@@ -6854,18 +6853,18 @@ class _FinanceState extends State<Finance> {
       list.add(EscalationsModel(
               desig: "VP",
               name: person,
-              phone: "+91 966",
-              imageUrl: "",
-              email: "prashant@jrcompliance.com")
+              phone: "+91 98730 60689",
+              imageUrl: vpimage,
+              email: "lalit@jrcompliance.com")
           .toJson());
       return list;
-    } else if (person == "Rishikesh Mistra") {
+    } else if (person == "Rishikesh Mishra") {
       list.add(EscalationsModel(
-              desig: "",
+              desig: "CEO",
               name: person,
-              phone: "",
+              phone: "+91 92664 50125",
               imageUrl: "",
-              email: "prashant@jrcompliance.com")
+              email: "rishi@jrcompliance.com")
           .toJson());
       return list;
     } else

@@ -19,10 +19,10 @@ class PdfISIService {
     required String subject,
     required List scopeofWork,
     required List termsandConditions,
-    required String serviceStandard,
+    // required String serviceStandard,
     // required String sampleQuantity,
     required String quotationNo,
-    required String sampleQuantity,
+    // required String sampleQuantity,
     required int isiserviceid,
     required List Servicelist,
     required String cusname,
@@ -46,20 +46,22 @@ class PdfISIService {
     required String eemail,
     required String ephone,
     required String edesig,
-    required String person1Image,
-    required String person2Image,
-    required String person3Image,
-    required String person1Desig,
-    required String person2Desig,
-    required String person3Desig,
+    // required List escalations1,
+    // required List escalations2,
+    required List escalations3,
+    // required String escimage3,
   }) async {
     Size size = MediaQuery.of(context).size;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
     final eimage = await networkImage(eimageurl);
-    final esc1image = await networkImage(person1Image);
-    final esc2image = await networkImage(person2Image);
-    final esc3image = await networkImage(person3Image);
+    // final esc3image = await networkImage(escimage3);
+    // final esc1image =
+    //     await networkImage(escalations1[0]["imageUrl"].toString());
+    // final esc2image =
+    //     await networkImage(escalations2[0]["imageUrl"].toString());
+    final esc3image =
+        await networkImage(escalations3[0]["imageUrl"].toString());
 
     final image =
         (await rootBundle.load("assets/Logos/jrlogo.png")).buffer.asUint8List();
@@ -635,7 +637,7 @@ class PdfISIService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Quotation No: 487256484",
+                            "Quotation No: $quotationNo",
                             style: textStl12bold,
                           ),
                         ),
@@ -644,7 +646,7 @@ class PdfISIService {
                           flex: 1,
                           child: pw.Text(
                             subject != null
-                                ? subject.toString()
+                                ? "Subject: ${subject.toString()}"
                                 : "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of New and Renewable Energy",
                             style: textStl12bold,
                           ),
@@ -1100,10 +1102,11 @@ class PdfISIService {
                                             pw.Expanded(
                                                 flex: 1,
                                                 child: pw.Text(
-                                                    serviceStandard != null
-                                                        ? serviceStandard
-                                                            .toString()
-                                                        : "IS 14286",
+                                                    // serviceStandard != null
+                                                    //     ? serviceStandard
+                                                    //         .toString()
+                                                    //     :
+                                                    "IS 14286",
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
@@ -1128,7 +1131,7 @@ class PdfISIService {
                                       style: textStl12bold)),
                               pw.SizedBox(width: 10),
                               pw.Padding(
-                                padding: pw.EdgeInsets.only(bottom: 5.0),
+                                padding: pw.EdgeInsets.only(bottom: 0.0),
                                 child: pw.Flexible(
                                     flex: 1,
                                     child: pw.Text(
@@ -1330,20 +1333,32 @@ class PdfISIService {
                             child: pw.Text("Project Escalation Levels",
                                 style: textStl15bold)),
                         space2(),
-                        listTile2(
-                            eimage,
-                            "${ename.toString()} - ${edesig.toString()}",
-                            eemail,
-                            "+91 $ephone"),
-                        space(),
+                        // listTile2(
+                        //     eimage,
+                        //     "${ename.toString()} - ${edesig.toString()}",
+                        //     eemail,
+                        //     "+91 $ephone"),
+                        // listTile2(
+                        //     esc1image,
+                        //     "${escalations1[0]['name'].toString()} - ${escalations1[0]['desig'].toString()}",
+                        //     escalations1[0]['email'],
+                        //     "${escalations1[0]['phone']}"),
+
+                        // space(),
                         // listTile2(escimage, "Mr.Tarun Sadana - BDE",
                         //     "tarun@jrcompliance.com", "+91 96679 55225"),
                         space(),
-                        listTile(vpimage, "Mr.Lalit Gupta - VP",
-                            "lalit@jrcompliance.com", "+91 9873060689"),
+                        // listTile2(
+                        //     esc2image,
+                        //     "${escalations2[0]['name'].toString()} - ${escalations2[0]['desig'].toString()}",
+                        //     escalations2[0]['email'],
+                        //     "${escalations2[0]['phone']}"),
                         space(),
-                        listTile(ceoimage, "Mr.Rishikesh Mishra - CEO",
-                            "rishi@jrcompliance.com", "+91 9266450125"),
+                        listTile2(
+                            esc3image,
+                            "${escalations3[0]['name'].toString()} - ${escalations3[0]['desig'].toString()}",
+                            escalations3[0]['email'],
+                            "${escalations3[0]['phone']}"),
                         space(),
 
                         ///
@@ -1580,34 +1595,34 @@ class PdfISIService {
                             ? scopeofWork[7]
                             : "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
                         space4(),
-                        rowWidget2(scopeofWork[8] != null
-                            ? scopeofWork[8]
-                            : "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
-                        space4(),
-                        rowWidget2(scopeofWork[0] != null
-                            ? scopeofWork[0]
-                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
-                        rowWidget2(scopeofWork[9] != null
-                            ? scopeofWork[9]
-                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
-                        rowWidget2(scopeofWork[10] != null
-                            ? scopeofWork[10]
-                            : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
-                        scopeofWork[11] != null
-                            ? rowWidget2(scopeofWork[11] != null
-                                ? scopeofWork[11]
-                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
-                            : pw.SizedBox(),
-                        scopeofWork[12] != null
-                            ? rowWidget2(scopeofWork[12] != null
-                                ? scopeofWork[12]
-                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
-                            : pw.SizedBox(),
-                        scopeofWork[13] != null
-                            ? rowWidget2(scopeofWork[13] != null
-                                ? scopeofWork[13]
-                                : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
-                            : pw.SizedBox(),
+                        // rowWidget2(scopeofWork[8] != null
+                        //     ? scopeofWork[8]
+                        //     : "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
+                        //space4(),
+                        // rowWidget2(scopeofWork[9] != null
+                        //     ? scopeofWork[9]
+                        //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        // rowWidget2(scopeofWork[9] != null
+                        //     ? scopeofWork[9]
+                        //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        // rowWidget2(scopeofWork[10] != null
+                        //     ? scopeofWork[10]
+                        //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        // scopeofWork[11] != null
+                        //     ? rowWidget2(scopeofWork[11] != null
+                        //         ? scopeofWork[11]
+                        //         : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                        //     : pw.SizedBox(),
+                        // scopeofWork[12] != null
+                        //     ? rowWidget2(scopeofWork[12] != null
+                        //         ? scopeofWork[12]
+                        //         : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                        //     : pw.SizedBox(),
+                        // scopeofWork[13] != null
+                        //     ? rowWidget2(scopeofWork[13] != null
+                        //         ? scopeofWork[13]
+                        //         : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries.")
+                        //     : pw.SizedBox(),
                       ]),
                 ),
                 pw.Container(
@@ -2475,12 +2490,12 @@ class PdfISIService {
                           rowWidget2link(
                               "To know more about our privacy policies, visit - ",
                               "https://www.jrcompliance.com/privacy-policy"),
-                          rowWidget2link(
-                              "To know more about our privacy policies, visit - ",
-                              "https://www.jrcompliance.com/privacy-policy"),
-                          rowWidget2link(
-                              "To know more about our privacy policies, visit - ",
-                              "https://www.jrcompliance.com/privacy-policy"),
+                          // rowWidget2link(
+                          //     "To know more about our privacy policies, visit - ",
+                          //     "https://www.jrcompliance.com/privacy-policy"),
+                          // rowWidget2link(
+                          //     "To know more about our privacy policies, visit - ",
+                          //     "https://www.jrcompliance.com/privacy-policy"),
                         ])),
                 pw.Container(
                     height: size.height - 70,
