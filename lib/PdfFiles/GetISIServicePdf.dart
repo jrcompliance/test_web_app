@@ -19,10 +19,9 @@ class PdfISIService {
     required String subject,
     required List scopeofWork,
     required List termsandConditions,
-    // required String serviceStandard,
-    // required String sampleQuantity,
+    required String serviceStandard,
+    required String sampleQuantity,
     required String quotationNo,
-    // required String sampleQuantity,
     required int isiserviceid,
     required List Servicelist,
     required String cusname,
@@ -46,20 +45,19 @@ class PdfISIService {
     required String eemail,
     required String ephone,
     required String edesig,
-    // required List escalations1,
-    // required List escalations2,
+    required List escalations1,
+    required List escalations2,
     required List escalations3,
-    // required String escimage3,
   }) async {
     Size size = MediaQuery.of(context).size;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
     DateTime? duedate1 = DateTime.parse(duedate);
     final eimage = await networkImage(eimageurl);
     // final esc3image = await networkImage(escimage3);
-    // final esc1image =
-    //     await networkImage(escalations1[0]["imageUrl"].toString());
-    // final esc2image =
-    //     await networkImage(escalations2[0]["imageUrl"].toString());
+    final esc1image =
+        await networkImage(escalations1[0]["imageUrl"].toString());
+    final esc2image =
+        await networkImage(escalations2[0]["imageUrl"].toString());
     final esc3image =
         await networkImage(escalations3[0]["imageUrl"].toString());
 
@@ -900,18 +898,18 @@ class PdfISIService {
                           pw.Padding(
                               padding: pw.EdgeInsets.only(left: 30),
                               child: rowWidget('ISI certification scheme',
-                                  'applicabe on Indian manufacturers')),
+                                  'applicable on Indian manufacturers')),
                           space3(),
                           pw.Padding(
                             padding: pw.EdgeInsets.only(left: 30),
                             child: rowWidget('FMCS certification scheme',
-                                'applicabe on foreign manufacturers'),
+                                'applicable on foreign manufacturers'),
                           ),
                           space3(),
                           pw.Padding(
                               padding: pw.EdgeInsets.only(left: 30),
                               child: rowWidget('CRS registration scheme',
-                                  'applicabe on electric and electronic appliances')),
+                                  'applicable on electric and electronic appliances')),
                           space4(),
                           //Since your products fall under purview of the FMCS certification scheme, we will emphasize on that, in the next section.
                           pw.Flexible(
@@ -1086,7 +1084,7 @@ class PdfISIService {
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
-                                                child: pw.Text("(IS) No :${""}",
+                                                child: pw.Text("(IS) No ",
                                                     style: textStl15bold)),
                                           ])),
                                   verticalDivider(),
@@ -1102,11 +1100,10 @@ class PdfISIService {
                                             pw.Expanded(
                                                 flex: 1,
                                                 child: pw.Text(
-                                                    // serviceStandard != null
-                                                    //     ? serviceStandard
-                                                    //         .toString()
-                                                    //     :
-                                                    "IS 14286",
+                                                    serviceStandard != null
+                                                        ? "IS $serviceStandard"
+                                                            .toString()
+                                                        : "IS 14286",
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
@@ -1147,7 +1144,7 @@ class PdfISIService {
                             child: pw.Text("Details:", style: textStl18bold)),
                         space(),
                         pw.Container(
-                            height: size.height * 0.26,
+                            height: size.height * 0.27,
                             decoration: pw.BoxDecoration(
                               borderRadius: pw.BorderRadius.circular(0.0),
                               border: pw.Border.all(color: PdfColors.grey300),
@@ -1156,8 +1153,8 @@ class PdfISIService {
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
                                   pw.Padding(
-                                    padding:
-                                        pw.EdgeInsets.only(left: 5.0, top: 20),
+                                    padding: pw.EdgeInsets.only(
+                                        left: 5.0, top: 10.0),
                                     child: pw.Expanded(
                                         flex: 2,
                                         child: pw.Text("Prepared For",
@@ -1174,7 +1171,7 @@ class PdfISIService {
                                           children: [
                                             pw.Padding(
                                               padding: pw.EdgeInsets.only(
-                                                  left: 5.0, top: 20),
+                                                  left: 5.0, top: 10.0),
                                               child: pw.Flexible(
                                                   flex: 1,
                                                   child: pw.Text(
@@ -1231,8 +1228,8 @@ class PdfISIService {
                                           ])),
                                   verticalDivider(),
                                   pw.Padding(
-                                    padding:
-                                        pw.EdgeInsets.only(left: 5.0, top: 20),
+                                    padding: pw.EdgeInsets.only(
+                                        left: 5.0, top: 10.0),
                                     child: pw.Expanded(
                                         flex: 1,
                                         child: pw.Text("Issued By",
@@ -1249,14 +1246,14 @@ class PdfISIService {
                                           children: [
                                             pw.Padding(
                                               padding: pw.EdgeInsets.only(
-                                                  left: 5.0, top: 20),
+                                                  left: 5.0, top: 10.0),
                                               child: pw.Flexible(
                                                   flex: 2,
                                                   child: pw.Text(
                                                       "JR Compliance & Testing Labs",
                                                       style: textStl12bold)),
                                             ),
-                                            pw.SizedBox(height: 5),
+                                            pw.SizedBox(height: 5.0),
                                             pw.Padding(
                                               padding:
                                                   pw.EdgeInsets.only(left: 5),
@@ -1310,9 +1307,11 @@ class PdfISIService {
                                                   pw.EdgeInsets.only(left: 5),
                                               child: pw.Flexible(
                                                   flex: 1,
-                                                  child: pw.Text(
-                                                      "prashant@jrcompliance.com",
-                                                      style: textStl12bold)),
+                                                  child: pw.FittedBox(
+                                                      child: pw.Text(
+                                                          "prashant@jrcompliance.com",
+                                                          style:
+                                                              textStl12bold))),
                                             ),
                                             pw.SizedBox(height: 5),
                                             pw.Padding(
@@ -1338,21 +1337,21 @@ class PdfISIService {
                         //     "${ename.toString()} - ${edesig.toString()}",
                         //     eemail,
                         //     "+91 $ephone"),
-                        // listTile2(
-                        //     esc1image,
-                        //     "${escalations1[0]['name'].toString()} - ${escalations1[0]['desig'].toString()}",
-                        //     escalations1[0]['email'],
-                        //     "${escalations1[0]['phone']}"),
+                        listTile2(
+                            esc1image,
+                            "${escalations1[0]['name'].toString()} - ${escalations1[0]['desig'].toString()}",
+                            escalations1[0]['email'],
+                            "${escalations1[0]['phone']}"),
 
                         // space(),
                         // listTile2(escimage, "Mr.Tarun Sadana - BDE",
                         //     "tarun@jrcompliance.com", "+91 96679 55225"),
                         space(),
-                        // listTile2(
-                        //     esc2image,
-                        //     "${escalations2[0]['name'].toString()} - ${escalations2[0]['desig'].toString()}",
-                        //     escalations2[0]['email'],
-                        //     "${escalations2[0]['phone']}"),
+                        listTile2(
+                            esc2image,
+                            "${escalations2[0]['name'].toString()} - ${escalations2[0]['desig'].toString()}",
+                            escalations2[0]['email'],
+                            "${escalations2[0]['phone']}"),
                         space(),
                         listTile2(
                             esc3image,
@@ -1360,188 +1359,6 @@ class PdfISIService {
                             escalations3[0]['email'],
                             "${escalations3[0]['phone']}"),
                         space(),
-
-                        ///
-                        // pw.Container(
-                        //   height: size.height * 0.2,
-                        //   child: pw.Table(
-                        //       border: pw.TableBorder(
-                        //           left: pw.BorderSide(color: PdfColors.grey300),
-                        //           right:
-                        //               pw.BorderSide(color: PdfColors.grey300),
-                        //           top: pw.BorderSide(color: PdfColors.grey300),
-                        //           bottom:
-                        //               pw.BorderSide(color: PdfColors.grey300),
-                        //           horizontalInside:
-                        //               pw.BorderSide(color: PdfColors.grey300),
-                        //           verticalInside:
-                        //               pw.BorderSide(color: PdfColors.grey300)),
-                        //       children: [
-                        //         pw.TableRow(
-                        //             // This is the third row for the table
-                        //             children: [
-                        //               pw.Column(
-                        //                 crossAxisAlignment:
-                        //                     pw.CrossAxisAlignment.start,
-                        //                 children: [
-                        //                   pw.Padding(
-                        //                     padding: pw.EdgeInsets.only(
-                        //                         left: 5.0, top: 5.0),
-                        //                     child: pw.Text(
-                        //                       "BDE - Mr.Tarun Sadana",
-                        //                       style: textStl12bold,
-                        //                     ),
-                        //                   ),
-                        //                   pw.Text(""),
-                        //                 ],
-                        //               ),
-                        //               pw.Column(
-                        //                 crossAxisAlignment:
-                        //                     pw.CrossAxisAlignment.start,
-                        //                 children: [
-                        //                   pw.Padding(
-                        //                     padding: pw.EdgeInsets.only(
-                        //                         left: 5.0,
-                        //                         top: 5.0,
-                        //                         bottom: 5.0),
-                        //                     child: pw.Column(
-                        //                         crossAxisAlignment:
-                        //                             pw.CrossAxisAlignment.start,
-                        //                         children: [
-                        //                           pw.Text(
-                        //                             "Primary Level",
-                        //                             style: textStl12bold,
-                        //                           ),
-                        //                           pw.Text(
-                        //                               "tarun@jrcompliance.com",
-                        //                               style: textStl12bold),
-                        //                         ]),
-                        //                   ),
-                        //                 ],
-                        //               ),
-                        //               pw.Padding(
-                        //                 padding: pw.EdgeInsets.all(4),
-                        //                 child: pw.Column(
-                        //                   crossAxisAlignment:
-                        //                       pw.CrossAxisAlignment.start,
-                        //                   children: [
-                        //                     pw.Column(
-                        //                         crossAxisAlignment:
-                        //                             pw.CrossAxisAlignment.start,
-                        //                         children: [
-                        //                           pw.Text(
-                        //                             "",
-                        //                             style: textStl12bold,
-                        //                           ),
-                        //                           pw.Padding(
-                        //                             padding: pw.EdgeInsets.only(
-                        //                                 left: 5.0, top: 5.0),
-                        //                             child: pw.Text(
-                        //                                 "+91 96679 55225",
-                        //                                 style: textStl12bold),
-                        //                           ),
-                        //                         ]),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             ]),
-                        //         pw.TableRow(children: [
-                        //           pw.Column(
-                        //               crossAxisAlignment:
-                        //                   pw.CrossAxisAlignment.start,
-                        //               children: [
-                        //                 pw.Padding(
-                        //                   padding: pw.EdgeInsets.only(
-                        //                       left: 5.0, top: 5.0),
-                        //                   child: pw.Text(
-                        //                     "VP - Mr.Lalit Gupta",
-                        //                     style: textStl12bold,
-                        //                   ),
-                        //                 ),
-                        //                 pw.Text("", style: textStl12bold),
-                        //               ]),
-                        //           pw.Padding(
-                        //             padding: pw.EdgeInsets.only(
-                        //                 left: 5.0, top: 5.0, bottom: 5.0),
-                        //             child: pw.Column(
-                        //                 crossAxisAlignment:
-                        //                     pw.CrossAxisAlignment.start,
-                        //                 children: [
-                        //                   pw.Text(
-                        //                     "Priority",
-                        //                     style: textStl12bold,
-                        //                   ),
-                        //                   pw.Text("lalit@jrcompliance.com",
-                        //                       style: textStl12bold),
-                        //                 ]),
-                        //           ),
-                        //           pw.Column(
-                        //               crossAxisAlignment:
-                        //                   pw.CrossAxisAlignment.start,
-                        //               children: [
-                        //                 pw.Text(
-                        //                   "",
-                        //                   style: textStl12bold,
-                        //                 ),
-                        //                 pw.Padding(
-                        //                   padding: pw.EdgeInsets.only(
-                        //                       left: 5.0, top: 5.0),
-                        //                   child: pw.Text("+91 9873060689",
-                        //                       style: textStl12bold),
-                        //                 ),
-                        //               ]),
-                        //         ]),
-                        //         pw.TableRow(children: [
-                        //           pw.Column(
-                        //               crossAxisAlignment:
-                        //                   pw.CrossAxisAlignment.start,
-                        //               children: [
-                        //                 pw.Padding(
-                        //                   padding: pw.EdgeInsets.only(
-                        //                       left: 5.0, top: 5.0, bottom: 5.0),
-                        //                   child: pw.Text(
-                        //                     "CEO - Mr.Rishikesh Mishra",
-                        //                     style: textStl12bold,
-                        //                   ),
-                        //                 ),
-                        //                 pw.Text("", style: textStl12bold),
-                        //               ]),
-                        //           pw.Padding(
-                        //             padding: pw.EdgeInsets.only(
-                        //               left: 5.0,
-                        //               top: 5.0,
-                        //               bottom: 5.0,
-                        //             ),
-                        //             child: pw.Column(
-                        //                 crossAxisAlignment:
-                        //                     pw.CrossAxisAlignment.start,
-                        //                 children: [
-                        //                   pw.Text(
-                        //                     "Urgent",
-                        //                     style: textStl12bold,
-                        //                   ),
-                        //                   pw.Text("rishi@jrcompliance.com",
-                        //                       style: textStl12bold),
-                        //                 ]),
-                        //           ),
-                        //           pw.Column(
-                        //               crossAxisAlignment:
-                        //                   pw.CrossAxisAlignment.start,
-                        //               children: [
-                        //                 pw.Text(
-                        //                   "",
-                        //                   style: textStl12bold,
-                        //                 ),
-                        //                 pw.Padding(
-                        //                   padding: pw.EdgeInsets.only(
-                        //                       left: 5.0, top: 5.0, bottom: 5.0),
-                        //                   child: pw.Text("+91 9266450125",
-                        //                       style: textStl12bold),
-                        //                 ),
-                        //               ]),
-                        //         ]),
-                        //       ]),
-                        // ),
                       ]),
                 ),
                 pw.Container(
@@ -2675,32 +2492,35 @@ class PdfISIService {
       print(e.toString());
       print(s.toString());
     }
-    Provider.of<ServiceSaveProvider>(context, listen: false).ServiceData(
-      isiserviceid: isiserviceid,
-      Servicelist: Servicelist,
-      cusname: cusname,
-      tbal: tbal,
-      actualinid: actualinid,
-      gstNo: gstNo,
-      docid: docid,
-      activeid: activeid,
-      gstAmount: gstAmount,
-      total: total,
-      invoicedate: invoicedate,
-      duedate: duedate,
-      selectedValue: selectedValue,
-      cxID: cxID,
-      externalNotes: externalNotes,
-      internalNotes: internalNotes,
-      referenceID: referenceID,
-      LeadId: LeadId,
-      eimageurl: eimageurl,
-      ename: ename,
-      eemail: eemail,
-      ephone: ephone,
-      edesig: edesig,
-      serviceurl: myUrl.toString(),
-    );
+
+    Provider.of<ServiceSaveProvider>(context, listen: false)
+        .ServiceData(
+          isiserviceid: isiserviceid,
+          Servicelist: Servicelist,
+          cusname: cusname,
+          tbal: tbal,
+          actualinid: actualinid,
+          gstNo: gstNo,
+          docid: docid,
+          activeid: activeid,
+          gstAmount: gstAmount,
+          total: total,
+          invoicedate: invoicedate,
+          duedate: duedate,
+          selectedValue: selectedValue,
+          cxID: cxID,
+          externalNotes: externalNotes,
+          internalNotes: internalNotes,
+          referenceID: referenceID,
+          LeadId: LeadId,
+          eimageurl: eimageurl,
+          ename: ename,
+          eemail: eemail,
+          ephone: ephone,
+          edesig: edesig,
+          serviceurl: myUrl.toString(),
+        )
+        .whenComplete(() {});
     print(6);
     return pdf.save();
   }

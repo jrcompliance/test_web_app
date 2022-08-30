@@ -144,7 +144,7 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _customersearchController =
       TextEditingController();
   final TextEditingController _rateController = TextEditingController();
-  final TextEditingController _selectController = TextEditingController();
+  late TextEditingController _selectController;
   final TextEditingController _qtyController2 = TextEditingController();
   final TextEditingController _discController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -197,7 +197,7 @@ class _FinanceState extends State<Finance> {
         bde2image = value.toString();
         print("bde2image---" + bde2image.toString());
       });
-      Utils.getEscalationsDownloadurl('ceoimage.png').then((value) {
+      Utils.getEscalationsDownloadurl('ceoimage.jpg').then((value) {
         ceoimage = value.toString();
         print("ceoimage---" + ceoimage.toString());
       });
@@ -937,6 +937,10 @@ class _FinanceState extends State<Finance> {
 
   Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    setState(() {
+      _selectController =
+          TextEditingController(text: selectedList[0].name.toString());
+    });
     return Container(
       height: size.height * 0.77,
       child: Column(
@@ -2638,26 +2642,27 @@ class _FinanceState extends State<Finance> {
             .actualinid
             .toString();
       });
-
+      bool isLoading = false;
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                     onPressed: () async {
                       List scope = scopetext.split('\n');
-                      print("qwerty--" + zefyrTermsController
-                        ..toString());
+
+                      /// print("qwerty--" + zefyrTermsController.toString());
                       List termsList = terms.split('\n');
                       // print(scope.toString());
                       var gstno = _gstController.text == null
                           ? ""
                           : _gstController.text.toString();
                       //  print(invoiceid.toString());
-                      print(escList3.toString());
+                      //  print(escList3.toString());
 
                       setState(() {});
 
@@ -2671,66 +2676,91 @@ class _FinanceState extends State<Finance> {
                                 listen: false)
                             .isiserviceid;
 
-                        int? fmcsserviceid;
-                        Provider.of<RecentFetchCXIDProvider>(context,
-                                listen: false)
-                            .fetchFMCSServiceId()
-                            .then((value) {
-                          fmcsserviceid = Provider.of<RecentFetchCXIDProvider>(
-                                  context,
-                                  listen: false)
-                              .fmcsserviceid;
-                        });
-                        int? crsserviceid;
-                        Provider.of<RecentFetchCXIDProvider>(context,
-                                listen: false)
-                            .fetchCRSServiceId()
-                            .then((value) {
-                          crsserviceid = Provider.of<RecentFetchCXIDProvider>(
-                                  context,
-                                  listen: false)
-                              .crsserviceid;
-                        });
-                        // Future.delayed(Duration(seconds: 2))
-                        //     .then((value) async {
-                        //   await PdfISIService.generatePdf(
-                        //     context: context,
-                        //     cusname: cusname.toString(),
-                        //     tbal: tbal,
-                        //     total: total,
-                        //     gstAmount:
-                        //         selectedValue == "INR" ? _gstamount : 0.00,
-                        //     selectedValue: selectedValue,
-                        //     isiserviceid: isiserviceid!,
-                        //     Servicelist: servicelist,
-                        //     activeid: activeid.toString(),
-                        //     actualinid: invoiceid.toString(),
-                        //     cxID: cusID.toString(),
-                        //     docid: Idocid.toString(),
-                        //     duedate: _duedatedateController.text,
-                        //     externalNotes: _externalController.text,
-                        //     gstNo: gstno,
-                        //     internalNotes: _internalController.text.toString(),
-                        //     invoicedate:
-                        //         _generatedateController.text.toString(),
-                        //     LeadId: leadID.toString(),
-                        //     eimageurl: eimageurl.toString(),
-                        //     ename: ename.toString(),
-                        //     eemail: eemail.toString(),
-                        //     ephone: ephone.toString(),
-                        //     edesig: edesig.toString(),
-                        //     referenceID: _referenceController.text.toString(),
-                        //     subject: _subjectController.text.toString(),
-                        //     // sampleQuantity: selectedList[0].qty.toString(),
-                        //     // serviceStandard: selectedList[0].name.toString(),
-                        //     quotationNo: randomNo.toString(),
-                        //     scopeofWork: scope,
-                        //     termsandConditions: termsList,
-                        //     // escalations1: escList1,
-                        //     // escalations2: escList2,
-                        //     escalations3: escList3,
-                        //   );
+                        // int? fmcsserviceid;
+                        // Provider.of<RecentFetchCXIDProvider>(context,
+                        //         listen: false)
+                        //     .fetchFMCSServiceId()
+                        //     .then((value) {
+                        //   fmcsserviceid = Provider.of<RecentFetchCXIDProvider>(
+                        //           context,
+                        //           listen: false)
+                        //       .fmcsserviceid;
                         // });
+                        // int? crsserviceid;
+                        // Provider.of<RecentFetchCXIDProvider>(context,
+                        //         listen: false)
+                        //     .fetchCRSServiceId()
+                        //     .then((value) {
+                        //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(
+                        //           context,
+                        //           listen: false)
+                        //       .crsserviceid;
+                        // });
+                        var error = "";
+                        Future.delayed(Duration(seconds: 1))
+                            .then((value) async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          isLoading && error.isEmpty
+                              ? showLoadingIndicator()
+                              : Navigator.pop(context);
+                          try {
+                            await PdfISIService.generatePdf(
+                              context: context,
+                              cusname: cusname.toString(),
+                              tbal: tbal,
+                              total: total,
+                              gstAmount:
+                                  selectedValue == "INR" ? _gstamount : 0.00,
+                              selectedValue: selectedValue,
+                              isiserviceid: isiserviceid!,
+                              Servicelist: servicelist,
+                              activeid: activeid.toString(),
+                              actualinid: invoiceid.toString(),
+                              cxID: cusID.toString(),
+                              docid: Idocid.toString(),
+                              duedate: _duedatedateController.text,
+                              externalNotes: _externalController.text,
+                              gstNo: gstno,
+                              internalNotes:
+                                  _internalController.text.toString(),
+                              invoicedate:
+                                  _generatedateController.text.toString(),
+                              LeadId: leadID.toString(),
+                              eimageurl: eimageurl.toString(),
+                              ename: ename.toString(),
+                              eemail: eemail.toString(),
+                              ephone: ephone.toString(),
+                              edesig: edesig.toString(),
+                              referenceID: _referenceController.text.toString(),
+                              subject: _subjectController.text.toString(),
+                              sampleQuantity:
+                                  _getController(selectedList[0].qty.toString())
+                                      .text
+                                      .toString(),
+                              serviceStandard: _getController(
+                                      selectedList[0].name.toString())
+                                  .text
+                                  .toString(),
+                              quotationNo: randomNo.toString(),
+                              scopeofWork: scope,
+                              termsandConditions: termsList,
+                              escalations1: escList1,
+                              escalations2: escList2,
+                              escalations3: escList3,
+                            );
+                          } on Exception catch (e) {
+                            setState(() {
+                              error = e.toString();
+                            });
+                          }
+                        }).whenComplete(() {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        });
+
                         // Future.delayed(Duration(seconds: 2)).then((value) async {
                         //   await PdfFMCSService.generatePdf(
                         //       context: context,
@@ -2777,14 +2807,16 @@ class _FinanceState extends State<Finance> {
                         //       referenceID: _referenceController.text);
                         // });
                       });
-
+                    },
+                    child: const Text("Create Pdf")),
+                TextButton(
+                    onPressed: () {
                       setState(() {
                         isShowPdf = !isShowPdf;
                         emaillist.add(cusemail);
                       });
                     },
-                    child: const Text("Create Pdf")),
-                TextButton(onPressed: () {}, child: Text("view Pdf")),
+                    child: Text("View Pdf")),
               ],
             ),
             isShowPdf
@@ -2795,13 +2827,14 @@ class _FinanceState extends State<Finance> {
                     ? pdfview()
                     : const SizedBox()
                 : const SizedBox(),
+            // isLoading ? const CircularProgressIndicator() : const SizedBox(),
           ],
         ),
       );
     } else {
       setState(() {
         isShowPdf = !isShowPdf;
-        emaillist.add(cusemail);
+        // emaillist.add(cusemail);
       });
 
       return Container(
@@ -2984,8 +3017,10 @@ class _FinanceState extends State<Finance> {
                                   ),
                                   height: size.width * 0.015,
                                   child: field3(
-                                      _getController(
-                                          selectedList[index].name.toString()),
+                                      _getController([
+                                        selectedList[index].name
+                                      ][index]
+                                          .toString()),
                                       "Type",
                                       1,
                                       true),
@@ -3026,10 +3061,10 @@ class _FinanceState extends State<Finance> {
                                               ),
                                               height: size.width * 0.015,
                                               child: field3(
-                                                  _getController(
-                                                      selectedList[index]
-                                                          .qty
-                                                          .toString()),
+                                                  _getController([
+                                                    selectedList[index].qty
+                                                  ][index]
+                                                      .toString()),
                                                   "Type",
                                                   1,
                                                   true),
@@ -3856,7 +3891,7 @@ class _FinanceState extends State<Finance> {
   }
 
   String scopetext =
-      'We assist you to know whether a product falls under the purview of concernedauthority.\nFor comprehensible guidance, we will first scrutinize the certificationrequirements of a product.\nWe will provide you information regarding a number of samples required forproduct testing because product sample requirements differ depending onproduct type.\nWe will educate you about the registration process, benefits, documentsrequired, including any query you may have regarding the same.\nBeing a reputed compliance consultant, we will provide you technical and non-technical support.\nJR Compliance offers competitive and excellent services to our clients bymeeting the startled queries/demands.\nTo ensure the utmost convenience of our client, we will also assist you in thecustom clearance of the sample product.\nWe are available 24*7 to make sure our clients get what they expect from us,thus, we will provide you with the finest solution to your queries.';
+      'We assist you to know whether a product falls under the purview of concerned authority.\nFor comprehensible guidance, we will first scrutinize the certification requirements of a product.\nWe will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type.\nWe will educate you about the registration process, benefits, documents required, including any query you may have regarding the same.\nBeing a reputed compliance consultant, we will provide you technical and non-technical support.\nJR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands.\nTo ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product.\nWe are available 24*7 to make sure our clients get what they expect from us,thus, we will provide you with the finest solution to your queries.';
 
   Widget predefinedtextDialog(BuildContext context, text) {
     bool tapped = false;
@@ -5392,12 +5427,12 @@ class _FinanceState extends State<Finance> {
                 onTap: () {
                   print(allServices[index].name);
                   setState(() {
+                    //  isServiceSelected = !isServiceSelected;
                     selectedList.add(allServices[index]);
-
-                    isServiceSelected = !isServiceSelected;
 
                     print(selectedList.toString());
                   });
+
                   toastmessage.sucesstoast(
                       context,
                       "you have selected ${allServices[index].name} please go to next for futher details",
@@ -6863,12 +6898,29 @@ class _FinanceState extends State<Finance> {
               desig: "CEO",
               name: person,
               phone: "+91 92664 50125",
-              imageUrl: "",
+              imageUrl: ceoimage,
               email: "rishi@jrcompliance.com")
           .toJson());
       return list;
     } else
       return [];
+  }
+
+  void showLoadingIndicator() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
+              backgroundColor: Colors.black87,
+              content: CircularProgressIndicator(color: bgColor),
+            ));
+      },
+    );
   }
   /////
 
