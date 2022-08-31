@@ -75,6 +75,7 @@ class _FinanceState extends State<Finance> {
 
   bool isPreview = false;
   bool isServiceAdded = false;
+  bool isLoading = false;
 
   final List<String> currencieslist = ["INR", "USD", "GBP", "EURO"];
   final List<String> escalations = [
@@ -182,6 +183,8 @@ class _FinanceState extends State<Finance> {
   String vpimage = "";
   String bde2image = "";
   String ceoimage = "";
+
+  bool _isCancelled = false;
   @override
   void initState() {
     var rng = new Random();
@@ -2394,14 +2397,13 @@ class _FinanceState extends State<Finance> {
                           child: Text("SEND"),
                           onTap: () {
                             sendemail2(
-                                    email: "yalagala@jrcompliance.com",
-                                    name: "yalagala",
-                                    fromName: "yalagala",
-                                    toName: "deepika",
-                                    toemail: "deepika@jrcompliance.com",
+                                    email: eemail.toString(),
+                                    name: ename.toString(),
+                                    fromName: ename.toString(),
+                                    toName: cusname.toString(),
+                                    toemail: cusemail.toString(),
                                     subject: _subjectController.text.toString(),
-                                    message:
-                                        "this is a test message from yalagala")
+                                    message: "This is a  Message from $ename")
                                 .whenComplete(() => toastmessage.sucesstoast(
                                     context, "mail sent successfully"));
 
@@ -2642,7 +2644,7 @@ class _FinanceState extends State<Finance> {
             .actualinid
             .toString();
       });
-      bool isLoading = false;
+
       return Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2702,9 +2704,7 @@ class _FinanceState extends State<Finance> {
                           setState(() {
                             isLoading = true;
                           });
-                          isLoading && error.isEmpty
-                              ? showLoadingIndicator()
-                              : Navigator.pop(context);
+                          showLoadingIndicator();
                           try {
                             await PdfISIService.generatePdf(
                               context: context,
@@ -2873,7 +2873,12 @@ class _FinanceState extends State<Finance> {
                 "Cancel",
                 style: TextStyle(color: btnColor.withOpacity(0.6)),
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  selectedList.clear();
+                  _isCancelled = !_isCancelled;
+                });
+              },
             ),
           ),
         ),
@@ -2893,14 +2898,19 @@ class _FinanceState extends State<Finance> {
               ),
               Flexible(
                 flex: 1,
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const CircleAvatar(
-                        radius: 40.0,
+                child: InkWell(
+                  child: const CircleAvatar(
+                      radius: 15.0,
+                      child: Center(
                         child: Icon(
                           Icons.add,
-                          size: 10.0,
-                        ))),
+                          size: 15.0,
+                        ),
+                      )),
+                  onTap: () {
+                    selectedList.add(allServices);
+                  },
+                ),
               ),
             ],
           ),
@@ -3072,19 +3082,20 @@ class _FinanceState extends State<Finance> {
                                 const SizedBox(
                                   width: 15.0,
                                 ),
-                                Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 5.0, right: 20.0),
-                                        child: popupMenu(
-                                            "EDIT",
-                                            "DELETE",
-                                            index,
-                                            btnColor,
-                                            neClr,
-                                            Icons.edit,
-                                            Icons.delete))),
+                                // Expanded(
+                                //     flex: 1,
+                                //     child: Padding(
+                                //         padding: const EdgeInsets.only(
+                                //             left: 5.0, right: 20.0),
+                                //         child: popupMenu(
+                                //             "EDIT",
+                                //             "DELETE",
+                                //             index,
+                                //             btnColor,
+                                //             neClr,
+                                //             Icons.edit,
+                                //             Icons.delete)
+                                //     )),
                               ],
                             ),
                           ),
@@ -3114,14 +3125,17 @@ class _FinanceState extends State<Finance> {
               )),
               Flexible(
                 flex: 1,
-                child: IconButton(
-                    onPressed: () {},
-                    icon: const CircleAvatar(
-                        radius: 40.0,
+                child: InkWell(
+                  child: CircleAvatar(
+                      radius: 15.0,
+                      child: Center(
                         child: Icon(
                           Icons.add,
-                          size: 10.0,
-                        ))),
+                          size: 15.0,
+                        ),
+                      )),
+                  onTap: () {},
+                ),
               ),
             ],
           ),
@@ -3275,19 +3289,19 @@ class _FinanceState extends State<Finance> {
                                 const SizedBox(
                                   width: 10.0,
                                 ),
-                                Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 0, right: 20.0),
-                                        child: popupMenu(
-                                            "EDIT",
-                                            "DELETE",
-                                            index,
-                                            btnColor,
-                                            neClr,
-                                            Icons.edit,
-                                            Icons.delete))),
+                                // Expanded(
+                                //     flex: 1,
+                                //     child: Padding(
+                                //         padding: const EdgeInsets.only(
+                                //             left: 0, right: 20.0),
+                                //         child: popupMenu(
+                                //             "EDIT",
+                                //             "DELETE",
+                                //             index,
+                                //             btnColor,
+                                //             neClr,
+                                //             Icons.edit,
+                                //             Icons.delete))),
                               ],
                             ),
                           ),
@@ -4966,7 +4980,7 @@ class _FinanceState extends State<Finance> {
     bool _ispopped = false;
     return PopupMenuButton(
       shape: const TooltipShape(),
-      offset: const Offset(-5, -50),
+      offset: const Offset(-10, 0),
       icon: const Icon(
         Icons.more_horiz,
         color: btnColor,
@@ -5515,36 +5529,36 @@ class _FinanceState extends State<Finance> {
     );
   }
 
-  final List<String> items = [
-    "2 pieces",
-    "3 pieces",
-    "4 pieces",
-    "5 pieces",
-    "6 pieces",
-    "7 pieces",
-    "8 pieces",
-    "9 pieces",
-    "10 pieces"
-  ];
-  final List<String> coloritems = [];
+  // final List<String> items = [
+  //   "2 pieces",
+  //   "3 pieces",
+  //   "4 pieces",
+  //   "5 pieces",
+  //   "6 pieces",
+  //   "7 pieces",
+  //   "8 pieces",
+  //   "9 pieces",
+  //   "10 pieces"
+  // ];
+  // final List<String> coloritems = [];
 
-  bool isChoosed = false;
-  Widget textButton(text) {
-    return TextButton(
-        onPressed: () {
-          if (text == "Yes") {
-            setState(() {
-              isChoosed = true;
-            });
-          } else {
-            setState(() {
-              isChoosed = false;
-            });
-          }
-        },
-        child: Text(text));
-  }
-
+  // bool isChoosed = false;
+  // Widget textButton(text) {
+  //   return TextButton(
+  //       onPressed: () {
+  //         if (text == "Yes") {
+  //           setState(() {
+  //             isChoosed = true;
+  //           });
+  //         } else {
+  //           setState(() {
+  //             isChoosed = false;
+  //           });
+  //         }
+  //       },
+  //       child: Text(text));
+  // }
+// PageNo-7 Widget(sending Window)
   Widget serviceIntro(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
@@ -6907,20 +6921,22 @@ class _FinanceState extends State<Finance> {
   }
 
   void showLoadingIndicator() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-            onWillPop: () async => false,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
-              backgroundColor: Colors.black87,
-              content: CircularProgressIndicator(color: bgColor),
-            ));
-      },
-    );
+    isLoading
+        ? showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return WillPopScope(
+                  onWillPop: () async => false,
+                  child: AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                    backgroundColor: Colors.black87,
+                    content: CircularProgressIndicator(color: bgColor),
+                  ));
+            },
+          )
+        : Navigator.pop(context);
   }
   /////
 

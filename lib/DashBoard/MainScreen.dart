@@ -69,10 +69,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         endDrawerEnableOpenDragGesture: false,
         drawerEnableOpenDragGesture: false,
         drawer: SideDrawer(context),
-        endDrawer: MoveDrawer(),
+        endDrawer: const MoveDrawer(),
         body: SafeArea(
           child: Responsive.isSmallScreen(context)
-              ? Center(
+              ? const Center(
                   child: Text(
                       "Mobile View is not Supported😔,Experiance it in Tab and Desktop",
                       style: TxtStls.titlestyle))

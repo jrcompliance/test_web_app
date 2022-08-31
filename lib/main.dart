@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/CompleteAppAuthentication/AuthProviders/LogOutProvider.dart';
@@ -36,7 +38,6 @@ import 'package:test_web_app/Providers/ActivityProvider.dart';
 import 'package:test_web_app/Providers/CustomerProvider.dart';
 import 'package:test_web_app/Providers/GstProvider.dart';
 import 'package:test_web_app/Task.dart';
-import 'package:test_web_app/TestPage.dart';
 import 'package:test_web_app/UserProvider/ShowLeadProvider.dart';
 import 'package:test_web_app/Providers/UserProvider.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
@@ -44,6 +45,8 @@ import 'package:test_web_app/firebase_options.dart';
 import 'package:http/http.dart' as http;
 
 void main() async {
+  //initialize hive
+  await Hive.initFlutter();
   // developer phone number-8794562301
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

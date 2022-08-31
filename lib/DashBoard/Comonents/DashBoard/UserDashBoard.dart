@@ -1996,31 +1996,36 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                 space(),
                                 container2("Product Sales Analytics",
                                     "FirstHalf", "SecondHalf"),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
-                                Container(
+                                SizedBox(
                                     height: size.height * 0.28,
                                     child: SfCircularChart(
                                         annotations: <CircularChartAnnotation>[
                                           CircularChartAnnotation(
-                                              widget: Container(
+                                              widget: SizedBox(
                                                   child: PhysicalModel(
                                                       child: Container(),
                                                       shape: BoxShape.circle,
-                                                      elevation: 10,
+                                                      elevation: 1,
                                                       shadowColor: Colors.black,
-                                                      color: Color.fromRGBO(
-                                                          230, 230, 230, 1)))),
-                                          CircularChartAnnotation(
-                                              widget: CircleAvatar(
-                                            radius: 100,
-                                            backgroundImage: AssetImage(
-                                                "Images/innerCircle.png"),
-                                            backgroundColor: Colors.transparent,
-                                            // child: Image.asset(
-                                            //     ),
-                                          ))
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              230,
+                                                              230,
+                                                              230,
+                                                              1)))),
+                                          // CircularChartAnnotation(
+                                          //     widget: const CircleAvatar(
+                                          //   radius: 80,
+                                          //   backgroundImage: AssetImage(
+                                          //       "Images/innerCircle.png"),
+                                          //   backgroundColor: Colors.transparent,
+                                          //   // child: Image.asset(
+                                          //   //     ),
+                                          // ),
+                                          // )
                                         ],
                                         series: <CircularSeries>[
                                           // Renders doughnut chart

@@ -126,10 +126,10 @@ class _AnalyticsState extends State<Analytics> {
                                                     style: TxtStls.fieldstyle,
                                                   ),
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(Icons.more_horiz),
-                                                  onPressed: () {},
-                                                )
+                                                // IconButton(
+                                                //   icon: Icon(Icons.more_horiz),
+                                                //   onPressed: () {},
+                                                // )
                                               ],
                                             ),
                                           ),

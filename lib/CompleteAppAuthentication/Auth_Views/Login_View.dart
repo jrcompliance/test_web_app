@@ -19,6 +19,7 @@ import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/DashBoard/MainScreen.dart';
 import 'package:test_web_app/GoogleSheets/DataFields.dart';
 import 'package:test_web_app/GoogleSheets/GSheetsApi.dart';
+import 'package:hive/hive.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -30,10 +31,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isSecured = true;
   bool _isAgree = false;
+  late Box hiveBox;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
+  @override
+  initState() {
+    super.initState();
+    createBox();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,16 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Row(
                                             children: [
                                               Checkbox(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                5.0))),
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5.0))),
                                                 activeColor: btnColor,
                                                 value: _isAgree,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    _isAgree = value ?? false;
+                                                    _isAgree = !_isAgree;
                                                   });
                                                 },
                                               ),
@@ -319,7 +327,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   .error
                   .toString());
         }
+        if (_isAgree) {
+          hiveBox.put('email', _emailController.text);
+          hiveBox.put('password', _passwordController.text);
+        }
       });
+    }
+  }
+
+  void createBox() async {
+    hiveBox = await Hive.openBox("logindetails");
+    getLoginData();
+  }
+
+  void getLoginData() async {
+    if (hiveBox.get('email') != null) {
+      _emailController.text = hiveBox.get('email');
+    }
+    if (hiveBox.get('password') != null) {
+      _passwordController.text = hiveBox.get('password');
     }
   }
 }
