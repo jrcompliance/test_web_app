@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ServiceSaveModel {
   String? serviceurl;
-  int? isiserviceid;
+  int? serviceid;
   String? cusname;
   List? Servicelist;
   double? tbal;
@@ -27,7 +27,7 @@ class ServiceSaveModel {
   String? edesig;
 
   ServiceSaveModel(
-      {this.isiserviceid,
+      {this.serviceid,
       this.cusname,
       this.ephone,
       this.edesig,
@@ -53,7 +53,7 @@ class ServiceSaveModel {
       this.serviceurl});
 
   Map<String, dynamic> toMap() => {
-        "isiserviceid": isiserviceid,
+        "serviceid": serviceid,
         "cusname": cusname,
         "ephone": ephone,
         "edesig": edesig,

@@ -145,12 +145,16 @@ class _FinanceState extends State<Finance> {
   final TextEditingController _customersearchController =
       TextEditingController();
   final TextEditingController _rateController = TextEditingController();
-  late TextEditingController _selectController;
+  final TextEditingController _selectController = TextEditingController();
   final TextEditingController _qtyController2 = TextEditingController();
   final TextEditingController _discController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descripController = TextEditingController();
   final TextEditingController _internalController = TextEditingController();
+  final TextEditingController _serviceName1 = TextEditingController();
+  final TextEditingController _serviceName2 = TextEditingController();
+  final TextEditingController _serviceQty1 = TextEditingController();
+  final TextEditingController _serviceQty2 = TextEditingController();
   // final TextEditingController _filterDateController = TextEditingController();
   // final TextEditingController _serviceController1 = TextEditingController();
   List cust = [];
@@ -940,11 +944,7 @@ class _FinanceState extends State<Finance> {
 
   Widget Createinvoice(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    setState(() {
-      _selectController =
-          TextEditingController(text: selectedList[0].name.toString());
-    });
-    return Container(
+    return SizedBox(
       height: size.height * 0.77,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2447,9 +2447,9 @@ class _FinanceState extends State<Finance> {
     required String toName,
     required String fromName,
   }) async {
-    final serviceId = 'service_tjaio0e';
-    final templateId = 'template_0kh0f9n';
-    final userId = 'P2tea9QRzq9zUgn2x';
+    final serviceId = 'service_w6uiwsg';
+    final templateId = 'template_lcantz5';
+    final userId = 'uBdU774ubk0HoEx1R';
     final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
     final response = await http.post(
       url,
@@ -2487,8 +2487,7 @@ class _FinanceState extends State<Finance> {
     final message = Message()
       ..from = Address(eemail.toString(), ename.toString())
       ..recipients.add(cusemail.toString())
-      ..ccRecipients
-          .addAll([popupcontroller1.text.toString(), cusemail.toString()])
+      ..ccRecipients.addAll([popupcontroller1.text.toString()])
       ..bccRecipients.add(Address('bccAddress@example.com'))
       ..subject =
           'This is conformation mail from Jrcompliance ands Testing labs :: 😀 :: ${DateTime.now()}'
@@ -2668,145 +2667,231 @@ class _FinanceState extends State<Finance> {
 
                       setState(() {});
 
-                      int? isiserviceid;
-                      Provider.of<RecentFetchCXIDProvider>(context,
-                              listen: false)
-                          .fetchISIServiceId()
-                          .then((value) async {
-                        isiserviceid = Provider.of<RecentFetchCXIDProvider>(
-                                context,
-                                listen: false)
-                            .isiserviceid;
-
-                        // int? fmcsserviceid;
-                        // Provider.of<RecentFetchCXIDProvider>(context,
-                        //         listen: false)
-                        //     .fetchFMCSServiceId()
-                        //     .then((value) {
-                        //   fmcsserviceid = Provider.of<RecentFetchCXIDProvider>(
-                        //           context,
-                        //           listen: false)
-                        //       .fmcsserviceid;
-                        // });
-                        // int? crsserviceid;
-                        // Provider.of<RecentFetchCXIDProvider>(context,
-                        //         listen: false)
-                        //     .fetchCRSServiceId()
-                        //     .then((value) {
-                        //   crsserviceid = Provider.of<RecentFetchCXIDProvider>(
-                        //           context,
-                        //           listen: false)
-                        //       .crsserviceid;
-                        // });
-                        var error = "";
-                        Future.delayed(Duration(seconds: 1))
-                            .then((value) async {
-                          setState(() {
-                            isLoading = true;
+                      var error = "";
+                      if (selectedList[0].name == "BIS Certificate") {
+                        if (selectedList[1].name == "ISI Certificate") {
+                          int? isiserviceid;
+                          Provider.of<RecentFetchCXIDProvider>(context,
+                                  listen: false)
+                              .fetchISIServiceId()
+                              .then((value) async {
+                            isiserviceid = Provider.of<RecentFetchCXIDProvider>(
+                                    context,
+                                    listen: false)
+                                .isiserviceid;
                           });
-                          showLoadingIndicator();
-                          try {
-                            await PdfISIService.generatePdf(
-                              context: context,
-                              cusname: cusname.toString(),
-                              tbal: tbal,
-                              total: total,
-                              gstAmount:
-                                  selectedValue == "INR" ? _gstamount : 0.00,
-                              selectedValue: selectedValue,
-                              isiserviceid: isiserviceid!,
-                              Servicelist: servicelist,
-                              activeid: activeid.toString(),
-                              actualinid: invoiceid.toString(),
-                              cxID: cusID.toString(),
-                              docid: Idocid.toString(),
-                              duedate: _duedatedateController.text,
-                              externalNotes: _externalController.text,
-                              gstNo: gstno,
-                              internalNotes:
-                                  _internalController.text.toString(),
-                              invoicedate:
-                                  _generatedateController.text.toString(),
-                              LeadId: leadID.toString(),
-                              eimageurl: eimageurl.toString(),
-                              ename: ename.toString(),
-                              eemail: eemail.toString(),
-                              ephone: ephone.toString(),
-                              edesig: edesig.toString(),
-                              referenceID: _referenceController.text.toString(),
-                              subject: _subjectController.text.toString(),
-                              sampleQuantity:
-                                  _getController(selectedList[0].qty.toString())
-                                      .text
-                                      .toString(),
-                              serviceStandard: _getController(
-                                      selectedList[0].name.toString())
-                                  .text
-                                  .toString(),
-                              quotationNo: randomNo.toString(),
-                              scopeofWork: scope,
-                              termsandConditions: termsList,
-                              escalations1: escList1,
-                              escalations2: escList2,
-                              escalations3: escList3,
-                            );
-                          } on Exception catch (e) {
+                          Future.delayed(Duration(seconds: 1))
+                              .then((value) async {
                             setState(() {
-                              error = e.toString();
+                              isLoading = true;
                             });
-                          }
-                        }).whenComplete(() {
-                          setState(() {
-                            isLoading = false;
+                            showLoadingIndicator();
+                            try {
+                              await PdfISIService.generatePdf(
+                                context: context,
+                                cusname: cusname.toString(),
+                                tbal: tbal,
+                                total: total,
+                                gstAmount:
+                                    selectedValue == "INR" ? _gstamount : 0.00,
+                                selectedValue: selectedValue,
+                                isiserviceid: isiserviceid!,
+                                Servicelist: servicelist,
+                                activeid: activeid.toString(),
+                                actualinid: invoiceid.toString(),
+                                cxID: cusID.toString(),
+                                docid: Idocid.toString(),
+                                duedate: _duedatedateController.text,
+                                externalNotes: _externalController.text,
+                                gstNo: gstno,
+                                internalNotes:
+                                    _internalController.text.toString(),
+                                invoicedate:
+                                    _generatedateController.text.toString(),
+                                LeadId: leadID.toString(),
+                                eimageurl: eimageurl.toString(),
+                                ename: ename.toString(),
+                                eemail: eemail.toString(),
+                                ephone: ephone.toString(),
+                                edesig: edesig.toString(),
+                                referenceID:
+                                    _referenceController.text.toString(),
+                                subject: _subjectController.text.toString(),
+                                sampleQuantity: _getController(
+                                        serviceQtyControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                serviceStandard: _getController(
+                                        serviceNameControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                quotationNo: randomNo.toString(),
+                                scopeofWork: scope,
+                                termsandConditions: termsList,
+                                escalations1: escList1,
+                                escalations2: escList2,
+                                escalations3: escList3,
+                              );
+                            } on Exception catch (e) {
+                              setState(() {
+                                error = e.toString();
+                              });
+                            }
+                          }).whenComplete(() {
+                            setState(() {
+                              isLoading = false;
+                            });
                           });
-                        });
-
-                        // Future.delayed(Duration(seconds: 2)).then((value) async {
-                        //   await PdfFMCSService.generatePdf(
-                        //       context: context,
-                        //       cusname: cusname.toString(),
-                        //       tbal: tbal,
-                        //       total: total,
-                        //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                        //       selectedValue: selectedValue,
-                        //       fmcsserviceid: fmcsserviceid!,
-                        //       Servicelist: servicelist,
-                        //       activeid: activeid.toString(),
-                        //       actualinid: invoiceid.toString(),
-                        //       cxID: cusID.toString(),
-                        //       docid: Idocid.toString(),
-                        //       duedate: _duedatedateController.text,
-                        //       externalNotes: _externalController.text,
-                        //       gstNo: gstno,
-                        //       internalNotes: _internalController.text.toString(),
-                        //       invoicedate: _generatedateController.text.toString(),
-                        //       LeadId: leadID.toString(),
-                        //       referenceID: _referenceController.text);
-                        //   });
-
-                        // Future.delayed(Duration(seconds: 2)).then((value) async {
-                        //   await PdfCRSService.generatePdf(
-                        //       context: context,
-                        //       cusname: cusname.toString(),
-                        //       tbal: tbal,
-                        //       total: total,
-                        //       gstAmount: selectedValue == "INR" ? _gstamount : 0.00,
-                        //       selectedValue: selectedValue,
-                        //       crsserviceid: crsserviceid!,
-                        //       Servicelist: servicelist,
-                        //       activeid: activeid.toString(),
-                        //       actualinid: invoiceid.toString(),
-                        //       cxID: cusID.toString(),
-                        //       docid: Idocid.toString(),
-                        //       duedate: _duedatedateController.text,
-                        //       externalNotes: _externalController.text,
-                        //       gstNo: gstno,
-                        //       internalNotes: _internalController.text.toString(),
-                        //       invoicedate: _generatedateController.text.toString(),
-                        //       LeadId: leadID.toString(),
-                        //       referenceID: _referenceController.text);
-                        // });
-                      });
+                        } else if (selectedList[1].name == "FMCS Certificate") {
+                          int? fmcsserviceid;
+                          Provider.of<RecentFetchCXIDProvider>(context,
+                                  listen: false)
+                              .fetchFMCSServiceId()
+                              .then((value) {
+                            fmcsserviceid =
+                                Provider.of<RecentFetchCXIDProvider>(context,
+                                        listen: false)
+                                    .fmcsserviceid;
+                          });
+                          Future.delayed(Duration(seconds: 1))
+                              .then((value) async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            showLoadingIndicator();
+                            try {
+                              await PdfFMCSService.generatePdf(
+                                context: context,
+                                cusname: cusname.toString(),
+                                tbal: tbal,
+                                total: total,
+                                gstAmount:
+                                    selectedValue == "INR" ? _gstamount : 0.00,
+                                selectedValue: selectedValue,
+                                fmcsserviceid: fmcsserviceid!,
+                                Servicelist: servicelist,
+                                activeid: activeid.toString(),
+                                actualinid: invoiceid.toString(),
+                                cxID: cusID.toString(),
+                                docid: Idocid.toString(),
+                                duedate: _duedatedateController.text,
+                                externalNotes: _externalController.text,
+                                gstNo: gstno,
+                                internalNotes:
+                                    _internalController.text.toString(),
+                                invoicedate:
+                                    _generatedateController.text.toString(),
+                                LeadId: leadID.toString(),
+                                eimageurl: eimageurl.toString(),
+                                ename: ename.toString(),
+                                eemail: eemail.toString(),
+                                ephone: ephone.toString(),
+                                edesig: edesig.toString(),
+                                referenceID: _referenceController.text,
+                                subject: _subjectController.text.toString(),
+                                sampleQuantity: _getController(
+                                        serviceQtyControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                serviceStandard: _getController(
+                                        serviceNameControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                quotationNo: randomNo.toString(),
+                                scopeofWork: scope,
+                                termsandConditions: termsList,
+                                escalations1: escList1,
+                                escalations2: escList2,
+                                escalations3: escList3,
+                              );
+                            } on Exception catch (e) {
+                              setState(() {
+                                error = e.toString();
+                              });
+                            }
+                          }).whenComplete(() {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        } else if (selectedList[1].name == "CRS Certificate") {
+                          int? crsserviceid;
+                          Provider.of<RecentFetchCXIDProvider>(context,
+                                  listen: false)
+                              .fetchCRSServiceId()
+                              .then((value) {
+                            crsserviceid = Provider.of<RecentFetchCXIDProvider>(
+                                    context,
+                                    listen: false)
+                                .crsserviceid;
+                          });
+                          Future.delayed(Duration(seconds: 1))
+                              .then((value) async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            showLoadingIndicator();
+                            try {
+                              await PdfCRSService.generatePdf(
+                                context: context,
+                                cusname: cusname.toString(),
+                                tbal: tbal,
+                                total: total,
+                                gstAmount:
+                                    selectedValue == "INR" ? _gstamount : 0.00,
+                                selectedValue: selectedValue,
+                                crsserviceid: crsserviceid!,
+                                Servicelist: servicelist,
+                                activeid: activeid.toString(),
+                                actualinid: invoiceid.toString(),
+                                cxID: cusID.toString(),
+                                docid: Idocid.toString(),
+                                duedate: _duedatedateController.text,
+                                externalNotes: _externalController.text,
+                                gstNo: gstno,
+                                internalNotes:
+                                    _internalController.text.toString(),
+                                invoicedate:
+                                    _generatedateController.text.toString(),
+                                LeadId: leadID.toString(),
+                                eimageurl: eimageurl.toString(),
+                                ename: ename.toString(),
+                                eemail: eemail.toString(),
+                                ephone: ephone.toString(),
+                                edesig: edesig.toString(),
+                                referenceID: _referenceController.text,
+                                subject: _subjectController.text.toString(),
+                                sampleQuantity: _getController(
+                                        serviceQtyControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                serviceStandard: _getController(
+                                        serviceNameControllers[0].toString())
+                                    .text
+                                    .toString(),
+                                quotationNo: randomNo.toString(),
+                                scopeofWork: scope,
+                                termsandConditions: termsList,
+                                escalations1: escList1,
+                                escalations2: escList2,
+                                escalations3: escList3,
+                              );
+                            } on Exception catch (e) {
+                              setState(() {
+                                error = e.toString();
+                              });
+                            }
+                          }).whenComplete(() {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        } else {
+                          return;
+                        }
+                      } else if (selectedList[0].name == "WPC Certificate") {
+                      } else if (selectedList[0].name == "LMPC Certificate") {
+                      } else if (selectedList[0].name == "EPR Certificate") {}
                     },
                     child: const Text("Create Pdf")),
                 TextButton(
@@ -2820,13 +2905,16 @@ class _FinanceState extends State<Finance> {
               ],
             ),
             isShowPdf
-                ? serviceurl != null &&
-                        Provider.of<GetServiceProvider>(context, listen: false)
-                                .customername ==
-                            cusname
+                ? Provider.of<GetServiceProvider>(context, listen: false)
+                            .customername ==
+                        cusname
                     ? pdfview()
-                    : const SizedBox()
-                : const SizedBox(),
+                    : const SizedBox(
+                        child: Center(child: Text("No Data Found")),
+                      )
+                : const SizedBox(
+                    child: Text("No Data Found"),
+                  ),
             // isLoading ? const CircularProgressIndicator() : const SizedBox(),
           ],
         ),
@@ -2834,7 +2922,7 @@ class _FinanceState extends State<Finance> {
     } else {
       setState(() {
         isShowPdf = !isShowPdf;
-        // emaillist.add(cusemail);
+        emaillist.add(cusemail);
       });
 
       return Container(
@@ -2908,7 +2996,7 @@ class _FinanceState extends State<Finance> {
                         ),
                       )),
                   onTap: () {
-                    selectedList.add(allServices);
+                    //  selectedList.add(allServices);
                   },
                 ),
               ),
@@ -3027,10 +3115,9 @@ class _FinanceState extends State<Finance> {
                                   ),
                                   height: size.width * 0.015,
                                   child: field3(
-                                      _getController([
-                                        selectedList[index].name
-                                      ][index]
-                                          .toString()),
+                                      _getController(
+                                          serviceNameControllers[index]
+                                              .toString()),
                                       "Type",
                                       1,
                                       true),
@@ -3071,10 +3158,10 @@ class _FinanceState extends State<Finance> {
                                               ),
                                               height: size.width * 0.015,
                                               child: field3(
-                                                  _getController([
-                                                    selectedList[index].qty
-                                                  ][index]
-                                                      .toString()),
+                                                  _getController(
+                                                      serviceQtyControllers[
+                                                              index]
+                                                          .toString()),
                                                   "Type",
                                                   1,
                                                   true),
@@ -3905,7 +3992,7 @@ class _FinanceState extends State<Finance> {
   }
 
   String scopetext =
-      'We assist you to know whether a product falls under the purview of concerned authority.\nFor comprehensible guidance, we will first scrutinize the certification requirements of a product.\nWe will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type.\nWe will educate you about the registration process, benefits, documents required, including any query you may have regarding the same.\nBeing a reputed compliance consultant, we will provide you technical and non-technical support.\nJR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands.\nTo ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product.\nWe are available 24*7 to make sure our clients get what they expect from us,thus, we will provide you with the finest solution to your queries.';
+      'We assist you to know whether a product falls under the purview of concerned authority.\nFor comprehensible guidance, we will first scrutinize the certification requirements of a product.\nWe will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type.\nWe will educate you about the registration process, benefits, documents required, including any query you may have regarding the same.\nBeing a reputed compliance consultant, we will provide you technical and non-technical support.\nJR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands.\nTo ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product.\nOur consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities.\nObtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines.\nWe are available 24*7 to make sure our clients get what they expect from us,thus, we will provide you with the finest solution to your queries.';
 
   Widget predefinedtextDialog(BuildContext context, text) {
     bool tapped = false;
@@ -5040,7 +5127,7 @@ class _FinanceState extends State<Finance> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
+                        child: SizedBox(
                           height: size.height * 0.08,
                           width: size.width * 0.25,
                           child: Material(
@@ -5440,16 +5527,60 @@ class _FinanceState extends State<Finance> {
                 ),
                 onTap: () {
                   print(allServices[index].name);
+                  if (allServices[index].name == "BIS Certificate") {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              content: RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                text: "Please Select ",
+                                style: TxtStls.fieldstyle,
+                              ),
+                              TextSpan(
+                                text: "ISI Certificate ",
+                                style: TxtStls.fieldstyle111,
+                              ),
+                              TextSpan(
+                                text: "/ ",
+                                style: TxtStls.fieldstyle,
+                              ),
+                              TextSpan(
+                                text: "FMCS Certificate ",
+                                style: TxtStls.fieldstyle111,
+                              ),
+                              TextSpan(
+                                text: "/ ",
+                                style: TxtStls.fieldstyle,
+                              ),
+                              TextSpan(
+                                text: "CRS Certificate ",
+                                style: TxtStls.fieldstyle111,
+                              ),
+                              TextSpan(
+                                text: " along with BIS Certificate",
+                                style: TxtStls.fieldstyle,
+                              ),
+                            ]),
+                          )
+                              // Text(
+                              //   "Please Select ISI Certificate/FMCS Certificate/CRS Certificate along with BIS Certificate",
+                              //   style: TxtStls.fieldstyle,
+                              // ),
+                              );
+                        });
+                  }
                   setState(() {
                     //  isServiceSelected = !isServiceSelected;
                     selectedList.add(allServices[index]);
-
                     print(selectedList.toString());
+                    print(selectedList.length.toString());
                   });
 
                   toastmessage.sucesstoast(
                       context,
-                      "you have selected ${allServices[index].name} please go to next for futher details",
+                      "you have selected ${allServices[index].name} please go to next for further details",
                       10);
                 },
               );
@@ -5718,7 +5849,7 @@ class _FinanceState extends State<Finance> {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text(
-                    _subjectController.text == null
+                    _subjectController.text.isEmpty
                         ? ""
                         : _subjectController.text.toString(),
                     style: TxtStls.fieldstyle,
@@ -5743,7 +5874,7 @@ class _FinanceState extends State<Finance> {
               padding: const EdgeInsets.only(left: 20),
               child: Material(
                 color: AbgColor.withOpacity(0.2),
-                //       // elevation: 1.0,
+                // elevation: 1.0,
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 child: Column(
                   children: [
@@ -5898,9 +6029,11 @@ class _FinanceState extends State<Finance> {
 
   final services = <ServicesModel>[
     ServicesModel(name: "BIS Certificate", qty: 1),
-    ServicesModel(name: "WPC Approval", qty: 2),
-    ServicesModel(name: "LMPC Approval", qty: 3),
+    ServicesModel(name: "CRS Certificate", qty: 2),
+    ServicesModel(name: "FMCS Certificate", qty: 3),
     ServicesModel(name: "ISI Certificate", qty: 4),
+    // ServicesModel(name: "WPC Approval", qty: 2),
+    // ServicesModel(name: "LMPC Approval", qty: 3),
   ];
   TextEditingController _getController(String name) {
     var controller = _controllerMap[name];
@@ -5921,6 +6054,8 @@ class _FinanceState extends State<Finance> {
   }
 
   List stages = ['Stage1', 'Stage2', 'Stage3', 'Stage4', 'Stage5'];
+  List serviceNameControllers = ['12', '23', '34', '45', '56'];
+  List serviceQtyControllers = ['1', '2', '3', '4', '5'];
   List amount = [
     'amount1',
     'amount2',
@@ -6601,10 +6736,10 @@ class _FinanceState extends State<Finance> {
                     setState(() {
                       person1 = selectedPerson;
                       print(person1.toString());
-
                       escList1 = escalationImages(person1!, escList1);
                       print('esclist1--' + escList1.toString());
                     });
+                    setState(() {});
                   },
                 ),
               ),
@@ -6926,14 +7061,22 @@ class _FinanceState extends State<Finance> {
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
-              return WillPopScope(
-                  onWillPop: () async => false,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                    backgroundColor: Colors.black87,
-                    content: CircularProgressIndicator(color: bgColor),
-                  ));
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                backgroundColor: Colors.black87,
+                content: const CircularProgressIndicator(color: bgColor),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Back'.toUpperCase(),
+                        style: TxtStls.titlesstyle,
+                      ))
+                ],
+              );
             },
           )
         : Navigator.pop(context);

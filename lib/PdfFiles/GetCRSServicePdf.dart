@@ -11,12 +11,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing%202.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:test_web_app/Models/UserModels.dart';
+
+import '../Providers/ServiceSaveProvider.dart';
 
 class PdfCRSService {
   static generatePdf({
     required BuildContext context,
+    required String subject,
+    required List scopeofWork,
+    required List termsandConditions,
+    required String serviceStandard,
+    required String sampleQuantity,
+    required String quotationNo,
     required int crsserviceid,
     required List Servicelist,
     required String cusname,
@@ -35,6 +44,14 @@ class PdfCRSService {
     required String internalNotes,
     required String referenceID,
     required String LeadId,
+    required String eimageurl,
+    required String ename,
+    required String eemail,
+    required String ephone,
+    required String edesig,
+    required List escalations1,
+    required List escalations2,
+    required List escalations3,
   }) async {
     Size size = MediaQuery.of(context).size;
     DateTime? invoicedate1 = DateTime.parse(invoicedate);
@@ -45,18 +62,24 @@ class PdfCRSService {
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
         .buffer
         .asUint8List();
-    final bdeimage = (await rootBundle.load("assets/Images/bdeimage2.png"))
-        .buffer
-        .asUint8List();
-    final vpimage = (await rootBundle.load("assets/Images/vpimage2.png"))
-        .buffer
-        .asUint8List();
-    final ceoimage = (await rootBundle.load("assets/Images/ceoimage2.png"))
-        .buffer
-        .asUint8List();
-    final bde2image = (await rootBundle.load("assets/Images/bde2image2.png"))
-        .buffer
-        .asUint8List();
+    final esc1image =
+        await networkImage(escalations1[0]["imageUrl"].toString());
+    final esc2image =
+        await networkImage(escalations2[0]["imageUrl"].toString());
+    final esc3image =
+        await networkImage(escalations3[0]["imageUrl"].toString());
+    // final bdeimage = (await rootBundle.load("assets/Images/bdeimage2.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final vpimage = (await rootBundle.load("assets/Images/vpimage2.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final ceoimage = (await rootBundle.load("assets/Images/ceoimage2.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final bde2image = (await rootBundle.load("assets/Images/bde2image2.png"))
+    //     .buffer
+    //     .asUint8List();
     final crslogo = (await rootBundle.load("assets/Logos/CRS_logo6.png"))
         .buffer
         .asUint8List();
@@ -182,6 +205,54 @@ class PdfCRSService {
     pw.VerticalDivider verticalDivider() {
       return pw.VerticalDivider(
           width: 1.0, thickness: 1.0, color: PdfColors.grey300);
+    }
+
+    pw.Container listTile2(image, name, email, phone) {
+      return pw.Container(
+          height: size.height * 0.072,
+          decoration: pw.BoxDecoration(
+              color: PdfColors.white,
+              borderRadius: pw.BorderRadius.circular(20.0),
+              border: pw.Border.all(color: PdfColors.grey300)),
+          child: pw.Row(children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.only(left: 20.0, bottom: 1.0, top: 1.0),
+              child: pw.ClipRRect(
+                  child: pw.Container(
+                    height: 100,
+                    width: 100,
+                    decoration: const pw.BoxDecoration(
+                      color: PdfColors.white,
+                      // borderRadius: pw.BorderRadius.only(
+                      //     bottomLeft: pw.Radius.circular(20.0),
+                      //     topLeft: pw.Radius.circular(20.0)),
+                    ),
+                    child: pw.Image(image, fit: pw.BoxFit.contain),
+                  ),
+                  horizontalRadius: 5.0,
+                  verticalRadius: 5.0),
+            ),
+            pw.SizedBox(width: 35),
+            pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Padding(
+                    padding: pw.EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: pw.Flexible(
+                        flex: 1, child: pw.Text(name, style: textStl10)),
+                  ),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: pw.Flexible(
+                        flex: 1, child: pw.Text(email, style: textStl10)),
+                  ),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.only(top: 2.0, bottom: 2.0),
+                    child: pw.Flexible(
+                        flex: 1, child: pw.Text(phone, style: textStl10)),
+                  ),
+                ])
+          ]));
     }
 
     pw.Container listTile(image, name, email, phone) {
@@ -553,7 +624,7 @@ class PdfCRSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Quotation No: 487256484",
+                            "Quotation No: $quotationNo",
                             style: textStl12bold,
                           ),
                         ),
@@ -561,7 +632,9 @@ class PdfCRSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of New and Renewable Energy",
+                            subject != null
+                                ? "Subject: ${subject.toString()}"
+                                : "Subject: IS 14286 Quotation under Mandatory BIS-CRS certification controlled by Ministry of New and Renewable Energy",
                             style: textStl12bold,
                           ),
                         ),
@@ -569,7 +642,7 @@ class PdfCRSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Prepared By: Mr.Tarun Sadana",
+                            "Prepared By: Mr.Prashant Thakur",
                             style: textStl12bold,
                           ),
                         ),
@@ -716,7 +789,7 @@ class PdfCRSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "Mr.Tarun Sadana",
+                            "Mr.Prashant Thakur",
                             style: textStl12bold,
                           ),
                         ),
@@ -732,7 +805,7 @@ class PdfCRSService {
                         pw.Flexible(
                           flex: 1,
                           child: pw.Text(
-                            "tarun@jrcompliance.com",
+                            "prashant@jrcompliance.com",
                             style: textStl12bold,
                           ),
                         ),
@@ -997,7 +1070,7 @@ class PdfCRSService {
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
-                                                child: pw.Text("(IS) No :${""}",
+                                                child: pw.Text("(IS) No : ",
                                                     style: textStl15bold)),
                                           ])),
                                   verticalDivider(),
@@ -1012,7 +1085,11 @@ class PdfCRSService {
                                           children: [
                                             pw.Expanded(
                                                 flex: 1,
-                                                child: pw.Text("IS 14286",
+                                                child: pw.Text(
+                                                    serviceStandard != null
+                                                        ? "IS $serviceStandard"
+                                                            .toString()
+                                                        : "IS 14286",
                                                     style: textStl15bold)),
                                             pw.Expanded(
                                                 flex: 1,
@@ -1037,7 +1114,10 @@ class PdfCRSService {
                               pw.SizedBox(width: 10),
                               pw.Flexible(
                                   flex: 1,
-                                  child: pw.Text("487256484",
+                                  child: pw.Text(
+                                      quotationNo != null
+                                          ? quotationNo.toString()
+                                          : "487256484",
                                       style: textStl18bold)),
                             ]),
                         space3(),
@@ -1046,7 +1126,7 @@ class PdfCRSService {
                             child: pw.Text("Details:", style: textStl18bold)),
                         space2(),
                         pw.Container(
-                            height: size.height * 0.26,
+                            height: size.height * 0.27,
                             decoration: pw.BoxDecoration(
                               borderRadius: pw.BorderRadius.circular(0.0),
                               border: pw.Border.all(color: PdfColors.grey300),
@@ -1209,9 +1289,11 @@ class PdfCRSService {
                                                   pw.EdgeInsets.only(left: 5),
                                               child: pw.Flexible(
                                                   flex: 1,
-                                                  child: pw.Text(
-                                                      "tarun@jrcompliance.com",
-                                                      style: textStl12bold)),
+                                                  child: pw.FittedBox(
+                                                      child: pw.Text(
+                                                          "prashant@jrcompliance.com",
+                                                          style:
+                                                              textStl12bold))),
                                             ),
                                             pw.SizedBox(height: 5),
                                             pw.Padding(
@@ -1220,7 +1302,7 @@ class PdfCRSService {
                                               child: pw.Flexible(
                                                   flex: 1,
                                                   child: pw.Text(
-                                                      "+91 9599550680"
+                                                      "+91 96679 55225"
                                                           .toString(),
                                                       style: textStl12bold)),
                                             ),
@@ -1231,15 +1313,37 @@ class PdfCRSService {
                             flex: 1,
                             child: pw.Text("Project Escalation Levels",
                                 style: textStl15bold)),
-                        space3(),
-                        listTile(bdeimage, "Mr.Tarun Sadana - BDE",
-                            "tarun@jrcompliance.com", "+91 9599550680"),
+                        space2(),
+                        listTile2(
+                            esc1image,
+                            "${escalations1[0]['name'].toString()} - ${escalations1[0]['desig'].toString()}",
+                            escalations1[0]['email'],
+                            "${escalations1[0]['phone']}"),
+
+                        // space(),
+                        // listTile2(escimage, "Mr.Tarun Sadana - BDE",
+                        //     "tarun@jrcompliance.com", "+91 96679 55225"),
                         space(),
-                        listTile(vpimage, "Mr.Lalit Gupta - VP",
-                            "lalit@jrcompliance.com", "+91 9873060689"),
+                        listTile2(
+                            esc2image,
+                            "${escalations2[0]['name'].toString()} - ${escalations2[0]['desig'].toString()}",
+                            escalations2[0]['email'],
+                            "${escalations2[0]['phone']}"),
                         space(),
-                        listTile(ceoimage, "Mr.Rishikesh Mishra - CEO",
-                            "rishi@jrcompliance.com", "+91 9266450125"),
+                        listTile2(
+                            esc3image,
+                            "${escalations3[0]['name'].toString()} - ${escalations3[0]['desig'].toString()}",
+                            escalations3[0]['email'],
+                            "${escalations3[0]['phone']}"),
+                        space(),
+                        // listTile(bdeimage, "Mr.Tarun Sadana - BDE",
+                        //     "tarun@jrcompliance.com", "+91 9599550680"),
+                        // space(),
+                        // listTile(vpimage, "Mr.Lalit Gupta - VP",
+                        //     "lalit@jrcompliance.com", "+91 9873060689"),
+                        // space(),
+                        // listTile(ceoimage, "Mr.Rishikesh Mishra - CEO",
+                        //     "rishi@jrcompliance.com", "+91 9266450125"),
                       ]),
                 ),
                 pw.Container(
@@ -1260,34 +1364,35 @@ class PdfCRSService {
                         ),
                         space3(),
                         rowWidget2(
-                          "We assist you to know whether a product falls under the purview of concerned authority.",
+                          scopeofWork[0] ??
+                              "We assist you to know whether a product falls under the purview of concerned authority.",
                         ),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[1] ??
                             "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[2] ??
                             "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[3] ??
                             "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[4] ??
                             "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[5] ??
                             "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[6] ??
                             "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[7] ??
                             "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[8] ??
                             "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
                         space4(),
-                        rowWidget2(
+                        rowWidget2(scopeofWork[9] ??
                             "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
                       ]),
                 ),
@@ -2335,19 +2440,34 @@ class PdfCRSService {
       print(e.toString());
       print(s.toString());
     }
-    // Provider.of<InvoiceSaveProvider>(context, listen: false).invoiceData(
-    //     myUrl,
-    //     activeid,
-    //     "Pending",
-    //     actualinid,
-    //     total,
-    //     selectedValue,
-    //     duedate,
-    //     internalNotes,
-    //     externalNotes,
-    //     referenceID,
-    //     cxID,
-    //     LeadId);
+    Provider.of<ServiceSaveProvider>(context, listen: false)
+        .ServiceData(
+          serviceid: crsserviceid,
+          Servicelist: Servicelist,
+          cusname: cusname,
+          tbal: tbal,
+          actualinid: actualinid,
+          gstNo: gstNo,
+          docid: docid,
+          activeid: activeid,
+          gstAmount: gstAmount,
+          total: total,
+          invoicedate: invoicedate,
+          duedate: duedate,
+          selectedValue: selectedValue,
+          cxID: cxID,
+          externalNotes: externalNotes,
+          internalNotes: internalNotes,
+          referenceID: referenceID,
+          LeadId: LeadId,
+          eimageurl: eimageurl,
+          ename: ename,
+          eemail: eemail,
+          ephone: ephone,
+          edesig: edesig,
+          serviceurl: myUrl.toString(),
+        )
+        .whenComplete(() {});
     print(6);
     return pdf.save();
   }

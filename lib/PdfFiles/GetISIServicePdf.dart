@@ -66,18 +66,18 @@ class PdfISIService {
     final bislogo = (await rootBundle.load("assets/Logos/BIS_logo.png"))
         .buffer
         .asUint8List();
-    final bdeimage = (await rootBundle.load("assets/Images/bdeimage3.png"))
-        .buffer
-        .asUint8List();
-    final vpimage = (await rootBundle.load("assets/Images/vpimage3.png"))
-        .buffer
-        .asUint8List();
-    final ceoimage = (await rootBundle.load("assets/Images/ceoimage3.png"))
-        .buffer
-        .asUint8List();
-    final bde2image = (await rootBundle.load("assets/Images/bde2image3.png"))
-        .buffer
-        .asUint8List();
+    // final bdeimage = (await rootBundle.load("assets/Images/bdeimage3.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final vpimage = (await rootBundle.load("assets/Images/vpimage3.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final ceoimage = (await rootBundle.load("assets/Images/ceoimage3.png"))
+    //     .buffer
+    //     .asUint8List();
+    // final bde2image = (await rootBundle.load("assets/Images/bde2image3.png"))
+    //     .buffer
+    //     .asUint8List();
 
     final isilogo = (await rootBundle.load("assets/Logos/ISI_logo6.png"))
         .buffer
@@ -1379,49 +1379,36 @@ class PdfISIService {
                         ),
                         space3(),
                         rowWidget2(
-                          scopeofWork[0] != null
-                              ? scopeofWork[0]
-                              : "We assist you to know whether a product falls under the purview of concerned authority.",
+                          scopeofWork[0] ??
+                              "We assist you to know whether a product falls under the purview of concerned authority.",
                         ),
                         space4(),
-                        rowWidget2(scopeofWork[1] != null
-                            ? scopeofWork[1]
-                            : "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
+                        rowWidget2(scopeofWork[1] ??
+                            "For comprehensible guidance, we will first scrutinize the certification requirements of a product."),
                         space4(),
-                        rowWidget2(scopeofWork[2] != null
-                            ? scopeofWork[2]
-                            : "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
+                        rowWidget2(scopeofWork[2] ??
+                            "We will provide you information regarding a number of samples required for product testing because product sample requirements differ depending on product type."),
                         space4(),
-                        rowWidget2(scopeofWork[3] != null
-                            ? scopeofWork[3]
-                            : "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
+                        rowWidget2(scopeofWork[3] ??
+                            "We will educate you about the registration process, benefits, documents required, including any query you may have regarding the same."),
                         space4(),
-                        rowWidget2(scopeofWork[4] != null
-                            ? scopeofWork[4]
-                            : "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
+                        rowWidget2(scopeofWork[4] ??
+                            "Being a reputed compliance consultant, we will provide you technical and non- technical support."),
                         space4(),
-                        rowWidget2(scopeofWork[5] != null
-                            ? scopeofWork[5]
-                            : "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
+                        rowWidget2(scopeofWork[5] ??
+                            "JR Compliance offers competitive and excellent services to our clients by meeting the startled queries/demands."),
                         space4(),
-                        rowWidget2(scopeofWork[6] != null
-                            ? scopeofWork[6]
-                            : "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
+                        rowWidget2(scopeofWork[6] ??
+                            "To ensure the utmost convenience of our client, we will also assist you in the custom clearance of the sample product."),
                         space4(),
-                        rowWidget2(scopeofWork[7] != null
-                            ? scopeofWork[7]
-                            : "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
+                        rowWidget2(scopeofWork[7] ??
+                            "Our consultants will invest their sustained efforts to meet the startled queries or demands of concerned authorities."),
                         space4(),
-                        // rowWidget2(scopeofWork[8] != null
-                        //     ? scopeofWork[8]
-                        //     : "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
-                        //space4(),
-                        // rowWidget2(scopeofWork[9] != null
-                        //     ? scopeofWork[9]
-                        //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
-                        // rowWidget2(scopeofWork[9] != null
-                        //     ? scopeofWork[9]
-                        //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
+                        rowWidget2(scopeofWork[8] ??
+                            "Obtaining a certificate is no easy task, however, there is no better place to obtain it than JR Compliance because we will analyze the product requirements to give clear guidelines."),
+                        space4(),
+                        rowWidget2(scopeofWork[9] ??
+                            "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
                         // rowWidget2(scopeofWork[10] != null
                         //     ? scopeofWork[10]
                         //     : "We are available 24*7 to make sure our clients get what they expect from us, thus, we will provide you with the finest solution to your queries."),
@@ -2495,7 +2482,7 @@ class PdfISIService {
 
     Provider.of<ServiceSaveProvider>(context, listen: false)
         .ServiceData(
-          isiserviceid: isiserviceid,
+          serviceid: isiserviceid,
           Servicelist: Servicelist,
           cusname: cusname,
           tbal: tbal,

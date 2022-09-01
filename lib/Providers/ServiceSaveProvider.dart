@@ -6,7 +6,7 @@ import 'package:test_web_app/Models/ServicesModel.dart';
 class ServiceSaveProvider extends ChangeNotifier {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future ServiceData({
-    required int isiserviceid,
+    required int serviceid,
     required List Servicelist,
     required String cusname,
     required double tbal,
@@ -37,7 +37,7 @@ class ServiceSaveProvider extends ChangeNotifier {
       ServiceSaveModel model = ServiceSaveModel();
       model.invoicedate = invoicedate;
       model.activeid = activeid;
-      model.isiserviceid = isiserviceid;
+      model.serviceid = serviceid;
       model.Servicelist = Servicelist;
       model.cusname = cusname;
       model.tbal = tbal;
