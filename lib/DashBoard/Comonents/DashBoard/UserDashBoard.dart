@@ -2000,47 +2000,73 @@ class _UserDashBoardState extends State<UserDashBoard> {
                                   height: 5,
                                 ),
                                 SizedBox(
-                                    height: size.height * 0.28,
+                                    height: size.height * 0.24,
                                     child: SfCircularChart(
-                                        annotations: <CircularChartAnnotation>[
-                                          CircularChartAnnotation(
-                                              widget: SizedBox(
-                                                  child: PhysicalModel(
-                                                      child: Container(),
-                                                      shape: BoxShape.circle,
-                                                      elevation: 1,
-                                                      shadowColor: Colors.black,
-                                                      color:
-                                                          const Color.fromRGBO(
-                                                              230,
-                                                              230,
-                                                              230,
-                                                              1)))),
-                                          // CircularChartAnnotation(
-                                          //     widget: const CircleAvatar(
-                                          //   radius: 80,
-                                          //   backgroundImage: AssetImage(
-                                          //       "Images/innerCircle.png"),
-                                          //   backgroundColor: Colors.transparent,
-                                          //   // child: Image.asset(
-                                          //   //     ),
-                                          // ),
-                                          // )
-                                        ],
-                                        series: <CircularSeries>[
-                                          // Renders doughnut chart
-                                          DoughnutSeries<ChartData, String>(
-                                            dataSource: chartData,
-                                            pointColorMapper:
-                                                (ChartData data, _) =>
-                                                    data.color,
-                                            xValueMapper: (ChartData data, _) =>
-                                                data.x,
-                                            yValueMapper: (ChartData data, _) =>
-                                                data.y,
-                                            innerRadius: "60",
-                                          )
-                                        ])),
+                                      series: <CircularSeries>[
+                                        // Renders doughnut chart
+                                        DoughnutSeries<ChartData, String>(
+                                          dataSource: chartData,
+                                          pointColorMapper:
+                                              (ChartData data, _) => data.color,
+                                          xValueMapper: (ChartData data, _) =>
+                                              data.x,
+                                          yValueMapper: (ChartData data, _) =>
+                                              data.y,
+                                          innerRadius: "50",
+                                        ),
+                                      ],
+                                      annotations: [
+                                        CircularChartAnnotation(
+                                            widget: CircleAvatar(
+                                          child: Image.asset(
+                                              "Images/innerCircle.png"),
+                                          backgroundColor: Colors.transparent,
+                                          radius: 80.0,
+                                        ))
+                                      ],
+                                    )
+
+                                    // child: SfCircularChart(
+                                    //     annotations: <CircularChartAnnotation>[
+                                    //       CircularChartAnnotation(
+                                    //           widget: SizedBox(
+                                    //               child: PhysicalModel(
+                                    //                   child: Container(),
+                                    //                   shape: BoxShape.circle,
+                                    //                   elevation: 0,
+                                    //                   shadowColor: Colors.black,
+                                    //                   color:
+                                    //                       const Color.fromRGBO(
+                                    //                           230,
+                                    //                           230,
+                                    //                           230,
+                                    //                           1)))),
+                                    //       // CircularChartAnnotation(
+                                    //       //     widget: const CircleAvatar(
+                                    //       //   radius: 80,
+                                    //       //   backgroundImage: AssetImage(
+                                    //       //       "Images/innerCircle.png"),
+                                    //       //   backgroundColor: Colors.transparent,
+                                    //       //   // child: Image.asset(
+                                    //       //   //     ),
+                                    //       // ),
+                                    //       // )
+                                    //     ],
+                                    //     series: <CircularSeries>[
+                                    //       // Renders doughnut chart
+                                    //       DoughnutSeries<ChartData, String>(
+                                    //         dataSource: chartData,
+                                    //         pointColorMapper:
+                                    //             (ChartData data, _) =>
+                                    //                 data.color,
+                                    //         xValueMapper: (ChartData data, _) =>
+                                    //             data.x,
+                                    //         yValueMapper: (ChartData data, _) =>
+                                    //             data.y,
+                                    //         innerRadius: "60",
+                                    //       )
+                                    //     ])
+                                    ),
                                 showbottomofPieChart3(),
                               ],
                             ))

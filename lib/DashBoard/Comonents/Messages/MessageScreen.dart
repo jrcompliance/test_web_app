@@ -85,7 +85,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.845,
+      height: size.height * 0.93,
       width: size.width,
       color: AbgColor.withOpacity(0.0001),
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
@@ -150,87 +150,91 @@ class _MessageScreenState extends State<MessageScreen> {
                               .get()
                               .asStream(),
                           builder: (context, snapshot) {
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (BuildContext context, int i) {
-                                EmployeesModel employeeModel =
-                                    EmployeesModel.fromMap(
-                                        snapshot.data!.docs[i].data());
-                                if (employeeModel.uid ==
-                                    FirebaseAuth.instance.currentUser!.uid) {
-                                  return Container();
-                                }
+                            return SizedBox(
+                              height: size.height * 0.8,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                physics: ClampingScrollPhysics(),
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  EmployeesModel employeeModel =
+                                      EmployeesModel.fromMap(
+                                          snapshot.data!.docs[i].data());
+                                  if (employeeModel.uid ==
+                                      FirebaseAuth.instance.currentUser!.uid) {
+                                    return Container();
+                                  }
 
-                                //  var snp = allEmployees[i];
-                                return Material(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                  color: bgColor,
-                                  child: ListTile(
-                                    tileColor: grClr.withOpacity(0.1),
-                                    hoverColor: btnColor.withOpacity(0.2),
-                                    selectedColor: btnColor.withOpacity(0.2),
-                                    selectedTileColor:
-                                        btnColor.withOpacity(0.2),
-                                    leading: CircleAvatar(
-                                      backgroundColor:
-                                          btnColor.withOpacity(0.1),
-                                      backgroundImage: employeeModel.uimage
-                                                  .toString() ==
-                                              null
-                                          ? NetworkImage(
-                                              "https://cdn1.iconfinder.com/data/icons/bokbokstars-121-classic-stock-icons-1/512/person-man.png")
-                                          : NetworkImage(
-                                              employeeModel.uimage.toString()),
-                                      // child: Icon(
-                                      //   Icons.person,
-                                      //   color: btnColor,
-                                      // )
+                                  //  var snp = allEmployees[i];
+                                  return Material(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    color: bgColor,
+                                    child: ListTile(
+                                      tileColor: grClr.withOpacity(0.1),
+                                      hoverColor: btnColor.withOpacity(0.2),
+                                      selectedColor: btnColor.withOpacity(0.2),
+                                      selectedTileColor:
+                                          btnColor.withOpacity(0.2),
+                                      leading: CircleAvatar(
+                                        backgroundColor:
+                                            btnColor.withOpacity(0.1),
+                                        backgroundImage: employeeModel.uimage
+                                                    .toString() ==
+                                                null
+                                            ? NetworkImage(
+                                                "https://cdn1.iconfinder.com/data/icons/bokbokstars-121-classic-stock-icons-1/512/person-man.png")
+                                            : NetworkImage(employeeModel.uimage
+                                                .toString()),
+                                        // child: Icon(
+                                        //   Icons.person,
+                                        //   color: btnColor,
+                                        // )
+                                      ),
+                                      title: Text(
+                                        employeeModel.uname.toString(),
+                                        style: TxtStls.fieldtitlestyle,
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            employeeModel.uemail.toString(),
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                          Text(
+                                            employeeModel.uphoneNumber
+                                                .toString(),
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: CircleAvatar(
+                                        backgroundColor:
+                                            btnColor.withOpacity(0.1),
+                                      ),
+                                      onTap: () {
+                                        checkAndCreateNewRoom(employeeModel);
+                                        setState(() {
+                                          isTapped = true;
+                                          peerid = employeeModel.uid;
+                                          print('peerid==' + peerid.toString());
+                                          employeeModal = employeeModel;
+                                        });
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
                                     ),
-                                    title: Text(
-                                      employeeModel.uname.toString(),
-                                      style: TxtStls.fieldtitlestyle,
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          employeeModel.uemail.toString(),
-                                          style: TxtStls.fieldstyle,
-                                        ),
-                                        Text(
-                                          employeeModel.uphoneNumber.toString(),
-                                          style: TxtStls.fieldstyle,
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: CircleAvatar(
-                                      backgroundColor:
-                                          btnColor.withOpacity(0.1),
-                                    ),
-                                    onTap: () {
-                                      checkAndCreateNewRoom(employeeModel);
-                                      setState(() {
-                                        isTapped = true;
-                                        peerid = employeeModel.uid;
-                                        print('peerid==' + peerid.toString());
-                                        employeeModal = employeeModel;
-                                      });
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                  ),
-                                );
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return Divider(color: grClr.withOpacity(0.5));
-                              },
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return Divider(color: grClr.withOpacity(0.5));
+                                },
+                              ),
                             );
                           })
                 ],
@@ -242,16 +246,9 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           Expanded(
             flex: 7,
-            child: isTapped && roomModel.roomId != null
-                //     ? chatWidget(context)
-                //     : Container(
-                //         child: Text('noData'),
-                //       )
-                // : Container(
-                //     child: Text("nt tapped"),
-                //   )
-
-                ? Container(
+            child: isTapped
+                ? const SizedBox()
+                : SizedBox(
                     child: Align(
                       alignment: Alignment.center,
                       child: Column(
@@ -268,8 +265,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         ],
                       ),
                     ),
-                  )
-                : Container(),
+                  ),
           ),
         ],
       ),

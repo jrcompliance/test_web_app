@@ -2898,7 +2898,7 @@ class _FinanceState extends State<Finance> {
                     onPressed: () {
                       setState(() {
                         isShowPdf = !isShowPdf;
-                        emaillist.add(cusemail);
+                        // emaillist.add(cusemail);
                       });
                     },
                     child: Text("View Pdf")),
@@ -2912,9 +2912,7 @@ class _FinanceState extends State<Finance> {
                     : const SizedBox(
                         child: Center(child: Text("No Data Found")),
                       )
-                : const SizedBox(
-                    child: Text("No Data Found"),
-                  ),
+                : const SizedBox(),
             // isLoading ? const CircularProgressIndicator() : const SizedBox(),
           ],
         ),
@@ -5531,44 +5529,49 @@ class _FinanceState extends State<Finance> {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                              content: RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: "Please Select ",
-                                style: TxtStls.fieldstyle,
-                              ),
-                              TextSpan(
-                                text: "ISI Certificate ",
-                                style: TxtStls.fieldstyle111,
-                              ),
-                              TextSpan(
-                                text: "/ ",
-                                style: TxtStls.fieldstyle,
-                              ),
-                              TextSpan(
-                                text: "FMCS Certificate ",
-                                style: TxtStls.fieldstyle111,
-                              ),
-                              TextSpan(
-                                text: "/ ",
-                                style: TxtStls.fieldstyle,
-                              ),
-                              TextSpan(
-                                text: "CRS Certificate ",
-                                style: TxtStls.fieldstyle111,
-                              ),
-                              TextSpan(
-                                text: " along with BIS Certificate",
-                                style: TxtStls.fieldstyle,
-                              ),
-                            ]),
-                          )
-                              // Text(
-                              //   "Please Select ISI Certificate/FMCS Certificate/CRS Certificate along with BIS Certificate",
-                              //   style: TxtStls.fieldstyle,
-                              // ),
-                              );
+                          return InkWell(
+                            child: AlertDialog(
+                                content: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: "Please Select ",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                                TextSpan(
+                                  text: "ISI Certificate ",
+                                  style: TxtStls.fieldstyle111,
+                                ),
+                                TextSpan(
+                                  text: "/ ",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                                TextSpan(
+                                  text: "FMCS Certificate ",
+                                  style: TxtStls.fieldstyle111,
+                                ),
+                                TextSpan(
+                                  text: "/ ",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                                TextSpan(
+                                  text: "CRS Certificate ",
+                                  style: TxtStls.fieldstyle111,
+                                ),
+                                TextSpan(
+                                  text: " along with BIS Certificate",
+                                  style: TxtStls.fieldstyle,
+                                ),
+                              ]),
+                            )
+                                // Text(
+                                //   "Please Select ISI Certificate/FMCS Certificate/CRS Certificate along with BIS Certificate",
+                                //   style: TxtStls.fieldstyle,
+                                // ),
+                                ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          );
                         });
                   }
                   setState(() {
