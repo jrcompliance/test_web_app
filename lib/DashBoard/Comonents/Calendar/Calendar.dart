@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:test_web_app/Constants/reusable.dart';
 import 'package:test_web_app/Models/EmployeesModel.dart';
 import 'package:test_web_app/Providers/CurrentUserdataProvider.dart';
@@ -70,9 +72,11 @@ class _CalendarState extends State<Calendar> {
   }
 
   var provider;
+  var _dataSource;
 
   @override
   void initState() {
+    super.initState();
     //  getUserData();
     Future.delayed(Duration(seconds: 0)).then((value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
@@ -86,6 +90,7 @@ class _CalendarState extends State<Calendar> {
             Provider.of<UserDataProvider>(context, listen: false).employeelist;
       });
     });
+    _dataSource = MeetingDataSource(_getDataSource());
   }
 
   @override
@@ -93,564 +98,240 @@ class _CalendarState extends State<Calendar> {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-      height: size.height * 0.845,
-      width: size.width,
-      color: AbgColor.withOpacity(0.0001),
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
-    );
-  }
-
-  //TranslationAnimatedWidget.tween(
-  //       duration: Duration(milliseconds: 250),
-  //       translationDisabled: Offset(400, 0),
-  //       translationEnabled: Offset(0, 0),
-  //       child: Row(
-  //         children: [
-  //           Expanded(
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-  //                 color: bgColor,
-  //               ),
-  //               height: size.height * 0.92,
-  //               padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
-  //               child: Expanded(
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(20),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     mainAxisAlignment: MainAxisAlignment.start,
-  //                     children: [
-  //                       Row(
-  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                         children: [
-  //                           Text(
-  //                             "Create New Invoice",
-  //                             style: TextStyle(
-  //                                 fontSize: 20,
-  //                                 color: txtColor,
-  //                                 fontWeight: FontWeight.bold),
-  //                           ),
-  //                           Icon(Icons.cancel, color: btnColor),
-  //                         ],
-  //                       ),
-  //                       SizedBox(height: size.height * 0.05),
-  //                       Container(
-  //                         decoration: BoxDecoration(
-  //                             color: fieldColor,
-  //                             borderRadius:
-  //                                 BorderRadius.all(Radius.circular(10.0))),
-  //                         child: Padding(
-  //                           padding: EdgeInsets.only(left: 15, right: 15, top: 2),
-  //                           child: TextField(
-  //                             controller: _searchController,
-  //                             style: TxtStls.fieldstyle,
-  //                             decoration: InputDecoration(
-  //                                 suffixIcon: IconButton(
-  //                                   icon: Icon(
-  //                                     Icons.search,
-  //                                     color: btnColor,
-  //                                   ),
-  //                                   onPressed: () {
-  //                                     setState(() {
-  //                                       Provider.of<GstProvider>(context,
-  //                                               listen: false)
-  //                                           .fetchGstData(_searchController.text)
-  //                                           .then((value) {
-  //                                         getarrayLength();
-  //                                         visible = true;
-  //                                         _invoiceusername.text = cusname!;
-  //                                         _emailController.text = cusemail!;
-  //                                         _nameController.text =
-  //                                             Provider.of<GstProvider>(context,
-  //                                                     listen: false)
-  //                                                 .tradename
-  //                                                 .toString();
-  //                                         _dateController.text =
-  //                                             DateFormat("dd-MM-yyyy")
-  //                                                 .format(DateTime.now());
-  //                                         _addressControoler.text =
-  //                                             Provider.of<GstProvider>(context,
-  //                                                     listen: false)
-  //                                                 .principalplace
-  //                                                 .toString();
-  //                                         _pincodeController.text =
-  //                                             Provider.of<GstProvider>(context,
-  //                                                     listen: false)
-  //                                                 .pincode
-  //                                                 .toString();
-  //                                         _panController.text =
-  //                                             Provider.of<GstProvider>(context,
-  //                                                     listen: false)
-  //                                                 .pan
-  //                                                 .toString();
-  //                                         setState(() {
-  //                                           _statusController.text =
-  //                                               Provider.of<GstProvider>(context,
-  //                                                       listen: false)
-  //                                                   .gstinstatus
-  //                                                   .toString();
-  //                                           bnature = Provider.of<GstProvider>(
-  //                                                   context,
-  //                                                   listen: false)
-  //                                               .businessnature![0]
-  //                                               .toString();
-  //                                         });
-  //                                       });
-  //                                     });
-  //                                   },
-  //                                 ),
-  //                                 border: InputBorder.none,
-  //                                 hintText: "Enter GSTIN Number...",
-  //                                 hintStyle: TxtStls.fieldstyle),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                       SizedBox(height: size.height * 0.05),
-  //                       Visibility(
-  //                         visible: visible,
-  //                         child: ScaleAnimatedWidget.tween(
-  //                           duration: Duration(milliseconds: 500),
-  //                           child: Column(
-  //                             children: [
-  //                               Row(
-  //                                 children: [
-  //                                   CircleAvatar(
-  //                                       maxRadius: 7,
-  //                                       backgroundColor: Provider.of<GstProvider>(
-  //                                                       context,
-  //                                                       listen: false)
-  //                                                   .gstinstatus
-  //                                                   .toString() ==
-  //                                               "Active"
-  //                                           ? Colors.green
-  //                                           : clsClr),
-  //                                   SizedBox(width: 5),
-  //                                   Text(
-  //                                     _statusController.text.toString(),
-  //                                     style: TxtStls.fieldstyle,
-  //                                   ),
-  //                                   Expanded(child: Text("")),
-  //                                   Text(bnature, style: TxtStls.fieldstyle)
-  //                                 ],
-  //                               ),
-  //                               space(),
-  //                               Row(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                         padding: EdgeInsets.only(right: 20),
-  //                                         child: formfield("Invoice Id",
-  //                                             _invoiceController, icnData())),
-  //                                   ),
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                         padding: EdgeInsets.only(left: 20),
-  //                                         child: formfield(
-  //                                             "Date",
-  //                                             _dateController,
-  //                                             Icon(Icons.calendar_today,
-  //                                                 color: btnColor))),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                               space(),
-  //                               formfield(
-  //                                   "TradeName", _nameController, icnData()),
-  //                               space(),
-  //                               formfield("Name", _invoiceusername, icnData()),
-  //                               space(),
-  //                               Row(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                       padding: EdgeInsets.only(right: 20),
-  //                                       child: formfield(
-  //                                           "Email", _emailController, icnData()),
-  //                                     ),
-  //                                   ),
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                       padding: EdgeInsets.only(left: 20),
-  //                                       child: formfield(
-  //                                           "Address",
-  //                                           _addressControoler,
-  //                                           Icon(
-  //                                             Icons.location_on_rounded,
-  //                                             color: btnColor,
-  //                                           )),
-  //                                     ),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                               space(),
-  //                               Row(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                       padding: EdgeInsets.only(right: 20),
-  //                                       child: formfield("PanNumber",
-  //                                           _panController, icnData()),
-  //                                     ),
-  //                                   ),
-  //                                   Expanded(
-  //                                     child: Padding(
-  //                                       padding: EdgeInsets.only(left: 20),
-  //                                       child: formfield("PinCode",
-  //                                           _pincodeController, icnData()),
-  //                                     ),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                               space(),
-  //                               Row(
-  //                                 children: [
-  //                                   Expanded(
-  //                                     flex: 4,
-  //                                     child: InkWell(
-  //                                       child: Container(
-  //                                         padding: EdgeInsets.all(12.0),
-  //                                         alignment: Alignment.center,
-  //                                         decoration: BoxDecoration(
-  //                                             color: bgColor,
-  //                                             border: Border.all(color: btnColor),
-  //                                             borderRadius: BorderRadius.all(
-  //                                                 Radius.circular(10.0))),
-  //                                         child: Text(
-  //                                           "Send Invoice",
-  //                                           style: TxtStls.btnstyle,
-  //                                         ),
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                   Expanded(flex: 1, child: Text("")),
-  //                                   Expanded(
-  //                                     flex: 4,
-  //                                     child: InkWell(
-  //                                       child: Container(
-  //                                         padding: EdgeInsets.all(12.0),
-  //                                         alignment: Alignment.center,
-  //                                         decoration: BoxDecoration(
-  //                                             color: btnColor,
-  //                                             borderRadius: BorderRadius.all(
-  //                                                 Radius.circular(10.0))),
-  //                                         child: Text(
-  //                                           "Create Invoice",
-  //                                           style: TextStyle(color: Colors.white),
-  //                                         ),
-  //                                       ),
-  //                                       onTap: () {},
-  //                                     ),
-  //                                   )
-  //                                 ],
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           SizedBox(width: 10),
-  //           Expanded(
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-  //                 color: bgColor,
-  //               ),
-  //               height: size.height * 0.92,
-  //               padding: EdgeInsets.symmetric(
-  //                   horizontal: size.width * 0.015, vertical: size.width * 0.015),
-  //               child: Expanded(
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                       children: [
-  //                         Text(
-  //                           "Invoice Preview",
-  //                           style: TextStyle(
-  //                               fontSize: 20,
-  //                               color: txtColor,
-  //                               fontWeight: FontWeight.bold),
-  //                         ),
-  //                         Expanded(child: Text(" ")),
-  //                         IconButton(
-  //                             onPressed: (() {
-  //                               setState(() {});
-  //                             }),
-  //                             icon: Icon(Icons.download, color: btnColor)),
-  //                         IconButton(
-  //                             onPressed: (() {}),
-  //                             icon: Icon(Icons.print_sharp, color: btnColor)),
-  //                       ],
-  //                     ),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Row(
-  //                       children: [
-  //                         SizedBox(
-  //                           height: size.height * 0.15,
-  //                           width: size.width * 0.175,
-  //                           child: Image.asset(
-  //                             "assets/Logos/jrlogo.png",
-  //                             filterQuality: FilterQuality.high,
-  //                             fit: BoxFit.cover,
-  //                           ),
-  //                         ),
-  //                         Expanded(child: SizedBox()),
-  //                         Column(
-  //                           crossAxisAlignment: CrossAxisAlignment.end,
-  //                           children: [
-  //                             Text("JR Compliance and Testing Labs",
-  //                                 style: TxtStls.fieldstyle),
-  //                             Text(
-  //                                 "Regd. Office: 705, 7th Floor,Krishna Apra Tower",
-  //                                 style: TxtStls.fieldstyle),
-  //                             Text(
-  //                                 "Netaji Subhash Place, Pitampura,New Delhi 110034,India",
-  //                                 style: TxtStls.fieldstyle),
-  //                             Text("JR Compliance and Testing Labs",
-  //                                 style: TxtStls.fieldstyle),
-  //                             Text("PAN: AALFJ0070E", style: TxtStls.fieldstyle),
-  //                             Text("TAN: DELJ10631F", style: TxtStls.fieldstyle),
-  //                             Text("GST REGN NO: 07AALFJ0070E1ZO",
-  //                                 style: TxtStls.fieldstyle),
-  //                           ],
-  //                         )
-  //                       ],
-  //                     ),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                       children: [
-  //                         Text("To,", style: TxtStls.fieldtitlestyle),
-  //                         Text(
-  //                           "Invoice No.",
-  //                           style: TxtStls.fieldtitlestyle,
-  //                         )
-  //                       ],
-  //                     ),
-  //                     Text(""),
-  //                     Text("GST NO- ", style: TxtStls.fieldtitlestyle),
-  //                     Text("Kind Atten: Mr.", style: TxtStls.fieldtitlestyle),
-  //                     Align(
-  //                       alignment: Alignment.centerRight,
-  //                       child: Text(
-  //                         "Issued On: " +
-  //                             DateFormat("dd MMM,yyyy").format(DateTime.now()),
-  //                         style: TxtStls.fieldstyle,
-  //                       ),
-  //                     ),
-  //                     Align(
-  //                         alignment: Alignment.centerRight,
-  //                         child: Text("Payment Due: Paid",
-  //                             style: TxtStls.fieldstyle)),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                       children: [
-  //                         Expanded(
-  //                             child: Text("# Description",
-  //                                 style: TxtStls.fieldstyle)),
-  //                         Expanded(
-  //                           child: Row(
-  //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                             children: [
-  //                               Text("SAC No", style: TxtStls.fieldstyle),
-  //                               Text("Qty", style: TxtStls.fieldstyle),
-  //                               Text("Unit Cost", style: TxtStls.fieldstyle),
-  //                               Text("Amount(Rs)", style: TxtStls.fieldstyle),
-  //                             ],
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Expanded(child: SizedBox()),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Text("Bank Details:",
-  //                         style: GoogleFonts.nunito(
-  //                             textStyle: TextStyle(
-  //                                 fontSize: 13,
-  //                                 color: txtColor,
-  //                                 fontWeight: FontWeight.bold,
-  //                                 decoration: TextDecoration.underline),
-  //                             fontSize: 13,
-  //                             color: txtColor,
-  //                             fontWeight: FontWeight.bold,
-  //                             decoration: TextDecoration.underline)),
-  //                     Text("Company Name: JR Compliance And Testing Labs",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Text("Bank Name: IDFC FIRST BANK",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Text("Account Number: 10041186185",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Text("IFSC Code: IDFB0040101",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Text("SWIFT Code: IDFBINBBMUM",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Text("Bank Address: Rohini, New Delhi-110085",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     Divider(
-  //                       color: grClr,
-  //                     ),
-  //                     Text("Terms And Conditions:",
-  //                         style: TxtStls.fieldtitlestyle),
-  //                     InkWell(
-  //                       child: Text(
-  //                         "https://www.jrcompliance.com/terms-and-conditions",
-  //                         style: TxtStls.fieldstyle,
-  //                       ),
-  //                       onTap: () {
-  //                         launches.termsofuse();
-  //                       },
-  //                     ),
-  //                     // InkWell(
-  //                     //   child: Text(
-  //                     //     "https://www.jrcompliance.com/privacy-policy",
-  //                     //     style: ClrStls.tnClr,
-  //                     //   ),
-  //                     //   onTap: () {
-  //                     //     launches.privacy();
-  //                     //   },
-  //                     // ),
-  //                     // InkWell(
-  //                     //   child: Text(
-  //                     //     "https://www.jrcompliance.com/purchase-and-billing",
-  //                     //     style: ClrStls.tnClr,
-  //                     //   ),
-  //                     //   onTap: () {
-  //                     //     launches.privacy();
-  //                     //   },
-  //                     // )
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  Widget formfield(title, _controller, icn) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: TxtStls.fieldtitlestyle),
-        Container(
-          decoration: deco,
-          child: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 2),
-            child: TextFormField(
-              controller: _controller,
-              style: TxtStls.fieldstyle,
-              decoration: InputDecoration(
-                hintText: title,
-                hintStyle: TxtStls.fieldstyle,
-                border: InputBorder.none,
-                suffixIcon: icn,
-              ),
-              validator: (fullname) {
-                if (fullname!.isEmpty) {
-                  return "Name can not be empty";
-                } else if (fullname.length < 3) {
-                  return "Name should be atleast 3 letters";
-                } else {
-                  return null;
-                }
-              },
-            ),
+        height: size.height * 0.845,
+        width: size.width,
+        color: AbgColor.withOpacity(0.0001),
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
+        child: CalendarControllerProvider<Event>(
+          child: SfCalendar(
+            view: CalendarView.month,
+            monthViewSettings: const MonthViewSettings(
+                appointmentDisplayMode:
+                    MonthAppointmentDisplayMode.appointment),
+            dataSource: _dataSource,
           ),
-        ),
-      ],
-    );
+          controller: EventController<Event>()..addAll(_events),
+        ));
   }
 
-  Widget icnData() {
-    return Icon(
-      Icons.horizontal_rule,
-      color: fieldColor,
-    );
-  }
+  // FirebaseFirestore _firebase = FirebaseFirestore.instance;
+  // void getarrayLength() async {
+  //   await _firebase
+  //       .collection("InvoiceID")
+  //       .doc("2dtDd787PkHNjpFag0H5")
+  //       .get()
+  //       .then((value) {
+  //     setState(() {
+  //       var list = List.from(value.data()!["id"]);
+  //       String lastvalue = list.elementAt(list.length - 1);
+  //       //   print("lastvalue is : " + lastvalue);
+  //       updatearray(lastvalue);
+  //     });
+  //   });
+  // }
+  //
+  // updatearray(String lastvalue) async {
+  //   var month = DateFormat("MM").format(DateTime.now());
+  //   var year = DateFormat("yy").format(DateTime.now());
+  //
+  //   int mymonth = int.parse(month);
+  //   int myyear = int.parse(year);
+  //   int acyear = myyear;
+  //   int acyear1 = myyear;
+  //   if (mymonth <= 3) {
+  //     setState(() {
+  //       acyear = myyear - 1;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       acyear1 = myyear + 1;
+  //     });
+  //   }
+  //   show() {
+  //     if (mymonth <= 9) {
+  //       return 0;
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+  //
+  //   String val = lastvalue.substring(6);
+  //   //  print("pad value is : "+val);
+  //   int addval = int.parse(val) + 1;
+  //   // print("Added value is : " + addval.toString());
+  //   var storeval = show().toString() +
+  //       mymonth.toString() +
+  //       acyear.toString() +
+  //       acyear1.toString() +
+  //       addval.toString();
+  //   // print(storeval);
+  //   setState(() {
+  //     _invoiceController.text = "#JR" + storeval;
+  //   });
+  //   await _firebase.collection("InvoiceID").doc("2dtDd787PkHNjpFag0H5").update({
+  //     "id": FieldValue.arrayUnion([storeval]),
+  //   });
+  // }
 
-  Widget space() {
-    Size size = MediaQuery.of(context).size;
-    return SizedBox(height: size.height * 0.025);
-  }
+  List<CalendarEventData<Event>> _events = [
+    CalendarEventData(
+      date: DateTime.now(),
+      // event: Event(title: "Joe's Birthday"),
+      title: "Project meeting",
+      description: "Today is project meeting.",
+      startTime: DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 18, 30),
+      endTime: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 22),
+    ),
+    CalendarEventData(
+      date: DateTime.now().add(Duration(days: 1)),
+      startTime: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 18),
+      endTime: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 19),
+      // event: Event(title: "Wedding anniversary"),
+      title: "Wedding anniversary",
+      description: "Attend uncle's wedding anniversary.",
+    ),
+    CalendarEventData(
+      date: DateTime.now(),
+      startTime: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 14),
+      endTime: DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day, 17),
+      // event: Event(title: "Football Tournament"),
+      title: "Football Tournament",
+      description: "Go to football tournament.",
+    ),
+    CalendarEventData(
+      date: DateTime.now().add(Duration(days: 3)),
+      startTime: DateTime(
+          DateTime.now().add(Duration(days: 3)).year,
+          DateTime.now().add(Duration(days: 3)).month,
+          DateTime.now().add(Duration(days: 3)).day,
+          10),
+      endTime: DateTime(
+          DateTime.now().add(Duration(days: 3)).year,
+          DateTime.now().add(Duration(days: 3)).month,
+          DateTime.now().add(Duration(days: 3)).day,
+          14),
+      //event: Event(title: "Sprint Meeting."),
+      title: "Sprint Meeting.",
+      description: "Last day of project submission for last year.",
+    ),
+    CalendarEventData(
+      date: DateTime.now().subtract(Duration(days: 2)),
+      startTime: DateTime(
+          DateTime.now().subtract(Duration(days: 2)).year,
+          DateTime.now().subtract(Duration(days: 2)).month,
+          DateTime.now().subtract(Duration(days: 2)).day,
+          14),
+      endTime: DateTime(
+          DateTime.now().subtract(Duration(days: 2)).year,
+          DateTime.now().subtract(Duration(days: 2)).month,
+          DateTime.now().subtract(Duration(days: 2)).day,
+          16),
+      // event: Event(title: "Team Meeting"),
+      title: "Team Meeting",
+      description: "Team Meeting",
+    ),
+    CalendarEventData(
+      date: DateTime.now().subtract(Duration(days: 2)),
+      startTime: DateTime(
+          DateTime.now().subtract(Duration(days: 2)).year,
+          DateTime.now().subtract(Duration(days: 2)).month,
+          DateTime.now().subtract(Duration(days: 2)).day,
+          10),
+      endTime: DateTime(
+          DateTime.now().subtract(Duration(days: 2)).year,
+          DateTime.now().subtract(Duration(days: 2)).month,
+          DateTime.now().subtract(Duration(days: 2)).day,
+          12),
+      // event: Event(title: "Chemistry Viva"),
+      title: "Chemistry Viva",
+      description: "Today is Joe's birthday.",
+    ),
+  ];
 
-  FirebaseFirestore _firebase = FirebaseFirestore.instance;
-  void getarrayLength() async {
-    await _firebase
-        .collection("InvoiceID")
-        .doc("2dtDd787PkHNjpFag0H5")
-        .get()
-        .then((value) {
-      setState(() {
-        var list = List.from(value.data()!["id"]);
-        String lastvalue = list.elementAt(list.length - 1);
-        //   print("lastvalue is : " + lastvalue);
-        updatearray(lastvalue);
-      });
-    });
-  }
+  List<Appointment> _getDataSource() {
+    final List<Appointment> meetings = <Appointment>[];
+    final DateTime today = DateTime.now();
+    final DateTime startTime = DateTime.now();
+    final DateTime endTime = startTime.add(const Duration(hours: 2));
+    // meetings.add(Meeting(
+    //     'Conference', startTime, endTime, const Color(0xFF0F8644), false));
+    meetings.add(Appointment(
+        endTime: endTime,
+        startTime: startTime,
+        subject: 'Conference',
+        color: btnColor,
+        isAllDay: false,
+        recurrenceRule: 'FREQ=DAILY,COUNT=10'));
 
-  updatearray(String lastvalue) async {
-    var month = DateFormat("MM").format(DateTime.now());
-    var year = DateFormat("yy").format(DateTime.now());
-
-    int mymonth = int.parse(month);
-    int myyear = int.parse(year);
-    int acyear = myyear;
-    int acyear1 = myyear;
-    if (mymonth <= 3) {
-      setState(() {
-        acyear = myyear - 1;
-      });
-    } else {
-      setState(() {
-        acyear1 = myyear + 1;
-      });
-    }
-    show() {
-      if (mymonth <= 9) {
-        return 0;
-      } else {
-        return null;
-      }
-    }
-
-    String val = lastvalue.substring(6);
-    //  print("pad value is : "+val);
-    int addval = int.parse(val) + 1;
-    // print("Added value is : " + addval.toString());
-    var storeval = show().toString() +
-        mymonth.toString() +
-        acyear.toString() +
-        acyear1.toString() +
-        addval.toString();
-    // print(storeval);
-    setState(() {
-      _invoiceController.text = "#JR" + storeval;
-    });
-    await _firebase.collection("InvoiceID").doc("2dtDd787PkHNjpFag0H5").update({
-      "id": FieldValue.arrayUnion([storeval]),
-    });
+    return meetings;
   }
 }
+
+class MeetingDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  MeetingDataSource(List<Appointment> source) {
+    appointments = source;
+  }
+
+  // @override
+  // DateTime getStartTime(int index) {
+  //   return _getMeetingData(index).from;
+  // }
+  //
+  // @override
+  // DateTime getEndTime(int index) {
+  //   return _getMeetingData(index).to;
+  // }
+  //
+  // @override
+  // String getSubject(int index) {
+  //   return _getMeetingData(index).eventName;
+  // }
+  //
+  // @override
+  // Color getColor(int index) {
+  //   return _getMeetingData(index).background;
+  // }
+  //
+  // @override
+  // bool isAllDay(int index) {
+  //   return _getMeetingData(index).isAllDay;
+  // }
+
+  // Meeting _getMeetingData(int index) {
+  //   final dynamic meeting = appointments![index];
+  //   late final Meeting meetingData;
+  //   if (meeting is Meeting) {
+  //     meetingData = meeting;
+  //   }
+  //
+  //   return meetingData;
+  // }
+}
+
+// class Meeting {
+//   /// Creates a meeting class with required details.
+//   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+//
+//   /// Event name which is equivalent to subject property of [Appointment].
+//   String eventName;
+//
+//   /// From which is equivalent to start time property of [Appointment].
+//   DateTime from;
+//
+//   /// To which is equivalent to end time property of [Appointment].
+//   DateTime to;
+//
+//   /// Background which is equivalent to color property of [Appointment].
+//   Color background;
+//
+//   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
+//   bool isAllDay;
+// }
