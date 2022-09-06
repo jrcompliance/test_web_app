@@ -86,12 +86,6 @@ class _FinanceState extends State<Finance> {
   ];
 
   //[{"id":4,"name":"1","email":"admin","password":"dc4b79a9200aa4630fee652bb5d7f232c503b77fb3b66df99b21ec3ff105f623","user_type":"1","created_on":"2020-01-13 12:50:28","updated_on":"2020-01-14 11:42:05","flags":"00000"},{"id":31,"name":"avi","email":"asdf@gmail.com","password":"dc4b79a9200aa4630fee652bb5d7f232c503b77fb3b66df99b21ec3ff105f623","user_type":"1","created_on":"2020-03-15 11:39:16","updated_on":"2020-03-15 11:39:16","flags":null}]
-  final List escalationslist = [
-    {'name': "Prashant Thakur", 'email': "", 'phone': "", 'img': ""},
-    {'name': "Tarun Sadana", 'email': "", 'phone': "", 'img': ""},
-    {'name': "Lalit Gupta", 'email': "", 'phone': "", 'img': ""},
-    {'name': "Rishikesh Mishra", 'email': "", 'phone': "", 'img': ""}
-  ];
 
   String selectedValue = "INR";
   var selectedleadid;
@@ -195,7 +189,15 @@ class _FinanceState extends State<Finance> {
     randomNo = rng.nextInt(900000) + 100000;
     allServices = services;
     super.initState();
-    Future.delayed(const Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      Provider.of<CustmerProvider>(context, listen: false)
+          .getCustomers(
+        context,
+      )
+          .then((value) {
+        allCustomers =
+            Provider.of<CustmerProvider>(context, listen: false).customerlist;
+      });
       Utils.getEscalationsDownloadurl('vpimage.jpg').then((value) {
         vpimage = value.toString();
         print("vpimage---" + vpimage.toString());
@@ -207,14 +209,6 @@ class _FinanceState extends State<Finance> {
       Utils.getEscalationsDownloadurl('ceoimage.jpg').then((value) {
         ceoimage = value.toString();
         print("ceoimage---" + ceoimage.toString());
-      });
-      Provider.of<CustmerProvider>(context, listen: false)
-          .getCustomers(
-        context,
-      )
-          .then((value) {
-        allCustomers =
-            Provider.of<CustmerProvider>(context, listen: false).customerlist;
       });
     });
     Future.delayed(const Duration(seconds: 2)).then((value) {
@@ -2253,7 +2247,6 @@ class _FinanceState extends State<Finance> {
 
   Widget productAddition(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -4388,563 +4381,598 @@ class _FinanceState extends State<Finance> {
 
   Widget serviceWidget(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: size.height * 0.06,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-                fit: FlexFit.tight,
-                flex: 2,
-                child: Container(
-                  height: size.height * 0.3,
-                  decoration: const BoxDecoration(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: size.height * 0.08,
-                          width: size.width * 0.25,
-                          child: Material(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0)),
-                            color: bgColor,
-                            child: ListTile(
-                              tileColor: grClr.withOpacity(0.1),
-                              hoverColor: btnColor.withOpacity(0.2),
-                              selectedColor: btnColor.withOpacity(0.2),
-                              selectedTileColor: btnColor.withOpacity(0.2),
-                              leading: CircleAvatar(
+    return Material(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: size.height * 0.06,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                  fit: FlexFit.tight,
+                  flex: 2,
+                  child: Container(
+                    height: size.height * 0.3,
+                    decoration: const BoxDecoration(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            height: size.height * 0.08,
+                            width: size.width * 0.25,
+                            child: Material(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10.0)),
+                              color: bgColor,
+                              child: ListTile(
+                                tileColor: grClr.withOpacity(0.1),
+                                hoverColor: btnColor.withOpacity(0.2),
+                                selectedColor: btnColor.withOpacity(0.2),
+                                selectedTileColor: btnColor.withOpacity(0.2),
+                                leading: CircleAvatar(
+                                    backgroundColor: btnColor.withOpacity(0.1),
+                                    child: const Icon(
+                                      Icons.person,
+                                      color: btnColor,
+                                    )),
+                                title: Text(
+                                  cusname.toString(),
+                                  style: TxtStls.fieldtitlestyle,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      cusemail.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                    Text(
+                                      cusphone.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    ),
+                                  ],
+                                ),
+                                trailing: CircleAvatar(
                                   backgroundColor: btnColor.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: btnColor,
-                                  )),
-                              title: Text(
-                                cusname.toString(),
-                                style: TxtStls.fieldtitlestyle,
+                                ),
+                                onTap: () {},
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cusemail.toString(),
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                  Text(
-                                    cusphone.toString(),
-                                    style: TxtStls.fieldstyle,
-                                  ),
-                                ],
-                              ),
-                              trailing: CircleAvatar(
-                                backgroundColor: btnColor.withOpacity(0.1),
-                              ),
-                              onTap: () {},
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            height: size.width * 0.022,
-                            width: size.width * 0.25,
-                            decoration: const BoxDecoration(
-                              color: fieldColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  bottomLeft: Radius.circular(10.0)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 0, top: 0),
-                              child: TextField(
-                                controller: _subjectController,
-                                style: TxtStls.fieldstyle,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Subject...",
-                                  hintStyle: TxtStls.fieldstyle,
-                                ),
-                                // onChanged: (value) {
-                                //   setState(() {
-                                //     _subjectController.text = value;
-                                //   });
-                                // }
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              height: size.width * 0.022,
+                              width: size.width * 0.25,
+                              decoration: const BoxDecoration(
+                                color: fieldColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0)),
                               ),
-                            )),
-                      ),
-                      Container(
-                        height: size.height * 0.12,
-                        child: Column(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 0, top: 0),
+                                child: TextField(
+                                  controller: _subjectController,
+                                  style: TxtStls.fieldstyle,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Subject...",
+                                    hintStyle: TxtStls.fieldstyle,
+                                  ),
+                                  // onChanged: (value) {
+                                  //   setState(() {
+                                  //     _subjectController.text = value;
+                                  //   });
+                                  // }
+                                ),
+                              )),
+                        ),
+                        Container(
+                          height: size.height * 0.12,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  "Choose Service",
+                                  style: TxtStls.fieldtitlestyle11,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                          height: size.width * 0.022,
+                                          width: size.width * 0.25,
+                                          decoration: const BoxDecoration(
+                                            color: fieldColor,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10.0),
+                                                bottomLeft:
+                                                    Radius.circular(10.0)),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15, right: 0, top: 0),
+                                            child: TextField(
+                                                controller:
+                                                    _serviceSearchController2,
+                                                style: TxtStls.fieldstyle,
+                                                decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: "Search...",
+                                                    hintStyle:
+                                                        TxtStls.fieldstyle,
+                                                    suffixIcon:
+                                                        _serviceSearchController2
+                                                                .text.isNotEmpty
+                                                            ? IconButton(
+                                                                onPressed: () {
+                                                                  _serviceSearchController2
+                                                                      .clear();
+                                                                  searchService(
+                                                                      "");
+                                                                  FocusScope.of(
+                                                                          context)
+                                                                      .requestFocus(
+                                                                          FocusNode());
+                                                                },
+                                                                icon: const Icon(
+                                                                    Icons
+                                                                        .cancel))
+                                                            : const Icon(
+                                                                Icons.search)),
+                                                onChanged: searchService),
+                                          )),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: btnColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0))),
+                                        onPressed: () {},
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: InkWell(
+                                            child: Text(
+                                              "Add",
+                                              style: TxtStls.fieldstyle1,
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 60),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Date",
+                                style: TxtStls.fieldtitlestyle11,
+                              ),
+                              Text(
+                                "Quotation No",
+                                style: TxtStls.fieldtitlestyle11,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Flexible(
-                              flex: 1,
-                              child: Text(
-                                "Choose Service",
-                                style: TxtStls.fieldtitlestyle11,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                        height: size.width * 0.022,
-                                        width: size.width * 0.25,
-                                        decoration: const BoxDecoration(
-                                          color: fieldColor,
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10.0),
-                                              bottomLeft:
-                                                  Radius.circular(10.0)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15, right: 0, top: 0),
-                                          child: TextField(
-                                              controller:
-                                                  _serviceSearchController2,
-                                              style: TxtStls.fieldstyle,
-                                              decoration: InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Search...",
-                                                  hintStyle: TxtStls.fieldstyle,
-                                                  suffixIcon:
-                                                      _serviceSearchController2
-                                                              .text.isNotEmpty
-                                                          ? IconButton(
-                                                              onPressed: () {
-                                                                _serviceSearchController2
-                                                                    .clear();
-                                                                searchService(
-                                                                    "");
-                                                                FocusScope.of(
-                                                                        context)
-                                                                    .requestFocus(
-                                                                        FocusNode());
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.cancel))
-                                                          : const Icon(
-                                                              Icons.search)),
-                                              onChanged: searchService),
-                                        )),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: btnColor,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0))),
-                                      onPressed: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: InkWell(
-                                          child: Text(
-                                            "Add",
-                                            style: TxtStls.fieldstyle1,
-                                          ),
-                                          onTap: () {},
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-            Flexible(
-                fit: FlexFit.tight,
-                flex: 1,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 60),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Date",
-                              style: TxtStls.fieldtitlestyle11,
-                            ),
-                            Text(
-                              "Quotation No",
-                              style: TxtStls.fieldtitlestyle11,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            flex: 2,
-                            fit: FlexFit.tight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: AbgColor.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(16.0)),
-                                child: Expanded(
-                                  flex: 2,
-                                  child: InkWell(
-                                    child: field(
-                                        _selectedDateController,
-                                        DateFormat('dd/MM/yyyy')
-                                            .format(DateTime.now()),
-                                        1,
-                                        false,
-                                        const Icon(
-                                          Icons.calendar_today_outlined,
-                                          color: btnColor,
-                                        )),
-                                    onTap: () {
-                                      MyCalenders.pickEndDate(
-                                          context, _selectedDateController);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            fit: FlexFit.tight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 40),
-                              child: Container(
-                                  padding: const EdgeInsets.all(16.0),
+                              flex: 2,
+                              fit: FlexFit.tight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Container(
                                   decoration: BoxDecoration(
                                       color: AbgColor.withOpacity(0.1),
                                       borderRadius:
-                                          BorderRadius.circular(12.0)),
+                                          BorderRadius.circular(16.0)),
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: InkWell(
+                                      child: field(
+                                          _selectedDateController,
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(DateTime.now()),
+                                          1,
+                                          false,
+                                          const Icon(
+                                            Icons.calendar_today_outlined,
+                                            color: btnColor,
+                                          )),
+                                      onTap: () {
+                                        MyCalenders.pickEndDate(
+                                            context, _selectedDateController);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 2,
+                              fit: FlexFit.tight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 40),
+                                child: Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                        color: AbgColor.withOpacity(0.1),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    child: Text(
+                                      "#" + randomNo.toString(),
+                                      style: TxtStls.fieldstyle,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: size.width * 0.132,
+                              decoration: const BoxDecoration(
+                                color: fieldColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 0, top: 5),
+                                child: TextField(
+                                  controller: _gstController2,
+                                  style: TxtStls.fieldstyle,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Enter Gst Number...",
+                                      hintStyle: TxtStls.fieldstyle),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                var provider = Provider.of<GstProvider>(context,
+                                    listen: false);
+                                provider
+                                    .fetchGstData(
+                                        _gstController2.text.toString())
+                                    .whenComplete(() {
+                                  Future.delayed(const Duration(seconds: 2))
+                                      .then((value) {
+                                    setState(() {
+                                      tradename = provider.tradename.toString();
+                                      address =
+                                          provider.principalplace.toString();
+                                      pan = provider.pan.toString();
+                                      pincode = provider.pincode.toString();
+                                    });
+                                  });
+                                });
+                              },
+                              child: Container(
+                                width: size.width * 0.025,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12.5),
+                                color: btnColor,
+                                child:
+                                    Provider.of<GstProvider>(context).isLoading
+                                        ? const SpinKitFadingCube(
+                                            color: bgColor,
+                                            size: 23,
+                                          )
+                                        : const Icon(
+                                            Icons.search,
+                                            color: bgColor,
+                                          ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ])),
+            ],
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          titleWidget2(),
+          Container(
+            height: size.height * 0.26,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              controller: sc,
+              itemCount: allServices.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: index % 2 == 0
+                            ? AbgColor.withOpacity(0.1)
+                            : bgColor,
+                      ),
+                      height: size.width * 0.025,
+                      padding: const EdgeInsets.only(left: 50, right: 50),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                                flex: 1,
+                                child: Text(
+                                  "${index + 1}",
+                                  style: TxtStls.fieldstyle,
+                                )),
+                            Flexible(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: productWidget(
+                                    "assets/Images/pending.png",
+                                    allServices[index].name,
+                                    index),
+                              ),
+                            ),
+                            Flexible(
+                                flex: 1,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 50),
                                   child: Text(
-                                    "#" + randomNo.toString(),
+                                    "\$56468",
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                )),
+                            Flexible(
+                                flex: 1,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 30),
+                                  child: Text(
+                                    "GST %",
+                                    style: TxtStls.fieldstyle,
+                                  ),
+                                )),
+                            Flexible(
+                              flex: 1,
+                              child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 30),
+                                  child: Text(
+                                    "2 pieces",
                                     style: TxtStls.fieldstyle,
                                   )),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: size.width * 0.132,
-                            decoration: const BoxDecoration(
-                              color: fieldColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  bottomLeft: Radius.circular(10.0)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15, right: 0, top: 5),
-                              child: TextField(
-                                controller: _gstController2,
-                                style: TxtStls.fieldstyle,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Enter Gst Number...",
-                                    hintStyle: TxtStls.fieldstyle),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              var provider = Provider.of<GstProvider>(context,
-                                  listen: false);
-                              provider
-                                  .fetchGstData(_gstController2.text.toString())
-                                  .whenComplete(() {
-                                Future.delayed(const Duration(seconds: 2))
-                                    .then((value) {
-                                  setState(() {
-                                    tradename = provider.tradename.toString();
-                                    address =
-                                        provider.principalplace.toString();
-                                    pan = provider.pan.toString();
-                                    pincode = provider.pincode.toString();
-                                  });
-                                });
-                              });
-                            },
-                            child: Container(
-                              width: size.width * 0.025,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.5),
-                              color: btnColor,
-                              child: Provider.of<GstProvider>(context).isLoading
-                                  ? const SpinKitFadingCube(
-                                      color: bgColor,
-                                      size: 23,
-                                    )
-                                  : const Icon(
-                                      Icons.search,
-                                      color: bgColor,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ])),
-          ],
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-        titleWidget2(),
-        Container(
-          height: size.height * 0.26,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            controller: sc,
-            itemCount: allServices.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color:
-                          index % 2 == 0 ? AbgColor.withOpacity(0.1) : bgColor,
-                    ),
-                    height: size.width * 0.025,
-                    padding: const EdgeInsets.only(left: 50, right: 50),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                              flex: 1,
-                              child: Text(
-                                "${index + 1}",
-                                style: TxtStls.fieldstyle,
-                              )),
-                          Flexible(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: productWidget("assets/Images/pending.png",
-                                  allServices[index].name, index),
-                            ),
-                          ),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 50),
-                                child: Text(
-                                  "\$56468",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                              )),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 30),
-                                child: Text(
-                                  "GST %",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                              )),
-                          Flexible(
-                            flex: 1,
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 30),
-                                child: Text(
-                                  "2 pieces",
-                                  style: TxtStls.fieldstyle,
+                            Flexible(
+                                flex: 1,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 30),
+                                  child: SACCode(
+                                    "894456",
+                                  ),
                                 )),
-                          ),
-                          Flexible(
-                              flex: 1,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 30),
-                                child: SACCode(
-                                  "894456",
-                                ),
-                              )),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onTap: () {
-                  print(allServices[index].name);
-                  if (allServices[index].name == "BIS Certificate") {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return InkWell(
-                            child: AlertDialog(
-                                content: RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: "Please Select ",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                                TextSpan(
-                                  text: "ISI Certificate ",
-                                  style: TxtStls.fieldstyle111,
-                                ),
-                                TextSpan(
-                                  text: "/ ",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                                TextSpan(
-                                  text: "FMCS Certificate ",
-                                  style: TxtStls.fieldstyle111,
-                                ),
-                                TextSpan(
-                                  text: "/ ",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                                TextSpan(
-                                  text: "CRS Certificate ",
-                                  style: TxtStls.fieldstyle111,
-                                ),
-                                TextSpan(
-                                  text: " along with BIS Certificate",
-                                  style: TxtStls.fieldstyle,
-                                ),
-                              ]),
-                            )
-                                // Text(
-                                //   "Please Select ISI Certificate/FMCS Certificate/CRS Certificate along with BIS Certificate",
-                                //   style: TxtStls.fieldstyle,
-                                // ),
-                                ),
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                          );
-                        });
-                  }
-                  setState(() {
-                    //  isServiceSelected = !isServiceSelected;
-                    selectedList.add(allServices[index]);
-                    print(selectedList.toString());
-                    print(selectedList.length.toString());
-                  });
+                  onTap: () {
+                    print(allServices[index].name);
+                    if (allServices[index].name == "BIS Certificate") {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Material(
+                              child: InkWell(
+                                child: AlertDialog(
+                                    content: Container(
+                                  height: size.height * 0.1,
+                                  width: size.width * 0.2,
+                                  child: Column(
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                            text: "Please Select ",
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                          TextSpan(
+                                            text: "ISI Certificate ",
+                                            style: TxtStls.fieldstyle111,
+                                          ),
+                                          TextSpan(
+                                            text: "/ ",
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                          TextSpan(
+                                            text: "FMCS Certificate ",
+                                            style: TxtStls.fieldstyle111,
+                                          ),
+                                          TextSpan(
+                                            text: "/ ",
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                          TextSpan(
+                                            text: "CRS Certificate ",
+                                            style: TxtStls.fieldstyle111,
+                                          ),
+                                          TextSpan(
+                                            text: " along with BIS Certificate",
+                                            style: TxtStls.fieldstyle,
+                                          ),
+                                        ]),
+                                      ),
+                                      const SizedBox(),
+                                      Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            color: btnColor,
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "Back",
+                                              style: TxtStls.messagestyle,
+                                            ),
+                                          ))
+                                    ],
+                                  ),
+                                )
+                                    // Text(
+                                    //   "Please Select ISI Certificate/FMCS Certificate/CRS Certificate along with BIS Certificate",
+                                    //   style: TxtStls.fieldstyle,
+                                    // ),
+                                    ),
+                                onTap: () {},
+                              ),
+                            );
+                          });
+                    }
+                    setState(() {
+                      //  isServiceSelected = !isServiceSelected;
+                      selectedList.add(allServices[index]);
+                      print(selectedList.toString());
+                      print(selectedList.length.toString());
+                    });
 
-                  toastmessage.sucesstoast(
-                      context,
-                      "you have selected ${allServices[index].name} please go to next for further details",
-                      10);
-                },
-              );
-            },
+                    toastmessage.sucesstoast(
+                        context,
+                        "you have selected ${allServices[index].name} please go to next for further details",
+                        2);
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        // Row(
-        //   children: [
-        //     const Text("Samples Required??"),
-        //     textButton("Yes"),
-        //     textButton("No"),
-        //     const SizedBox(
-        //       width: 50,
-        //     ),
-        //     isChoosed
-        //         ? Align(
-        //             alignment: Alignment.bottomCenter,
-        //             child: Padding(
-        //               padding: const EdgeInsets.all(8.0),
-        //               child: DropdownButton2<String>(
-        //                 iconEnabledColor: btnColor,
-        //                 iconDisabledColor: AbgColor,
-        //                 itemPadding: const EdgeInsets.only(left: 5),
-        //                 buttonHeight: 30,
-        //                 buttonPadding: null,
-        //                 hint: Padding(
-        //                   padding: const EdgeInsets.only(left: 8.0),
-        //                   child: Text(
-        //                     "Samples",
-        //                     style: TxtStls.fieldstyle,
-        //                   ),
-        //                 ),
-        //
-        //                 // selectedItemBuilder: (BuildContext context) {
-        //                 //   return items.map((String value) {
-        //                 //     return Text(value.toString(),
-        //                 //         style: TextStyle(
-        //                 //             fontSize: 13,
-        //                 //             color: bgColor,
-        //                 //             fontWeight: FontWeight.bold));
-        //                 //   }).toList();
-        //                 // },
-        //                 selectedItemHighlightColor: bgColor,
-        //                 buttonDecoration: BoxDecoration(
-        //                   shape: BoxShape.rectangle,
-        //                   color: btnColor.withOpacity(0.4),
-        //                   borderRadius: BorderRadius.circular(10.0),
-        //                 ),
-        //                 items: items
-        //                     .map((item) => DropdownMenuItem<String>(
-        //                           value: item,
-        //                           child: Padding(
-        //                             padding: const EdgeInsets.only(left: 8.0),
-        //                             child: Text(
-        //                               item,
-        //                               style: TxtStls.fieldstyle,
-        //                               overflow: TextOverflow.ellipsis,
-        //                             ),
-        //                           ),
-        //                         ))
-        //                     .toList(),
-        //                 value: selectedSamples,
-        //                 onChanged: (value) {
-        //                   setState(() {
-        //                     selectedSamples = value as String;
-        //                   });
-        //                 },
-        //               ),
-        //             ))
-        //         : const SizedBox(),
-        //   ],
-        // )
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          // Row(
+          //   children: [
+          //     const Text("Samples Required??"),
+          //     textButton("Yes"),
+          //     textButton("No"),
+          //     const SizedBox(
+          //       width: 50,
+          //     ),
+          //     isChoosed
+          //         ? Align(
+          //             alignment: Alignment.bottomCenter,
+          //             child: Padding(
+          //               padding: const EdgeInsets.all(8.0),
+          //               child: DropdownButton2<String>(
+          //                 iconEnabledColor: btnColor,
+          //                 iconDisabledColor: AbgColor,
+          //                 itemPadding: const EdgeInsets.only(left: 5),
+          //                 buttonHeight: 30,
+          //                 buttonPadding: null,
+          //                 hint: Padding(
+          //                   padding: const EdgeInsets.only(left: 8.0),
+          //                   child: Text(
+          //                     "Samples",
+          //                     style: TxtStls.fieldstyle,
+          //                   ),
+          //                 ),
+          //
+          //                 // selectedItemBuilder: (BuildContext context) {
+          //                 //   return items.map((String value) {
+          //                 //     return Text(value.toString(),
+          //                 //         style: TextStyle(
+          //                 //             fontSize: 13,
+          //                 //             color: bgColor,
+          //                 //             fontWeight: FontWeight.bold));
+          //                 //   }).toList();
+          //                 // },
+          //                 selectedItemHighlightColor: bgColor,
+          //                 buttonDecoration: BoxDecoration(
+          //                   shape: BoxShape.rectangle,
+          //                   color: btnColor.withOpacity(0.4),
+          //                   borderRadius: BorderRadius.circular(10.0),
+          //                 ),
+          //                 items: items
+          //                     .map((item) => DropdownMenuItem<String>(
+          //                           value: item,
+          //                           child: Padding(
+          //                             padding: const EdgeInsets.only(left: 8.0),
+          //                             child: Text(
+          //                               item,
+          //                               style: TxtStls.fieldstyle,
+          //                               overflow: TextOverflow.ellipsis,
+          //                             ),
+          //                           ),
+          //                         ))
+          //                     .toList(),
+          //                 value: selectedSamples,
+          //                 onChanged: (value) {
+          //                   setState(() {
+          //                     selectedSamples = value as String;
+          //                   });
+          //                 },
+          //               ),
+          //             ))
+          //         : const SizedBox(),
+          //   ],
+          // )
+        ],
+      ),
     );
   }
 
