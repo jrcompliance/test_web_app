@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:html';
 import 'dart:ui';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,6 +61,8 @@ class _CalendarState extends State<Calendar> {
   EmployeesModel? logginUserModel;
 
   String? currentuid;
+
+  bool isDaySelected = false;
   getUserData() {
     FirebaseFirestore.instance
         .collection("EmployeeData")
@@ -73,7 +76,11 @@ class _CalendarState extends State<Calendar> {
 
   var provider;
   var _dataSource;
+  CalendarController _calendarController = CalendarController();
 
+  DateTime startTime = DateTime.now();
+  DateTime endTime = DateTime.now().add(const Duration(hours: 2));
+  List eventList = [];
   @override
   void initState() {
     super.initState();
@@ -90,27 +97,108 @@ class _CalendarState extends State<Calendar> {
             Provider.of<UserDataProvider>(context, listen: false).employeelist;
       });
     });
-    _dataSource = MeetingDataSource(_getDataSource());
+    _dataSource = _getDataSource(startTime, endTime, "", btnColor, "", false);
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Container(
-        height: size.height * 0.845,
-        width: size.width,
-        color: AbgColor.withOpacity(0.0001),
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
-        child: SfCalendar(
-          view: CalendarView.schedule,
-          monthViewSettings: const MonthViewSettings(
-              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-          dataSource: _dataSource,
-          onTap: (_) {
-            print("kjfhjwfhuef");
-          },
-        ));
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+            flex: 2,
+            child: SfCalendar(
+              view: CalendarView.month,
+            )),
+        SizedBox(
+          width: size.width * 0.02,
+        ),
+        Expanded(
+          flex: 8,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // FlatButton(
+              //   color: isDaySelected ? btnColor : neClr,
+              //   onPressed: () {
+              //     setState(() {
+              //       isDaySelected = !isDaySelected;
+              //     });
+              //   },
+              //   child: Text("DAY"),
+              // ),
+              Container(
+                  height: size.height * 0.845,
+                  width: size.width,
+                  color: AbgColor.withOpacity(0.0001),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.015),
+                  child: SfCalendar(
+                    controller: _calendarController,
+                    view: isDaySelected
+                        ? CalendarView.schedule
+                        : CalendarView.month,
+                    monthViewSettings: const MonthViewSettings(
+                        appointmentDisplayMode:
+                            MonthAppointmentDisplayMode.appointment),
+                    scheduleViewMonthHeaderBuilder: (BuildContext buildContext,
+                        ScheduleViewMonthHeaderDetails details) {
+                      return Container(
+                        color: Colors.red,
+                        child: Text(
+                          details.date.month.toString() +
+                              ' ,' +
+                              details.date.year.toString(),
+                        ),
+                      );
+                    },
+                    onViewChanged: (_) {},
+                    dataSource: _dataSource,
+                    onTap: (_) {
+                      setState(() {
+                        isDaySelected = !isDaySelected;
+                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Container(
+                            height: size.height * 0.4,
+                            width: size.width * 0.3,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            child: Column(
+                              children: [
+                                Text(""),
+                                Text(_calendarController.selectedDate
+                                    .toString()
+                                    .substring(0, 10)),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            FlatButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _getDataSource(startTime, endTime,
+                                        "Meeting2", neClr, "", false);
+                                    Future.delayed(const Duration(seconds: 3))
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                    });
+                                  });
+                                },
+                                child: Text("Create Event")),
+                          ],
+                        ),
+                      );
+                    },
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   // FirebaseFirestore _firebase = FirebaseFirestore.instance;
@@ -172,67 +260,96 @@ class _CalendarState extends State<Calendar> {
   //   });
   // }
 
-  List<Appointment> _getDataSource() {
-    final List<Appointment> meetings = <Appointment>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime.now();
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    // meetings.add(Meeting(
-    //     'Conference', startTime, endTime, const Color(0xFF0F8644), false));
-    meetings.add(Appointment(
-        endTime: endTime,
+  MeetingDataSource _getDataSource(
+      startTime, endTime, subject, color, recurrenceRule, isAllDay) {
+    final List<Appointment> appointments = <Appointment>[];
+    appointments.add(Appointment(
         startTime: startTime,
-        subject: 'Conference',
-        color: btnColor,
-        isAllDay: false,
-        recurrenceRule: 'FREQ=DAILY,COUNT=5'));
+        endTime: endTime,
+        subject: subject,
+        color: color,
+        isAllDay: isAllDay,
+        recurrenceRule: recurrenceRule));
 
-    return meetings;
+    return MeetingDataSource(appointments);
   }
 }
 
 class MeetingDataSource extends CalendarDataSource {
-  /// Creates a meeting data source, which used to set the appointment
-  /// collection to the calendar
   MeetingDataSource(List<Appointment> source) {
     appointments = source;
   }
 
-  // @override
-  // DateTime getStartTime(int index) {
-  //   return _getMeetingData(index).from;
-  // }
-  //
-  // @override
-  // DateTime getEndTime(int index) {
-  //   return _getMeetingData(index).to;
-  // }
-  //
-  // @override
-  // String getSubject(int index) {
-  //   return _getMeetingData(index).eventName;
-  // }
-  //
-  // @override
-  // Color getColor(int index) {
-  //   return _getMeetingData(index).background;
-  // }
-  //
-  // @override
-  // bool isAllDay(int index) {
-  //   return _getMeetingData(index).isAllDay;
-  // }
+  @override
+  DateTime getStartTime(int index) {
+    return appointments![index].from;
+  }
 
-  // Meeting _getMeetingData(int index) {
-  //   final dynamic meeting = appointments![index];
-  //   late final Meeting meetingData;
-  //   if (meeting is Meeting) {
-  //     meetingData = meeting;
-  //   }
-  //
-  //   return meetingData;
-  // }
+  @override
+  DateTime getEndTime(int index) {
+    return appointments![index].to;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return appointments![index].isAllDay;
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments![index].eventName;
+  }
+
+  @override
+  String getStartTimeZone(int index) {
+    return appointments![index].startTimeZone;
+  }
+
+  @override
+  String getEndTimeZone(int index) {
+    return appointments![index].endTimeZone;
+  }
+
+  @override
+  Color getColor(int index) {
+    return appointments![index].background;
+  }
 }
+
+// @override
+// DateTime getStartTime(int index) {
+//   return _getMeetingData(index).from;
+// }
+//
+// @override
+// DateTime getEndTime(int index) {
+//   return _getMeetingData(index).to;
+// }
+//
+// @override
+// String getSubject(int index) {
+//   return _getMeetingData(index).eventName;
+// }
+//
+// @override
+// Color getColor(int index) {
+//   return _getMeetingData(index).background;
+// }
+//
+// @override
+// bool isAllDay(int index) {
+//   return _getMeetingData(index).isAllDay;
+// }
+
+// Meeting _getMeetingData(int index) {
+//   final dynamic meeting = appointments![index];
+//   late final Meeting meetingData;
+//   if (meeting is Meeting) {
+//     meetingData = meeting;
+//   }
+//
+//   return meetingData;
+// }
 
 // class Meeting {
 //   /// Creates a meeting class with required details.
