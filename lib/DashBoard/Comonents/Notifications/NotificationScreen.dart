@@ -58,6 +58,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_web_app/ChatWidgets/MyOwnCard.dart';
@@ -147,8 +148,21 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    String url =
+        "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/Services%2FISIServices%2F1?alt=media&token=d9d16bdd-c7b4-4685-a7f1-fa35f8e36ee6";
     return Container(
       height: size.height * 0.93,
+      child: Column(
+        children: [
+          FlatButton(
+            onPressed: () async {
+              downloadUrl();
+            },
+            child: Text("downloads"),
+          ),
+          Text(downloadUrl().toString()),
+        ],
+      ),
       // child: Row(
       //   children: [
       //     Expanded(
@@ -206,6 +220,31 @@ class _NotificationsState extends State<Notifications> {
       //   ],
       // ),
     );
+  }
+
+  downloadUrl() async {
+    String url =
+        "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/Services%2FISIServices%2F1?alt=media&token=d9d16bdd-c7b4-4685-a7f1-fa35f8e36ee6";
+    final response = await Dio().get(
+      url,
+      onReceiveProgress: showDownloadProgress,
+      options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+  }
+
+// var progress;
+  showDownloadProgress(received, total) {
+    if (total != -1) {
+      // setState(() {
+      //  var progress = (received / total * 100).toStringAsFixed(0);
+      print((received / total * 100).toStringAsFixed(0) + "%");
+      // });
+    }
   }
 
   Widget chatRoomsList() {
