@@ -115,7 +115,7 @@ class _MessageScreenState extends State<MessageScreen> {
                               suffixIcon:
                                   _customersearchController.text.isNotEmpty
                                       ? IconButton(
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.cancel,
                                             color: btnColor,
                                           ),
@@ -126,7 +126,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                                 .requestFocus(FocusNode());
                                           },
                                         )
-                                      : Icon(
+                                      : const Icon(
                                           Icons.search,
                                           color: btnColor,
                                         ),
@@ -137,11 +137,11 @@ class _MessageScreenState extends State<MessageScreen> {
                           onChanged: searchCustomer),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  allEmployees.length <= 0
-                      ? Center(
+                  allEmployees.isEmpty
+                      ? const Center(
                           child: SpinKitFadingCube(color: btnColor, size: 15),
                         )
                       : StreamBuilder<QuerySnapshot>(
@@ -183,7 +183,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                         backgroundImage: employeeModel.uimage
                                                     .toString() ==
                                                 null
-                                            ? NetworkImage(
+                                            ? const NetworkImage(
                                                 "https://cdn1.iconfinder.com/data/icons/bokbokstars-121-classic-stock-icons-1/512/person-man.png")
                                             : NetworkImage(employeeModel.uimage
                                                 .toString()),

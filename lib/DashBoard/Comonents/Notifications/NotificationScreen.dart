@@ -122,12 +122,12 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 0)).then((value) async {
+    Future.delayed(const Duration(seconds: 0)).then((value) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
       currentuid = pref.getString("uid");
     });
 
-    Future.delayed(Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(seconds: 2)).then((value) {
       Provider.of<UserDataProvider>(context, listen: false)
           .getEmployeesList(currentuid)
           .then((value) {
@@ -156,11 +156,25 @@ class _NotificationsState extends State<Notifications> {
         children: [
           FlatButton(
             onPressed: () async {
-              downloadUrl();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Container(
+                      height: size.height * 0.2,
+                      width: size.width * 0.2,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: Text(progress),
+                    ),
+                  );
+                },
+              );
+              // downloadUrl(url);
             },
-            child: Text("downloads"),
+            child: const Text("download"),
           ),
-          Text(downloadUrl().toString()),
+          Text(downloadUrl(url).toString()),
         ],
       ),
       // child: Row(
@@ -222,9 +236,9 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  downloadUrl() async {
-    String url =
-        "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/Services%2FISIServices%2F1?alt=media&token=d9d16bdd-c7b4-4685-a7f1-fa35f8e36ee6";
+  downloadUrl(url) async {
+    // String url =
+    //     "https://firebasestorage.googleapis.com/v0/b/jrcrm-4f580.appspot.com/o/Services%2FISIServices%2F1?alt=media&token=d9d16bdd-c7b4-4685-a7f1-fa35f8e36ee6";
     final response = await Dio().get(
       url,
       onReceiveProgress: showDownloadProgress,
@@ -237,11 +251,11 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-// var progress;
+  var progress;
   showDownloadProgress(received, total) {
     if (total != -1) {
       // setState(() {
-      //  var progress = (received / total * 100).toStringAsFixed(0);
+      progress = (received / total * 100).toStringAsFixed(0);
       print((received / total * 100).toStringAsFixed(0) + "%");
       // });
     }
@@ -264,7 +278,7 @@ class _NotificationsState extends State<Notifications> {
               index);
         },
         separatorBuilder: (context, int) {
-          return SizedBox(
+          return const SizedBox(
             height: 5,
           );
         },
