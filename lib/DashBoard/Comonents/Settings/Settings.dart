@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_web_app/DashBoard/Comonents/Settings/ChatsList.dart';
-import 'package:test_web_app/DashBoard/Comonents/Settings/EmployeesList.dart';
 import 'package:test_web_app/GoogleSheets/DataFields.dart';
 import 'package:test_web_app/GoogleSheets/GSheetsApi.dart';
 import 'package:test_web_app/NewModels/ChattingScreen.dart';
@@ -41,12 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       height: size.height * 0.93,
       width: size.width,
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: EmployeesList()),
-          // Expanded(flex: 7, child: ChatsList()),
-        ],
-      ),
     );
   }
 
